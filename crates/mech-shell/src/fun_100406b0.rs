@@ -11,3 +11,19 @@ pub fn FUN_100406b0() -> u32 {
     debug!("FUN_100406b0() -> {result}");
     result
 }
+
+#[cfg(test)]
+mod tests {
+    use super::FUN_100406b0;
+    use crate::test_log::debug_lines;
+
+    /// The original's one row returns 0 on both stack fills
+    /// (`harvest/100406b0.log:272`), and the call leaves a DEBUG line.
+    #[test]
+    fn returns_the_originals_result() {
+        let lines = debug_lines(|| {
+            assert_eq!(FUN_100406b0(), 0, "harvest/100406b0.log:272");
+        });
+        assert!(lines.iter().any(|line| line.contains("FUN_100406b0")));
+    }
+}

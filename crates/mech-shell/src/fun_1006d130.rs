@@ -14,3 +14,26 @@ pub fn FUN_1006d130(state: &ShellState) -> u32 {
     debug!("FUN_1006d130() -> {value:#x}");
     value
 }
+
+#[cfg(test)]
+mod tests {
+    use super::FUN_1006d130;
+    use crate::ShellState;
+    use crate::test_log::debug_lines;
+
+    /// The original's one row (`harvest/1006d130.log:273`, both stack fills)
+    /// reads `DAT_100a6798` in the game file as the checker maps it and returns
+    /// 0, the word the file holds there. Every field is 0 here, so the row
+    /// cannot tell this field from another.
+    #[test]
+    fn returns_the_word_the_game_file_holds() {
+        let state = ShellState {
+            dat_100a6798: 0,
+            ..ShellState::default()
+        };
+        let lines = debug_lines(|| {
+            assert_eq!(FUN_1006d130(&state), 0, "harvest/1006d130.log:273");
+        });
+        assert!(lines.iter().any(|line| line.contains("FUN_1006d130")));
+    }
+}
