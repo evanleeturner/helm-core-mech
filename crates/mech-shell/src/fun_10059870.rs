@@ -4,10 +4,15 @@
 //! `DAT_100a4b14`, here [`ShellState::dat_100a4b10`] and
 //! [`ShellState::dat_100a4b14`].
 
+use log::debug;
+
 use crate::ShellState;
 
 /// Stores 0 at `DAT_100a4b10`, then at `DAT_100a4b14`.
 pub fn FUN_10059870(state: &mut ShellState) {
+    debug!("FUN_10059870()");
     state.dat_100a4b10 = 0;
+    debug!("FUN_10059870: dat_100a4b10 = {}", state.dat_100a4b10);
     state.dat_100a4b14 = 0;
+    debug!("FUN_10059870: dat_100a4b14 = {}", state.dat_100a4b14);
 }

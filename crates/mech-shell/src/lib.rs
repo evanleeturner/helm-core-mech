@@ -35,6 +35,8 @@ mod fun_1005b5f0;
 mod fun_100640f0;
 mod fun_1006d130;
 mod state;
+#[cfg(test)]
+mod test_log;
 
 pub use fun_1000a6e0::FUN_1000a6e0;
 pub use fun_1000a160::FUN_1000a160;
