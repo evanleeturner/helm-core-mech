@@ -9,7 +9,7 @@ unsafe extern "C" {
     fn _rand() -> i32;
 }
 
-/// A random whole number from `lo` to `hi`: `lo + rand() * RAND_SCALE *
+/// A random whole number from `lo` to `hi`: `lo + _rand() * RAND_SCALE *
 /// (hi + 1 - lo)`, cut toward zero as the original's `__ftol` cuts. cdecl,
 /// the caller pops; Ghidra stored it as `(void)`, its assembly reads both
 /// arguments. Each step rounds to a double, which equals the x87's result
