@@ -1,6 +1,7 @@
-# The shell library's functions in Rust, ported from the decompile's Rust
-# (RT1) with each global an owned field, DEBUG logs, and tests harvested
-# from the original under Wine.
+# The shell library's functions in Rust, ported from the decompile's Rust:
+# RT1's 20 with each global an owned field, DEBUG logs, and tests harvested
+# from the original under Wine; RT2 and RT3's other 488 copied unchanged,
+# 32-bit x86 only, as their calling conventions are.
 [package]
 name = "mech_shell"
 version = "0.1.0"
@@ -11,7 +12,7 @@ publish = false
 
 [lints.rust]
 rust_2018_idioms = { level = "warn", priority = -1 }
-unsafe_code = "forbid"
+unsafe_code = "warn"
 
 [lints.clippy]
 all = { level = "warn", priority = -2 }
