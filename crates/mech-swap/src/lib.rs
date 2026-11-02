@@ -16,10 +16,6 @@
 //! 32-bit x86 Windows only: on any other target the crate is [`body`]
 //! alone, for the host test that holds it equal to `mech_logline::body`.
 #![no_std]
-#![allow(
-    non_snake_case,
-    reason = "each port keeps its export's name, FUN_<address>, until a name is approved"
-)]
 
 #[cfg(test)]
 extern crate std;
@@ -113,8 +109,9 @@ pub fn body(record: &Record<'_>, line: &mut Line) {
 
 #[cfg(test)]
 mod tests {
-    use super::{Line, body};
     use log::{Level, Record};
+
+    use super::{Line, body};
 
     /// The swap's line holds `mech_logline::body`'s for one record whose
     /// fields take every rule: plain, a space, a quote, `=`, and empty.
