@@ -264,12 +264,14 @@ macro_rules! rdf {
     }};
 }
 
-/// `mem.rd`: a raw deref read (`*p`).
+/// `mem.rd`: a raw deref read (`*p`). The pointer is taken as `&raw`
+/// of its place, as `dw` and `du` take theirs: a `&mut` is reborrowed,
+/// never moved, and nothing is read to take it.
 #[macro_export]
 macro_rules! dr {
     ($f:literal, $pointer:expr $(,)?) => {{
         #[allow(unused_parens, reason = "a receiver keeps the parens its method call needed")]
-        let p = $pointer;
+        let p = &raw const *$pointer;
         $crate::tap(*p, |v| {
             $crate::log::debug!(
                 f = $f, a:% = $crate::__shown!(p), v:% = $crate::__shown!(*v); "mem.rd"
@@ -300,7 +302,7 @@ macro_rules! dw {
     ($f:literal, $pointer:expr, $value:expr $(,)?) => {{
         let v = $value;
         #[allow(unused_parens, reason = "a receiver keeps the parens its method call needed")]
-        let p = $pointer;
+        let p = &raw mut *$pointer;
         *p = $crate::tap(v, |v| {
             $crate::log::debug!(
                 f = $f, a:% = $crate::__shown!(p), v:% = $crate::__shown!(*v); "mem.wr"
@@ -316,7 +318,7 @@ macro_rules! du {
     ($f:literal, $pointer:expr, $op:tt, $value:expr $(,)?) => {{
         let v = $value;
         #[allow(unused_parens, reason = "a receiver keeps the parens its method call needed")]
-        let p = $pointer;
+        let p = &raw mut *$pointer;
         *p $op $crate::tap(v, |v| {
             $crate::log::debug!(
                 f = $f, a:% = $crate::__shown!(p), op = stringify!($op),
