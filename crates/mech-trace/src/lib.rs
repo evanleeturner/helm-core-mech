@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-//! The firehose's macros: each wraps one site of a port, evaluates the
+//! The DEBUG trace's macros: each wraps one site of a port, evaluates the
 //! wrapped expression once, and logs at DEBUG the values that moved.
 //!
 //! A port keeps every read and write it had, in the same count and order: a

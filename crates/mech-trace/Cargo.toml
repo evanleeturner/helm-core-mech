@@ -1,4 +1,4 @@
-# The firehose's instrument: the macros each port's sites are wrapped in,
+# The DEBUG trace's instrument: the macros each port's sites are wrapped in,
 # each evaluating its wrapped expression once and logging the values that
 # moved at DEBUG, through the `log` facade. No sink is installed here.
 [package]
