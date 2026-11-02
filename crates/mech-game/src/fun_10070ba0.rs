@@ -20,7 +20,7 @@ pub unsafe extern "C" fn FUN_10070ba0(mut param_1: i32, mut param_2: *const i8) 
         loop {
             let local_c: u32 = if mech_trace::gr!("10070ba0", "100c2dec", DAT_100c2dec) < 2 {
                 let idx = (mech_trace::dr!("10070ba0", param_2) as i32).wrapping_mul(2);
-                let p = mech_trace::gr!("10070ba0", "PTR_DAT_100c2be0", PTR_DAT_100c2be0)
+                let p = mech_trace::gr!("10070ba0", "100c2be0", PTR_DAT_100c2be0)
                     .wrapping_add(idx as u32) as *const u16;
                 (mech_trace::rd!("10070ba0", p, read_unaligned) & 8) as u32
             } else {
@@ -57,7 +57,7 @@ pub unsafe extern "C" fn FUN_10070ba0(mut param_1: i32, mut param_2: *const i8) 
         }
         let local_10: u32 = if mech_trace::gr!("10070ba0", "100c2dec", DAT_100c2dec) < 2 {
             let idx = (mech_trace::dr!("10070ba0", param_2) as i32).wrapping_mul(2);
-            let p = mech_trace::gr!("10070ba0", "PTR_DAT_100c2be0", PTR_DAT_100c2be0)
+            let p = mech_trace::gr!("10070ba0", "100c2be0", PTR_DAT_100c2be0)
                 .wrapping_add(idx as u32) as *const u16;
             (mech_trace::rd!("10070ba0", p, read_unaligned) & 8) as u32
         } else {

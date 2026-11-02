@@ -49,18 +49,18 @@ pub unsafe extern "stdcall" fn FUN_1001ae8f() {
         if mech_trace::gr!("1001ae8f", "100ab07c", DAT_100ab07c) != 0 {
             mech_trace::gw!(
                 "1001ae8f",
-                "_DAT_101eb450",
+                "101eb450",
                 _DAT_101eb450,
                 mech_trace::gr!("1001ae8f", "100b38fc", DAT_100b38fc)
             );
-            mech_trace::gw!("1001ae8f", "_DAT_101eb458", _DAT_101eb458, 0);
+            mech_trace::gw!("1001ae8f", "101eb458", _DAT_101eb458, 0);
             mech_trace::gw!(
                 "1001ae8f",
-                "_DAT_101eb3a0",
+                "101eb3a0",
                 _DAT_101eb3a0,
                 mech_trace::gr!("1001ae8f", "100b38fc", DAT_100b38fc)
             );
-            mech_trace::gw!("1001ae8f", "_DAT_101eb3a8", _DAT_101eb3a8, 0);
+            mech_trace::gw!("1001ae8f", "101eb3a8", _DAT_101eb3a8, 0);
             FUN_1003e938();
             FUN_1001a635(0);
         }

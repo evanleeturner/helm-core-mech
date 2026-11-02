@@ -100,8 +100,7 @@ pub unsafe extern "stdcall" fn FUN_1003e5c0() -> u32 {
         );
         mech_trace::wr!(
             "1003e5c0",
-            (mech_trace::gr!("1003e5c0", "PTR_DAT_100aaf68", PTR_DAT_100aaf68) as *mut u8)
-                .cast::<i32>(),
+            (mech_trace::gr!("1003e5c0", "100aaf68", PTR_DAT_100aaf68) as *mut u8).cast::<i32>(),
             write_unaligned,
             local_1c.wrapping_add(i_var2)
         );
@@ -112,7 +111,7 @@ pub unsafe extern "stdcall" fn FUN_1003e5c0() -> u32 {
         );
         mech_trace::wr!(
             "1003e5c0",
-            (mech_trace::gr!("1003e5c0", "PTR_DAT_100aaf68", PTR_DAT_100aaf68) as *mut u8)
+            (mech_trace::gr!("1003e5c0", "100aaf68", PTR_DAT_100aaf68) as *mut u8)
                 .byte_add(4)
                 .cast::<i32>(),
             write_unaligned,
@@ -125,7 +124,7 @@ pub unsafe extern "stdcall" fn FUN_1003e5c0() -> u32 {
         );
         mech_trace::wr!(
             "1003e5c0",
-            (mech_trace::gr!("1003e5c0", "PTR_DAT_100aaf68", PTR_DAT_100aaf68) as *mut u8)
+            (mech_trace::gr!("1003e5c0", "100aaf68", PTR_DAT_100aaf68) as *mut u8)
                 .byte_add(8)
                 .cast::<i32>(),
             write_unaligned,
@@ -138,7 +137,7 @@ pub unsafe extern "stdcall" fn FUN_1003e5c0() -> u32 {
         );
         mech_trace::wr!(
             "1003e5c0",
-            (mech_trace::gr!("1003e5c0", "PTR_DAT_100aaf68", PTR_DAT_100aaf68) as *mut u8)
+            (mech_trace::gr!("1003e5c0", "100aaf68", PTR_DAT_100aaf68) as *mut u8)
                 .byte_add(0x10)
                 .cast::<i32>(),
             write_unaligned,
@@ -151,7 +150,7 @@ pub unsafe extern "stdcall" fn FUN_1003e5c0() -> u32 {
         );
         mech_trace::wr!(
             "1003e5c0",
-            (mech_trace::gr!("1003e5c0", "PTR_DAT_100aaf68", PTR_DAT_100aaf68) as *mut u8)
+            (mech_trace::gr!("1003e5c0", "100aaf68", PTR_DAT_100aaf68) as *mut u8)
                 .byte_add(0xc)
                 .cast::<i32>(),
             write_unaligned,
@@ -164,7 +163,7 @@ pub unsafe extern "stdcall" fn FUN_1003e5c0() -> u32 {
         );
         mech_trace::wr!(
             "1003e5c0",
-            (mech_trace::gr!("1003e5c0", "PTR_DAT_100aaf68", PTR_DAT_100aaf68) as *mut u8)
+            (mech_trace::gr!("1003e5c0", "100aaf68", PTR_DAT_100aaf68) as *mut u8)
                 .byte_add(0x14)
                 .cast::<i32>(),
             write_unaligned,

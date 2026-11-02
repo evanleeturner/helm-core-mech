@@ -159,7 +159,7 @@ pub unsafe extern "C" fn FUN_10002d8f(
                 FUN_1008668b(
                     0,
                     param_1,
-                    mech_trace::gr!("10002d8f", "PTR_DAT_100af0a8", PTR_DAT_100af0a8) as *mut i32
+                    mech_trace::gr!("10002d8f", "100af0a8", PTR_DAT_100af0a8) as *mut i32
                 )
             );
             wr32(0x368u32.wrapping_add(l4), p as u32);
@@ -289,8 +289,7 @@ pub unsafe extern "C" fn FUN_10002d8f(
                     "1008664f",
                     FUN_1008664f(
                         param_1,
-                        mech_trace::gr!("10002d8f", "PTR_DAT_100af0a8", PTR_DAT_100af0a8)
-                            as *mut i32
+                        mech_trace::gr!("10002d8f", "100af0a8", PTR_DAT_100af0a8) as *mut i32
                     )
                 );
             } else {

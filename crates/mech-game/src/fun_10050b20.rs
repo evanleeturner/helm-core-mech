@@ -45,7 +45,7 @@ pub unsafe extern "stdcall" fn FUN_10050b20() {
         let mut local_32c: i32 = -1;
         let mut local_10: i32 = -1;
         let mut local_c: i32 = -1;
-        let base = mech_trace::gr!("10050b20", "PTR_DAT_100aaf68", PTR_DAT_100aaf68);
+        let base = mech_trace::gr!("10050b20", "100aaf68", PTR_DAT_100aaf68);
         let local_8 = mech_trace::rd!(
             "10050b20",
             ((base.wrapping_add(0xb8)) as *const i32),

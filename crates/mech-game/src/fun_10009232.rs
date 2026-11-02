@@ -159,7 +159,7 @@ pub unsafe extern "C" fn FUN_10009232(param_1: *mut i32) {
                         mech_trace::gr!("10009232", "100af17c", DAT_100af17c),
                         mech_trace::gr!("10009232", "101686f0", DAT_101686f0)
                             .wrapping_add(local_14),
-                        mech_trace::gr!("10009232", "PTR_DAT_100af0b4", PTR_DAT_100af0b4),
+                        mech_trace::gr!("10009232", "100af0b4", PTR_DAT_100af0b4),
                     )
                 );
                 if !puvar2.is_null() {
@@ -206,7 +206,7 @@ pub unsafe extern "C" fn FUN_10009232(param_1: *mut i32) {
                     FUN_1008664f(
                         mech_trace::gr!("10009232", "101686f0", DAT_101686f0)
                             .wrapping_add(local_14),
-                        mech_trace::gr!("10009232", "PTR_DAT_100af0b4", PTR_DAT_100af0b4),
+                        mech_trace::gr!("10009232", "100af0b4", PTR_DAT_100af0b4),
                     );
                 }
             }

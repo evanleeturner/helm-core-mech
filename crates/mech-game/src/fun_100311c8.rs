@@ -32,7 +32,7 @@ pub unsafe extern "C" fn FUN_100311c8(param_1: i32, param_2: u32) {
     // read and written are the game's tables and the local buffer, accessed
     // in the same order and extent as the original.
     unsafe {
-        let base = mech_trace::gr!("100311c8", "PTR_DAT_100aaf68", PTR_DAT_100aaf68);
+        let base = mech_trace::gr!("100311c8", "100aaf68", PTR_DAT_100aaf68);
         let a = mech_trace::rd!(
             "100311c8",
             (base.wrapping_add(0x3c) as *const i32),

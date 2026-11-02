@@ -22,7 +22,7 @@ pub unsafe extern "C" fn FUN_1002d360(param_1: i32) -> *mut u8 {
         let r = param_1 % 0x9f150;
         let i_var2 = r / 0x2a6c;
         let d_var1 = (r.wrapping_add(i_var2.wrapping_mul(-0x2a6c)) as f64)
-            / mech_trace::gr!("1002d360", "_DAT_100a1130", _DAT_100a1130);
+            / mech_trace::gr!("1002d360", "100a1130", _DAT_100a1130);
         mech_trace::cr!(
             "1002d360",
             "sprintf",

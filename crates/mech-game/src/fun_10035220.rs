@@ -72,13 +72,12 @@ pub unsafe extern "C" fn FUN_10035220(param_1: *mut u32, param_2: i32, param_3: 
             out("edx") _,
         );
         mech_trace::gw!("10035220", "10168398", DAT_10168398, q);
-        mech_trace::gw!("10035220", "_DAT_10168384", _DAT_10168384, param_3 / 2);
+        mech_trace::gw!("10035220", "10168384", _DAT_10168384, param_3 / 2);
         mech_trace::gw!(
             "10035220",
             "10168380",
             DAT_10168380,
-            0u32.wrapping_sub(mech_trace::gr!("10035220", "_DAT_10168384", _DAT_10168384) as u32)
-                as i32
+            0u32.wrapping_sub(mech_trace::gr!("10035220", "10168384", _DAT_10168384) as u32) as i32
         );
         let h2 = mech_trace::rd!(
             "10035220",
@@ -105,7 +104,7 @@ pub unsafe extern "C" fn FUN_10035220(param_1: *mut u32, param_2: i32, param_3: 
             DAT_1016838c,
             0u32.wrapping_sub(mech_trace::gr!("10035220", "10168388", DAT_10168388) as u32) as i32
         );
-        mech_trace::gw!("10035220", "_DAT_10168390", _DAT_10168390, 0);
+        mech_trace::gw!("10035220", "10168390", _DAT_10168390, 0);
         mech_trace::gw!("10035220", "10168394", DAT_10168394, param_4);
         mech_trace::gw!(
             "10035220",

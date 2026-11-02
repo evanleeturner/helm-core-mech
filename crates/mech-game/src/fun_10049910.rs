@@ -88,11 +88,11 @@ pub unsafe extern "stdcall" fn FUN_10049910() {
         }
         mech_trace::gw!("10049910", "100c7e18", DAT_100c7e18, 0);
         mech_trace::gw!("10049910", "100c7e14", DAT_100c7e14, 0);
-        mech_trace::gw!("10049910", "_DAT_100c7e10", _DAT_100c7e10, 0);
+        mech_trace::gw!("10049910", "100c7e10", _DAT_100c7e10, 0);
         mech_trace::gw!("10049910", "100c7e20", DAT_100c7e20, 0);
         mech_trace::gw!("10049910", "100c7e24", DAT_100c7e24, 0);
-        mech_trace::gw!("10049910", "_DAT_100c7e1c", _DAT_100c7e1c, 0);
-        mech_trace::gw!("10049910", "_DAT_100c7e28", _DAT_100c7e28, 0);
+        mech_trace::gw!("10049910", "100c7e1c", _DAT_100c7e1c, 0);
+        mech_trace::gw!("10049910", "100c7e28", _DAT_100c7e28, 0);
         let mut p: *mut u32 = &raw mut DAT_10165850;
         let mut i: i32 = 0x35;
         while i != 0 {

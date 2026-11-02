@@ -105,9 +105,9 @@ pub unsafe extern "stdcall" fn FUN_100120fc() -> u32 {
                 }
                 mech_trace::gw!(
                     "100120fc",
-                    "_DAT_100aa1c4",
+                    "100aa1c4",
                     _DAT_100aa1c4,
-                    mech_trace::gr!("100120fc", "_DAT_100aa1c4", _DAT_100aa1c4).wrapping_add(1)
+                    mech_trace::gr!("100120fc", "100aa1c4", _DAT_100aa1c4).wrapping_add(1)
                 );
                 let local_8 = mech_trace::cr!("100120fc", "10011e80", FUN_10011e80(local_14));
                 if local_8 == mech_trace::gr!("100120fc", "100adf38", DAT_100adf38) || local_8 <= -1
@@ -218,10 +218,9 @@ pub unsafe extern "stdcall" fn FUN_100120fc() -> u32 {
                     } else {
                         mech_trace::gw!(
                             "100120fc",
-                            "_DAT_100aa1c8",
+                            "100aa1c8",
                             _DAT_100aa1c8,
-                            mech_trace::gr!("100120fc", "_DAT_100aa1c8", _DAT_100aa1c8)
-                                .wrapping_add(1)
+                            mech_trace::gr!("100120fc", "100aa1c8", _DAT_100aa1c8).wrapping_add(1)
                         );
                     }
                 }

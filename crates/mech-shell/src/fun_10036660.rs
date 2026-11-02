@@ -55,7 +55,7 @@ pub unsafe extern "C" fn FUN_10036660(param_1: *const u32, param_2: u32) {
                 < (aligned_size as i32)
             {
                 mech_trace::gw!("10036660", "10093c64", DAT_10093c64, aligned_size);
-                mech_trace::gw!("10036660", "_DAT_100b52a0", _DAT_100b52a0, aligned_size);
+                mech_trace::gw!("10036660", "100b52a0", _DAT_100b52a0, aligned_size);
             }
         }
     }

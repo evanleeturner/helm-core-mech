@@ -54,60 +54,60 @@ pub unsafe extern "stdcall" fn FUN_1002d233() -> *mut c_void {
     unsafe {
         mech_trace::gw!(
             "1002d233",
-            "_DAT_1016a654",
+            "1016a654",
             _DAT_1016a654,
             i32::from(mech_trace::gr!("1002d233", "1016a638", DAT_1016a638)).wrapping_mul(0x250)
         );
         mech_trace::gw!(
             "1002d233",
-            "_DAT_1016a650",
+            "1016a650",
             _DAT_1016a650,
             mech_trace::gr!("1002d233", "100ad6b8", DAT_100ad6b8)
         );
         mech_trace::gw!(
             "1002d233",
-            "_DAT_1016a65c",
+            "1016a65c",
             _DAT_1016a65c,
             mech_trace::cr!("1002d233", "10022aaa", FUN_10022aaa())
         );
         mech_trace::gw!(
             "1002d233",
-            "_DAT_1016a65c",
+            "1016a65c",
             _DAT_1016a65c,
-            mech_trace::gr!("1002d233", "_DAT_1016a65c", _DAT_1016a65c).wrapping_mul(i32::from(
+            mech_trace::gr!("1002d233", "1016a65c", _DAT_1016a65c).wrapping_mul(i32::from(
                 mech_trace::gr!("1002d233", "1016a638", DAT_1016a638)
             ))
         );
         mech_trace::gw!(
             "1002d233",
-            "_DAT_1016a658",
+            "1016a658",
             _DAT_1016a658,
             mech_trace::gr!("1002d233", "100ad6bc", DAT_100ad6bc)
         );
         mech_trace::gw!(
             "1002d233",
-            "_DAT_1016a664",
+            "1016a664",
             _DAT_1016a664,
             mech_trace::cr!("1002d233", "10030398", FUN_10030398())
         );
         mech_trace::gw!(
             "1002d233",
-            "_DAT_1016a664",
+            "1016a664",
             _DAT_1016a664,
-            mech_trace::gr!("1002d233", "_DAT_1016a664", _DAT_1016a664).wrapping_mul(i32::from(
+            mech_trace::gr!("1002d233", "1016a664", _DAT_1016a664).wrapping_mul(i32::from(
                 mech_trace::gr!("1002d233", "1016a63c", DAT_1016a63c)
             ))
         );
         mech_trace::gw!(
             "1002d233",
-            "_DAT_1016a660",
+            "1016a660",
             _DAT_1016a660,
             mech_trace::gr!("1002d233", "100ad6c0", DAT_100ad6c0)
         );
         let i_var1 = mech_trace::cr!("1002d233", "1005dbf1", FUN_1005dbf1());
         mech_trace::gw!(
             "1002d233",
-            "_DAT_1016a66c",
+            "1016a66c",
             _DAT_1016a66c,
             i_var1.wrapping_mul(i32::from(mech_trace::gr!(
                 "1002d233",
@@ -141,7 +141,7 @@ pub unsafe extern "stdcall" fn FUN_1002d233() -> *mut c_void {
         );
         mech_trace::gw!(
             "1002d233",
-            "_DAT_1016a674",
+            "1016a674",
             _DAT_1016a674,
             i32::from(mech_trace::gr!("1002d233", "1016a644", DAT_1016a644)).wrapping_mul(0x2c)
         );
@@ -171,7 +171,7 @@ pub unsafe extern "stdcall" fn FUN_1002d233() -> *mut c_void {
         );
         mech_trace::gw!(
             "1002d233",
-            "_DAT_1016a67c",
+            "1016a67c",
             _DAT_1016a67c,
             i32::from(mech_trace::gr!("1002d233", "1016a646", DAT_1016a646)).wrapping_mul(0x14)
         );
@@ -201,7 +201,7 @@ pub unsafe extern "stdcall" fn FUN_1002d233() -> *mut c_void {
         );
         mech_trace::gw!(
             "1002d233",
-            "_DAT_1016a684",
+            "1016a684",
             _DAT_1016a684,
             mech_trace::gr!("1002d233", "1016a648", DAT_1016a648)
         );
@@ -231,7 +231,7 @@ pub unsafe extern "stdcall" fn FUN_1002d233() -> *mut c_void {
         );
         mech_trace::gw!(
             "1002d233",
-            "_DAT_1016a68c",
+            "1016a68c",
             _DAT_1016a68c,
             i32::from(mech_trace::gr!("1002d233", "1016a63e", DAT_1016a63e)).wrapping_shl(3)
         );
@@ -261,7 +261,7 @@ pub unsafe extern "stdcall" fn FUN_1002d233() -> *mut c_void {
         );
         mech_trace::gw!(
             "1002d233",
-            "_DAT_1016a694",
+            "1016a694",
             _DAT_1016a694,
             i32::from(mech_trace::gr!("1002d233", "1016a63e", DAT_1016a63e)).wrapping_shl(2)
         );
@@ -291,13 +291,13 @@ pub unsafe extern "stdcall" fn FUN_1002d233() -> *mut c_void {
         );
         mech_trace::gw!(
             "1002d233",
-            "_DAT_1016a69c",
+            "1016a69c",
             _DAT_1016a69c,
             i32::from(mech_trace::gr!("1002d233", "1016a63e", DAT_1016a63e)).wrapping_shl(2)
         );
         mech_trace::gw!(
             "1002d233",
-            "_DAT_1016a698",
+            "1016a698",
             _DAT_1016a698,
             mech_trace::gr!("1002d233", "100ad6dc", DAT_100ad6dc)
         );

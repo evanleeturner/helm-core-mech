@@ -33,7 +33,7 @@ pub unsafe extern "C" fn FUN_10068dc9(
     // SAFETY: the globals and callees are the game's own; param_2 points at
     // the caller's int, and the locals' addresses are passed as the original does.
     unsafe {
-        mech_trace::gw!("10068dc9", "_DAT_100b3980", _DAT_100b3980, 0);
+        mech_trace::gw!("10068dc9", "100b3980", _DAT_100b3980, 0);
         if mech_trace::rd!("10068dc9", param_2, read_unaligned) < param_3 {
             let r = mech_trace::cr!(
                 "10068dc9",

@@ -45,8 +45,7 @@ pub unsafe extern "stdcall" fn FUN_1003545c() {
             n = n.wrapping_sub(1);
         }
         let mut src = (&raw mut DAT_101682a0).cast::<u32>();
-        let mut dst =
-            mech_trace::gr!("1003545c", "PTR_DAT_100aaf68", PTR_DAT_100aaf68).cast::<u32>();
+        let mut dst = mech_trace::gr!("1003545c", "100aaf68", PTR_DAT_100aaf68).cast::<u32>();
         let mut n: i32 = 0x38;
         while n != 0 {
             mech_trace::wr!(
@@ -69,23 +68,17 @@ pub unsafe extern "stdcall" fn FUN_1003545c() {
         mech_trace::cr!(
             "1003545c",
             "1003b59a",
-            FUN_1003b59a(mech_trace::gr!("1003545c", "PTR_DAT_100aaf68", PTR_DAT_100aaf68) as i32)
+            FUN_1003b59a(mech_trace::gr!("1003545c", "100aaf68", PTR_DAT_100aaf68) as i32)
         );
         mech_trace::cr!(
             "1003545c",
             "1003b954",
-            FUN_1003b954(
-                mech_trace::gr!("1003545c", "PTR_DAT_100aaf68", PTR_DAT_100aaf68).cast::<i32>()
-            )
+            FUN_1003b954(mech_trace::gr!("1003545c", "100aaf68", PTR_DAT_100aaf68).cast::<i32>())
         );
         mech_trace::cr!(
             "1003545c",
             "1003b2f0",
-            FUN_1003b2f0(mech_trace::gr!(
-                "1003545c",
-                "PTR_DAT_100aaf68",
-                PTR_DAT_100aaf68
-            ))
+            FUN_1003b2f0(mech_trace::gr!("1003545c", "100aaf68", PTR_DAT_100aaf68))
         );
         mech_trace::gw!("1003545c", "100a7b60", DAT_100a7b60, 0);
     }

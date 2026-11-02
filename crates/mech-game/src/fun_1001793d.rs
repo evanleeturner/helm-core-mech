@@ -96,7 +96,7 @@ pub unsafe extern "C" fn FUN_1001793d(
                     FUN_1008668b(
                         mech_trace::gr!("1001793d", "100af17c", DAT_100af17c),
                         mech_trace::gr!("1001793d", "100b351c", DAT_100b351c),
-                        mech_trace::gr!("1001793d", "PTR_DAT_100af100", PTR_DAT_100af100) as usize
+                        mech_trace::gr!("1001793d", "100af100", PTR_DAT_100af100) as usize
                             as *mut i32,
                     )
                 )
@@ -151,8 +151,8 @@ pub unsafe extern "C" fn FUN_1001793d(
         while local_1f8 < param_3 {
             let a = mech_trace::rd!(
                 "1001793d",
-                ((mech_trace::gr!("1001793d", "PTR_DAT_100aaf68", PTR_DAT_100aaf68)
-                    .wrapping_add(0x94)) as usize as *const u32),
+                ((mech_trace::gr!("1001793d", "100aaf68", PTR_DAT_100aaf68).wrapping_add(0x94))
+                    as usize as *const u32),
                 read_unaligned
             );
             let mut u = mech_trace::cr!(

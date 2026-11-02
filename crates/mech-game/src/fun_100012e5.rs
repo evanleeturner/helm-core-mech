@@ -19,7 +19,7 @@ unsafe fn check_space(c: i8) -> bool {
             let off = (c as i32).wrapping_mul(2) as u32;
             let v = mech_trace::rd!(
                 "100012e5",
-                mech_trace::gr!("100012e5", "PTR_DAT_100c2be0", PTR_DAT_100c2be0)
+                mech_trace::gr!("100012e5", "100c2be0", PTR_DAT_100c2be0)
                     .byte_add(off as usize)
                     .cast::<u16>(),
                 read_unaligned

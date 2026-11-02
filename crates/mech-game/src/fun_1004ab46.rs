@@ -205,8 +205,7 @@ pub unsafe extern "C" fn FUN_1004ab46(
         let local_38: *mut u32 = (&raw mut DAT_100a9670 as *mut u8)
             .byte_add(iv as usize)
             .cast::<u32>();
-        let pp =
-            mech_trace::gr!("1004ab46", "PTR_DAT_100aaf68", PTR_DAT_100aaf68) as usize as *mut u8;
+        let pp = mech_trace::gr!("1004ab46", "100aaf68", PTR_DAT_100aaf68) as usize as *mut u8;
         let local_18: u32 = (rdi(pp) as u32).wrapping_sub(param_4 as u32);
         let local_10: i32 = rdi(pp.byte_add(4)).wrapping_sub(param_5);
         let local_28: u32 = (rdi(pp.byte_add(8)) as u32).wrapping_sub(param_6 as u32);

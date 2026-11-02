@@ -76,7 +76,7 @@ pub unsafe extern "stdcall" fn FUN_100416d0() {
         mech_trace::gw!("100416d0", "100983b4", DAT_100983b4, 0);
         mech_trace::gw!("100416d0", "100983b8", DAT_100983b8, 0);
         mech_trace::gw!("100416d0", "100983bc", DAT_100983bc, 0);
-        mech_trace::gw!("100416d0", "_DAT_100983c0", _DAT_100983c0, 0);
+        mech_trace::gw!("100416d0", "100983c0", _DAT_100983c0, 0);
         mech_trace::gw!("100416d0", "100983c4", DAT_100983c4, 0);
         copy_cstr(
             (&raw mut DAT_1009845c).cast::<i8>(),
@@ -90,8 +90,8 @@ pub unsafe extern "stdcall" fn FUN_100416d0() {
         mech_trace::gw!("100416d0", "100983cc", DAT_100983cc, 0);
         mech_trace::gw!("100416d0", "100983d0", DAT_100983d0, 0);
         mech_trace::gw!("100416d0", "100ba1d0", DAT_100ba1d0, 0);
-        mech_trace::gw!("100416d0", "_DAT_100983d4", _DAT_100983d4, 0);
+        mech_trace::gw!("100416d0", "100983d4", _DAT_100983d4, 0);
         mech_trace::gw!("100416d0", "100983d8", DAT_100983d8, 0);
-        mech_trace::gw!("100416d0", "_DAT_100983e4", _DAT_100983e4, 0);
+        mech_trace::gw!("100416d0", "100983e4", _DAT_100983e4, 0);
     }
 }

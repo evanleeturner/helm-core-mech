@@ -282,25 +282,25 @@ pub unsafe extern "C" fn FUN_100026c1(
         );
         mech_trace::gw!(
             "100026c1",
-            "_DAT_100820a0",
+            "100820a0",
             _DAT_100820a0,
             (i_var6 as u32).wrapping_sub(u_var10) as i32
         );
         if u_var12.wrapping_sub(i_var6 as u32) == 0 || (u_var12 as i32) < i_var6 {
             mech_trace::gw!(
                 "100026c1",
-                "_DAT_100820a0",
+                "100820a0",
                 _DAT_100820a0,
-                (mech_trace::gr!("100026c1", "_DAT_100820a0", _DAT_100820a0) as u32)
+                (mech_trace::gr!("100026c1", "100820a0", _DAT_100820a0) as u32)
                     .wrapping_add(u_var12.wrapping_sub(i_var6 as u32)) as i32
             );
         }
         if 0x7fffffffu32 < u_var10 {
             mech_trace::gw!(
                 "100026c1",
-                "_DAT_100820a0",
+                "100820a0",
                 _DAT_100820a0,
-                (mech_trace::gr!("100026c1", "_DAT_100820a0", _DAT_100820a0) as u32)
+                (mech_trace::gr!("100026c1", "100820a0", _DAT_100820a0) as u32)
                     .wrapping_add(u_var10) as i32
             );
             mech_trace::gw!("100026c1", "100820a4", DAT_100820a4, 0);
@@ -478,14 +478,14 @@ pub unsafe extern "C" fn FUN_100026c1(
             );
             mech_trace::gw!(
                 "100026c1",
-                "_DAT_100820a0",
+                "100820a0",
                 _DAT_100820a0,
-                mech_trace::gr!("100026c1", "_DAT_100820a0", _DAT_100820a0).wrapping_sub(1)
+                mech_trace::gr!("100026c1", "100820a0", _DAT_100820a0).wrapping_sub(1)
             );
-            if !(-1 < mech_trace::gr!("100026c1", "_DAT_100820a0", _DAT_100820a0)) {
+            if !(-1 < mech_trace::gr!("100026c1", "100820a0", _DAT_100820a0)) {
                 return;
             }
-            if mech_trace::gr!("100026c1", "_DAT_100820a0", _DAT_100820a0) == 0 {
+            if mech_trace::gr!("100026c1", "100820a0", _DAT_100820a0) == 0 {
                 i_var4 = i_var4.wrapping_add(mech_trace::gr!("100026c1", "100820c8", DAT_100820c8));
                 i_var5 = i_var5.wrapping_add(mech_trace::gr!("100026c1", "100820cc", DAT_100820cc));
             } else {

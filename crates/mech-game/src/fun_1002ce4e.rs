@@ -42,7 +42,7 @@ pub unsafe extern "C" fn FUN_1002ce4e(param_1: *mut i8) -> *mut u8 {
         );
         mech_trace::dw!("1002ce4e", buf.as_mut_ptr().add(14), 0);
         let local_44: u32 = if mech_trace::gr!("1002ce4e", "100c2dec", DAT_100c2dec) < 2 {
-            let addr = mech_trace::gr!("1002ce4e", "PTR_DAT_100c2be0", PTR_DAT_100c2be0)
+            let addr = mech_trace::gr!("1002ce4e", "100c2be0", PTR_DAT_100c2be0)
                 .wrapping_add((mech_trace::dr!("1002ce4e", param_1) as i32).wrapping_mul(2) as u32);
             ((mech_trace::rd!("1002ce4e", (addr as *const u16), read_unaligned)) & 4) as u32
         } else {

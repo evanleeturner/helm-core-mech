@@ -51,7 +51,7 @@ pub unsafe extern "C" fn FUN_100099a1(param_1: *mut u32) {
                 mech_trace::gr!("100099a1", "100af17c", DAT_100af17c),
                 (mech_trace::rd!("100099a1", param_1.add(0xc), read_unaligned) as i32)
                     .wrapping_add(mech_trace::gr!("100099a1", "101686f0", DAT_101686f0)),
-                mech_trace::gr!("100099a1", "PTR_DAT_100af0b8", PTR_DAT_100af0b8).cast::<i32>(),
+                mech_trace::gr!("100099a1", "100af0b8", PTR_DAT_100af0b8).cast::<i32>(),
             )
         );
         if !pu_var2.is_null() {
@@ -77,8 +77,7 @@ pub unsafe extern "C" fn FUN_100099a1(param_1: *mut u32) {
                         mech_trace::rd!("100099a1", param_1.add(0x10), read_unaligned) as *mut i8,
                         (&raw const s__s_3_1lf_s_100a7318).cast::<i8>(),
                         mech_trace::rd!("100099a1", param_1.add(0xf), read_unaligned),
-                        (local_14 as f64)
-                            / mech_trace::gr!("100099a1", "_DAT_100a1048", _DAT_100a1048),
+                        (local_14 as f64) / mech_trace::gr!("100099a1", "100a1048", _DAT_100a1048),
                         local_10,
                     )
                 );
@@ -114,7 +113,7 @@ pub unsafe extern "C" fn FUN_100099a1(param_1: *mut u32) {
                             (&raw const s__s_3_1lf_100a7324).cast::<i8>(),
                             mech_trace::rd!("100099a1", param_1.add(0x11), read_unaligned),
                             (i_var4 as f64)
-                                / mech_trace::gr!("100099a1", "_DAT_100a1048", _DAT_100a1048),
+                                / mech_trace::gr!("100099a1", "100a1048", _DAT_100a1048),
                         )
                     );
                     mech_trace::wr!(
@@ -136,7 +135,7 @@ pub unsafe extern "C" fn FUN_100099a1(param_1: *mut u32) {
             FUN_1008664f(
                 (mech_trace::rd!("100099a1", param_1.add(0xc), read_unaligned) as i32)
                     .wrapping_add(mech_trace::gr!("100099a1", "101686f0", DAT_101686f0)),
-                mech_trace::gr!("100099a1", "PTR_DAT_100af0b8", PTR_DAT_100af0b8).cast::<i32>(),
+                mech_trace::gr!("100099a1", "100af0b8", PTR_DAT_100af0b8).cast::<i32>(),
             );
         }
     }

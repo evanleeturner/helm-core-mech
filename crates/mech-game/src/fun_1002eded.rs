@@ -95,8 +95,7 @@ pub unsafe extern "C" fn FUN_1002eded(param_1: i32) {
                     _sprintf(
                         local_48.as_mut_ptr().cast::<i8>(),
                         (&raw const DAT_100ada38).cast::<i8>(),
-                        (local_8 as f64)
-                            / mech_trace::gr!("1002eded", "_DAT_100a1140", _DAT_100a1140),
+                        (local_8 as f64) / mech_trace::gr!("1002eded", "100a1140", _DAT_100a1140),
                     )
                 );
                 pbvar3 = local_48.as_mut_ptr();

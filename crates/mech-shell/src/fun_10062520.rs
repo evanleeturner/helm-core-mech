@@ -87,7 +87,7 @@ pub unsafe extern "C" fn FUN_10062520(param_1: i32, param_2: i32) -> i32 {
             mech_trace::gw!("10062520", "100c5ad0", DAT_100c5ad0, 0x6c);
             mech_trace::gw!("10062520", "100c5ad4", DAT_100c5ad4, 0x20);
             mech_trace::gw!("10062520", "100c5b38", DAT_100c5b38, 0x218);
-            mech_trace::gw!("10062520", "_DAT_100c5ae4", _DAT_100c5ae4, 2);
+            mech_trace::gw!("10062520", "100c5ae4", _DAT_100c5ae4, 2);
             mech_trace::gw!(
                 "10062520",
                 "100c5a50",
@@ -104,7 +104,7 @@ pub unsafe extern "C" fn FUN_10062520(param_1: i32, param_2: i32) -> i32 {
                     mech_trace::gr!("10062520", "100c5a50", DAT_100c5a50)
                 );
             }
-            mech_trace::gw!("10062520", "_DAT_100c5bac", _DAT_100c5bac, 4);
+            mech_trace::gw!("10062520", "100c5bac", _DAT_100c5bac, 4);
             mech_trace::gw!(
                 "10062520",
                 "100c5a50",
@@ -127,7 +127,7 @@ pub unsafe extern "C" fn FUN_10062520(param_1: i32, param_2: i32) -> i32 {
                 DAT_100a8184,
                 mech_trace::gr!("10062520", "100a8180", DAT_100a8180)
             );
-            mech_trace::gw!("10062520", "_DAT_100c5bac", _DAT_100c5bac, 0x10);
+            mech_trace::gw!("10062520", "100c5bac", _DAT_100c5bac, 0x10);
             mech_trace::gw!(
                 "10062520",
                 "100c5a50",
@@ -162,7 +162,7 @@ pub unsafe extern "C" fn FUN_10062520(param_1: i32, param_2: i32) -> i32 {
             if b_var1 != 0 {
                 mech_trace::gw!("10062520", "100c5ad4", DAT_100c5ad4, 0x20);
                 mech_trace::gw!("10062520", "100c5b38", DAT_100c5b38, 0x4218);
-                mech_trace::gw!("10062520", "_DAT_100c5ae4", _DAT_100c5ae4, 2);
+                mech_trace::gw!("10062520", "100c5ae4", _DAT_100c5ae4, 2);
             }
             mech_trace::gw!(
                 "10062520",
@@ -173,7 +173,7 @@ pub unsafe extern "C" fn FUN_10062520(param_1: i32, param_2: i32) -> i32 {
             if mech_trace::gr!("10062520", "100c5a50", DAT_100c5a50) != 0 {
                 if b_var1 != 0 {
                     FUN_100640a0(&raw mut DAT_100a8304);
-                    mech_trace::gw!("10062520", "_DAT_100c5ae4", _DAT_100c5ae4, 1);
+                    mech_trace::gw!("10062520", "100c5ae4", _DAT_100c5ae4, 1);
                     mech_trace::gw!(
                         "10062520",
                         "100c5a50",
@@ -197,7 +197,7 @@ pub unsafe extern "C" fn FUN_10062520(param_1: i32, param_2: i32) -> i32 {
             }
             if mech_trace::gr!("10062520", "100c5a50", DAT_100c5a50) == 0 {
                 if b_var1 != 0 {
-                    mech_trace::gw!("10062520", "_DAT_100c5bac", _DAT_100c5bac, 4);
+                    mech_trace::gw!("10062520", "100c5bac", _DAT_100c5bac, 4);
                     mech_trace::gw!(
                         "10062520",
                         "100c5a50",
@@ -231,17 +231,17 @@ pub unsafe extern "C" fn FUN_10062520(param_1: i32, param_2: i32) -> i32 {
                         mech_trace::gr!("10062520", "100c5a50", DAT_100c5a50)
                     );
                 }
-                mech_trace::gw!("10062520", "_DAT_100c5bbc", _DAT_100c5bbc, param_1);
-                mech_trace::gw!("10062520", "_DAT_100c5bb8", _DAT_100c5bb8, param_2);
+                mech_trace::gw!("10062520", "100c5bbc", _DAT_100c5bbc, param_1);
+                mech_trace::gw!("10062520", "100c5bb8", _DAT_100c5bb8, param_2);
                 mech_trace::gw!("10062520", "100c5bb0", DAT_100c5bb0, 0x6c);
                 mech_trace::gw!("10062520", "100c5bb4", DAT_100c5bb4, 6);
-                mech_trace::gw!("10062520", "_DAT_100c5c18", _DAT_100c5c18, 0x4040);
+                mech_trace::gw!("10062520", "100c5c18", _DAT_100c5c18, 0x4040);
                 if mech_trace::dr!(
                     "10062520",
                     mech_trace::gr!("10062520", "100a724c", DAT_100a724c)
                 ) != 2
                 {
-                    mech_trace::gw!("10062520", "_DAT_100c5c18", _DAT_100c5c18, 0x840);
+                    mech_trace::gw!("10062520", "100c5c18", _DAT_100c5c18, 0x840);
                 }
                 mech_trace::gw!(
                     "10062520",

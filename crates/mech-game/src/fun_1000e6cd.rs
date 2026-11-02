@@ -97,12 +97,12 @@ pub unsafe extern "stdcall" fn FUN_1000e6cd() {
             DAT_100aafd4,
             FUN_10016e60 as usize as i32
         );
-        mech_trace::gw!("1000e6cd", "_DAT_100ad6b0", _DAT_100ad6b0, 0xff);
+        mech_trace::gw!("1000e6cd", "100ad6b0", _DAT_100ad6b0, 0xff);
         if mech_trace::gr!("1000e6cd", "100aaf8c", DAT_100aaf8c) != 0
             || mech_trace::gr!("1000e6cd", "100aaf90", DAT_100aaf90) != 0
         {
             mech_trace::gw!("1000e6cd", "100aafa0", DAT_100aafa0, 0);
         }
-        mech_trace::gu!("1000e6cd", "_DAT_100aaf80", _DAT_100aaf80, |=, 8);
+        mech_trace::gu!("1000e6cd", "100aaf80", _DAT_100aaf80, |=, 8);
     }
 }

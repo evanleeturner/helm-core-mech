@@ -22,8 +22,8 @@ pub unsafe extern "stdcall" fn FUN_10035eb0() {
             "10035eb0",
             "100b07fc",
             DAT_100b07fc,
-            (mech_trace::gr!("10035eb0", "PTR_DAT_10093b2c", PTR_DAT_10093b2c)
-                == (src as usize as u32)) as u32
+            (mech_trace::gr!("10035eb0", "10093b2c", PTR_DAT_10093b2c) == (src as usize as u32))
+                as u32
         );
         let mut dst = &raw mut DAT_100b0800 as *mut u32;
         let mut i: i32 = 0x45;

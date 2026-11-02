@@ -46,17 +46,17 @@ pub unsafe extern "C" fn FUN_1006a915(param_1: i32) {
                     if mech_trace::gr!("1006a915", "100b3c50", DAT_100b3c50) == 0 {
                         mech_trace::gw!(
                             "1006a915",
-                            "_DAT_100b3c58",
+                            "100b3c58",
                             _DAT_100b3c58,
-                            (mech_trace::gr!("1006a915", "_DAT_100b3c58", _DAT_100b3c58) as u32
+                            (mech_trace::gr!("1006a915", "100b3c58", _DAT_100b3c58) as u32
                                 & 0xfffffffd) as i32
                         );
                     } else {
                         mech_trace::gw!(
                             "1006a915",
-                            "_DAT_100b3c58",
+                            "100b3c58",
                             _DAT_100b3c58,
-                            (mech_trace::gr!("1006a915", "_DAT_100b3c58", _DAT_100b3c58) as u32 | 2)
+                            (mech_trace::gr!("1006a915", "100b3c58", _DAT_100b3c58) as u32 | 2)
                                 as i32
                         );
                     }
@@ -71,19 +71,19 @@ pub unsafe extern "C" fn FUN_1006a915(param_1: i32) {
                     if mech_trace::gr!("1006a915", "100b3c54", DAT_100b3c54) == 0 {
                         mech_trace::gw!(
                             "1006a915",
-                            "_DAT_100b3c58",
+                            "100b3c58",
                             _DAT_100b3c58,
-                            (mech_trace::gr!("1006a915", "_DAT_100b3c58", _DAT_100b3c58) as u32
+                            (mech_trace::gr!("1006a915", "100b3c58", _DAT_100b3c58) as u32
                                 & 0xfffffff3) as i32
                         );
                         FUN_1006ac3b();
                     } else {
                         mech_trace::gw!(
                             "1006a915",
-                            "_DAT_100b3c58",
+                            "100b3c58",
                             _DAT_100b3c58,
-                            (mech_trace::gr!("1006a915", "_DAT_100b3c58", _DAT_100b3c58) as u32
-                                | 0xc) as i32
+                            (mech_trace::gr!("1006a915", "100b3c58", _DAT_100b3c58) as u32 | 0xc)
+                                as i32
                         );
                         FUN_100470be();
                         if mech_trace::gr!("1006a915", "100aa1ac", DAT_100aa1ac) == 0 {
@@ -102,7 +102,7 @@ pub unsafe extern "C" fn FUN_1006a915(param_1: i32) {
                 4 => {
                     mech_trace::gw!(
                         "1006a915",
-                        "_DAT_100b3c58",
+                        "100b3c58",
                         _DAT_100b3c58,
                         mech_trace::rd!("1006a915", arr.add(4), read)
                     );

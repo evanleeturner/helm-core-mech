@@ -87,7 +87,7 @@ pub unsafe extern "C" fn FUN_10044054(param_1: *mut i32) -> i32 {
                     mech_trace::wr!("10044054", p1e6, write_unaligned, l);
                 }
                 let l = mech_trace::rd!("10044054", p1e6, read_unaligned);
-                if (l as f64) < mech_trace::gr!("10044054", "_DAT_100a1220", _DAT_100a1220) {
+                if (l as f64) < mech_trace::gr!("10044054", "100a1220", _DAT_100a1220) {
                     mech_trace::wr!("10044054", p1e6, write_unaligned, 0x4ccc);
                 }
             }

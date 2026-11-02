@@ -190,7 +190,7 @@ pub unsafe extern "C" fn FUN_1003a3b2(param_1: *mut i32) {
                     at(&raw mut DAT_10161098, i_var2),
                     read_unaligned
                 ) as f32)
-                    / mech_trace::gr!("1003a3b2", "_DAT_100a11dc", _DAT_100a11dc);
+                    / mech_trace::gr!("1003a3b2", "100a11dc", _DAT_100a11dc);
                 mech_trace::wr!(
                     "1003a3b2",
                     at(&raw mut DAT_101610d8, i_var2).cast::<f32>(),

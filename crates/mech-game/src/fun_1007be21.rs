@@ -56,9 +56,9 @@ pub unsafe extern "C" fn FUN_1007be21(param_1: *mut i32, param_2: u32) -> i32 {
             FUN_1007c97d(local_8);
             mech_trace::gw!(
                 "1007be21",
-                "_DAT_100b67f8",
+                "100b67f8",
                 _DAT_100b67f8,
-                mech_trace::gr!("1007be21", "_DAT_100b67f8", _DAT_100b67f8).wrapping_add(1)
+                mech_trace::gr!("1007be21", "100b67f8", _DAT_100b67f8).wrapping_add(1)
             );
             FUN_1002fcce(param_1);
             let i_var1 = local_8.wrapping_mul(0x24);

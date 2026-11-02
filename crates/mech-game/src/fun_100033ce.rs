@@ -75,7 +75,7 @@ pub unsafe extern "stdcall" fn FUN_100033ce(sample_handle: u32) {
         if u_var2 != 0 && 0 < (u_var2 as i32) && u_var2 != next {
             FUN_1008664f(
                 u_var2,
-                mech_trace::gr!("100033ce", "PTR_DAT_100af0a8", PTR_DAT_100af0a8) as *mut i32,
+                mech_trace::gr!("100033ce", "100af0a8", PTR_DAT_100af0a8) as *mut i32,
             );
         }
 
@@ -115,8 +115,7 @@ pub unsafe extern "stdcall" fn FUN_100033ce(sample_handle: u32) {
                 if (r as i32) < 0 {
                     FUN_1008664f(
                         next,
-                        mech_trace::gr!("100033ce", "PTR_DAT_100af0a8", PTR_DAT_100af0a8)
-                            as *mut i32,
+                        mech_trace::gr!("100033ce", "100af0a8", PTR_DAT_100af0a8) as *mut i32,
                     );
                     next = 0;
                 } else {

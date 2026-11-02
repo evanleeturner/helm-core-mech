@@ -26,7 +26,7 @@ pub unsafe extern "C" fn FUN_100603ff(param_1: i32) {
             && (mech_trace::gr!("100603ff", "100b36d0", DAT_100b36d0) != param_1)
         {
             let i_var1 = param_1.wrapping_mul(0x14) as usize;
-            let base = mech_trace::gr!("100603ff", "PTR_DAT_100aaf68", PTR_DAT_100aaf68) as usize;
+            let base = mech_trace::gr!("100603ff", "100aaf68", PTR_DAT_100aaf68) as usize;
             mech_trace::wr!(
                 "100603ff",
                 ((base.wrapping_add(0x2c)) as *mut u32),

@@ -31,7 +31,7 @@ pub unsafe extern "C" fn FUN_10070d99(param_1: *mut u32) {
                 "10070d99",
                 "fread",
                 fread(
-                    mech_trace::gr!("10070d99", "PTR_DAT_100b4828", PTR_DAT_100b4828),
+                    mech_trace::gr!("10070d99", "100b4828", PTR_DAT_100b4828),
                     1,
                     0x200,
                     mech_trace::rd!("10070d99", param_1, read) as *mut c_void
@@ -44,7 +44,7 @@ pub unsafe extern "C" fn FUN_10070d99(param_1: *mut u32) {
                 "10070d99",
                 "10070cd5",
                 FUN_10070cd5(
-                    mech_trace::gr!("10070d99", "PTR_DAT_100b4828", PTR_DAT_100b4828) as i32,
+                    mech_trace::gr!("10070d99", "100b4828", PTR_DAT_100b4828) as i32,
                     &raw mut DAT_100c81e0 as *mut u32,
                     &raw mut local_c,
                 )
@@ -80,9 +80,7 @@ pub unsafe extern "C" fn FUN_10070d99(param_1: *mut u32) {
             let i_var3 = mech_trace::cr!(
                 "10070d99",
                 "100a0320",
-                FUN_100a0320(
-                    mech_trace::gr!("10070d99", "PTR_DAT_100b4828", PTR_DAT_100b4828) as *mut u32
-                )
+                FUN_100a0320(mech_trace::gr!("10070d99", "100b4828", PTR_DAT_100b4828) as *mut u32)
             ) as i32;
             mech_trace::wr!("10070d99", local_8, write, i_var3);
             if mech_trace::rd!("10070d99", local_8, read) == 0 {

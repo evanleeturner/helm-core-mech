@@ -194,8 +194,7 @@ pub unsafe extern "stdcall" fn FUN_1004b4ef() {
                     if b5 {
                         if b6 {
                             mech_trace::gw!("1004b4ef", "100a7b70", DAT_100a7b70, 1);
-                            let base =
-                                mech_trace::gr!("1004b4ef", "PTR_DAT_100aaf68", PTR_DAT_100aaf68);
+                            let base = mech_trace::gr!("1004b4ef", "100aaf68", PTR_DAT_100aaf68);
                             mech_trace::wr!(
                                 "1004b4ef",
                                 (base.wrapping_add(0x1c) as usize as *mut u32),
@@ -216,7 +215,7 @@ pub unsafe extern "stdcall" fn FUN_1004b4ef() {
                             );
                             mech_trace::wr!(
                                 "1004b4ef",
-                                (mech_trace::gr!("1004b4ef", "PTR_DAT_100aaf68", PTR_DAT_100aaf68)
+                                (mech_trace::gr!("1004b4ef", "100aaf68", PTR_DAT_100aaf68)
                                     .wrapping_add(0x28) as usize
                                     as *mut i16),
                                 write_unaligned,
@@ -224,7 +223,7 @@ pub unsafe extern "stdcall" fn FUN_1004b4ef() {
                             );
                             mech_trace::wr!(
                                 "1004b4ef",
-                                (mech_trace::gr!("1004b4ef", "PTR_DAT_100aaf68", PTR_DAT_100aaf68)
+                                (mech_trace::gr!("1004b4ef", "100aaf68", PTR_DAT_100aaf68)
                                     .wrapping_add(0x2a) as usize
                                     as *mut i16),
                                 write_unaligned,

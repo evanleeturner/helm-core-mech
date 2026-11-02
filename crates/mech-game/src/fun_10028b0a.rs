@@ -58,9 +58,9 @@ pub unsafe extern "C" fn FUN_10028b0a(
                 local_8 = false;
                 mech_trace::gw!(
                     "10028b0a",
-                    "_DAT_1016a6c8",
+                    "1016a6c8",
                     _DAT_1016a6c8,
-                    mech_trace::gr!("10028b0a", "_DAT_1016a6c8", _DAT_1016a6c8).wrapping_add(1)
+                    mech_trace::gr!("10028b0a", "1016a6c8", _DAT_1016a6c8).wrapping_add(1)
                 );
             }
             let v = (mech_trace::gr!("10028b0a", "100b38fc", DAT_100b38fc) as i16 as i32)

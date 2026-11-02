@@ -67,13 +67,13 @@ pub unsafe extern "C" fn FUN_10043f2c(param_1: i32) -> i32 {
                 (local_8.wrapping_add(0x42c) as *const i32),
                 read_unaligned
             );
-            if mech_trace::gr!("10043f2c", "_DAT_100a1210", _DAT_100a1210) <= v as f64 {
+            if mech_trace::gr!("10043f2c", "100a1210", _DAT_100a1210) <= v as f64 {
                 let v2 = mech_trace::rd!(
                     "10043f2c",
                     (local_8.wrapping_add(0x42c) as *const i32),
                     read_unaligned
                 );
-                if mech_trace::gr!("10043f2c", "_DAT_100a1218", _DAT_100a1218) < v2 as f64 {
+                if mech_trace::gr!("10043f2c", "100a1218", _DAT_100a1218) < v2 as f64 {
                     local_c &= 0xFFFF0000;
                 }
             } else {

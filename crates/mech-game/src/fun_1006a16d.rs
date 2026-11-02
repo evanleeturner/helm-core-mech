@@ -30,11 +30,7 @@ pub unsafe extern "stdcall" fn FUN_1006a16d() {
         mech_trace::cr!(
             "1006a16d",
             "_sprintf",
-            _sprintf(
-                local_2c.as_mut_ptr(),
-                mech_trace::gr!("1006a16d", "s__8_8ld_100b3bf0", s__8_8ld_100b3bf0).as_ptr(),
-                0i32
-            )
+            _sprintf(local_2c.as_mut_ptr(), s__8_8ld_100b3bf0.as_ptr(), 0i32)
         );
         if mech_trace::gr!("1006a16d", "100b3a64", DAT_100b3a64) != 0 {
             mech_trace::cr!(

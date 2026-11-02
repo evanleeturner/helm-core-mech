@@ -115,7 +115,7 @@ pub unsafe extern "C" fn FUN_10071b60(param_1: i32, str: *mut i8, param_3: i32) 
                 return mech_trace::rt!("10071b60", 0);
             }
             if mech_trace::gr!("10071b60", "100adac0", DAT_100adac0) == 0 {
-                mech_trace::gw!("10071b60", "_DAT_100b4e58", _DAT_100b4e58, 1);
+                mech_trace::gw!("10071b60", "100b4e58", _DAT_100b4e58, 1);
                 mech_trace::cr!(
                     "10071b60",
                     "HeapFree",
@@ -158,7 +158,7 @@ pub unsafe extern "C" fn FUN_10071b60(param_1: i32, str: *mut i8, param_3: i32) 
                 }
                 if local_2c == 0 {
                     s(l, 8, 0);
-                    mech_trace::gw!("10071b60", "_DAT_100b4e58", _DAT_100b4e58, 2);
+                    mech_trace::gw!("10071b60", "100b4e58", _DAT_100b4e58, 2);
                 } else {
                     s(l, 8, 1);
                     if 0x7f < local_2c {
@@ -203,7 +203,7 @@ pub unsafe extern "C" fn FUN_10071b60(param_1: i32, str: *mut i8, param_3: i32) 
                 s(l, 2, u2);
             }
             if g(l, 2) == 0 {
-                mech_trace::gw!("10071b60", "_DAT_100b4e58", _DAT_100b4e58, 3);
+                mech_trace::gw!("10071b60", "100b4e58", _DAT_100b4e58, 3);
             }
         } else if param_1 == 1 {
             let i3 = mech_trace::cr!("10071b60", "1005d8e0", FUN_1005d8e0());
@@ -216,11 +216,11 @@ pub unsafe extern "C" fn FUN_10071b60(param_1: i32, str: *mut i8, param_3: i32) 
                 return mech_trace::rt!("10071b60", 0);
             }
             if g(l, 3) == 0 {
-                mech_trace::gw!("10071b60", "_DAT_100b4e58", _DAT_100b4e58, 5);
+                mech_trace::gw!("10071b60", "100b4e58", _DAT_100b4e58, 5);
                 return mech_trace::rt!("10071b60", 0);
             }
             if g(l, 8) == 0 {
-                mech_trace::gw!("10071b60", "_DAT_100b4e58", _DAT_100b4e58, 4);
+                mech_trace::gw!("10071b60", "100b4e58", _DAT_100b4e58, 4);
                 return mech_trace::rt!("10071b60", 0);
             }
             let o = g(l, 3);
@@ -242,11 +242,11 @@ pub unsafe extern "C" fn FUN_10071b60(param_1: i32, str: *mut i8, param_3: i32) 
                     }
                 } else {
                     if g(l, 4) == 0 {
-                        mech_trace::gw!("10071b60", "_DAT_100b4e58", _DAT_100b4e58, 6);
+                        mech_trace::gw!("10071b60", "100b4e58", _DAT_100b4e58, 6);
                         return mech_trace::rt!("10071b60", 0);
                     }
                     if ri(o.wrapping_add(0x94)) == 0 {
-                        mech_trace::gw!("10071b60", "_DAT_100b4e58", _DAT_100b4e58, 7);
+                        mech_trace::gw!("10071b60", "100b4e58", _DAT_100b4e58, 7);
                         return mech_trace::rt!("10071b60", 0);
                     }
                     let mut local_34: i32;

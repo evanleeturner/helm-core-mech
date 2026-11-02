@@ -57,8 +57,7 @@ pub unsafe extern "stdcall" fn FUN_1003c260() {
                     let v = mech_trace::rd!("1003c260", p80.cast::<i16>(), read_unaligned);
                     FUN_1008664f(
                         v as i32 as u32,
-                        mech_trace::gr!("1003c260", "PTR_DAT_100af0c4", PTR_DAT_100af0c4)
-                            as *mut i32,
+                        mech_trace::gr!("1003c260", "100af0c4", PTR_DAT_100af0c4) as *mut i32,
                     );
                     mech_trace::wr!("1003c260", p80.cast::<u16>(), write_unaligned, 0);
                 }

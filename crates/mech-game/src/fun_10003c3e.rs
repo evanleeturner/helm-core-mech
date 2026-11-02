@@ -89,7 +89,7 @@ pub unsafe extern "C" fn FUN_10003c3e(param_1: i32) {
             );
             FUN_1008664f(
                 s as i32 as u32,
-                mech_trace::gr!("10003c3e", "PTR_DAT_100af0a8", PTR_DAT_100af0a8) as *mut i32,
+                mech_trace::gr!("10003c3e", "100af0a8", PTR_DAT_100af0a8) as *mut i32,
             );
             mech_trace::wr!(
                 "10003c3e",

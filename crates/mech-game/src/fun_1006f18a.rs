@@ -46,23 +46,23 @@ pub unsafe extern "stdcall" fn FUN_1006f18a() {
             if i_var1 == 0 {
                 mech_trace::gw!(
                     "1006f18a",
-                    "_DAT_10165888",
+                    "10165888",
                     _DAT_10165888,
-                    mech_trace::gr!("1006f18a", "_DAT_10165888", _DAT_10165888).wrapping_add(1)
+                    mech_trace::gr!("1006f18a", "10165888", _DAT_10165888).wrapping_add(1)
                 );
             } else if i_var1 == 1 {
                 mech_trace::gw!(
                     "1006f18a",
-                    "_DAT_1016588c",
+                    "1016588c",
                     _DAT_1016588c,
-                    mech_trace::gr!("1006f18a", "_DAT_1016588c", _DAT_1016588c).wrapping_add(1)
+                    mech_trace::gr!("1006f18a", "1016588c", _DAT_1016588c).wrapping_add(1)
                 );
             } else if i_var1 == 2 {
                 mech_trace::gw!(
                     "1006f18a",
-                    "_DAT_1016588a",
+                    "1016588a",
                     _DAT_1016588a,
-                    mech_trace::gr!("1006f18a", "_DAT_1016588a", _DAT_1016588a).wrapping_add(1)
+                    mech_trace::gr!("1006f18a", "1016588a", _DAT_1016588a).wrapping_add(1)
                 );
             }
             local_c = local_c.wrapping_add(1);
@@ -73,23 +73,23 @@ pub unsafe extern "stdcall" fn FUN_1006f18a() {
             if i_var1 == 0 {
                 mech_trace::gw!(
                     "1006f18a",
-                    "_DAT_1016588e",
+                    "1016588e",
                     _DAT_1016588e,
-                    mech_trace::gr!("1006f18a", "_DAT_1016588e", _DAT_1016588e).wrapping_add(1)
+                    mech_trace::gr!("1006f18a", "1016588e", _DAT_1016588e).wrapping_add(1)
                 );
             } else if i_var1 == 1 {
                 mech_trace::gw!(
                     "1006f18a",
-                    "_DAT_10165892",
+                    "10165892",
                     _DAT_10165892,
-                    mech_trace::gr!("1006f18a", "_DAT_10165892", _DAT_10165892).wrapping_add(1)
+                    mech_trace::gr!("1006f18a", "10165892", _DAT_10165892).wrapping_add(1)
                 );
             } else if i_var1 == 2 {
                 mech_trace::gw!(
                     "1006f18a",
-                    "_DAT_10165890",
+                    "10165890",
                     _DAT_10165890,
-                    mech_trace::gr!("1006f18a", "_DAT_10165890", _DAT_10165890).wrapping_add(1)
+                    mech_trace::gr!("1006f18a", "10165890", _DAT_10165890).wrapping_add(1)
                 );
             }
             let off = (local_c as u32).wrapping_mul(0x40) as usize;

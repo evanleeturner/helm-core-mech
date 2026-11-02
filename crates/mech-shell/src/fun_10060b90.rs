@@ -21,10 +21,10 @@ pub unsafe extern "stdcall" fn FUN_10060b90() {
     // SAFETY: the globals and the callee are the game's own; the address of
     // DAT_100a7888 is passed on without creating a reference.
     unsafe {
-        mech_trace::gw!("10060b90", "_DAT_100a7920", _DAT_100a7920, 1);
-        mech_trace::gw!("10060b90", "_DAT_100a7958", _DAT_100a7958, 1);
-        mech_trace::gw!("10060b90", "_DAT_100a7990", _DAT_100a7990, 1);
-        mech_trace::gw!("10060b90", "_DAT_100a79c8", _DAT_100a79c8, 1);
+        mech_trace::gw!("10060b90", "100a7920", _DAT_100a7920, 1);
+        mech_trace::gw!("10060b90", "100a7958", _DAT_100a7958, 1);
+        mech_trace::gw!("10060b90", "100a7990", _DAT_100a7990, 1);
+        mech_trace::gw!("10060b90", "100a79c8", _DAT_100a79c8, 1);
         FUN_10063de0(&raw mut DAT_100a7888);
     }
 }

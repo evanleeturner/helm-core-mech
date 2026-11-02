@@ -26,7 +26,7 @@ pub unsafe extern "C" fn FUN_1001a635(param_1: i32) {
     // holds the address of a structure whose field at offset 0x18 is read
     // and written where the original does.
     unsafe {
-        let p = mech_trace::gr!("1001a635", "PTR_DAT_100aaf68", PTR_DAT_100aaf68).wrapping_add(0x18)
+        let p = mech_trace::gr!("1001a635", "100aaf68", PTR_DAT_100aaf68).wrapping_add(0x18)
             as *mut i32;
         let i_var1 = mech_trace::rd!("1001a635", p, read_unaligned);
         if param_1 != 0 {
@@ -35,8 +35,8 @@ pub unsafe extern "C" fn FUN_1001a635(param_1: i32) {
         }
         let i_var2 = mech_trace::cr!("1001a635", "1001a620", FUN_1001a620()) as i32;
         if i_var2 == 0 {
-            let p = mech_trace::gr!("1001a635", "PTR_DAT_100aaf68", PTR_DAT_100aaf68)
-                .wrapping_add(0x18) as *mut u32;
+            let p = mech_trace::gr!("1001a635", "100aaf68", PTR_DAT_100aaf68).wrapping_add(0x18)
+                as *mut u32;
             mech_trace::wr!(
                 "1001a635",
                 p,
@@ -44,8 +44,8 @@ pub unsafe extern "C" fn FUN_1001a635(param_1: i32) {
                 mech_trace::gr!("1001a635", "100ab074", DAT_100ab074)
             );
         } else {
-            let p = mech_trace::gr!("1001a635", "PTR_DAT_100aaf68", PTR_DAT_100aaf68)
-                .wrapping_add(0x18) as *mut u32;
+            let p = mech_trace::gr!("1001a635", "100aaf68", PTR_DAT_100aaf68).wrapping_add(0x18)
+                as *mut u32;
             mech_trace::wr!(
                 "1001a635",
                 p,
@@ -53,7 +53,7 @@ pub unsafe extern "C" fn FUN_1001a635(param_1: i32) {
                 mech_trace::gr!("1001a635", "100ab078", DAT_100ab078)
             );
         }
-        let p = mech_trace::gr!("1001a635", "PTR_DAT_100aaf68", PTR_DAT_100aaf68).wrapping_add(0x18)
+        let p = mech_trace::gr!("1001a635", "100aaf68", PTR_DAT_100aaf68).wrapping_add(0x18)
             as *const i32;
         if mech_trace::rd!("1001a635", p, read_unaligned) != i_var1 {
             mech_trace::gw!("1001a635", "100a7b60", DAT_100a7b60, 1);

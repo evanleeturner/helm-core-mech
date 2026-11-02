@@ -74,22 +74,12 @@ pub unsafe extern "C" fn FUN_1003b2f0(param_1: *mut u8) {
     // SAFETY: globals and callees are the game's own; param_1 points at the
     // caller's structure, read at the same offsets as the original.
     unsafe {
-        mech_trace::gw!("1003b2f0", "PTR_DAT_100aaf68", PTR_DAT_100aaf68, param_1);
+        mech_trace::gw!("1003b2f0", "100aaf68", PTR_DAT_100aaf68, param_1);
         FUN_1007d245(rd16(param_1, 0x2a));
         mech_trace::gw!("1003b2f0", "10160f18", DAT_10160f18, rd32(param_1, 0x9c));
         mech_trace::gw!("1003b2f0", "10160f1c", DAT_10160f1c, rd32(param_1, 0xa0));
-        mech_trace::gw!(
-            "1003b2f0",
-            "_DAT_10160ed4",
-            _DAT_10160ed4,
-            rd32(param_1, 0x94)
-        );
-        mech_trace::gw!(
-            "1003b2f0",
-            "_DAT_10160ed8",
-            _DAT_10160ed8,
-            rd32(param_1, 0x98)
-        );
+        mech_trace::gw!("1003b2f0", "10160ed4", _DAT_10160ed4, rd32(param_1, 0x94));
+        mech_trace::gw!("1003b2f0", "10160ed8", _DAT_10160ed8, rd32(param_1, 0x98));
         mech_trace::gw!("1003b2f0", "10160f20", DAT_10160f20, rd32(param_1, 0x54));
         mech_trace::gw!("1003b2f0", "10160f24", DAT_10160f24, rd32(param_1, 0x58));
         mech_trace::gw!("1003b2f0", "10160f28", DAT_10160f28, rd32(param_1, 0x5c));
@@ -195,24 +185,9 @@ pub unsafe extern "C" fn FUN_1003b2f0(param_1: *mut u8) {
                 )
             )
         );
-        mech_trace::gw!(
-            "1003b2f0",
-            "_DAT_10160f48",
-            _DAT_10160f48,
-            rd32(param_1, 0x78)
-        );
-        mech_trace::gw!(
-            "1003b2f0",
-            "_DAT_10160f44",
-            _DAT_10160f44,
-            rd32(param_1, 0x7c)
-        );
-        mech_trace::gw!(
-            "1003b2f0",
-            "_DAT_10160f4c",
-            _DAT_10160f4c,
-            rd32(param_1, 0x80)
-        );
+        mech_trace::gw!("1003b2f0", "10160f48", _DAT_10160f48, rd32(param_1, 0x78));
+        mech_trace::gw!("1003b2f0", "10160f44", _DAT_10160f44, rd32(param_1, 0x7c));
+        mech_trace::gw!("1003b2f0", "10160f4c", _DAT_10160f4c, rd32(param_1, 0x80));
         FUN_1007d21a(
             rd32(param_1, 0x1c),
             rd32(param_1, 0x20),
@@ -239,40 +214,30 @@ pub unsafe extern "C" fn FUN_1003b2f0(param_1: *mut u8) {
         );
         mech_trace::gw!(
             "1003b2f0",
-            "_DAT_10160f50",
+            "10160f50",
             _DAT_10160f50,
             (rd32(param_1, 0x34) as u32).wrapping_shl(2) as i32
         );
         mech_trace::gw!(
             "1003b2f0",
-            "_DAT_10160eec",
+            "10160eec",
             _DAT_10160eec,
             (rd32(param_1, 0x38) as u32).wrapping_shl(2) as i32
         );
         mech_trace::gw!(
             "1003b2f0",
-            "_DAT_10160ee4",
+            "10160ee4",
             _DAT_10160ee4,
             (rd32(param_1, 0x2c) as u32).wrapping_shl(2) as i32
         );
         mech_trace::gw!(
             "1003b2f0",
-            "_DAT_10160f58",
+            "10160f58",
             _DAT_10160f58,
             (rd32(param_1, 0x30) as u32).wrapping_shl(2) as i32
         );
-        mech_trace::gw!(
-            "1003b2f0",
-            "_DAT_10160ecc",
-            _DAT_10160ecc,
-            rd32(param_1, 0x84)
-        );
-        mech_trace::gw!(
-            "1003b2f0",
-            "_DAT_10160ec8",
-            _DAT_10160ec8,
-            rd32(param_1, 0x88)
-        );
+        mech_trace::gw!("1003b2f0", "10160ecc", _DAT_10160ecc, rd32(param_1, 0x84));
+        mech_trace::gw!("1003b2f0", "10160ec8", _DAT_10160ec8, rd32(param_1, 0x88));
         mech_trace::gw!("1003b2f0", "10160ec4", DAT_10160ec4, rd32(param_1, 0x8c));
         mech_trace::gw!("1003b2f0", "10160ee8", DAT_10160ee8, rd32(param_1, 0x90));
         mech_trace::gw!("1003b2f0", "10160eb4", DAT_10160eb4, rd16(param_1, 0xa4));

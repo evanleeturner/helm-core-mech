@@ -40,8 +40,7 @@ pub unsafe extern "C" fn FUN_10057530(record_index: i16, logo_number: i16) -> u3
             FUN_100425b0(
                 mech_trace::gr!("10057530", "100986b4", DAT_100986b4) as i32,
                 id as u32,
-                mech_trace::gr!("10057530", "PTR_DAT_100985ec", PTR_DAT_100985ec) as usize
-                    as *mut i32,
+                mech_trace::gr!("10057530", "100985ec", PTR_DAT_100985ec) as usize as *mut i32,
             )
         );
         if cel_buffer.is_null() {

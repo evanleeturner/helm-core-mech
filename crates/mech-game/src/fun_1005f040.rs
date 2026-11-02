@@ -124,7 +124,7 @@ pub unsafe extern "C" fn FUN_1005f040(
                         t0f3170.byte_offset(i_var1).cast::<i16>(),
                         read_unaligned
                     ) as i32,
-                    mech_trace::gr!("1005f040", "PTR_DAT_100af0ac", PTR_DAT_100af0ac) as *mut i32,
+                    mech_trace::gr!("1005f040", "100af0ac", PTR_DAT_100af0ac) as *mut i32,
                 )
             );
             if local_18.is_null() {
@@ -183,8 +183,7 @@ pub unsafe extern "C" fn FUN_1005f040(
                     FUN_1008668b(
                         mech_trace::gr!("1005f040", "100af17c", DAT_100af17c),
                         mech_trace::gr!("1005f040", "100b351c", DAT_100b351c),
-                        mech_trace::gr!("1005f040", "PTR_DAT_100af100", PTR_DAT_100af100)
-                            as *mut i32
+                        mech_trace::gr!("1005f040", "100af100", PTR_DAT_100af100) as *mut i32
                     )
                 )
             );

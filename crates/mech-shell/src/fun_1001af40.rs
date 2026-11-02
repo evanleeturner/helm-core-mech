@@ -63,7 +63,7 @@ pub unsafe extern "stdcall" fn FUN_1001af40() {
         mech_trace::gw!("1001af40", "1008fb1c", DAT_1008fb1c, 0);
         mech_trace::gw!("1001af40", "1008fb20", DAT_1008fb20, 0);
         mech_trace::gw!("1001af40", "1008fb24", DAT_1008fb24, 0);
-        mech_trace::gw!("1001af40", "_DAT_1008fb28", _DAT_1008fb28, 0);
+        mech_trace::gw!("1001af40", "1008fb28", _DAT_1008fb28, 0);
         mech_trace::gw!("1001af40", "1008fb2c", DAT_1008fb2c, 0);
         mech_trace::gw!("1001af40", "1008fb30", DAT_1008fb30, 0);
         mech_trace::gw!("1001af40", "1008fb34", DAT_1008fb34, 0);
@@ -73,7 +73,7 @@ pub unsafe extern "stdcall" fn FUN_1001af40() {
         mech_trace::gw!("1001af40", "1008f968", DAT_1008f968, 0);
         mech_trace::gw!(
             "1001af40",
-            "PTR_DAT_1008fb44",
+            "1008fb44",
             PTR_DAT_1008fb44,
             &raw mut DAT_1008f988
         );

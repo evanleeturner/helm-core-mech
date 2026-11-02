@@ -117,7 +117,7 @@ pub unsafe extern "stdcall" fn FUN_100086f7() -> u32 {
                     mech_trace::gw!("100086f7", "10215660", DAT_10215660, 4);
                     mech_trace::gw!(
                         "100086f7",
-                        "PTR_FUN_100a7164",
+                        "100a7164",
                         PTR_FUN_100a7164,
                         mech_trace::gr!("100086f7", "100aafc4", DAT_100aafc4)
                     );
@@ -129,8 +129,8 @@ pub unsafe extern "stdcall" fn FUN_100086f7() -> u32 {
                     );
                     let v = mech_trace::rd!(
                         "100086f7",
-                        (mech_trace::gr!("100086f7", "PTR_PTR_100a7b40", PTR_PTR_100a7b40)
-                            .wrapping_add(0xc) as *const u32),
+                        (mech_trace::gr!("100086f7", "100a7b40", PTR_PTR_100a7b40).wrapping_add(0xc)
+                            as *const u32),
                         read_unaligned
                     );
                     if v != 0xffff_ffff {
@@ -179,7 +179,7 @@ pub unsafe extern "stdcall" fn FUN_100086f7() -> u32 {
                         "100086f7",
                         "100aafc4",
                         DAT_100aafc4,
-                        mech_trace::gr!("100086f7", "PTR_FUN_100a7164", PTR_FUN_100a7164)
+                        mech_trace::gr!("100086f7", "100a7164", PTR_FUN_100a7164)
                     );
                     mech_trace::gw!(
                         "100086f7",
@@ -189,7 +189,7 @@ pub unsafe extern "stdcall" fn FUN_100086f7() -> u32 {
                     );
                     let v = mech_trace::rd!(
                         "100086f7",
-                        (mech_trace::gr!("100086f7", "PTR_PTR_100a7b40", PTR_PTR_100a7b40)
+                        (mech_trace::gr!("100086f7", "100a7b40", PTR_PTR_100a7b40)
                             .wrapping_add(0x10) as *const u32),
                         read_unaligned
                     );

@@ -49,19 +49,19 @@ pub unsafe extern "C" fn FUN_1003bed0(param_1: *mut u16) -> u32 {
             param_1.byte_add(0x34).cast::<i32>(),
             read_unaligned
         )
-        .wrapping_sub(mech_trace::gr!("1003bed0", "_DAT_10160f48", _DAT_10160f48));
+        .wrapping_sub(mech_trace::gr!("1003bed0", "10160f48", _DAT_10160f48));
         let i_var3 = mech_trace::rd!(
             "1003bed0",
             param_1.byte_add(0x38).cast::<i32>(),
             read_unaligned
         )
-        .wrapping_sub(mech_trace::gr!("1003bed0", "_DAT_10160f44", _DAT_10160f44));
+        .wrapping_sub(mech_trace::gr!("1003bed0", "10160f44", _DAT_10160f44));
         let i_var4 = mech_trace::rd!(
             "1003bed0",
             param_1.byte_add(0x3c).cast::<i32>(),
             read_unaligned
         )
-        .wrapping_sub(mech_trace::gr!("1003bed0", "_DAT_10160f4c", _DAT_10160f4c));
+        .wrapping_sub(mech_trace::gr!("1003bed0", "10160f4c", _DAT_10160f4c));
         if (mech_trace::rd!("1003bed0", param_1, read_unaligned) & 0x1000) != 0 {
             return mech_trace::rt!("1003bed0", 1);
         }
@@ -93,7 +93,7 @@ pub unsafe extern "C" fn FUN_1003bed0(param_1: *mut u16) -> u32 {
                 mech_trace::gr!("1003bed0", "10160f28", DAT_10160f28),
             )
         );
-        let base = mech_trace::gr!("1003bed0", "PTR_DAT_100aaf68", PTR_DAT_100aaf68);
+        let base = mech_trace::gr!("1003bed0", "100aaf68", PTR_DAT_100aaf68);
         let mut local_14;
         if i_var7 < 1 {
             local_14 = mech_trace::cr!(
@@ -149,7 +149,7 @@ pub unsafe extern "C" fn FUN_1003bed0(param_1: *mut u16) -> u32 {
                 mech_trace::gr!("1003bed0", "10160f34", DAT_10160f34),
             )
         );
-        let base = mech_trace::gr!("1003bed0", "PTR_DAT_100aaf68", PTR_DAT_100aaf68);
+        let base = mech_trace::gr!("1003bed0", "100aaf68", PTR_DAT_100aaf68);
         if i_var2 < 1 {
             local_14 = mech_trace::cr!(
                 "1003bed0",

@@ -28,7 +28,7 @@ pub unsafe extern "C" fn FUN_1005e020(table_key: u32, str2: *const i8) -> i32 {
             FUN_100425b0(
                 mech_trace::gr!("1005e020", "100986b4", DAT_100986b4) as i32,
                 table_key,
-                mech_trace::gr!("1005e020", "PTR_DAT_1009860c", PTR_DAT_1009860c) as *mut i32
+                mech_trace::gr!("1005e020", "1009860c", PTR_DAT_1009860c) as *mut i32
             )
         );
         if !entry_table.is_null() {
@@ -91,7 +91,7 @@ pub unsafe extern "C" fn FUN_1005e020(table_key: u32, str2: *const i8) -> i32 {
             }
             FUN_10042590(
                 table_key as i32,
-                mech_trace::gr!("1005e020", "PTR_DAT_1009860c", PTR_DAT_1009860c) as *mut i32,
+                mech_trace::gr!("1005e020", "1009860c", PTR_DAT_1009860c) as *mut i32,
             );
         }
     }

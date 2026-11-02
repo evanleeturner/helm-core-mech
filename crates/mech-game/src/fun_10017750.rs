@@ -64,7 +64,7 @@ pub unsafe extern "C" fn FUN_10017750(param_1: *mut i8) {
                     FUN_1008668b(
                         mech_trace::gr!("10017750", "100af17c", DAT_100af17c) as i32,
                         mech_trace::gr!("10017750", "100b351c", DAT_100b351c),
-                        mech_trace::gr!("10017750", "PTR_DAT_100af100", PTR_DAT_100af100) as usize
+                        mech_trace::gr!("10017750", "100af100", PTR_DAT_100af100) as usize
                             as *mut i32,
                     )
                 )

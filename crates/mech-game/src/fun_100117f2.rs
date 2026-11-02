@@ -69,8 +69,7 @@ pub unsafe extern "C" fn FUN_100117f2(param_1: i32, _param_2: u32, param_3: i32)
             FUN_1008668b(
                 mech_trace::gr!("100117f2", "100af17c", DAT_100af17c) as i32,
                 key,
-                mech_trace::gr!("100117f2", "PTR_DAT_100af0b4", PTR_DAT_100af0b4) as usize
-                    as *mut i32,
+                mech_trace::gr!("100117f2", "100af0b4", PTR_DAT_100af0b4) as usize as *mut i32,
             )
         );
         if puv3.is_null() {
@@ -195,7 +194,7 @@ pub unsafe extern "C" fn FUN_100117f2(param_1: i32, _param_2: u32, param_3: i32)
         }
         FUN_1008664f(
             key,
-            mech_trace::gr!("100117f2", "PTR_DAT_100af0b4", PTR_DAT_100af0b4) as usize as *mut i32,
+            mech_trace::gr!("100117f2", "100af0b4", PTR_DAT_100af0b4) as usize as *mut i32,
         );
     }
 }

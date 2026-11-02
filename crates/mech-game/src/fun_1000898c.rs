@@ -133,8 +133,8 @@ pub unsafe extern "stdcall" fn FUN_1000898c() {
             vec3[0] = local_4c;
             vec3[2] = local_44;
         } else {
-            let pp = mech_trace::gr!("1000898c", "PTR_DAT_100aaf68", PTR_DAT_100aaf68) as usize
-                as *const u8;
+            let pp =
+                mech_trace::gr!("1000898c", "100aaf68", PTR_DAT_100aaf68) as usize as *const u8;
             vec3[0] = mech_trace::rd!("1000898c", pp.cast::<u32>(), read_unaligned);
             vec3[2] = mech_trace::rd!("1000898c", pp.byte_add(8).cast::<u32>(), read_unaligned);
         }

@@ -86,17 +86,15 @@ pub unsafe extern "C" fn FUN_100842bd(param_1: *mut i32, param_2: i32, param_3: 
                 "100842bd",
                 "100b9a18",
                 DAT_100b9a18,
-                mech_trace::gr!("100842bd", "PTR_DAT_100b99f0", PTR_DAT_100b99f0)
+                mech_trace::gr!("100842bd", "100b99f0", PTR_DAT_100b99f0)
             );
             if mech_trace::rd!(
                 "100842bd",
-                mech_trace::gr!("100842bd", "PTR_DAT_100b99f0", PTR_DAT_100b99f0).add(1),
+                mech_trace::gr!("100842bd", "100b99f0", PTR_DAT_100b99f0).add(1),
                 read
             ) != mech_trace::gr!("100842bd", "100b9d4c", DAT_100b9d4c)
             {
-                FUN_10082279(
-                    mech_trace::gr!("100842bd", "PTR_DAT_100b99f0", PTR_DAT_100b99f0) as i32,
-                );
+                FUN_10082279(mech_trace::gr!("100842bd", "100b99f0", PTR_DAT_100b99f0) as i32);
             }
         }
 

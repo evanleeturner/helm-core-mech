@@ -87,20 +87,20 @@ pub unsafe extern "C" fn FUN_1000465a(param_1: *mut i32) {
             }
         }
         if i_var2 < 0x65 {
-            if (i_var2 as f64) <= mech_trace::gr!("1000465a", "_DAT_100a1030", _DAT_100a1030) {
-                if (i_var2 as f64) <= mech_trace::gr!("1000465a", "_DAT_100a1038", _DAT_100a1038) {
+            if (i_var2 as f64) <= mech_trace::gr!("1000465a", "100a1030", _DAT_100a1030) {
+                if (i_var2 as f64) <= mech_trace::gr!("1000465a", "100a1038", _DAT_100a1038) {
                     if (fl() & 4) == 0 {
                         if mech_trace::gr!("1000465a", "100a4118", DAT_100a4118) != 0
                             && 0x2d4
                                 < (mech_trace::gr!("1000465a", "100b38fc", DAT_100b38fc) as u32)
                                     .wrapping_sub(mech_trace::gr!(
                                         "1000465a",
-                                        "_DAT_100c4c8c",
+                                        "100c4c8c",
                                         _DAT_100c4c8c
                                     ) as u32) as i32
                             && id() == mech_trace::gr!("1000465a", "100adf38", DAT_100adf38)
                             && (i_var2 as f64)
-                                < mech_trace::gr!("1000465a", "_DAT_100a1040", _DAT_100a1040)
+                                < mech_trace::gr!("1000465a", "100a1040", _DAT_100a1040)
                         {
                             mech_trace::gw!("1000465a", "100a4118", DAT_100a4118, 0);
                         }
@@ -126,7 +126,7 @@ pub unsafe extern "C" fn FUN_1000465a(param_1: *mut i32) {
                 {
                     mech_trace::gw!(
                         "1000465a",
-                        "_DAT_100c4c8c",
+                        "100c4c8c",
                         _DAT_100c4c8c,
                         mech_trace::gr!("1000465a", "100b38fc", DAT_100b38fc)
                     );

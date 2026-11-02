@@ -280,26 +280,26 @@ pub unsafe extern "C" fn FUN_10040141(
         );
         mech_trace::gw!(
             "10040141",
-            "_DAT_100af360",
+            "100af360",
             _DAT_100af360,
             (ivar6 as u32).wrapping_sub(uvar10) as i32
         );
         if uvar12.wrapping_sub(ivar6 as u32) == 0 || (uvar12 as i32) < ivar6 {
             mech_trace::gw!(
                 "10040141",
-                "_DAT_100af360",
+                "100af360",
                 _DAT_100af360,
-                (mech_trace::gr!("10040141", "_DAT_100af360", _DAT_100af360) as u32)
+                (mech_trace::gr!("10040141", "100af360", _DAT_100af360) as u32)
                     .wrapping_add(uvar12.wrapping_sub(ivar6 as u32)) as i32
             );
         }
         if 0x7fffffff < uvar10 {
             mech_trace::gw!(
                 "10040141",
-                "_DAT_100af360",
+                "100af360",
                 _DAT_100af360,
-                (mech_trace::gr!("10040141", "_DAT_100af360", _DAT_100af360) as u32)
-                    .wrapping_add(uvar10) as i32
+                (mech_trace::gr!("10040141", "100af360", _DAT_100af360) as u32).wrapping_add(uvar10)
+                    as i32
             );
             mech_trace::gw!("10040141", "100af364", DAT_100af364, 0);
             mech_trace::gw!(
@@ -476,15 +476,15 @@ pub unsafe extern "C" fn FUN_10040141(
             );
             mech_trace::gw!(
                 "10040141",
-                "_DAT_100af360",
+                "100af360",
                 _DAT_100af360,
-                (mech_trace::gr!("10040141", "_DAT_100af360", _DAT_100af360) as u32).wrapping_sub(1)
+                (mech_trace::gr!("10040141", "100af360", _DAT_100af360) as u32).wrapping_sub(1)
                     as i32
             );
-            if !(-1 < mech_trace::gr!("10040141", "_DAT_100af360", _DAT_100af360)) {
+            if !(-1 < mech_trace::gr!("10040141", "100af360", _DAT_100af360)) {
                 return;
             }
-            if mech_trace::gr!("10040141", "_DAT_100af360", _DAT_100af360) == 0 {
+            if mech_trace::gr!("10040141", "100af360", _DAT_100af360) == 0 {
                 ivar4 = (ivar4 as u32).wrapping_add(mech_trace::gr!(
                     "10040141",
                     "100af388",

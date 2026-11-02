@@ -163,7 +163,7 @@ pub unsafe extern "C" fn FUN_100034e5(
         );
         mech_trace::gw!(
             "100034e5",
-            "_DAT_1008206c",
+            "1008206c",
             _DAT_1008206c,
             mech_trace::rd!("100034e5", param_4, read_unaligned)
         );
@@ -354,25 +354,25 @@ pub unsafe extern "C" fn FUN_100034e5(
 
         mech_trace::gw!(
             "100034e5",
-            "_DAT_100820a0",
+            "100820a0",
             _DAT_100820a0,
             (i_var7 as u32).wrapping_sub(u_var17) as i32
         );
         if u_var21.wrapping_sub(i_var7 as u32) == 0 || (u_var21 as i32) < i_var7 {
             mech_trace::gw!(
                 "100034e5",
-                "_DAT_100820a0",
+                "100820a0",
                 _DAT_100820a0,
-                (mech_trace::gr!("100034e5", "_DAT_100820a0", _DAT_100820a0) as u32)
+                (mech_trace::gr!("100034e5", "100820a0", _DAT_100820a0) as u32)
                     .wrapping_add(u_var21.wrapping_sub(i_var7 as u32)) as i32
             );
         }
         if 0x7fffffff < u_var17 {
             mech_trace::gw!(
                 "100034e5",
-                "_DAT_100820a0",
+                "100820a0",
                 _DAT_100820a0,
-                (mech_trace::gr!("100034e5", "_DAT_100820a0", _DAT_100820a0) as u32)
+                (mech_trace::gr!("100034e5", "100820a0", _DAT_100820a0) as u32)
                     .wrapping_add(u_var17) as i32
             );
             mech_trace::gw!("100034e5", "100820a4", DAT_100820a4, 0);
@@ -462,7 +462,7 @@ pub unsafe extern "C" fn FUN_100034e5(
         );
         mech_trace::gw!(
             "100034e5",
-            "_DAT_10082104",
+            "10082104",
             _DAT_10082104,
             mech_trace::rd!(
                 "100034e5",
@@ -530,7 +530,7 @@ pub unsafe extern "C" fn FUN_100034e5(
                     let mut s_var11 = (u_q >> 16) as i16;
                     mech_trace::gw!(
                         "100034e5",
-                        "_DAT_10082124",
+                        "10082124",
                         _DAT_10082124,
                         mech_trace::gr!("100034e5", "10082068", DAT_10082068)
                     );
@@ -538,7 +538,7 @@ pub unsafe extern "C" fn FUN_100034e5(
                     {
                         mech_trace::gw!(
                             "100034e5",
-                            "_DAT_10082124",
+                            "10082124",
                             _DAT_10082124,
                             0u32.wrapping_sub(
                                 mech_trace::gr!("100034e5", "10082068", DAT_10082068) as u32
@@ -550,54 +550,46 @@ pub unsafe extern "C" fn FUN_100034e5(
                     }
                     mech_trace::gw!(
                         "100034e5",
-                        "_DAT_10082120",
+                        "10082120",
                         _DAT_10082120,
                         (mech_trace::gr!("100034e5", "10082068", DAT_10082068) as i16)
                             .wrapping_mul(s_var11) as i32
                     );
                     mech_trace::gw!(
                         "100034e5",
-                        "_DAT_10082118",
+                        "10082118",
                         _DAT_10082118,
-                        u_var21.wrapping_add(mech_trace::gr!(
-                            "100034e5",
-                            "_DAT_10082120",
-                            _DAT_10082120
-                        ) as u32) as i32
+                        u_var21.wrapping_add(
+                            mech_trace::gr!("100034e5", "10082120", _DAT_10082120) as u32
+                        ) as i32
                     );
                     mech_trace::gw!(
                         "100034e5",
-                        "_DAT_1008211c",
+                        "1008211c",
                         _DAT_1008211c,
-                        (mech_trace::gr!("100034e5", "_DAT_10082118", _DAT_10082118) as u32)
-                            .wrapping_add(mech_trace::gr!(
-                                "100034e5",
-                                "_DAT_10082124",
-                                _DAT_10082124
-                            ) as u32) as i32
+                        (mech_trace::gr!("100034e5", "10082118", _DAT_10082118) as u32)
+                            .wrapping_add(
+                                mech_trace::gr!("100034e5", "10082124", _DAT_10082124) as u32
+                            ) as i32
                     );
                     mech_trace::gw!(
                         "100034e5",
-                        "_DAT_10082120",
+                        "10082120",
                         _DAT_10082120,
                         (i_step as u32)
                             .wrapping_add(u_var21)
-                            .wrapping_add(mech_trace::gr!(
-                                "100034e5",
-                                "_DAT_10082120",
-                                _DAT_10082120
-                            ) as u32) as i32
+                            .wrapping_add(
+                                mech_trace::gr!("100034e5", "10082120", _DAT_10082120) as u32
+                            ) as i32
                     );
                     mech_trace::gw!(
                         "100034e5",
-                        "_DAT_10082124",
+                        "10082124",
                         _DAT_10082124,
-                        (mech_trace::gr!("100034e5", "_DAT_10082120", _DAT_10082120) as u32)
-                            .wrapping_add(mech_trace::gr!(
-                                "100034e5",
-                                "_DAT_10082124",
-                                _DAT_10082124
-                            ) as u32) as i32
+                        (mech_trace::gr!("100034e5", "10082120", _DAT_10082120) as u32)
+                            .wrapping_add(
+                                mech_trace::gr!("100034e5", "10082124", _DAT_10082124) as u32
+                            ) as i32
                     );
                     if 0x7fffffff < u_var17 {
                         mech_trace::gw!("100034e5", "100820e8", DAT_100820e8, 0);
@@ -633,15 +625,15 @@ pub unsafe extern "C" fn FUN_100034e5(
             );
             mech_trace::gw!(
                 "100034e5",
-                "_DAT_100820a0",
+                "100820a0",
                 _DAT_100820a0,
-                (mech_trace::gr!("100034e5", "_DAT_100820a0", _DAT_100820a0) as u32).wrapping_sub(1)
+                (mech_trace::gr!("100034e5", "100820a0", _DAT_100820a0) as u32).wrapping_sub(1)
                     as i32
             );
-            if mech_trace::gr!("100034e5", "_DAT_100820a0", _DAT_100820a0) < 0 {
+            if mech_trace::gr!("100034e5", "100820a0", _DAT_100820a0) < 0 {
                 break;
             }
-            if mech_trace::gr!("100034e5", "_DAT_100820a0", _DAT_100820a0) == 0 {
+            if mech_trace::gr!("100034e5", "100820a0", _DAT_100820a0) == 0 {
                 i_var9 = i_var9.wrapping_add(mech_trace::gr!("100034e5", "100820c8", DAT_100820c8));
                 i_var7 = i_var7.wrapping_add(mech_trace::gr!("100034e5", "100820d8", DAT_100820d8));
                 i_var20 =

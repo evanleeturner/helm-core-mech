@@ -86,9 +86,9 @@ pub unsafe extern "C" fn FUN_10034495(
                     FUN_1003431f(&raw mut DAT_100adc28);
                     mech_trace::gw!(
                         "10034495",
-                        "_DAT_100adc30",
+                        "100adc30",
                         _DAT_100adc30,
-                        (mech_trace::gr!("10034495", "_DAT_100adc30", _DAT_100adc30) as u32)
+                        (mech_trace::gr!("10034495", "100adc30", _DAT_100adc30) as u32)
                             .wrapping_sub(i_var1 as u32) as i32
                     );
                     mech_trace::gw!(
@@ -140,7 +140,7 @@ pub unsafe extern "C" fn FUN_10034495(
             );
             mech_trace::gw!(
                 "10034495",
-                "_DAT_100adc30",
+                "100adc30",
                 _DAT_100adc30,
                 mech_trace::gr!("10034495", "101f52fc", DAT_101f52fc)
             );
@@ -150,13 +150,13 @@ pub unsafe extern "C" fn FUN_10034495(
                 DAT_100adc34,
                 mech_trace::gr!("10034495", "101f52fc", DAT_101f52fc)
             );
-            mech_trace::gw!("10034495", "_DAT_100adc48", _DAT_100adc48, 1);
+            mech_trace::gw!("10034495", "100adc48", _DAT_100adc48, 1);
             if param_5 == 0 {
-                mech_trace::gw!("10034495", "_DAT_100adc44", _DAT_100adc44, 0xe);
+                mech_trace::gw!("10034495", "100adc44", _DAT_100adc44, 0xe);
             } else if param_5 == 2 {
-                mech_trace::gw!("10034495", "_DAT_100adc44", _DAT_100adc44, 6);
+                mech_trace::gw!("10034495", "100adc44", _DAT_100adc44, 6);
             } else {
-                mech_trace::gw!("10034495", "_DAT_100adc44", _DAT_100adc44, 10);
+                mech_trace::gw!("10034495", "100adc44", _DAT_100adc44, 10);
             }
             mech_trace::gw!("10034495", "100adc4c", DAT_100adc4c, param_2);
             let mut p2: *mut u32 = &raw mut DAT_100adc28;

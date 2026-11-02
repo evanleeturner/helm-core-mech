@@ -40,7 +40,7 @@ pub unsafe extern "C" fn FUN_10014642(
             let mut l_var3: u64 =
                 mech_trace::cr!("10014642", "1003d2d3", FUN_1003d2d3(param_2, param_4));
             let mut u_var1: u32 = l_var3 as u32;
-            let mut local_14: i32 = mech_trace::gr!("10014642", "_DAT_10160c00", _DAT_10160c00);
+            let mut local_14: i32 = mech_trace::gr!("10014642", "10160c00", _DAT_10160c00);
             while local_14 != 0 {
                 local_18 = local_18.wrapping_add(1);
                 let mut local_1c: i32 = mech_trace::rd!(

@@ -31,7 +31,7 @@ pub unsafe extern "C" fn FUN_10031c80(param_1: *mut i32) {
         );
         mech_trace::wr!(
             "10031c80",
-            ((mech_trace::gr!("10031c80", "PTR_DAT_100aaf68", PTR_DAT_100aaf68).wrapping_add(0x44))
+            ((mech_trace::gr!("10031c80", "100aaf68", PTR_DAT_100aaf68).wrapping_add(0x44))
                 as *mut u32),
             write_unaligned,
             mech_trace::gr!("10031c80", "101686ec", DAT_101686ec)

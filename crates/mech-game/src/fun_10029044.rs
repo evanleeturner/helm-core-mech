@@ -32,7 +32,7 @@ pub unsafe extern "C" fn FUN_10029044(param_1: *mut i32, param_2: u16) {
         let i_var2 = mech_trace::cr!("10029044", "1002954c", FUN_1002954c(param_2));
         mech_trace::gw!(
             "10029044",
-            "_DAT_1016ac70",
+            "1016ac70",
             _DAT_1016ac70,
             mech_trace::gr!("10029044", "100b38fc", DAT_100b38fc)
         );
@@ -85,9 +85,9 @@ pub unsafe extern "C" fn FUN_10029044(param_1: *mut i32, param_2: u16) {
                 }
                 mech_trace::gw!(
                     "10029044",
-                    "_DAT_1016ac70",
+                    "1016ac70",
                     _DAT_1016ac70,
-                    (mech_trace::gr!("10029044", "_DAT_1016ac70", _DAT_1016ac70) as u32)
+                    (mech_trace::gr!("10029044", "1016ac70", _DAT_1016ac70) as u32)
                         .wrapping_add(0xb5) as i32
                 );
             }
@@ -108,9 +108,9 @@ pub unsafe extern "C" fn FUN_10029044(param_1: *mut i32, param_2: u16) {
                 FUN_1002a8fe(param_1 as i32);
                 mech_trace::gw!(
                     "10029044",
-                    "_DAT_1016ac70",
+                    "1016ac70",
                     _DAT_1016ac70,
-                    (mech_trace::gr!("10029044", "_DAT_1016ac70", _DAT_1016ac70) as u32)
+                    (mech_trace::gr!("10029044", "1016ac70", _DAT_1016ac70) as u32)
                         .wrapping_add(0xb5) as i32
                 );
             }
@@ -130,9 +130,9 @@ pub unsafe extern "C" fn FUN_10029044(param_1: *mut i32, param_2: u16) {
                 }
                 mech_trace::gw!(
                     "10029044",
-                    "_DAT_1016ac70",
+                    "1016ac70",
                     _DAT_1016ac70,
-                    (mech_trace::gr!("10029044", "_DAT_1016ac70", _DAT_1016ac70) as u32)
+                    (mech_trace::gr!("10029044", "1016ac70", _DAT_1016ac70) as u32)
                         .wrapping_add(0xb5) as i32
                 );
             }

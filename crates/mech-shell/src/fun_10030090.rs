@@ -28,10 +28,10 @@ pub unsafe extern "stdcall" fn FUN_10030090() {
     // in the globals point at live game structures read and written at the
     // same offsets as the original.
     unsafe {
-        mech_trace::gw!("10030090", "_DAT_10092138", _DAT_10092138, 1);
-        mech_trace::gw!("10030090", "_DAT_10092170", _DAT_10092170, 1);
-        mech_trace::gw!("10030090", "_DAT_100921a8", _DAT_100921a8, 1);
-        mech_trace::gw!("10030090", "_DAT_100921e0", _DAT_100921e0, 1);
+        mech_trace::gw!("10030090", "10092138", _DAT_10092138, 1);
+        mech_trace::gw!("10030090", "10092170", _DAT_10092170, 1);
+        mech_trace::gw!("10030090", "100921a8", _DAT_100921a8, 1);
+        mech_trace::gw!("10030090", "100921e0", _DAT_100921e0, 1);
         let i_var1 = mech_trace::cr!(
             "10030090",
             "1002fea0",

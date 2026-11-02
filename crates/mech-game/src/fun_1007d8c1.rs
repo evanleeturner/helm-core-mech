@@ -43,7 +43,7 @@ pub unsafe extern "C" fn FUN_1007d8c1(
         let mut b_var1 = false;
         let b_var7 = mech_trace::gr!("1007d8c1", "100aafa4", DAT_100aafa4) == 3;
         if b_var7 || mech_trace::gr!("1007d8c1", "100b6828", DAT_100b6828) != 0 {
-            let p = mech_trace::gr!("1007d8c1", "PTR_DAT_100aaf68", PTR_DAT_100aaf68);
+            let p = mech_trace::gr!("1007d8c1", "100aaf68", PTR_DAT_100aaf68);
             mech_trace::gw!(
                 "1007d8c1",
                 "100c9ec4",

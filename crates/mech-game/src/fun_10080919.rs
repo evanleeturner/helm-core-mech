@@ -87,9 +87,9 @@ pub unsafe extern "C" fn FUN_10080919(param_1: *mut u16, param_2: i32) {
         let mut local_18: u8 = 3;
         mech_trace::gw!(
             "10080919",
-            "_DAT_1011516c",
+            "1011516c",
             _DAT_1011516c,
-            mech_trace::gr!("10080919", "_DAT_1011516c", _DAT_1011516c).wrapping_add(1)
+            mech_trace::gr!("10080919", "1011516c", _DAT_1011516c).wrapping_add(1)
         );
 
         let do_it: bool;
@@ -98,25 +98,19 @@ pub unsafe extern "C" fn FUN_10080919(param_1: *mut u16, param_2: i32) {
         } else {
             let b = mech_trace::dr!("10080919", ((p1i.wrapping_add(idx_off)) as *const u8));
             let v = param_2.wrapping_add(((b as u16).wrapping_mul(0x44)) as i32);
-            let p1 = (rd(v, 0xc).wrapping_sub(mech_trace::gr!(
-                "10080919",
-                "_DAT_10160f48",
-                _DAT_10160f48
-            )) as i64)
-                .wrapping_mul(rd(p1i, 0x14) as i64);
-            let p2 = (rd(v, 0x10).wrapping_sub(mech_trace::gr!(
-                "10080919",
-                "_DAT_10160f44",
-                _DAT_10160f44
-            )) as i64)
-                .wrapping_mul(rd(p1i, 0x18) as i64);
+            let p1 =
+                (rd(v, 0xc).wrapping_sub(mech_trace::gr!("10080919", "10160f48", _DAT_10160f48))
+                    as i64)
+                    .wrapping_mul(rd(p1i, 0x14) as i64);
+            let p2 =
+                (rd(v, 0x10).wrapping_sub(mech_trace::gr!("10080919", "10160f44", _DAT_10160f44))
+                    as i64)
+                    .wrapping_mul(rd(p1i, 0x18) as i64);
             let s3 = (p1 as u64).wrapping_add(p2 as u64);
-            let p3 = (rd(v, 0x14).wrapping_sub(mech_trace::gr!(
-                "10080919",
-                "_DAT_10160f4c",
-                _DAT_10160f4c
-            )) as i64)
-                .wrapping_mul(rd(p1i, 0x1c) as i64);
+            let p3 =
+                (rd(v, 0x14).wrapping_sub(mech_trace::gr!("10080919", "10160f4c", _DAT_10160f4c))
+                    as i64)
+                    .wrapping_mul(rd(p1i, 0x1c) as i64);
             let lo3 = s3 as u32;
             let lo2 = (p3 as u64) as u32;
             let carry: i64 = if lo3.wrapping_add(lo2) < lo3 { 1 } else { 0 };
@@ -131,9 +125,9 @@ pub unsafe extern "C" fn FUN_10080919(param_1: *mut u16, param_2: i32) {
 
         mech_trace::gw!(
             "10080919",
-            "_DAT_101150f4",
+            "101150f4",
             _DAT_101150f4,
-            mech_trace::gr!("10080919", "_DAT_101150f4", _DAT_101150f4).wrapping_add(1)
+            mech_trace::gr!("10080919", "101150f4", _DAT_101150f4).wrapping_add(1)
         );
         let mut local_1c: i16 = mech_trace::rd!("10080919", param_1.add(1), read_unaligned) as i16;
         let mut local_24: *const u8 = p1i.wrapping_add(idx_off) as *const u8;
@@ -144,26 +138,26 @@ pub unsafe extern "C" fn FUN_10080919(param_1: *mut u16, param_2: i32) {
             if flags(v) & 4 == 0 {
                 mech_trace::gw!(
                     "10080919",
-                    "_DAT_10115164",
+                    "10115164",
                     _DAT_10115164,
-                    mech_trace::gr!("10080919", "_DAT_10115164", _DAT_10115164).wrapping_add(1)
+                    mech_trace::gr!("10080919", "10115164", _DAT_10115164).wrapping_add(1)
                 );
                 let t1 = (mech_trace::gr!("10080919", "10160f10", DAT_10160f10) as i64)
                     .wrapping_mul(rd(v, 0x10).wrapping_sub(mech_trace::gr!(
                         "10080919",
-                        "_DAT_10160f44",
+                        "10160f44",
                         _DAT_10160f44
                     )) as i64);
                 let t2 = (mech_trace::gr!("10080919", "10160f0c", DAT_10160f0c) as i64)
                     .wrapping_mul(rd(v, 0xc).wrapping_sub(mech_trace::gr!(
                         "10080919",
-                        "_DAT_10160f48",
+                        "10160f48",
                         _DAT_10160f48
                     )) as i64);
                 let t3 = (mech_trace::gr!("10080919", "10160f14", DAT_10160f14) as i64)
                     .wrapping_mul(rd(v, 0x14).wrapping_sub(mech_trace::gr!(
                         "10080919",
-                        "_DAT_10160f4c",
+                        "10160f4c",
                         _DAT_10160f4c
                     )) as i64);
                 let sum = (t1 as u64).wrapping_add(t2 as u64).wrapping_add(t3 as u64);
@@ -370,9 +364,9 @@ pub unsafe extern "C" fn FUN_10080919(param_1: *mut u16, param_2: i32) {
             let u_var1 = mech_trace::rd!("10080919", param_1.add(1), read_unaligned);
             mech_trace::gw!(
                 "10080919",
-                "_DAT_10115158",
+                "10115158",
                 _DAT_10115158,
-                mech_trace::gr!("10080919", "_DAT_10115158", _DAT_10115158).wrapping_add(1)
+                mech_trace::gr!("10080919", "10115158", _DAT_10115158).wrapping_add(1)
             );
             if 1 < mech_trace::gr!("10080919", "10115160", DAT_10115160) as i32 {
                 mech_trace::gw!(

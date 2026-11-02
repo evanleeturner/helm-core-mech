@@ -42,7 +42,7 @@ pub unsafe extern "stdcall" fn FUN_10054000() {
                 break;
             }
         }
-        mech_trace::gw!("10054000", "_DAT_1009c68c", _DAT_1009c68c, 0);
+        mech_trace::gw!("10054000", "1009c68c", _DAT_1009c68c, 0);
         mech_trace::gw!("10054000", "1009c698", DAT_1009c698, 0);
         mech_trace::gw!(
             "10054000",

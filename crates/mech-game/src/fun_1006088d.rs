@@ -75,7 +75,7 @@ pub unsafe extern "C" fn FUN_1006088d(param_1: i8, param_2: i32) {
                     i_var2 = i_var2.wrapping_sub(1);
                 }
                 mech_trace::gw!("1006088d", "100c7e68", DAT_100c7e68, 0x80u8 as i8);
-                mech_trace::gw!("1006088d", "_DAT_100c7e69", _DAT_100c7e69, 0x10);
+                mech_trace::gw!("1006088d", "100c7e69", _DAT_100c7e69, 0x10);
                 mech_trace::gw!("1006088d", "100b36f4", DAT_100b36f4, 1);
             }
         }

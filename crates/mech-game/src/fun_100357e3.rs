@@ -47,11 +47,11 @@ pub unsafe extern "C" fn FUN_100357e3(param_1: *mut i32) -> u32 {
     unsafe {
         let mut local_8: u32 = 0;
         let mut i_var1 = mech_trace::rd!("100357e3", param_1, read_unaligned)
-            .wrapping_sub(mech_trace::gr!("100357e3", "_DAT_10160f48", _DAT_10160f48));
+            .wrapping_sub(mech_trace::gr!("100357e3", "10160f48", _DAT_10160f48));
         let mut i_var2 = mech_trace::rd!("100357e3", param_1.add(1), read_unaligned)
-            .wrapping_sub(mech_trace::gr!("100357e3", "_DAT_10160f44", _DAT_10160f44));
+            .wrapping_sub(mech_trace::gr!("100357e3", "10160f44", _DAT_10160f44));
         let mut i_var3 = mech_trace::rd!("100357e3", param_1.add(2), read_unaligned)
-            .wrapping_sub(mech_trace::gr!("100357e3", "_DAT_10160f4c", _DAT_10160f4c));
+            .wrapping_sub(mech_trace::gr!("100357e3", "10160f4c", _DAT_10160f4c));
         let u_var4 = mech_trace::cr!(
             "100357e3",
             "1001a080",

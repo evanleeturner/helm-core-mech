@@ -49,8 +49,7 @@ pub unsafe extern "C" fn FUN_10048402(param_1: *mut i32) {
                     mech_trace::gr!("10048402", "100af17c", DAT_100af17c) as i32,
                     (mech_trace::rd!("10048402", param_1.add(4), read_unaligned) as u32)
                         .wrapping_add(mech_trace::gr!("10048402", "101686f0", DAT_101686f0)),
-                    mech_trace::gr!("10048402", "PTR_DAT_100af0b4", PTR_DAT_100af0b4) as usize
-                        as *mut i32,
+                    mech_trace::gr!("10048402", "100af0b4", PTR_DAT_100af0b4) as usize as *mut i32,
                 )
             );
             if !local_10.is_null() {
@@ -65,7 +64,7 @@ pub unsafe extern "C" fn FUN_10048402(param_1: *mut i32) {
                     FUN_1008664f(
                         (mech_trace::rd!("10048402", param_1.add(4), read_unaligned) as u32)
                             .wrapping_add(mech_trace::gr!("10048402", "101686f0", DAT_101686f0)),
-                        mech_trace::gr!("10048402", "PTR_DAT_100af0b4", PTR_DAT_100af0b4) as usize
+                        mech_trace::gr!("10048402", "100af0b4", PTR_DAT_100af0b4) as usize
                             as *mut i32,
                     )
                 );

@@ -577,12 +577,12 @@ pub unsafe extern "C" fn FUN_10020f5c(param_1: *mut i32) {
                         && local_c != 0
                         && 0xb5
                             < mech_trace::gr!("10020f5c", "100b38fc", DAT_100b38fc).wrapping_sub(
-                                mech_trace::gr!("10020f5c", "_DAT_100ab32c", _DAT_100ab32c),
+                                mech_trace::gr!("10020f5c", "100ab32c", _DAT_100ab32c),
                             )
                     {
                         mech_trace::gw!(
                             "10020f5c",
-                            "_DAT_100ab32c",
+                            "100ab32c",
                             _DAT_100ab32c,
                             mech_trace::gr!("10020f5c", "100b38fc", DAT_100b38fc)
                         );
@@ -721,14 +721,13 @@ pub unsafe extern "C" fn FUN_10020f5c(param_1: *mut i32) {
                     e_sus(local_24, 0x14, e_us(local_24, 0x14) & 0xdfff);
                     local_20 = (e_i(local_24, 0x50) as u32).wrapping_sub(mech_trace::rd!(
                         "10020f5c",
-                        mech_trace::gr!("10020f5c", "PTR_DAT_100aaf68", PTR_DAT_100aaf68)
-                            .cast::<i32>(),
+                        mech_trace::gr!("10020f5c", "100aaf68", PTR_DAT_100aaf68).cast::<i32>(),
                         read_unaligned
                     )
                         as u32);
                     local_28 = (e_i(local_24, 0x54) as u32).wrapping_sub(mech_trace::rd!(
                         "10020f5c",
-                        mech_trace::gr!("10020f5c", "PTR_DAT_100aaf68", PTR_DAT_100aaf68)
+                        mech_trace::gr!("10020f5c", "100aaf68", PTR_DAT_100aaf68)
                             .byte_add(4)
                             .cast::<i32>(),
                         read_unaligned
@@ -736,7 +735,7 @@ pub unsafe extern "C" fn FUN_10020f5c(param_1: *mut i32) {
                         as u32) as i32;
                     local_2c = (e_i(local_24, 0x58) as u32).wrapping_sub(mech_trace::rd!(
                         "10020f5c",
-                        mech_trace::gr!("10020f5c", "PTR_DAT_100aaf68", PTR_DAT_100aaf68)
+                        mech_trace::gr!("10020f5c", "100aaf68", PTR_DAT_100aaf68)
                             .byte_add(8)
                             .cast::<i32>(),
                         read_unaligned
@@ -861,19 +860,19 @@ pub unsafe extern "C" fn FUN_10020f5c(param_1: *mut i32) {
             {
                 let a = (e_i(local_24, 0x50) as u32).wrapping_sub(mech_trace::rd!(
                     "10020f5c",
-                    mech_trace::gr!("10020f5c", "PTR_DAT_100aaf68", PTR_DAT_100aaf68).cast::<i32>(),
+                    mech_trace::gr!("10020f5c", "100aaf68", PTR_DAT_100aaf68).cast::<i32>(),
                     read_unaligned
                 ) as u32) as i32;
                 let b = (e_i(local_24, 0x54) as u32).wrapping_sub(mech_trace::rd!(
                     "10020f5c",
-                    mech_trace::gr!("10020f5c", "PTR_DAT_100aaf68", PTR_DAT_100aaf68)
+                    mech_trace::gr!("10020f5c", "100aaf68", PTR_DAT_100aaf68)
                         .byte_add(4)
                         .cast::<i32>(),
                     read_unaligned
                 ) as u32) as i32;
                 let c = (e_i(local_24, 0x58) as u32).wrapping_sub(mech_trace::rd!(
                     "10020f5c",
-                    mech_trace::gr!("10020f5c", "PTR_DAT_100aaf68", PTR_DAT_100aaf68)
+                    mech_trace::gr!("10020f5c", "100aaf68", PTR_DAT_100aaf68)
                         .byte_add(8)
                         .cast::<i32>(),
                     read_unaligned

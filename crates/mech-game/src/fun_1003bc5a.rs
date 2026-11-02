@@ -62,13 +62,13 @@ pub unsafe extern "C" fn FUN_1003bc5a(param_1: i32) -> u32 {
                     mech_trace::rd!("1003bc5a", p.byte_add(0x40).cast::<i32>(), read_unaligned);
                 let i_var3 =
                     mech_trace::rd!("1003bc5a", p.byte_add(0x34).cast::<i32>(), read_unaligned)
-                        .wrapping_sub(mech_trace::gr!("1003bc5a", "_DAT_10160f48", _DAT_10160f48));
+                        .wrapping_sub(mech_trace::gr!("1003bc5a", "10160f48", _DAT_10160f48));
                 let i_var4 =
                     mech_trace::rd!("1003bc5a", p.byte_add(0x38).cast::<i32>(), read_unaligned)
-                        .wrapping_sub(mech_trace::gr!("1003bc5a", "_DAT_10160f44", _DAT_10160f44));
+                        .wrapping_sub(mech_trace::gr!("1003bc5a", "10160f44", _DAT_10160f44));
                 let i_var5 =
                     mech_trace::rd!("1003bc5a", p.byte_add(0x3c).cast::<i32>(), read_unaligned)
-                        .wrapping_sub(mech_trace::gr!("1003bc5a", "_DAT_10160f4c", _DAT_10160f4c));
+                        .wrapping_sub(mech_trace::gr!("1003bc5a", "10160f4c", _DAT_10160f4c));
                 let i_var6 = mech_trace::cr!(
                     "1003bc5a",
                     "1003c190",
