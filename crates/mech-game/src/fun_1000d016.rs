@@ -13,12 +13,13 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1000d016(param_1: *mut i32) {
+    mech_trace::enter!("1000d016", param_1);
     // SAFETY: the global and the callee are the game's own; param_1 points at
     // the caller's three consecutive ints, only addressed here.
     unsafe {
-        if DAT_100a7590 != -1 {
+        if mech_trace::gr!("1000d016", "100a7590", DAT_100a7590) != -1 {
             FUN_10089060(
-                (DAT_100a7590 as u32)
+                (mech_trace::gr!("1000d016", "100a7590", DAT_100a7590) as u32)
                     .wrapping_mul(0x7c)
                     .wrapping_add(0x101f5568) as *mut i32,
                 param_1,

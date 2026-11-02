@@ -26,27 +26,28 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10013420() {
+    mech_trace::enter!("10013420");
     // SAFETY: the globals are the game's own memory; each is written once
     // in the original's order.
     unsafe {
-        DAT_1008ec74 = 0;
-        DAT_1008ec78 = 0;
-        DAT_100b0f3c = 0;
-        DAT_1008ec7c = 0;
-        DAT_1008ec80 = 0;
-        DAT_1008ec84 = 0;
-        DAT_1008ec88 = 0;
-        DAT_1008ec8c = 0;
-        DAT_1008ec90 = 0;
-        DAT_1008ec94 = 0;
-        DAT_1008ec9c = 0;
-        DAT_1008eca0 = 0;
-        DAT_1008eca4 = 0;
-        DAT_1008eca8 = 0;
-        DAT_100b0f38 = 0;
-        DAT_1008ecac = 0;
-        DAT_1008ecb0 = 0;
-        DAT_1008ecb4 = 0;
-        DAT_1008ecb8 = 0;
+        mech_trace::gw!("10013420", "1008ec74", DAT_1008ec74, 0);
+        mech_trace::gw!("10013420", "1008ec78", DAT_1008ec78, 0);
+        mech_trace::gw!("10013420", "100b0f3c", DAT_100b0f3c, 0);
+        mech_trace::gw!("10013420", "1008ec7c", DAT_1008ec7c, 0);
+        mech_trace::gw!("10013420", "1008ec80", DAT_1008ec80, 0);
+        mech_trace::gw!("10013420", "1008ec84", DAT_1008ec84, 0);
+        mech_trace::gw!("10013420", "1008ec88", DAT_1008ec88, 0);
+        mech_trace::gw!("10013420", "1008ec8c", DAT_1008ec8c, 0);
+        mech_trace::gw!("10013420", "1008ec90", DAT_1008ec90, 0);
+        mech_trace::gw!("10013420", "1008ec94", DAT_1008ec94, 0);
+        mech_trace::gw!("10013420", "1008ec9c", DAT_1008ec9c, 0);
+        mech_trace::gw!("10013420", "1008eca0", DAT_1008eca0, 0);
+        mech_trace::gw!("10013420", "1008eca4", DAT_1008eca4, 0);
+        mech_trace::gw!("10013420", "1008eca8", DAT_1008eca8, 0);
+        mech_trace::gw!("10013420", "100b0f38", DAT_100b0f38, 0);
+        mech_trace::gw!("10013420", "1008ecac", DAT_1008ecac, 0);
+        mech_trace::gw!("10013420", "1008ecb0", DAT_1008ecb0, 0);
+        mech_trace::gw!("10013420", "1008ecb4", DAT_1008ecb4, 0);
+        mech_trace::gw!("10013420", "1008ecb8", DAT_1008ecb8, 0);
     }
 }

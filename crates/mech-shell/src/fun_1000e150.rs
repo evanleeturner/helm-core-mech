@@ -28,21 +28,36 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1000e150(x1: i32, y1: i32, x2: i32) -> i32 {
+    mech_trace::enter!("1000e150", x1, y1, x2);
     let blit_size = x2.wrapping_sub(x1).wrapping_add(1);
     // SAFETY: the globals and BitBlt are the game's own; the handles are
     // passed through unchanged as the original does.
     unsafe {
-        DAT_100d1540 = BitBlt(
-            DAT_1008d150,
-            0xa0,
-            0x8c,
-            blit_size,
-            blit_size,
-            DAT_1008d55c,
-            x1,
-            y1,
-            0xcc0020,
-        ) as u32;
-        ((DAT_100c6060 == DAT_100d1540) as i32).wrapping_sub(1)
+        mech_trace::gw!(
+            "1000e150",
+            "100d1540",
+            DAT_100d1540,
+            mech_trace::cr!(
+                "1000e150",
+                "BitBlt",
+                BitBlt(
+                    mech_trace::gr!("1000e150", "1008d150", DAT_1008d150),
+                    0xa0,
+                    0x8c,
+                    blit_size,
+                    blit_size,
+                    mech_trace::gr!("1000e150", "1008d55c", DAT_1008d55c),
+                    x1,
+                    y1,
+                    0xcc0020,
+                )
+            ) as u32
+        );
+        mech_trace::rt!(
+            "1000e150",
+            ((mech_trace::gr!("1000e150", "100c6060", DAT_100c6060)
+                == mech_trace::gr!("1000e150", "100d1540", DAT_100d1540)) as i32)
+                .wrapping_sub(1)
+        )
     }
 }

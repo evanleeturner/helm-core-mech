@@ -21,6 +21,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10037ce0() {
+    mech_trace::enter!("10037ce0");
     // Frame: local_118 (20 bytes) followed directly by local_104 (260 bytes).
     let mut buf: MaybeUninit<[u32; 70]> = MaybeUninit::uninit();
     // SAFETY: the callees and the global are the game's own; the buffer
@@ -28,16 +29,28 @@ pub unsafe extern "stdcall" fn FUN_10037ce0() {
     unsafe {
         let local_118 = buf.as_mut_ptr().cast::<u32>();
         let local_104 = local_118.byte_add(20);
-        let pv_var1 = findfirst_10037ce0((&raw mut DAT_10094358).cast::<c_void>(), local_118);
+        let pv_var1 = mech_trace::cr!(
+            "10037ce0",
+            "findfirst_10037ce0",
+            findfirst_10037ce0((&raw mut DAT_10094358).cast::<c_void>(), local_118)
+        );
         if pv_var1 as usize != 0xffff_ffff {
             loop {
-                FUN_1006f780(local_104.cast::<c_void>());
-                let i_var2 = findnext_10037ce0(pv_var1, local_118);
+                mech_trace::cr!(
+                    "10037ce0",
+                    "1006f780",
+                    FUN_1006f780(local_104.cast::<c_void>())
+                );
+                let i_var2 = mech_trace::cr!(
+                    "10037ce0",
+                    "findnext_10037ce0",
+                    findnext_10037ce0(pv_var1, local_118)
+                );
                 if i_var2 != 0 {
                     break;
                 }
             }
-            FUN_1006f590(pv_var1);
+            mech_trace::cr!("10037ce0", "1006f590", FUN_1006f590(pv_var1));
         }
     }
 }

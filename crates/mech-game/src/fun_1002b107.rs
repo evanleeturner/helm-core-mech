@@ -8,6 +8,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1002b107(param_1: i32) {
+    mech_trace::enter!("1002b107", param_1);
     // SAFETY: the callee is the game's own function; a null second
     // argument is what the original passes.
     unsafe {

@@ -14,6 +14,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1004d6e0(param_1: *mut i8) {
+    mech_trace::enter!("1004d6e0", param_1);
     // SAFETY: param_1 points at a NUL-terminated string the caller owns; the
     // globals and __isctype are the game's own, and the table pointer is read
     // where the original reads it.
@@ -25,39 +26,49 @@ pub unsafe extern "C" fn FUN_1004d6e0(param_1: *mut i8) {
             let mut local_10: u32;
             loop {
                 local_8 = p_var1;
-                if *local_c == 0 {
-                    *local_8 = 0;
+                if mech_trace::dr!("1004d6e0", local_c) == 0 {
+                    mech_trace::dw!("1004d6e0", local_8, 0);
                     return;
                 }
-                *local_8 = *local_c;
+                mech_trace::dw!("1004d6e0", local_8, mech_trace::dr!("1004d6e0", local_c));
                 local_c = local_c.add(1);
-                if DAT_100c2dec < 2 {
-                    let idx = (*local_c as i32).wrapping_mul(2);
-                    let addr = DAT_100c2be0.wrapping_add(idx as u32) as *const u16;
-                    local_10 = (addr.read_unaligned() as u32) & 8;
+                if mech_trace::gr!("1004d6e0", "100c2dec", DAT_100c2dec) < 2 {
+                    let idx = (mech_trace::dr!("1004d6e0", local_c) as i32).wrapping_mul(2);
+                    let addr = mech_trace::gr!("1004d6e0", "100c2be0", DAT_100c2be0)
+                        .wrapping_add(idx as u32) as *const u16;
+                    local_10 = (mech_trace::rd!("1004d6e0", addr, read_unaligned) as u32) & 8;
                 } else {
-                    local_10 = __isctype(*local_c as i32, 8) as u32;
+                    local_10 = mech_trace::cr!(
+                        "1004d6e0",
+                        "__isctype",
+                        __isctype(mech_trace::dr!("1004d6e0", local_c) as i32, 8)
+                    ) as u32;
                 }
                 p_var1 = local_8.add(1);
                 if local_10 != 0 {
                     break;
                 }
             }
-            while *local_c != 0 {
+            while mech_trace::dr!("1004d6e0", local_c) != 0 {
                 let local_14: u32;
-                if DAT_100c2dec < 2 {
-                    let idx = (*local_c as i32).wrapping_mul(2);
-                    let addr = DAT_100c2be0.wrapping_add(idx as u32) as *const u16;
-                    local_14 = (addr.read_unaligned() as u32) & 8;
+                if mech_trace::gr!("1004d6e0", "100c2dec", DAT_100c2dec) < 2 {
+                    let idx = (mech_trace::dr!("1004d6e0", local_c) as i32).wrapping_mul(2);
+                    let addr = mech_trace::gr!("1004d6e0", "100c2be0", DAT_100c2be0)
+                        .wrapping_add(idx as u32) as *const u16;
+                    local_14 = (mech_trace::rd!("1004d6e0", addr, read_unaligned) as u32) & 8;
                 } else {
-                    local_14 = __isctype(*local_c as i32, 8) as u32;
+                    local_14 = mech_trace::cr!(
+                        "1004d6e0",
+                        "__isctype",
+                        __isctype(mech_trace::dr!("1004d6e0", local_c) as i32, 8)
+                    ) as u32;
                 }
                 if local_14 == 0 {
                     break;
                 }
                 local_c = local_c.add(1);
             }
-            *local_8.add(1) = b' ' as i8;
+            mech_trace::dw!("1004d6e0", local_8.add(1), b' ' as i8);
             p_var1 = local_8.add(2);
         }
     }

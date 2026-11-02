@@ -27,25 +27,44 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1005e670() {
+    mech_trace::enter!("1005e670");
     // SAFETY: the callees and globals are the game's own memory; the
     // pointers passed are addresses of the game's file object and strings.
     unsafe {
-        DAT_100a62c0 = FUN_1005b430();
-        let u_var1 = FUN_1000d930();
-        DAT_100a62c0 = DAT_100a62c0 & u_var1;
-        if DAT_100a62cc == 0 {
-            DAT_100a62cc = 1;
+        mech_trace::gw!(
+            "1005e670",
+            "100a62c0",
+            DAT_100a62c0,
+            mech_trace::cr!("1005e670", "1005b430", FUN_1005b430())
+        );
+        let u_var1 = mech_trace::cr!("1005e670", "1000d930", FUN_1000d930());
+        mech_trace::gw!(
+            "1005e670",
+            "100a62c0",
+            DAT_100a62c0,
+            mech_trace::gr!("1005e670", "100a62c0", DAT_100a62c0) & u_var1
+        );
+        if mech_trace::gr!("1005e670", "100a62cc", DAT_100a62cc) == 0 {
+            mech_trace::gw!("1005e670", "100a62cc", DAT_100a62cc, 1);
         } else {
-            FID_conflict__fwprintf(
-                (&raw mut DAT_100ab6e8).cast::<u8>(),
-                (&raw const DAT_100a6364).cast::<i8>(),
+            mech_trace::cr!(
+                "1005e670",
+                "FID_conflict__fwprintf",
+                FID_conflict__fwprintf(
+                    (&raw mut DAT_100ab6e8).cast::<u8>(),
+                    (&raw const DAT_100a6364).cast::<i8>(),
+                )
             );
-            FUN_1006fde0(0);
+            mech_trace::cr!("1005e670", "1006fde0", FUN_1006fde0(0));
         }
-        if DAT_100a62c0 == 0 {
-            FID_conflict__wprintf((&raw const DAT_100a6394).cast::<i8>());
-            DAT_100a50f4 = 1;
+        if mech_trace::gr!("1005e670", "100a62c0", DAT_100a62c0) == 0 {
+            mech_trace::cr!(
+                "1005e670",
+                "FID_conflict__wprintf",
+                FID_conflict__wprintf((&raw const DAT_100a6394).cast::<i8>())
+            );
+            mech_trace::gw!("1005e670", "100a50f4", DAT_100a50f4, 1);
         }
-        DAT_100c6064 = 0;
+        mech_trace::gw!("1005e670", "100c6064", DAT_100c6064, 0);
     }
 }

@@ -64,96 +64,167 @@ unsafe fn idiv(num: i32, den: i32) -> i32 {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10072b35(param_1: i32, param_2: *mut i8, param_3: i32) -> i32 {
+    mech_trace::enter!("10072b35", param_1, param_2, param_3);
     // SAFETY: the callees and globals are the game's own; pointers are the
     // caller's and the heap block of 0x1c bytes, accessed as the original does.
     unsafe {
         if param_1 == 0 {
-            let local_10 = HeapAlloc(DAT_100adf74, 1, 0x1c) as *mut i32;
+            let local_10 = mech_trace::cr!(
+                "10072b35",
+                "HeapAlloc",
+                HeapAlloc(
+                    mech_trace::gr!("10072b35", "100adf74", DAT_100adf74),
+                    1,
+                    0x1c
+                )
+            ) as *mut i32;
             if local_10.is_null() {
-                return 0;
+                return mech_trace::rt!("10072b35", 0);
             }
-            let i_var3 = FUN_1005d8e0();
-            let p_var1 = FUN_1005db1f(i_var3) as *mut *mut i32;
-            p_var1.write_unaligned(local_10);
-            local_10.add(4).write_unaligned(0);
-            let v = local_10.add(4).read_unaligned();
-            local_10.add(3).write_unaligned(v);
-            let v = local_10.add(3).read_unaligned();
-            local_10.add(2).write_unaligned(v);
-            local_10.add(1).write_unaligned(0);
-            let mut local_c = _strchr(param_2 as *const i8, 0x3b);
+            let i_var3 = mech_trace::cr!("10072b35", "1005d8e0", FUN_1005d8e0());
+            let p_var1 =
+                mech_trace::cr!("10072b35", "1005db1f", FUN_1005db1f(i_var3)) as *mut *mut i32;
+            mech_trace::wr!("10072b35", p_var1, write_unaligned, local_10);
+            mech_trace::wr!("10072b35", local_10.add(4), write_unaligned, 0);
+            let v = mech_trace::rd!("10072b35", local_10.add(4), read_unaligned);
+            mech_trace::wr!("10072b35", local_10.add(3), write_unaligned, v);
+            let v = mech_trace::rd!("10072b35", local_10.add(3), read_unaligned);
+            mech_trace::wr!("10072b35", local_10.add(2), write_unaligned, v);
+            mech_trace::wr!("10072b35", local_10.add(1), write_unaligned, 0);
+            let mut local_c =
+                mech_trace::cr!("10072b35", "_strchr", _strchr(param_2 as *const i8, 0x3b));
             if !local_c.is_null() {
-                *local_c = 0;
+                mech_trace::dw!("10072b35", local_c, 0);
                 local_c = local_c.add(1);
                 let mut local_14: f32 = 0.0;
                 let mut local_18: f32 = 0.0;
                 let mut local_1c: f32 = 0.0;
                 let mut local_20: f32 = 0.0;
-                _sscanf(
-                    local_c as *const i8,
-                    b"%f,%f,%f,%f\0".as_ptr() as *const i8,
-                    &raw mut local_14,
-                    &raw mut local_18,
-                    &raw mut local_1c,
-                    &raw mut local_20,
+                mech_trace::cr!(
+                    "10072b35",
+                    "_sscanf",
+                    _sscanf(
+                        local_c as *const i8,
+                        b"%f,%f,%f,%f\0".as_ptr() as *const i8,
+                        &raw mut local_14,
+                        &raw mut local_18,
+                        &raw mut local_1c,
+                        &raw mut local_20,
+                    )
                 );
-                local_10
-                    .add(2)
-                    .write_unaligned(ftol_low(&raw const local_14));
-                local_10
-                    .add(3)
-                    .write_unaligned(ftol_low(&raw const local_18));
-                local_10
-                    .add(4)
-                    .write_unaligned(ftol_low(&raw const local_1c));
-                local_10
-                    .add(5)
-                    .write_unaligned(ftol_low(&raw const local_20));
-                if local_10.add(5).read_unaligned() == 0 {
-                    local_10.add(5).write_unaligned(0xb5);
+                mech_trace::wr!(
+                    "10072b35",
+                    local_10.add(2),
+                    write_unaligned,
+                    ftol_low(&raw const local_14)
+                );
+                mech_trace::wr!(
+                    "10072b35",
+                    local_10.add(3),
+                    write_unaligned,
+                    ftol_low(&raw const local_18)
+                );
+                mech_trace::wr!(
+                    "10072b35",
+                    local_10.add(4),
+                    write_unaligned,
+                    ftol_low(&raw const local_1c)
+                );
+                mech_trace::wr!(
+                    "10072b35",
+                    local_10.add(5),
+                    write_unaligned,
+                    ftol_low(&raw const local_20)
+                );
+                if mech_trace::rd!("10072b35", local_10.add(5), read_unaligned) == 0 {
+                    mech_trace::wr!("10072b35", local_10.add(5), write_unaligned, 0xb5);
                 }
-                local_10.add(6).write_unaligned(param_3);
+                mech_trace::wr!("10072b35", local_10.add(6), write_unaligned, param_3);
             }
-            let i_var3 = _atoi(param_2 as *const i8);
-            let i_var3 = FUN_10032c10(i_var3);
-            let i_var3 = FUN_1000c8ee(i_var3);
+            let i_var3 = mech_trace::cr!("10072b35", "_atoi", _atoi(param_2 as *const i8));
+            let i_var3 = mech_trace::cr!("10072b35", "10032c10", FUN_10032c10(i_var3));
+            let i_var3 = mech_trace::cr!("10072b35", "1000c8ee", FUN_1000c8ee(i_var3));
             if i_var3 == -1 {
-                return 0;
+                return mech_trace::rt!("10072b35", 0);
             }
-            let p_var2 = FUN_1000c9e3(i_var3);
-            local_10.write_unaligned(p_var2 as usize as i32);
+            let p_var2 = mech_trace::cr!("10072b35", "1000c9e3", FUN_1000c9e3(i_var3));
+            mech_trace::wr!(
+                "10072b35",
+                local_10,
+                write_unaligned,
+                p_var2 as usize as i32
+            );
         } else if param_1 == 1 {
-            let i_var3 = FUN_1005d8e0();
-            let local_10 = (FUN_1005db1f(i_var3) as *const *mut i32).read_unaligned();
+            let i_var3 = mech_trace::cr!("10072b35", "1005d8e0", FUN_1005d8e0());
+            let local_10 = mech_trace::rd!(
+                "10072b35",
+                (mech_trace::cr!("10072b35", "1005db1f", FUN_1005db1f(i_var3)) as *const *mut i32),
+                read_unaligned
+            );
             if local_10.is_null() {
-                return 0;
+                return mech_trace::rt!("10072b35", 0);
             }
-            if local_10.read_unaligned() == 0 {
-                return 0;
+            if mech_trace::rd!("10072b35", local_10, read_unaligned) == 0 {
+                return mech_trace::rt!("10072b35", 0);
             }
-            let inner = local_10.read_unaligned();
-            if (inner as usize as *const i32).read_unaligned() == 0 {
-                return 0;
+            let inner = mech_trace::rd!("10072b35", local_10, read_unaligned);
+            if mech_trace::rd!("10072b35", (inner as usize as *const i32), read_unaligned) == 0 {
+                return mech_trace::rt!("10072b35", 0);
             }
-            let i_var3 = FUN_1001d5cb((inner as usize as *const i32).read_unaligned());
-            local_10.add(1).write_unaligned(i_var3);
+            let i_var3 = mech_trace::cr!(
+                "10072b35",
+                "1001d5cb",
+                FUN_1001d5cb(mech_trace::rd!(
+                    "10072b35",
+                    (inner as usize as *const i32),
+                    read_unaligned
+                ))
+            );
+            mech_trace::wr!("10072b35", local_10.add(1), write_unaligned, i_var3);
             let num = param_3
-                .wrapping_sub(local_10.add(6).read_unaligned())
+                .wrapping_sub(mech_trace::rd!("10072b35", local_10.add(6), read_unaligned))
                 .wrapping_mul(0x10000);
-            let i_var3 = idiv(num, local_10.add(5).read_unaligned());
-            let i_var4 = FUN_10003d60(local_10.add(2).read_unaligned(), i_var3);
-            let i_var5 = FUN_10003d60(local_10.add(3).read_unaligned(), i_var3);
-            let local_8 = FUN_10003d60(local_10.add(4).read_unaligned(), i_var3);
-            local_10.add(6).write_unaligned(param_3);
+            let i_var3 = idiv(
+                num,
+                mech_trace::rd!("10072b35", local_10.add(5), read_unaligned),
+            );
+            let i_var4 = mech_trace::cr!(
+                "10072b35",
+                "10003d60",
+                FUN_10003d60(
+                    mech_trace::rd!("10072b35", local_10.add(2), read_unaligned),
+                    i_var3
+                )
+            );
+            let i_var5 = mech_trace::cr!(
+                "10072b35",
+                "10003d60",
+                FUN_10003d60(
+                    mech_trace::rd!("10072b35", local_10.add(3), read_unaligned),
+                    i_var3
+                )
+            );
+            let local_8 = mech_trace::cr!(
+                "10072b35",
+                "10003d60",
+                FUN_10003d60(
+                    mech_trace::rd!("10072b35", local_10.add(4), read_unaligned),
+                    i_var3
+                )
+            );
+            mech_trace::wr!("10072b35", local_10.add(6), write_unaligned, param_3);
             FUN_1002f6a8(
-                local_10.add(1).read_unaligned() as usize as *mut c_void,
+                mech_trace::rd!("10072b35", local_10.add(1), read_unaligned) as usize
+                    as *mut c_void,
                 i_var4,
                 i_var5,
                 local_8,
                 0,
             );
-            FUN_1002fbc0(local_10.add(1).read_unaligned() as usize as *mut i32);
+            FUN_1002fbc0(
+                mech_trace::rd!("10072b35", local_10.add(1), read_unaligned) as usize as *mut i32,
+            );
         }
     }
-    1
+    mech_trace::rt!("10072b35", 1)
 }

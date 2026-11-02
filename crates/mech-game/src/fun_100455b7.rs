@@ -38,30 +38,49 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_100455b7() -> u32 {
+    mech_trace::enter!("100455b7");
     // SAFETY: the globals and callees are the game's own memory and the
     // system's GDI; they are used exactly as the original does.
     unsafe {
-        DAT_10160bec = SetDIBitsToDevice(
-            DAT_100afbc0,
-            0,
-            0,
-            DAT_100c967c as u32,
-            DAT_100c9680 as u32,
-            0,
-            0,
-            0,
-            DAT_100c9680 as u32,
-            DAT_100b9d30 as *const core::ffi::c_void,
-            (&raw mut DAT_100c9250) as *const core::ffi::c_void,
-            1,
+        mech_trace::gw!(
+            "100455b7",
+            "10160bec",
+            DAT_10160bec,
+            mech_trace::cr!(
+                "100455b7",
+                "SetDIBitsToDevice",
+                SetDIBitsToDevice(
+                    mech_trace::gr!("100455b7", "100afbc0", DAT_100afbc0),
+                    0,
+                    0,
+                    mech_trace::gr!("100455b7", "100c967c", DAT_100c967c) as u32,
+                    mech_trace::gr!("100455b7", "100c9680", DAT_100c9680) as u32,
+                    0,
+                    0,
+                    0,
+                    mech_trace::gr!("100455b7", "100c9680", DAT_100c9680) as u32,
+                    mech_trace::gr!("100455b7", "100b9d30", DAT_100b9d30)
+                        as *const core::ffi::c_void,
+                    (&raw mut DAT_100c9250) as *const core::ffi::c_void,
+                    1,
+                )
+            )
         );
-        if DAT_10160bec == 0 {
-            FUN_10002168((&raw mut DAT_100b045c).cast::<i8>(), GetLastError());
+        if mech_trace::gr!("100455b7", "10160bec", DAT_10160bec) == 0 {
+            FUN_10002168(
+                (&raw mut DAT_100b045c).cast::<i8>(),
+                mech_trace::cr!("100455b7", "GetLastError", GetLastError()),
+            );
         }
-        if DAT_10160bec == DAT_100c9680 {
-            0
-        } else {
-            0xffffffff
-        }
+        mech_trace::rt!(
+            "100455b7",
+            if mech_trace::gr!("100455b7", "10160bec", DAT_10160bec)
+                == mech_trace::gr!("100455b7", "100c9680", DAT_100c9680)
+            {
+                0
+            } else {
+                0xffffffff
+            }
+        )
     }
 }

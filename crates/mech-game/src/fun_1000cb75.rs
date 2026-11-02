@@ -51,24 +51,30 @@ unsafe extern "C" {
 unsafe fn g(base: *mut u8, off: i32) -> i32 {
     // SAFETY: caller supplies a game-owned address plus offset.
     unsafe {
-        base.wrapping_offset(off as isize)
-            .cast::<i32>()
-            .read_unaligned()
+        mech_trace::rd!(
+            "1000cb75",
+            base.wrapping_offset(off as isize).cast::<i32>(),
+            read_unaligned
+        )
     }
 }
 
 unsafe fn s(base: *mut u8, off: i32, v: i32) {
     // SAFETY: caller supplies a game-owned address plus offset.
     unsafe {
-        base.wrapping_offset(off as isize)
-            .cast::<i32>()
-            .write_unaligned(v)
+        mech_trace::wr!(
+            "1000cb75",
+            base.wrapping_offset(off as isize).cast::<i32>(),
+            write_unaligned,
+            v
+        )
     }
 }
 
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1000cb75(param_1: i32) {
+    mech_trace::enter!("1000cb75", param_1);
     // SAFETY: all globals, arrays and callees are the game's own memory;
     // param_1 points at the caller's record, accessed as the original does.
     unsafe {
@@ -98,20 +104,36 @@ pub unsafe extern "C" fn FUN_1000cb75(param_1: i32) {
         let b9c = &raw mut DAT_1021559c as *mut u8;
         let ba0 = &raw mut DAT_102155a0 as *mut u8;
 
-        if DAT_100a7594 == 0 {
-            DAT_101f5518 = 0;
+        if mech_trace::gr!("1000cb75", "100a7594", DAT_100a7594) == 0 {
+            mech_trace::gw!("1000cb75", "101f5518", DAT_101f5518, 0);
             let mut local_6c: i32 = 0;
-            while local_6c < DAT_10215624 {
-                let addr = DAT_100a7570.wrapping_add((local_6c as u32).wrapping_mul(4));
-                (addr as *mut u32).write_unaligned(0xffffffff);
+            while local_6c < mech_trace::gr!("1000cb75", "10215624", DAT_10215624) {
+                let addr = mech_trace::gr!("1000cb75", "100a7570", DAT_100a7570)
+                    .wrapping_add((local_6c as u32).wrapping_mul(4));
+                mech_trace::wr!("1000cb75", (addr as *mut u32), write_unaligned, 0xffffffff);
                 local_6c = local_6c.wrapping_add(1);
             }
-            s(ba0, DAT_100a7594.wrapping_mul(4), -1);
+            s(
+                ba0,
+                mech_trace::gr!("1000cb75", "100a7594", DAT_100a7594).wrapping_mul(4),
+                -1,
+            );
         }
-        if DAT_100a758c < 0x20 && -1 < DAT_100a758c {
-            DAT_100a7594 = DAT_100a7594.wrapping_add(1);
-            s(ba0, DAT_100a7594.wrapping_mul(4), DAT_100a758c);
-            let i4 = DAT_100a758c.wrapping_mul(0x7c);
+        if mech_trace::gr!("1000cb75", "100a758c", DAT_100a758c) < 0x20
+            && -1 < mech_trace::gr!("1000cb75", "100a758c", DAT_100a758c)
+        {
+            mech_trace::gw!(
+                "1000cb75",
+                "100a7594",
+                DAT_100a7594,
+                mech_trace::gr!("1000cb75", "100a7594", DAT_100a7594).wrapping_add(1)
+            );
+            s(
+                ba0,
+                mech_trace::gr!("1000cb75", "100a7594", DAT_100a7594).wrapping_mul(4),
+                mech_trace::gr!("1000cb75", "100a758c", DAT_100a758c),
+            );
+            let i4 = mech_trace::gr!("1000cb75", "100a758c", DAT_100a758c).wrapping_mul(0x7c);
             let pi1 = a20.wrapping_offset(i4 as isize);
             let p1 = |o: i32| g(param_1 as u32 as usize as *mut u8, o);
             s(pi1, 0, p1(8));
@@ -120,13 +142,25 @@ pub unsafe extern "C" fn FUN_1000cb75(param_1: i32) {
             s(a2c, i4, p1(0x14));
             s(a30, i4, p1(0x18));
             s(a34, i4, p1(0x1c));
-            s(a98, i4, g(b9c, DAT_100a7594.wrapping_mul(4)));
+            s(
+                a98,
+                i4,
+                g(
+                    b9c,
+                    mech_trace::gr!("1000cb75", "100a7594", DAT_100a7594).wrapping_mul(4),
+                ),
+            );
 
             let mut src = &raw mut DAT_100a7598 as *mut u32;
             let mut dst = a44.wrapping_offset(i4 as isize) as *mut u32;
             let mut n = 9;
             while n != 0 {
-                dst.write_unaligned(src.read_unaligned());
+                mech_trace::wr!(
+                    "1000cb75",
+                    dst,
+                    write_unaligned,
+                    mech_trace::rd!("1000cb75", src, read_unaligned)
+                );
                 src = src.wrapping_add(1);
                 dst = dst.wrapping_add(1);
                 n -= 1;
@@ -152,77 +186,128 @@ pub unsafe extern "C" fn FUN_1000cb75(param_1: i32) {
             s(a40, i4, g(a34, i4).wrapping_add(g(a28, i4)) / 2);
 
             let pi2 = i4.wrapping_add(0x101f5568) as u32 as usize as *mut i32;
-            FUN_1008975d(local_34.as_mut_ptr().cast::<u32>());
+            mech_trace::cr!(
+                "1000cb75",
+                "1008975d",
+                FUN_1008975d(local_34.as_mut_ptr().cast::<u32>())
+            );
             local_34[0] = ((g(a44, i4) as u32).wrapping_shl(0x1d)) as i32;
             local_34[4] = ((g(a48, i4) as u32).wrapping_shl(0x1d)) as i32;
             local_34[8] = ((g(a4c, i4) as u32).wrapping_shl(0x1d)) as i32;
 
-            FUN_10089cc9(
-                local_64.as_mut_ptr(),
-                0,
-                0,
-                0,
-                g(a38, i4).wrapping_neg(),
-                g(a3c, i4).wrapping_neg(),
-                g(a40, i4).wrapping_neg(),
+            mech_trace::cr!(
+                "1000cb75",
+                "10089cc9",
+                FUN_10089cc9(
+                    local_64.as_mut_ptr(),
+                    0,
+                    0,
+                    0,
+                    g(a38, i4).wrapping_neg(),
+                    g(a3c, i4).wrapping_neg(),
+                    g(a40, i4).wrapping_neg(),
+                )
             );
-            FUN_10089cc9(
-                local_9c.as_mut_ptr(),
-                g(a50, i4),
-                g(a54, i4),
-                g(a58, i4),
-                0,
-                0,
-                0,
+            mech_trace::cr!(
+                "1000cb75",
+                "10089cc9",
+                FUN_10089cc9(
+                    local_9c.as_mut_ptr(),
+                    g(a50, i4),
+                    g(a54, i4),
+                    g(a58, i4),
+                    0,
+                    0,
+                    0,
+                )
             );
-            FUN_100895ca(
-                local_9c.as_mut_ptr(),
-                local_64.as_mut_ptr(),
-                pi2.cast::<u32>(),
+            mech_trace::cr!(
+                "1000cb75",
+                "100895ca",
+                FUN_100895ca(
+                    local_9c.as_mut_ptr(),
+                    local_64.as_mut_ptr(),
+                    pi2.cast::<u32>(),
+                )
             );
-            FUN_10089cc9(
-                local_64.as_mut_ptr(),
-                0,
-                0,
-                0,
-                g(a5c, i4),
-                g(a60, i4),
-                g(a64, i4),
+            mech_trace::cr!(
+                "1000cb75",
+                "10089cc9",
+                FUN_10089cc9(
+                    local_64.as_mut_ptr(),
+                    0,
+                    0,
+                    0,
+                    g(a5c, i4),
+                    g(a60, i4),
+                    g(a64, i4),
+                )
             );
-            FUN_100895ca(local_64.as_mut_ptr(), pi2, pi2.cast::<u32>());
-            FUN_10089cc9(
-                local_64.as_mut_ptr(),
-                0,
-                0,
-                0,
-                g(a38, i4),
-                g(a3c, i4),
-                g(a40, i4),
+            mech_trace::cr!(
+                "1000cb75",
+                "100895ca",
+                FUN_100895ca(local_64.as_mut_ptr(), pi2, pi2.cast::<u32>())
             );
-            FUN_100895ca(local_64.as_mut_ptr(), pi2, pi2.cast::<u32>());
+            mech_trace::cr!(
+                "1000cb75",
+                "10089cc9",
+                FUN_10089cc9(
+                    local_64.as_mut_ptr(),
+                    0,
+                    0,
+                    0,
+                    g(a38, i4),
+                    g(a3c, i4),
+                    g(a40, i4),
+                )
+            );
+            mech_trace::cr!(
+                "1000cb75",
+                "100895ca",
+                FUN_100895ca(local_64.as_mut_ptr(), pi2, pi2.cast::<u32>())
+            );
 
             let mut local_68 = pi1.cast::<i32>();
-            while local_68.wrapping_add(0x1e).read_unaligned() != -1 {
+            while mech_trace::rd!("1000cb75", local_68.wrapping_add(0x1e), read_unaligned) != -1 {
                 let pj = local_68.wrapping_add(0x1e);
-                let idx = pj.read_unaligned();
+                let idx = mech_trace::rd!("1000cb75", pj, read_unaligned);
                 local_68 = a20
                     .wrapping_offset(idx.wrapping_mul(0x7c) as isize)
                     .cast::<i32>();
                 let m = idx.wrapping_mul(0x7c).wrapping_add(0x101f5568) as u32 as usize as *mut i32;
-                FUN_100895ca(m, pi2, pi2.cast::<u32>());
+                mech_trace::cr!(
+                    "1000cb75",
+                    "100895ca",
+                    FUN_100895ca(m, pi2, pi2.cast::<u32>())
+                );
             }
 
             let mut src = &raw mut DAT_100a75c0 as *mut u32;
             let mut dst = &raw mut DAT_100a7598 as *mut u32;
             let mut n = 9;
             while n != 0 {
-                dst.write_unaligned(src.read_unaligned());
+                mech_trace::wr!(
+                    "1000cb75",
+                    dst,
+                    write_unaligned,
+                    mech_trace::rd!("1000cb75", src, read_unaligned)
+                );
                 src = src.wrapping_add(1);
                 dst = dst.wrapping_add(1);
                 n -= 1;
             }
-            DAT_100a7590 = DAT_100a758c;
-            DAT_100a758c = DAT_100a758c.wrapping_add(1);
+            mech_trace::gw!(
+                "1000cb75",
+                "100a7590",
+                DAT_100a7590,
+                mech_trace::gr!("1000cb75", "100a758c", DAT_100a758c)
+            );
+            mech_trace::gw!(
+                "1000cb75",
+                "100a758c",
+                DAT_100a758c,
+                mech_trace::gr!("1000cb75", "100a758c", DAT_100a758c).wrapping_add(1)
+            );
         }
     }
 }

@@ -19,22 +19,31 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1005b710() {
+    mech_trace::enter!("1005b710");
     // MSG layout: hwnd, message, wParam, lParam, time, pt.x, pt.y (7 x 4 bytes)
     let mut key_message: [u32; 7] = [0; 7];
     // SAFETY: the buffer is a local MSG-sized array; the callees and globals
     // are the game's own and the OS's.
     unsafe {
-        let got_message = PeekMessageA(
-            key_message.as_mut_ptr(),
-            core::ptr::null_mut(),
-            0x100,
-            0x108,
-            1,
+        let got_message = mech_trace::cr!(
+            "1005b710",
+            "PeekMessageA",
+            PeekMessageA(
+                key_message.as_mut_ptr(),
+                core::ptr::null_mut(),
+                0x100,
+                0x108,
+                1,
+            )
         );
         if got_message != 0 {
-            FUN_1005b760(key_message[1], key_message[2], key_message[3]);
+            mech_trace::cr!(
+                "1005b710",
+                "1005b760",
+                FUN_1005b760(key_message[1], key_message[2], key_message[3])
+            );
         }
-        DAT_100c40c4 = 0;
-        DAT_100c40c0 = 0;
+        mech_trace::gw!("1005b710", "100c40c4", DAT_100c40c4, 0);
+        mech_trace::gw!("1005b710", "100c40c0", DAT_100c40c0, 0);
     }
 }

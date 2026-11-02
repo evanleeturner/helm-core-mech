@@ -18,31 +18,67 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_100248f2(param_1: i32) -> bool {
+    mech_trace::enter!("100248f2", param_1);
     let base = param_1 as usize as *mut u8;
     // SAFETY: param_1 points at the game's object; the fields, globals and
     // callees are the game's own, accessed in the original's order.
     unsafe {
-        let v_1de = base.byte_add(0x1de).cast::<i32>().read_unaligned();
-        let i_var1 = DAT_100b38fc.wrapping_sub(v_1de);
+        let v_1de = mech_trace::rd!(
+            "100248f2",
+            base.byte_add(0x1de).cast::<i32>(),
+            read_unaligned
+        );
+        let i_var1 = mech_trace::gr!("100248f2", "100b38fc", DAT_100b38fc).wrapping_sub(v_1de);
         if i_var1 < 0x2e {
-            let v_1f2 = base.byte_add(0x1f2).cast::<i32>().read_unaligned();
+            let v_1f2 = mech_trace::rd!(
+                "100248f2",
+                base.byte_add(0x1f2).cast::<i32>(),
+                read_unaligned
+            );
             let i_var4 = v_1f2;
-            let i_var2 = FUN_10051f43(10);
-            let v_1d2 = base.byte_add(0x1d2).cast::<i32>().read_unaligned();
-            let v_1ea = base.byte_add(0x1ea).cast::<i32>().read_unaligned();
-            let v_1ee = base.byte_add(0x1ee).cast::<i32>().read_unaligned();
+            let i_var2 = mech_trace::cr!("100248f2", "10051f43", FUN_10051f43(10));
+            let v_1d2 = mech_trace::rd!(
+                "100248f2",
+                base.byte_add(0x1d2).cast::<i32>(),
+                read_unaligned
+            );
+            let v_1ea = mech_trace::rd!(
+                "100248f2",
+                base.byte_add(0x1ea).cast::<i32>(),
+                read_unaligned
+            );
+            let v_1ee = mech_trace::rd!(
+                "100248f2",
+                base.byte_add(0x1ee).cast::<i32>(),
+                read_unaligned
+            );
             FUN_1002f3a7(v_1d2, v_1ea, v_1ee.wrapping_add(i_var2), i_var4);
             FUN_1002fbc0(v_1d2);
-            let l_var3 = __ftol();
+            let l_var3 = mech_trace::cr!("100248f2", "__ftol", __ftol());
             let tbl = (&raw mut DAT_1016acb8).cast::<u8>();
-            let v_1e6 = tbl.offset((l_var3 as i32) as isize).read() as u32 as i32;
-            base.byte_add(0x1e6).cast::<i32>().write_unaligned(v_1e6);
+            let v_1e6 = mech_trace::rd!("100248f2", tbl.offset((l_var3 as i32) as isize), read)
+                as u32 as i32;
+            mech_trace::wr!(
+                "100248f2",
+                base.byte_add(0x1e6).cast::<i32>(),
+                write_unaligned,
+                v_1e6
+            );
         } else {
             let p = base.byte_add(0x10).cast::<u16>();
-            p.write_unaligned(p.read_unaligned() & 0xfffe);
-            let v_1d2 = base.byte_add(0x1d2).cast::<i32>().read_unaligned();
+            mech_trace::wr!(
+                "100248f2",
+                p,
+                write_unaligned,
+                mech_trace::rd!("100248f2", p, read_unaligned) & 0xfffe
+            );
+            let v_1d2 = mech_trace::rd!(
+                "100248f2",
+                base.byte_add(0x1d2).cast::<i32>(),
+                read_unaligned
+            );
             FUN_1002f727(v_1d2);
         }
-        i_var1 < 0x2e
+        mech_trace::rt!("100248f2", i_var1 < 0x2e)
     }
 }

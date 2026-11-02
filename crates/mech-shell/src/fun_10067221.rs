@@ -10,6 +10,9 @@ pub unsafe extern "C" fn FUN_10067221(
     param_5: u32,
     param_6: *mut i32,
 ) -> u32 {
+    mech_trace::enter!(
+        "10067221", param_1, param_2, param_3, param_4, param_5, param_6
+    );
     let mut local_1c: i32 = 0;
     let mut local_20: i32 = 0;
     let mut local_24: i32 = 0;
@@ -23,17 +26,26 @@ pub unsafe extern "C" fn FUN_10067221(
             .wrapping_mul(8)
             .wrapping_add(8)
             .wrapping_add(param_1);
-        let i_var7 = (off as usize as *const i32)
-            .read_unaligned()
+        let i_var7 = mech_trace::rd!("10067221", (off as usize as *const i32), read_unaligned)
             .wrapping_add(param_1);
-        let i_var3 = ((i_var7.wrapping_add(8)) as usize as *const i32)
-            .read_unaligned()
-            .wrapping_add(param_3);
-        let i_var10 = ((i_var7.wrapping_add(0xc)) as usize as *const i32).read_unaligned();
+        let i_var3 = mech_trace::rd!(
+            "10067221",
+            ((i_var7.wrapping_add(8)) as usize as *const i32),
+            read_unaligned
+        )
+        .wrapping_add(param_3);
+        let i_var10 = mech_trace::rd!(
+            "10067221",
+            ((i_var7.wrapping_add(0xc)) as usize as *const i32),
+            read_unaligned
+        );
         let mut i_var4 = i_var10.wrapping_add(param_4);
-        let i_var5 = ((i_var7.wrapping_add(0x14)) as usize as *const i32)
-            .read_unaligned()
-            .wrapping_add(1);
+        let i_var5 = mech_trace::rd!(
+            "10067221",
+            ((i_var7.wrapping_add(0x14)) as usize as *const i32),
+            read_unaligned
+        )
+        .wrapping_add(1);
         let mut i_var6 = i_var5.wrapping_sub(i_var10);
         if i_var6 != 0 && i_var10 <= i_var5 {
             let mut p = i_var7.wrapping_add(0x18) as usize as *const u8;
@@ -43,7 +55,7 @@ pub unsafe extern "C" fn FUN_10067221(
             local_28 = i32::MIN;
             loop {
                 let mut x = i_var3;
-                let mut h = p.read();
+                let mut h = mech_trace::rd!("10067221", p, read);
                 p = p.add(1);
                 loop {
                     let flag = (h & 1) != 0;
@@ -65,7 +77,7 @@ pub unsafe extern "C" fn FUN_10067221(
                         if local_28 <= i_var4 {
                             local_28 = i_var4;
                         }
-                        h = p.add(1).read();
+                        h = mech_trace::rd!("10067221", p.add(1), read);
                         p = p.add(2);
                     } else if cnt != 0 {
                         if x <= local_1c {
@@ -81,11 +93,11 @@ pub unsafe extern "C" fn FUN_10067221(
                         if local_28 <= i_var4 {
                             local_28 = i_var4;
                         }
-                        h = p.add(cnt as usize).read();
+                        h = mech_trace::rd!("10067221", p.add(cnt as usize), read);
                         p = p.add(cnt as usize + 1);
                     } else {
-                        x = x.wrapping_add(p.read() as i32);
-                        h = p.add(1).read();
+                        x = x.wrapping_add(mech_trace::rd!("10067221", p, read) as i32);
+                        h = mech_trace::rd!("10067221", p.add(1), read);
                         p = p.add(2);
                     }
                 }
@@ -106,10 +118,10 @@ pub unsafe extern "C" fn FUN_10067221(
             local_20 = param_4.wrapping_mul(2).wrapping_sub(local_28);
             local_28 = t;
         }
-        param_6.write_unaligned(local_1c);
-        param_6.add(1).write_unaligned(local_20);
-        param_6.add(2).write_unaligned(local_24);
-        param_6.add(3).write_unaligned(local_28);
+        mech_trace::wr!("10067221", param_6, write_unaligned, local_1c);
+        mech_trace::wr!("10067221", param_6.add(1), write_unaligned, local_20);
+        mech_trace::wr!("10067221", param_6.add(2), write_unaligned, local_24);
+        mech_trace::wr!("10067221", param_6.add(3), write_unaligned, local_28);
     }
-    0
+    mech_trace::rt!("10067221", 0)
 }

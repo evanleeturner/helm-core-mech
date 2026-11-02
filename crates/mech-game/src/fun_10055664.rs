@@ -30,32 +30,49 @@ pub unsafe extern "C" fn FUN_10055664(
     param_3: u32,
     param_4: *mut u32,
 ) {
+    mech_trace::enter!("10055664", param_1, param_2, param_3, param_4);
     // SAFETY: the callees and globals are the game's own; the pointers refer
     // to the caller's arrays, read and written at the same indices as the original.
     unsafe {
-        let a = |i: usize| param_1.add(i).read_unaligned();
-        let b = |i: usize| param_2.add(i).read_unaligned();
-        let w = |i: usize, v: u32| param_4.add(i).write_unaligned(v);
-        let r = |i: usize| param_4.add(i).read_unaligned();
+        let a = |i: usize| mech_trace::rd!("10055664", param_1.add(i), read_unaligned);
+        let b = |i: usize| mech_trace::rd!("10055664", param_2.add(i), read_unaligned);
+        let w = |i: usize, v: u32| mech_trace::wr!("10055664", param_4.add(i), write_unaligned, v);
+        let r = |i: usize| mech_trace::rd!("10055664", param_4.add(i), read_unaligned);
 
-        let u_var1 = FUN_1005558c(a(0), b(0), param_3, 1, a(2), b(2)) as u32;
+        let u_var1 = mech_trace::cr!(
+            "10055664",
+            "1005558c",
+            FUN_1005558c(a(0), b(0), param_3, 1, a(2), b(2))
+        ) as u32;
         w(2, u_var1);
         let u_var1 = r(2);
         w(3, param_3);
-        let u_var3 = FUN_10055bc0(a(3), b(3), param_3 as i32, a(4), b(4));
+        let u_var3 = mech_trace::cr!(
+            "10055664",
+            "10055bc0",
+            FUN_10055bc0(a(3), b(3), param_3 as i32, a(4), b(4))
+        );
         w(4, u_var3 as u32);
-        let u_var2 = FUN_10055b60(
-            param_3 as i32,
-            DAT_10160ec4 as i32,
-            u_var1 as i32,
-            DAT_10160eb4 as u8,
+        let u_var2 = mech_trace::cr!(
+            "10055664",
+            "10055b60",
+            FUN_10055b60(
+                param_3 as i32,
+                mech_trace::gr!("10055664", "10160ec4", DAT_10160ec4) as i32,
+                u_var1 as i32,
+                mech_trace::gr!("10055664", "10160eb4", DAT_10160eb4) as u8,
+            )
         );
         w(0, u_var2);
-        let u_var1 = FUN_10055b60(
-            DAT_10160ee8 as i32,
-            r(4) as i32,
-            u_var1 as i32,
-            DAT_10160eb8 as u8,
+        let u_var1 = mech_trace::cr!(
+            "10055664",
+            "10055b60",
+            FUN_10055b60(
+                mech_trace::gr!("10055664", "10160ee8", DAT_10160ee8) as i32,
+                r(4) as i32,
+                u_var1 as i32,
+                mech_trace::gr!("10055664", "10160eb8", DAT_10160eb8) as u8,
+            )
         );
         w(1, u_var1);
 
@@ -68,11 +85,23 @@ pub unsafe extern "C" fn FUN_10055664(
             local_10 = local_10.wrapping_neg();
         }
         if local_10 < local_c {
-            let v = FUN_10055bc0(a(0), b(0), r(0) as i32, a(5), b(5));
+            let v = mech_trace::cr!(
+                "10055664",
+                "10055bc0",
+                FUN_10055bc0(a(0), b(0), r(0) as i32, a(5), b(5))
+            );
             w(5, v as u32);
-            let v = FUN_10055bc0(a(0), b(0), r(0) as i32, a(6), b(6));
+            let v = mech_trace::cr!(
+                "10055664",
+                "10055bc0",
+                FUN_10055bc0(a(0), b(0), r(0) as i32, a(6), b(6))
+            );
             w(6, v as u32);
-            let v = FUN_10055bc0(a(0), b(0), r(0) as i32, a(0xb), b(0xb));
+            let v = mech_trace::cr!(
+                "10055664",
+                "10055bc0",
+                FUN_10055bc0(a(0), b(0), r(0) as i32, a(0xb), b(0xb))
+            );
             w(0xb, v as u32);
         } else if local_10 == 0 {
             w(
@@ -88,11 +117,23 @@ pub unsafe extern "C" fn FUN_10055664(
                 (((b(0xb) as u32).wrapping_add(a(0xb) as u32)) as i32 >> 1) as u32,
             );
         } else {
-            let v = FUN_10055bc0(a(1), b(1), r(1) as i32, a(5), b(5));
+            let v = mech_trace::cr!(
+                "10055664",
+                "10055bc0",
+                FUN_10055bc0(a(1), b(1), r(1) as i32, a(5), b(5))
+            );
             w(5, v as u32);
-            let v = FUN_10055bc0(a(1), b(1), r(1) as i32, a(6), b(6));
+            let v = mech_trace::cr!(
+                "10055664",
+                "10055bc0",
+                FUN_10055bc0(a(1), b(1), r(1) as i32, a(6), b(6))
+            );
             w(6, v as u32);
-            let v = FUN_10055bc0(a(1), b(1), r(1) as i32, a(0xb), b(0xb));
+            let v = mech_trace::cr!(
+                "10055664",
+                "10055bc0",
+                FUN_10055bc0(a(1), b(1), r(1) as i32, a(0xb), b(0xb))
+            );
             w(0xb, v as u32);
         }
     }

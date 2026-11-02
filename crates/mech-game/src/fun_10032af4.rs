@@ -31,6 +31,10 @@ pub unsafe extern "C" fn FUN_10032af4(
     param_12: *mut u32,
     param_13: *mut u32,
 ) {
+    mech_trace::enter!(
+        "10032af4", param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
+        param_9, param_10, param_11, param_12, param_13
+    );
     let f_var1 =
         (param_9 - param_2) * (param_5 - param_2) - (param_6 - param_3) * (param_8 - param_2);
     let f_var2 =
@@ -40,15 +44,19 @@ pub unsafe extern "C" fn FUN_10032af4(
     // SAFETY: the callee is the game's own function; the output pointers are
     // passed through unchanged from the caller.
     unsafe {
-        FUN_100329cf(
-            f_var1,
-            f_var2,
-            f_var3,
-            -(f_var2 * param_2 + f_var3 * param_3 + f_var1 * param_1),
-            param_10,
-            param_11,
-            param_12,
-            param_13,
+        mech_trace::cr!(
+            "10032af4",
+            "100329cf",
+            FUN_100329cf(
+                f_var1,
+                f_var2,
+                f_var3,
+                -(f_var2 * param_2 + f_var3 * param_3 + f_var1 * param_1),
+                param_10,
+                param_11,
+                param_12,
+                param_13,
+            )
         );
     }
 }

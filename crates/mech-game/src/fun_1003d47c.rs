@@ -39,16 +39,17 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1003d47c() {
+    mech_trace::enter!("1003d47c");
     // SAFETY: all globals and the callee belong to the game; the table at
     // DAT_100c6d48 is a 12x12 grid of 0x18-byte entries, written in bounds.
     unsafe {
-        DAT_10160e68 = 0;
-        DAT_10160e60 = 0;
+        mech_trace::gw!("1003d47c", "10160e68", DAT_10160e68, 0);
+        mech_trace::gw!("1003d47c", "10160e60", DAT_10160e60, 0);
         FUN_1003cb2a();
         let arr = &raw mut DAT_10160c00 as *mut i32;
         let mut local_8: i32 = 0;
         while local_8 < 0x19 {
-            arr.add(local_8 as usize).write(0);
+            mech_trace::wr!("1003d47c", arr.add(local_8 as usize), write, 0);
             local_8 = local_8.wrapping_add(1);
         }
         local_8 = 0;
@@ -59,43 +60,73 @@ pub unsafe extern "stdcall" fn FUN_1003d47c() {
                 let e = base
                     .byte_add(local_c.wrapping_mul(0x18) as usize)
                     .byte_add(local_8.wrapping_mul(0x120) as usize);
-                e.byte_add(0xc).cast::<i32>().write_unaligned(0);
-                let v = e.byte_add(0xc).cast::<i32>().read_unaligned();
-                e.byte_add(4).cast::<i32>().write_unaligned(v);
-                e.byte_add(0x10).cast::<i32>().write_unaligned(0);
-                let v = e.byte_add(0x10).cast::<i32>().read_unaligned();
-                e.byte_add(8).cast::<i32>().write_unaligned(v);
-                e.cast::<i16>().write_unaligned(0x4000);
+                mech_trace::wr!(
+                    "1003d47c",
+                    e.byte_add(0xc).cast::<i32>(),
+                    write_unaligned,
+                    0
+                );
+                let v = mech_trace::rd!("1003d47c", e.byte_add(0xc).cast::<i32>(), read_unaligned);
+                mech_trace::wr!("1003d47c", e.byte_add(4).cast::<i32>(), write_unaligned, v);
+                mech_trace::wr!(
+                    "1003d47c",
+                    e.byte_add(0x10).cast::<i32>(),
+                    write_unaligned,
+                    0
+                );
+                let v = mech_trace::rd!("1003d47c", e.byte_add(0x10).cast::<i32>(), read_unaligned);
+                mech_trace::wr!("1003d47c", e.byte_add(8).cast::<i32>(), write_unaligned, v);
+                mech_trace::wr!("1003d47c", e.cast::<i16>(), write_unaligned, 0x4000);
                 let p = base
                     .byte_add(local_8.wrapping_mul(0x120) as usize)
                     .byte_add(local_c.wrapping_mul(0x18) as usize);
-                e.byte_add(0x14).cast::<*mut u8>().write_unaligned(p);
+                mech_trace::wr!(
+                    "1003d47c",
+                    e.byte_add(0x14).cast::<*mut u8>(),
+                    write_unaligned,
+                    p
+                );
                 local_c = local_c.wrapping_add(1);
             }
             local_8 = local_8.wrapping_add(1);
         }
-        DAT_100c6d24 = 0;
-        DAT_100c6d1c = 0;
-        DAT_100c6d28 = 0;
-        DAT_100c6d20 = 0;
-        DAT_100c6d18 = 0x4000;
-        DAT_100c6d0c = 0;
-        DAT_100c6d04 = 0;
-        DAT_100c6d10 = 0;
-        DAT_100c6d08 = 0;
-        DAT_100c6d00 = 0x4000;
-        DAT_100c6d3c = 0;
-        DAT_100c6d34 = 0;
-        DAT_100c6d40 = 0;
-        DAT_100c6d38 = 0;
-        DAT_100c6d30 = 0x4000;
-        DAT_100c7ad4 = 0;
-        DAT_100c7acc = 0;
-        DAT_100c7ad8 = 0;
-        DAT_100c7ad0 = 0;
-        DAT_100c7ac8 = 0x4000;
-        DAT_100af098 = (&raw mut DAT_100c6d00).cast();
-        DAT_100af09c = (&raw mut DAT_100c6d30).cast();
-        DAT_100aefc4 = (&raw mut DAT_100c6d18).cast();
+        mech_trace::gw!("1003d47c", "100c6d24", DAT_100c6d24, 0);
+        mech_trace::gw!("1003d47c", "100c6d1c", DAT_100c6d1c, 0);
+        mech_trace::gw!("1003d47c", "100c6d28", DAT_100c6d28, 0);
+        mech_trace::gw!("1003d47c", "100c6d20", DAT_100c6d20, 0);
+        mech_trace::gw!("1003d47c", "100c6d18", DAT_100c6d18, 0x4000);
+        mech_trace::gw!("1003d47c", "100c6d0c", DAT_100c6d0c, 0);
+        mech_trace::gw!("1003d47c", "100c6d04", DAT_100c6d04, 0);
+        mech_trace::gw!("1003d47c", "100c6d10", DAT_100c6d10, 0);
+        mech_trace::gw!("1003d47c", "100c6d08", DAT_100c6d08, 0);
+        mech_trace::gw!("1003d47c", "100c6d00", DAT_100c6d00, 0x4000);
+        mech_trace::gw!("1003d47c", "100c6d3c", DAT_100c6d3c, 0);
+        mech_trace::gw!("1003d47c", "100c6d34", DAT_100c6d34, 0);
+        mech_trace::gw!("1003d47c", "100c6d40", DAT_100c6d40, 0);
+        mech_trace::gw!("1003d47c", "100c6d38", DAT_100c6d38, 0);
+        mech_trace::gw!("1003d47c", "100c6d30", DAT_100c6d30, 0x4000);
+        mech_trace::gw!("1003d47c", "100c7ad4", DAT_100c7ad4, 0);
+        mech_trace::gw!("1003d47c", "100c7acc", DAT_100c7acc, 0);
+        mech_trace::gw!("1003d47c", "100c7ad8", DAT_100c7ad8, 0);
+        mech_trace::gw!("1003d47c", "100c7ad0", DAT_100c7ad0, 0);
+        mech_trace::gw!("1003d47c", "100c7ac8", DAT_100c7ac8, 0x4000);
+        mech_trace::gw!(
+            "1003d47c",
+            "100af098",
+            DAT_100af098,
+            (&raw mut DAT_100c6d00).cast()
+        );
+        mech_trace::gw!(
+            "1003d47c",
+            "100af09c",
+            DAT_100af09c,
+            (&raw mut DAT_100c6d30).cast()
+        );
+        mech_trace::gw!(
+            "1003d47c",
+            "100aefc4",
+            DAT_100aefc4,
+            (&raw mut DAT_100c6d18).cast()
+        );
     }
 }

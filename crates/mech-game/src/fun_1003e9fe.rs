@@ -8,6 +8,12 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1003e9fe() -> u32 {
+    mech_trace::enter!("1003e9fe");
     // SAFETY: the global is the game's own memory, read by value.
-    unsafe { DAT_100af0a4 }
+    unsafe {
+        mech_trace::rt!(
+            "1003e9fe",
+            mech_trace::gr!("1003e9fe", "100af0a4", DAT_100af0a4)
+        )
+    }
 }

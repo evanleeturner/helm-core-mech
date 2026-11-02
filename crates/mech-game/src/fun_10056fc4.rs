@@ -7,22 +7,22 @@ unsafe extern "C" {
 
 unsafe fn rb(p: u32) -> u8 {
     // SAFETY: the address is a game buffer address, read as the original does.
-    unsafe { (p as usize as *const u8).read() }
+    unsafe { mech_trace::rd!("10056fc4", (p as usize as *const u8), read) }
 }
 
 unsafe fn wb(p: u32, v: u8) {
     // SAFETY: the address is a game buffer address, written as the original does.
-    unsafe { (p as usize as *mut u8).write(v) }
+    unsafe { mech_trace::wr!("10056fc4", (p as usize as *mut u8), write, v) }
 }
 
 unsafe fn rw(p: u32) -> u32 {
     // SAFETY: the address is a game buffer address, read as the original does.
-    unsafe { (p as usize as *const u32).read_unaligned() }
+    unsafe { mech_trace::rd!("10056fc4", (p as usize as *const u32), read_unaligned) }
 }
 
 unsafe fn ww(p: u32, v: u32) {
     // SAFETY: the address is a game buffer address, written as the original does.
-    unsafe { (p as usize as *mut u32).write_unaligned(v) }
+    unsafe { mech_trace::wr!("10056fc4", (p as usize as *mut u32), write_unaligned, v) }
 }
 
 #[unsafe(no_mangle)]
@@ -34,6 +34,7 @@ pub unsafe extern "C" fn FUN_10056fc4(
     param_4: i32,
     param_5: i32,
 ) -> u32 {
+    mech_trace::enter!("10056fc4", param_1, param_2, param_3, param_4, param_5);
     const SKIP: u32 = 0;
     const ROW: u32 = 1;
     const END: u32 = 2;
@@ -60,30 +61,30 @@ pub unsafe extern "C" fn FUN_10056fc4(
     // SAFETY: all pointers are the game's own structures and buffers; reads
     // and writes happen in the same order and places as the original.
     unsafe {
-        let pi1 = (*param_1 as u32) as usize as *mut i32;
-        let mut i10 = pi1.add(1).read();
+        let pi1 = (mech_trace::dr!("10056fc4", param_1) as u32) as usize as *mut i32;
+        let mut i10 = mech_trace::rd!("10056fc4", pi1.add(1), read);
         let i6 = i10.wrapping_add(1);
         if i6 == 0 || i10 < -1 {
-            return 0xffffffff;
+            return mech_trace::rt!("10056fc4", 0xffffffff);
         }
-        let mut i11 = pi1.add(2).read();
+        let mut i11 = mech_trace::rd!("10056fc4", pi1.add(2), read);
         if i11 < 0 {
-            return 0xffffffff;
+            return mech_trace::rt!("10056fc4", 0xffffffff);
         }
-        let mut i2 = param_1.add(1).read();
+        let mut i2 = mech_trace::rd!("10056fc4", param_1.add(1), read);
         let i7 = if i2 < 1 { 0 } else { i2 };
-        let mut i3 = param_1.add(2).read();
+        let mut i3 = mech_trace::rd!("10056fc4", param_1.add(2), read);
         let i8 = if i3 < 1 { 0 } else { i3 };
-        let mut i9 = param_1.add(3).read();
-        if i10 <= param_1.add(3).read() {
+        let mut i9 = mech_trace::rd!("10056fc4", param_1.add(3), read);
+        if i10 <= mech_trace::rd!("10056fc4", param_1.add(3), read) {
             i9 = i10;
         }
-        i10 = param_1.add(4).read();
-        if i11 <= param_1.add(4).read() {
+        i10 = mech_trace::rd!("10056fc4", param_1.add(4), read);
+        if i11 <= mech_trace::rd!("10056fc4", param_1.add(4), read) {
             i10 = i11;
         }
         if i9 < i7 || i10 < i8 {
-            return 0xfffffffe;
+            return mech_trace::rt!("10056fc4", 0xfffffffe);
         }
         i2 = param_4.wrapping_add(i2);
         i3 = param_5.wrapping_add(i3);
@@ -99,7 +100,7 @@ pub unsafe extern "C" fn FUN_10056fc4(
         let i13 = (rw(b.wrapping_add(0x14)) as i32).wrapping_add(i3);
         let mut p20: u32 = b.wrapping_add(0x18);
         if i12 < i11 || i13 < local_24 {
-            return 0xfffffffc;
+            return mech_trace::rt!("10056fc4", 0xfffffffc);
         }
         let b16: u8 =
             (((((i11.wrapping_sub(i7) < 0) as i32) * 2 + (i9.wrapping_sub(i11) < 0) as i32) * 2
@@ -112,20 +113,24 @@ pub unsafe extern "C" fn FUN_10056fc4(
                 * 2
                 + (i10.wrapping_sub(i13) < 0) as i32) as u8;
         if (b18 & b16) != 0 {
-            return 0xfffffffd;
+            return mech_trace::rt!("10056fc4", 0xfffffffd);
         }
         if b16 == 0 && b18 == 0 {
-            FUN_100573c8(
-                param_1,
-                i19,
-                i2.wrapping_sub(param_1.add(1).read()),
-                i3.wrapping_sub(param_1.add(2).read()),
+            mech_trace::cr!(
+                "10056fc4",
+                "100573c8",
+                FUN_100573c8(
+                    param_1,
+                    i19,
+                    i2.wrapping_sub(mech_trace::rd!("10056fc4", param_1.add(1), read)),
+                    i3.wrapping_sub(mech_trace::rd!("10056fc4", param_1.add(2), read)),
+                )
             );
-            return 0;
+            return mech_trace::rt!("10056fc4", 0);
         }
         let mut local_28: u32 = (local_24 as u32)
             .wrapping_mul(i6 as u32)
-            .wrapping_add(pi1.read() as u32)
+            .wrapping_add(mech_trace::rd!("10056fc4", pi1, read) as u32)
             .wrapping_add(i11 as u32);
         let mut local_2c: u32 = 0;
         let mut local_30: u32 = 0;
@@ -203,10 +208,10 @@ pub unsafe extern "C" fn FUN_10056fc4(
                 }
                 ROW => {
                     if i13 < local_24 {
-                        return 0;
+                        return mech_trace::rt!("10056fc4", 0);
                     }
                     if i10 < local_24 {
-                        return 0;
+                        return mech_trace::rt!("10056fc4", 0);
                     }
                     p22 = local_28;
                     if (b16 & 8) == 0 {

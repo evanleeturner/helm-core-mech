@@ -9,13 +9,18 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10044761(param_1: i32, param_2: i16) -> i32 {
+    mech_trace::enter!("10044761", param_1, param_2);
     // SAFETY: param_1 is the game's object address, read at offset 0xdc as the
     // original does; the callees are the game's own functions.
     unsafe {
-        let u_var1 = ((param_1.wrapping_add(0xdc)) as *const u32).read_unaligned();
-        FUN_1002950f(param_1, param_2);
-        let i_var2 = FUN_1002a132(param_1);
-        FUN_1002950f(param_1, u_var1 as i16);
-        i_var2.wrapping_add(0x1680000) % 0x1680000
+        let u_var1 = mech_trace::rd!(
+            "10044761",
+            ((param_1.wrapping_add(0xdc)) as *const u32),
+            read_unaligned
+        );
+        mech_trace::cr!("10044761", "1002950f", FUN_1002950f(param_1, param_2));
+        let i_var2 = mech_trace::cr!("10044761", "1002a132", FUN_1002a132(param_1));
+        mech_trace::cr!("10044761", "1002950f", FUN_1002950f(param_1, u_var1 as i16));
+        mech_trace::rt!("10044761", i_var2.wrapping_add(0x1680000) % 0x1680000)
     }
 }

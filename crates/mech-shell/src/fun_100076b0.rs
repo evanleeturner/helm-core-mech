@@ -42,42 +42,43 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_100076b0() {
+    mech_trace::enter!("100076b0");
     // SAFETY: the globals are the game's own memory; each is written in the original's order.
     unsafe {
-        DAT_10082d74 = 0;
-        DAT_10082d78 = 0;
-        DAT_10082d7c = 0;
-        DAT_10082d80 = 0;
-        DAT_10082d84 = 0;
-        DAT_10082d88 = 0;
-        DAT_10082d8c = 0;
-        DAT_100ae114 = 0;
-        DAT_100ad4f8 = 0;
-        DAT_100ad504 = 0;
-        DAT_100ae10c = 0;
-        DAT_100ad6d0 = 0;
-        DAT_100ad500 = 0;
-        DAT_100ae158 = 0;
-        DAT_100ad6b4 = 0;
-        DAT_100ad6d8 = 0;
-        DAT_100ae108 = 0;
-        DAT_100ad6d4 = 0;
-        DAT_100ae1d8 = 0;
-        DAT_100ae110 = 0;
-        DAT_100ad6b8 = 0;
-        DAT_100ae140 = 0;
-        DAT_100ae154 = 0;
-        DAT_100ad4c8 = 0;
-        DAT_100ae118 = 0;
-        DAT_100ae144 = 0;
-        DAT_100ad4fc = 0;
-        DAT_100ad558 = 0;
-        DAT_10082388 = 0;
-        DAT_1008238c = 0;
-        DAT_100ad6b0 = 0;
-        DAT_10082d08 = 0;
-        DAT_10082d0c = 0;
-        DAT_10082d58 = 0;
-        DAT_10082d70 = 0;
+        mech_trace::gw!("100076b0", "10082d74", DAT_10082d74, 0);
+        mech_trace::gw!("100076b0", "10082d78", DAT_10082d78, 0);
+        mech_trace::gw!("100076b0", "10082d7c", DAT_10082d7c, 0);
+        mech_trace::gw!("100076b0", "10082d80", DAT_10082d80, 0);
+        mech_trace::gw!("100076b0", "10082d84", DAT_10082d84, 0);
+        mech_trace::gw!("100076b0", "10082d88", DAT_10082d88, 0);
+        mech_trace::gw!("100076b0", "10082d8c", DAT_10082d8c, 0);
+        mech_trace::gw!("100076b0", "100ae114", DAT_100ae114, 0);
+        mech_trace::gw!("100076b0", "100ad4f8", DAT_100ad4f8, 0);
+        mech_trace::gw!("100076b0", "100ad504", DAT_100ad504, 0);
+        mech_trace::gw!("100076b0", "100ae10c", DAT_100ae10c, 0);
+        mech_trace::gw!("100076b0", "100ad6d0", DAT_100ad6d0, 0);
+        mech_trace::gw!("100076b0", "100ad500", DAT_100ad500, 0);
+        mech_trace::gw!("100076b0", "100ae158", DAT_100ae158, 0);
+        mech_trace::gw!("100076b0", "100ad6b4", DAT_100ad6b4, 0);
+        mech_trace::gw!("100076b0", "100ad6d8", DAT_100ad6d8, 0);
+        mech_trace::gw!("100076b0", "100ae108", DAT_100ae108, 0);
+        mech_trace::gw!("100076b0", "100ad6d4", DAT_100ad6d4, 0);
+        mech_trace::gw!("100076b0", "100ae1d8", DAT_100ae1d8, 0);
+        mech_trace::gw!("100076b0", "100ae110", DAT_100ae110, 0);
+        mech_trace::gw!("100076b0", "100ad6b8", DAT_100ad6b8, 0);
+        mech_trace::gw!("100076b0", "100ae140", DAT_100ae140, 0);
+        mech_trace::gw!("100076b0", "100ae154", DAT_100ae154, 0);
+        mech_trace::gw!("100076b0", "100ad4c8", DAT_100ad4c8, 0);
+        mech_trace::gw!("100076b0", "100ae118", DAT_100ae118, 0);
+        mech_trace::gw!("100076b0", "100ae144", DAT_100ae144, 0);
+        mech_trace::gw!("100076b0", "100ad4fc", DAT_100ad4fc, 0);
+        mech_trace::gw!("100076b0", "100ad558", DAT_100ad558, 0);
+        mech_trace::gw!("100076b0", "10082388", DAT_10082388, 0);
+        mech_trace::gw!("100076b0", "1008238c", DAT_1008238c, 0);
+        mech_trace::gw!("100076b0", "100ad6b0", DAT_100ad6b0, 0);
+        mech_trace::gw!("100076b0", "10082d08", DAT_10082d08, 0);
+        mech_trace::gw!("100076b0", "10082d0c", DAT_10082d0c, 0);
+        mech_trace::gw!("100076b0", "10082d58", DAT_10082d58, 0);
+        mech_trace::gw!("100076b0", "10082d70", DAT_10082d70, 0);
     }
 }

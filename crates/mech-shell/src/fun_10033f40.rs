@@ -37,25 +37,30 @@ unsafe extern "stdcall" {
 #[inline(always)]
 unsafe fn st(p: *mut u32, i: usize, v: u32) {
     // SAFETY: p points into the heap block allocated by the caller.
-    unsafe { p.add(i).write(v) }
+    unsafe { mech_trace::wr!("10033f40", p.add(i), write, v) }
 }
 
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10033f40(collection: i32) -> *mut u32 {
+    mech_trace::enter!("10033f40", collection);
     if collection == 0 {
-        return core::ptr::null_mut();
+        return mech_trace::rt!("10033f40", core::ptr::null_mut());
     }
     // SAFETY: the callees and globals are the game's own; collection and its
     // items are the game's structures, read and written where the original does.
     unsafe {
         let cnt = (collection as usize + 4) as *const i32;
-        FUN_10017ff0(collection);
-        let mut same = FUN_1000cd20(collection);
-        let arr = HeapAlloc(
-            DAT_10098224,
-            1,
-            same.wrapping_mul(0xa8).wrapping_add(0x118) as u32,
+        mech_trace::cr!("10033f40", "10017ff0", FUN_10017ff0(collection));
+        let mut same = mech_trace::cr!("10033f40", "1000cd20", FUN_1000cd20(collection));
+        let arr = mech_trace::cr!(
+            "10033f40",
+            "HeapAlloc",
+            HeapAlloc(
+                mech_trace::gr!("10033f40", "10098224", DAT_10098224),
+                1,
+                same.wrapping_mul(0xa8).wrapping_add(0x118) as u32,
+            )
         );
         let c49 = (&raw mut DAT_100c49d0) as usize as u32;
         st(arr, 0, 0x1cc);
@@ -70,11 +75,16 @@ pub unsafe extern "C" fn FUN_10033f40(collection: i32) -> *mut u32 {
         st(arr, 9, 0xffffffff);
         st(arr, 10, 0xffffffff);
         st(arr, 0xb, 0xffffffff);
-        if cnt.read_unaligned() == 0 {
+        if mech_trace::rd!("10033f40", cnt, read_unaligned) == 0 {
             st(arr, 7, (&raw mut LAB_10034780) as usize as u32);
         } else {
             st(arr, 7, (&raw mut LAB_10034640) as usize as u32);
-            same = ((DAT_10083508 as usize + 0x23bb) as *const i32).read_unaligned();
+            same = mech_trace::rd!(
+                "10033f40",
+                ((mech_trace::gr!("10033f40", "10083508", DAT_10083508) as usize + 0x23bb)
+                    as *const i32),
+                read_unaligned
+            );
             st(arr, 0xe, 0x231);
             if same != 1 {
                 st(arr, 0xe, 0x263);
@@ -105,13 +115,13 @@ pub unsafe extern "C" fn FUN_10033f40(collection: i32) -> *mut u32 {
             st(arr, 0x23, (&raw mut LAB_10034690) as usize as u32);
         }
         same = 0;
-        if 0 < cnt.read_unaligned() {
+        if 0 < mech_trace::rd!("10033f40", cnt, read_unaligned) {
             loop {
                 let next = same.wrapping_add(1);
-                let it = FUN_10018060(collection, same);
-                ((it as usize + 9) as *mut u8).write(0);
+                let it = mech_trace::cr!("10033f40", "10018060", FUN_10018060(collection, same));
+                mech_trace::wr!("10033f40", ((it as usize + 9) as *mut u8), write, 0);
                 same = next;
-                if next >= cnt.read_unaligned() {
+                if next >= mech_trace::rd!("10033f40", cnt, read_unaligned) {
                     break;
                 }
             }
@@ -119,35 +129,53 @@ pub unsafe extern "C" fn FUN_10033f40(collection: i32) -> *mut u32 {
         let mut added: i32 = 0;
         let mut item_index: i32 = 0;
         let mut row: i32 = header - 1;
-        if 0 < cnt.read_unaligned() {
+        if 0 < mech_trace::rd!("10033f40", cnt, read_unaligned) {
             loop {
-                let cur = FUN_10018060(collection, item_index) as usize;
-                if ((cur + 9) as *const u8).read() != 1 {
+                let cur =
+                    mech_trace::cr!("10033f40", "10018060", FUN_10018060(collection, item_index))
+                        as usize;
+                if mech_trace::rd!("10033f40", ((cur + 9) as *const u8), read) != 1 {
                     let mut same_key: i32 = 1;
-                    ((cur + 9) as *mut u8).write(1);
+                    mech_trace::wr!("10033f40", ((cur + 9) as *mut u8), write, 1);
                     let mut scan = item_index.wrapping_add(1);
-                    let cur_key = (cur as *const i32).read_unaligned();
-                    if scan < cnt.read_unaligned() {
+                    let cur_key = mech_trace::rd!("10033f40", (cur as *const i32), read_unaligned);
+                    if scan < mech_trace::rd!("10033f40", cnt, read_unaligned) {
                         loop {
-                            let later = FUN_10018060(collection, scan) as usize;
-                            if (later as *const i32).read_unaligned() == cur_key {
-                                ((later + 9) as *mut u8).write(1);
+                            let later = mech_trace::cr!(
+                                "10033f40",
+                                "10018060",
+                                FUN_10018060(collection, scan)
+                            ) as usize;
+                            if mech_trace::rd!("10033f40", (later as *const i32), read_unaligned)
+                                == cur_key
+                            {
+                                mech_trace::wr!("10033f40", ((later + 9) as *mut u8), write, 1);
                                 same_key = same_key.wrapping_add(1);
                             }
                             scan = scan.wrapping_add(1);
-                            if scan >= cnt.read_unaligned() {
+                            if scan >= mech_trace::rd!("10033f40", cnt, read_unaligned) {
                                 break;
                             }
                         }
                     }
-                    if ((DAT_10083508 as usize + 0x23bb) as *const i32).read_unaligned() != 1 {
+                    if mech_trace::rd!(
+                        "10033f40",
+                        ((mech_trace::gr!("10033f40", "10083508", DAT_10083508) as usize + 0x23bb)
+                            as *const i32),
+                        read_unaligned
+                    ) != 1
+                    {
                         same_key = 99999999;
                     }
                     let y = |r: i32| -> u32 {
-                        ((DAT_100a6744 as usize + 0x40c) as *const i32)
-                            .read_unaligned()
-                            .wrapping_mul(r)
-                            .wrapping_add(0x5c) as u32
+                        mech_trace::rd!(
+                            "10033f40",
+                            ((mech_trace::gr!("10033f40", "100a6744", DAT_100a6744) as usize
+                                + 0x40c) as *const i32),
+                            read_unaligned
+                        )
+                        .wrapping_mul(r)
+                        .wrapping_add(0x5c) as u32
                     };
                     // entry 0
                     let o = arr.add(header.wrapping_add(added).wrapping_mul(0xe) as usize);
@@ -162,24 +190,29 @@ pub unsafe extern "C" fn FUN_10033f40(collection: i32) -> *mut u32 {
                     st(o, 9, cur_key as u32);
                     st(o, 10, same_key as u32);
                     st(o, 0xb, 0xffffffff);
-                    let f = FUN_10050490(cur as i32);
+                    let f = mech_trace::cr!("10033f40", "10050490", FUN_10050490(cur as i32));
                     st(o, 0xc, f);
                     st(o, 0xd, 0xffffffff);
                     st(o, 8, (&raw mut LAB_100347e0) as usize as u32);
-                    if DAT_100a67c4 == collection
-                        || collection == DAT_100a67bc
-                        || DAT_100a67c0 == collection
+                    if mech_trace::gr!("10033f40", "100a67c4", DAT_100a67c4) == collection
+                        || collection == mech_trace::gr!("10033f40", "100a67bc", DAT_100a67bc)
+                        || mech_trace::gr!("10033f40", "100a67c0", DAT_100a67c0) == collection
                     {
                         st(o, 0xd, 0);
-                    } else if collection == DAT_100a67b8 {
+                    } else if collection == mech_trace::gr!("10033f40", "100a67b8", DAT_100a67b8) {
                         st(o, 0xd, 1);
-                    } else if DAT_100a67c8 == collection {
+                    } else if mech_trace::gr!("10033f40", "100a67c8", DAT_100a67c8) == collection {
                         st(o, 0xd, 2);
                     }
                     // entry 1
                     let o = arr
                         .add(header.wrapping_add(added).wrapping_add(1).wrapping_mul(0xe) as usize);
-                    let m = ((DAT_10083508 as usize + 0x23bb) as *const i32).read_unaligned();
+                    let m = mech_trace::rd!(
+                        "10033f40",
+                        ((mech_trace::gr!("10033f40", "10083508", DAT_10083508) as usize + 0x23bb)
+                            as *const i32),
+                        read_unaligned
+                    );
                     st(o, 0, 0x231);
                     if m != 1 {
                         st(o, 0, 0x263);
@@ -194,7 +227,7 @@ pub unsafe extern "C" fn FUN_10033f40(collection: i32) -> *mut u32 {
                     st(o, 9, cur_key as u32);
                     st(o, 10, same_key as u32);
                     st(o, 0xb, 0xffffffff);
-                    let f = FUN_10050490(cur as i32);
+                    let f = mech_trace::cr!("10033f40", "10050490", FUN_10050490(cur as i32));
                     st(o, 0xc, f);
                     st(o, 0xd, 0xffffffff);
                     st(o, 8, 0);
@@ -212,7 +245,7 @@ pub unsafe extern "C" fn FUN_10033f40(collection: i32) -> *mut u32 {
                     st(o, 9, cur_key as u32);
                     st(o, 10, same_key as u32);
                     st(o, 0xb, 0xffffffff);
-                    let f = FUN_10050490(cur as i32);
+                    let f = mech_trace::cr!("10033f40", "10050490", FUN_10050490(cur as i32));
                     added = added.wrapping_add(3);
                     st(o, 0xc, f);
                     st(o, 0xd, 0xffffffff);
@@ -220,7 +253,7 @@ pub unsafe extern "C" fn FUN_10033f40(collection: i32) -> *mut u32 {
                     row = row.wrapping_add(1);
                 }
                 item_index = item_index.wrapping_add(1);
-                if item_index >= cnt.read_unaligned() {
+                if item_index >= mech_trace::rd!("10033f40", cnt, read_unaligned) {
                     break;
                 }
             }
@@ -230,6 +263,6 @@ pub unsafe extern "C" fn FUN_10033f40(collection: i32) -> *mut u32 {
             header.wrapping_add(added).wrapping_mul(0xe) as usize,
             0xffffffff,
         );
-        arr
+        mech_trace::rt!("10033f40", arr)
     }
 }

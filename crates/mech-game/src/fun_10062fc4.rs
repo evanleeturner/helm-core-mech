@@ -8,12 +8,13 @@ unsafe extern "C" {
 #[inline(always)]
 unsafe fn rd(addr: i32) -> i32 {
     // SAFETY: the address is a game structure field read where the original reads it.
-    unsafe { (addr as usize as *const i32).read_unaligned() }
+    unsafe { mech_trace::rd!("10062fc4", (addr as usize as *const i32), read_unaligned) }
 }
 
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10062fc4(param_1: i32) {
+    mech_trace::enter!("10062fc4", param_1);
     let mut b_var3 = false;
     // SAFETY: param_1 points at the game's structure; all offsets and the
     // global table are the game's own memory, accessed as the original does.
@@ -51,13 +52,19 @@ pub unsafe extern "C" fn FUN_10062fc4(param_1: i32) {
                         .wrapping_add(off))
                         != -1)
                 {
-                    let b = (&raw mut DAT_100a7ba8)
-                        .byte_offset(i_var2.wrapping_mul(0x68) as isize)
-                        .read();
+                    let b = mech_trace::rd!(
+                        "10062fc4",
+                        (&raw mut DAT_100a7ba8).byte_offset(i_var2.wrapping_mul(0x68) as isize),
+                        read
+                    );
                     if (b & 4) != 0 {
                         b_var3 = true;
-                        (param_1.wrapping_add(0x3e0) as usize as *mut i32)
-                            .write_unaligned(local_1c);
+                        mech_trace::wr!(
+                            "10062fc4",
+                            (param_1.wrapping_add(0x3e0) as usize as *mut i32),
+                            write_unaligned,
+                            local_1c
+                        );
                         break;
                     }
                 }

@@ -35,80 +35,178 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_100086f7() -> u32 {
+    mech_trace::enter!("100086f7");
     // SAFETY: all globals and callees are the game's own memory and code;
     // pointers derived from them are read where the original reads.
     unsafe {
         let mut local_8: u32 = 0;
-        if DAT_10215658 < 3 && DAT_10215650 == 4 && DAT_100a7174 != 0 {
-            DAT_100adcd4 = DAT_100a7168;
-            DAT_100adcd8 = DAT_100a7170;
-            DAT_100a7174 = 0;
+        if mech_trace::gr!("100086f7", "10215658", DAT_10215658) < 3
+            && mech_trace::gr!("100086f7", "10215650", DAT_10215650) == 4
+            && mech_trace::gr!("100086f7", "100a7174", DAT_100a7174) != 0
+        {
+            mech_trace::gw!(
+                "100086f7",
+                "100adcd4",
+                DAT_100adcd4,
+                mech_trace::gr!("100086f7", "100a7168", DAT_100a7168)
+            );
+            mech_trace::gw!(
+                "100086f7",
+                "100adcd8",
+                DAT_100adcd8,
+                mech_trace::gr!("100086f7", "100a7170", DAT_100a7170)
+            );
+            mech_trace::gw!("100086f7", "100a7174", DAT_100a7174, 0);
         }
-        if DAT_10215658 == 4 {
-            let mut cond = DAT_100ab318 != 0;
+        if mech_trace::gr!("100086f7", "10215658", DAT_10215658) == 4 {
+            let mut cond = mech_trace::gr!("100086f7", "100ab318", DAT_100ab318) != 0;
             if !cond {
-                let entry = (&raw mut DAT_100eef40)
-                    .cast::<u32>()
-                    .add(DAT_100adf38 as usize)
-                    .read_unaligned();
-                let flags = (entry.wrapping_add(0x14) as *const u16).read_unaligned();
+                let entry = mech_trace::rd!(
+                    "100086f7",
+                    (&raw mut DAT_100eef40).cast::<u32>().add(mech_trace::gr!(
+                        "100086f7",
+                        "100adf38",
+                        DAT_100adf38
+                    ) as usize),
+                    read_unaligned
+                );
+                let flags = mech_trace::rd!(
+                    "100086f7",
+                    (entry.wrapping_add(0x14) as *const u16),
+                    read_unaligned
+                );
                 cond = (flags & 6) != 0;
             }
             if cond {
-                DAT_10215660 = 5;
+                mech_trace::gw!("100086f7", "10215660", DAT_10215660, 5);
             }
         }
-        if DAT_10215658 != DAT_10215660 {
+        if mech_trace::gr!("100086f7", "10215658", DAT_10215658)
+            != mech_trace::gr!("100086f7", "10215660", DAT_10215660)
+        {
             local_8 = 1;
-            match DAT_10215660 {
+            match mech_trace::gr!("100086f7", "10215660", DAT_10215660) {
                 0 => {
-                    DAT_10215650 = DAT_10215658;
-                    DAT_10215658 = 0;
+                    mech_trace::gw!(
+                        "100086f7",
+                        "10215650",
+                        DAT_10215650,
+                        mech_trace::gr!("100086f7", "10215658", DAT_10215658)
+                    );
+                    mech_trace::gw!("100086f7", "10215658", DAT_10215658, 0);
                 }
                 1 => {
-                    DAT_10215650 = DAT_10215658;
-                    DAT_10215658 = 1;
+                    mech_trace::gw!(
+                        "100086f7",
+                        "10215650",
+                        DAT_10215650,
+                        mech_trace::gr!("100086f7", "10215658", DAT_10215658)
+                    );
+                    mech_trace::gw!("100086f7", "10215658", DAT_10215658, 1);
                 }
                 2 => {
-                    DAT_10215650 = DAT_10215658;
-                    DAT_10215658 = 2;
+                    mech_trace::gw!(
+                        "100086f7",
+                        "10215650",
+                        DAT_10215650,
+                        mech_trace::gr!("100086f7", "10215658", DAT_10215658)
+                    );
+                    mech_trace::gw!("100086f7", "10215658", DAT_10215658, 2);
                 }
                 3 => {
-                    DAT_10215660 = 4;
-                    PTR_FUN_100a7164 = DAT_100aafc4;
-                    DAT_100aafc4 = FUN_1000895c as usize as u32;
-                    let v = (PTR_PTR_100a7b40.wrapping_add(0xc) as *const u32).read_unaligned();
+                    mech_trace::gw!("100086f7", "10215660", DAT_10215660, 4);
+                    mech_trace::gw!(
+                        "100086f7",
+                        "PTR_FUN_100a7164",
+                        PTR_FUN_100a7164,
+                        mech_trace::gr!("100086f7", "100aafc4", DAT_100aafc4)
+                    );
+                    mech_trace::gw!(
+                        "100086f7",
+                        "100aafc4",
+                        DAT_100aafc4,
+                        FUN_1000895c as usize as u32
+                    );
+                    let v = mech_trace::rd!(
+                        "100086f7",
+                        (mech_trace::gr!("100086f7", "PTR_PTR_100a7b40", PTR_PTR_100a7b40)
+                            .wrapping_add(0xc) as *const u32),
+                        read_unaligned
+                    );
                     if v != 0xffff_ffff {
-                        FUN_10003742(v, 100, 0x40, 5, 0x50);
+                        mech_trace::cr!(
+                            "100086f7",
+                            "10003742",
+                            FUN_10003742(v, 100, 0x40, 5, 0x50)
+                        );
                     }
-                    FUN_100082c4(0x12, -1);
+                    mech_trace::cr!("100086f7", "100082c4", FUN_100082c4(0x12, -1));
                 }
                 4 => {
-                    DAT_10215650 = DAT_10215658;
-                    DAT_10215658 = 4;
-                    if DAT_100a7174 == 0 {
-                        DAT_100a7168 = DAT_100adcd4;
-                        DAT_100adcd4 = 0;
-                        DAT_100a7170 = DAT_100adcd8;
-                        DAT_100adcd8 = 0;
-                        DAT_100a716c = DAT_100adcd0;
-                        DAT_100a7174 = 1;
+                    mech_trace::gw!(
+                        "100086f7",
+                        "10215650",
+                        DAT_10215650,
+                        mech_trace::gr!("100086f7", "10215658", DAT_10215658)
+                    );
+                    mech_trace::gw!("100086f7", "10215658", DAT_10215658, 4);
+                    if mech_trace::gr!("100086f7", "100a7174", DAT_100a7174) == 0 {
+                        mech_trace::gw!(
+                            "100086f7",
+                            "100a7168",
+                            DAT_100a7168,
+                            mech_trace::gr!("100086f7", "100adcd4", DAT_100adcd4)
+                        );
+                        mech_trace::gw!("100086f7", "100adcd4", DAT_100adcd4, 0);
+                        mech_trace::gw!(
+                            "100086f7",
+                            "100a7170",
+                            DAT_100a7170,
+                            mech_trace::gr!("100086f7", "100adcd8", DAT_100adcd8)
+                        );
+                        mech_trace::gw!("100086f7", "100adcd8", DAT_100adcd8, 0);
+                        mech_trace::gw!(
+                            "100086f7",
+                            "100a716c",
+                            DAT_100a716c,
+                            mech_trace::gr!("100086f7", "100adcd0", DAT_100adcd0)
+                        );
+                        mech_trace::gw!("100086f7", "100a7174", DAT_100a7174, 1);
                     }
                 }
                 5 => {
-                    DAT_100aafc4 = PTR_FUN_100a7164;
-                    DAT_10215660 = DAT_10215650;
-                    let v = (PTR_PTR_100a7b40.wrapping_add(0x10) as *const u32).read_unaligned();
+                    mech_trace::gw!(
+                        "100086f7",
+                        "100aafc4",
+                        DAT_100aafc4,
+                        mech_trace::gr!("100086f7", "PTR_FUN_100a7164", PTR_FUN_100a7164)
+                    );
+                    mech_trace::gw!(
+                        "100086f7",
+                        "10215660",
+                        DAT_10215660,
+                        mech_trace::gr!("100086f7", "10215650", DAT_10215650)
+                    );
+                    let v = mech_trace::rd!(
+                        "100086f7",
+                        (mech_trace::gr!("100086f7", "PTR_PTR_100a7b40", PTR_PTR_100a7b40)
+                            .wrapping_add(0x10) as *const u32),
+                        read_unaligned
+                    );
                     if v != 0xffff_ffff {
-                        FUN_10003742(v, 100, 0x40, 5, 0x50);
+                        mech_trace::cr!(
+                            "100086f7",
+                            "10003742",
+                            FUN_10003742(v, 100, 0x40, 5, 0x50)
+                        );
                     }
-                    if DAT_100ab07c == 1 {
-                        FUN_100082c4(0x11, -1);
+                    if mech_trace::gr!("100086f7", "100ab07c", DAT_100ab07c) == 1 {
+                        mech_trace::cr!("100086f7", "100082c4", FUN_100082c4(0x11, -1));
                     }
                 }
                 _ => {}
             }
         }
-        local_8
+        mech_trace::rt!("100086f7", local_8)
     }
 }

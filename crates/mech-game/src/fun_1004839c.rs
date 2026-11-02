@@ -20,17 +20,30 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1004839c() {
+    mech_trace::enter!("1004839c");
     // SAFETY: the globals and callees are the game's own; each list node
     // is read at offset 0x14 before being freed.
     unsafe {
-        let mut local_c: u32 = DAT_10160be0;
+        let mut local_c: u32 = mech_trace::gr!("1004839c", "10160be0", DAT_10160be0);
         while local_c != 0 {
-            FUN_10048832(local_c as i32);
-            let pv_var1: u32 = ((local_c as usize + 0x14) as *const u32).read_unaligned();
-            HeapFree(DAT_100adf74, 1, local_c as usize as *mut core::ffi::c_void);
+            mech_trace::cr!("1004839c", "10048832", FUN_10048832(local_c as i32));
+            let pv_var1: u32 = mech_trace::rd!(
+                "1004839c",
+                ((local_c as usize + 0x14) as *const u32),
+                read_unaligned
+            );
+            mech_trace::cr!(
+                "1004839c",
+                "HeapFree",
+                HeapFree(
+                    mech_trace::gr!("1004839c", "100adf74", DAT_100adf74),
+                    1,
+                    local_c as usize as *mut core::ffi::c_void
+                )
+            );
             local_c = pv_var1;
         }
-        DAT_10160be0 = 0;
-        DAT_10160bdc = 0;
+        mech_trace::gw!("1004839c", "10160be0", DAT_10160be0, 0);
+        mech_trace::gw!("1004839c", "10160bdc", DAT_10160bdc, 0);
     }
 }

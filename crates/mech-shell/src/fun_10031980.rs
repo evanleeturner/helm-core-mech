@@ -9,12 +9,18 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10031980(param_1: i32) {
+    mech_trace::enter!("10031980", param_1);
     // SAFETY: param_1 is the address of a game object; the field at offset
     // 0x22c is read and written where the original does, and the callees are
     // the game's own.
     unsafe {
         let p = (param_1 as usize).wrapping_add(0x22c) as *mut i32;
-        p.write_unaligned(p.read_unaligned().wrapping_sub(100));
+        mech_trace::wr!(
+            "10031980",
+            p,
+            write_unaligned,
+            mech_trace::rd!("10031980", p, read_unaligned).wrapping_sub(100)
+        );
         FUN_1000a6f0(param_1);
         FUN_1000a890(param_1);
     }

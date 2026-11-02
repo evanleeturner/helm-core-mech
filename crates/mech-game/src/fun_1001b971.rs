@@ -52,6 +52,10 @@ pub unsafe extern "C" fn FUN_1001b971(
     param_11: *mut i32,
     param_12: *mut i32,
 ) -> i32 {
+    mech_trace::enter!(
+        "1001b971", param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
+        param_9, param_10, param_11, param_12
+    );
     let (mut local_18, u_var15, u_var7a, u_var16a) = cross(
         param_5.wrapping_sub(param_2),
         param_9.wrapping_sub(param_6),
@@ -79,11 +83,11 @@ pub unsafe extern "C" fn FUN_1001b971(
         if u_var7 == 0 {
             // SAFETY: caller supplies valid output pointers.
             unsafe {
-                *param_12 = -1;
-                *param_11 = *param_12;
-                *param_10 = *param_11;
+                mech_trace::dw!("1001b971", param_12, -1);
+                mech_trace::dw!("1001b971", param_11, mech_trace::dr!("1001b971", param_12));
+                mech_trace::dw!("1001b971", param_10, mech_trace::dr!("1001b971", param_11));
             }
-            return 0;
+            return mech_trace::rt!("1001b971", 0);
         }
         let mut s_var5: i16 = 0x18;
         if (u_var7 & 0xffff0000) != 0 {
@@ -184,12 +188,12 @@ pub unsafe extern "C" fn FUN_1001b971(
     unsafe {
         let base = (&raw mut DAT_10165944) as u32;
         let addr = (idx as u32).wrapping_add(base) as *const u16;
-        let u_var6 = addr.read_unaligned() as u32;
+        let u_var6 = mech_trace::rd!("1001b971", addr, read_unaligned) as u32;
 
-        *param_10 = div_part(local_18, u_var6);
-        *param_11 = div_part(local_20, u_var6);
-        *param_12 = div_part(local_28, u_var6);
+        mech_trace::dw!("1001b971", param_10, div_part(local_18, u_var6));
+        mech_trace::dw!("1001b971", param_11, div_part(local_20, u_var6));
+        mech_trace::dw!("1001b971", param_12, div_part(local_28, u_var6));
     }
 
-    local_24 as i32
+    mech_trace::rt!("1001b971", local_24 as i32)
 }

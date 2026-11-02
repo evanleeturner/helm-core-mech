@@ -11,12 +11,13 @@ unsafe extern "C" {
 #[inline(always)]
 unsafe fn rd<T>(addr: i32) -> T {
     // SAFETY: the caller guarantees the address is readable game memory.
-    unsafe { (addr as usize as *const T).read_unaligned() }
+    unsafe { mech_trace::rd!("10044a83", (addr as usize as *const T), read_unaligned) }
 }
 
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10044a83(param_1: i32) {
+    mech_trace::enter!("10044a83", param_1);
     // SAFETY: param_1 points at the game's object; all offsets read are the
     // original's, and the callees are the game's own.
     unsafe {
@@ -25,8 +26,12 @@ pub unsafe extern "C" fn FUN_10044a83(param_1: i32) {
             && rd::<i16>(param_1.wrapping_add(0x1e4)) == 0
             && rd::<i16>(param_1.wrapping_add(0x1c4)) != 10
         {
-            FUN_1002950f(param_1, rd::<i16>(param_1.wrapping_add(0x178)));
-            let u_var1 = FUN_1002a132(param_1) as u32;
+            mech_trace::cr!(
+                "10044a83",
+                "1002950f",
+                FUN_1002950f(param_1, rd::<i16>(param_1.wrapping_add(0x178)))
+            );
+            let u_var1 = mech_trace::cr!("10044a83", "1002a132", FUN_1002a132(param_1)) as u32;
             let sign = (u_var1 as i32) >> 0x1f;
             let i_var2 = (u_var1 ^ (sign as u32)).wrapping_sub(sign as u32) as i32;
             let limit = rd::<i32>(i_var3.wrapping_add(0x414));
@@ -38,15 +43,16 @@ pub unsafe extern "C" fn FUN_10044a83(param_1: i32) {
                     && rd::<i8>(rd::<i32>(param_1.wrapping_add(0x4c)).wrapping_add(0x1d)) != 0
                     && rd::<i32>(param_1.wrapping_add(0x78)) != 0
                 {
-                    FUN_1004403d(param_1, 0);
+                    mech_trace::cr!("10044a83", "1004403d", FUN_1004403d(param_1, 0));
                 }
             } else {
-                i_var3 = FUN_10044bba(param_1, 0x14) as i32;
+                i_var3 =
+                    mech_trace::cr!("10044a83", "10044bba", FUN_10044bba(param_1, 0x14)) as i32;
                 if i_var3 != 0
                     && rd::<i32>(param_1.wrapping_add(0x78)) != 0
                     && rd::<i8>(rd::<i32>(param_1.wrapping_add(0x4c)).wrapping_add(0x1d)) == 0
                 {
-                    FUN_1004403d(param_1, 1);
+                    mech_trace::cr!("10044a83", "1004403d", FUN_1004403d(param_1, 1));
                 }
             }
         }

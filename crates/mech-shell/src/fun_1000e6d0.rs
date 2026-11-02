@@ -17,24 +17,35 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1000e6d0(param_1: u32) -> *mut u8 {
+    mech_trace::enter!("1000e6d0", param_1);
     // SAFETY: the globals, format strings and sprintf are the game's own;
     // the buffer is the game's path buffer, written where the original does.
     unsafe {
-        if DAT_1008e3e0 == 0 || DAT_100a6780 == 0 {
-            sprintf(
-                (&raw mut DAT_100b0568).cast::<i8>(),
-                (&raw const DAT_1008e420).cast::<i8>(),
-                param_1,
+        if mech_trace::gr!("1000e6d0", "1008e3e0", DAT_1008e3e0) == 0
+            || mech_trace::gr!("1000e6d0", "100a6780", DAT_100a6780) == 0
+        {
+            mech_trace::cr!(
+                "1000e6d0",
+                "sprintf",
+                sprintf(
+                    (&raw mut DAT_100b0568).cast::<i8>(),
+                    (&raw const DAT_1008e420).cast::<i8>(),
+                    param_1,
+                )
             );
         } else {
-            sprintf(
-                (&raw mut DAT_100b0568).cast::<i8>(),
-                (&raw const DAT_1008e410).cast::<i8>(),
-                &raw mut DAT_100a6780,
-                param_1,
+            mech_trace::cr!(
+                "1000e6d0",
+                "sprintf",
+                sprintf(
+                    (&raw mut DAT_100b0568).cast::<i8>(),
+                    (&raw const DAT_1008e410).cast::<i8>(),
+                    &raw mut DAT_100a6780,
+                    param_1,
+                )
             );
         }
-        DAT_1008e3e0 = 0;
-        (&raw mut DAT_100b0568).cast::<u8>()
+        mech_trace::gw!("1000e6d0", "1008e3e0", DAT_1008e3e0, 0);
+        mech_trace::rt!("1000e6d0", (&raw mut DAT_100b0568).cast::<u8>())
     }
 }

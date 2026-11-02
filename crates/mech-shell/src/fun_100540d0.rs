@@ -26,27 +26,52 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_100540d0() {
+    mech_trace::enter!("100540d0");
     let mut local_20: [i32; 8] = [0; 8];
     // SAFETY: all globals and callees are the game's own; the pointers
     // computed stay within the game's tables exactly as the original does.
     unsafe {
-        let i_var2 = FUN_100576a0(DAT_1009c558);
-        _sprintf(
-            local_20.as_mut_ptr().cast::<i8>(),
-            (&raw const DAT_1009fea0).cast::<i8>(),
-            (i_var2 as u32).wrapping_add(0x50),
+        let i_var2 = mech_trace::cr!(
+            "100540d0",
+            "100576a0",
+            FUN_100576a0(mech_trace::gr!("100540d0", "1009c558", DAT_1009c558))
         );
-        let file = FID_conflict___wfopen(
-            local_20.as_ptr().cast::<i8>(),
-            (&raw const DAT_1009feb0).cast::<i8>(),
+        mech_trace::cr!(
+            "100540d0",
+            "_sprintf",
+            _sprintf(
+                local_20.as_mut_ptr().cast::<i8>(),
+                (&raw const DAT_1009fea0).cast::<i8>(),
+                (i_var2 as u32).wrapping_add(0x50),
+            )
+        );
+        let file = mech_trace::cr!(
+            "100540d0",
+            "FID_conflict___wfopen",
+            FID_conflict___wfopen(
+                local_20.as_ptr().cast::<i8>(),
+                (&raw const DAT_1009feb0).cast::<i8>(),
+            )
         );
         if file.is_null() {
             return;
         }
-        _fread((&raw mut DAT_100bd950).cast::<u8>(), 0x40, 1, file);
-        _fread((&raw mut DAT_100bfed8).cast::<u8>(), 0x10, 0x10, file);
-        _fread((&raw mut DAT_100beeb8).cast::<u8>(), 0xde0, 1, file);
-        _fclose(file);
+        mech_trace::cr!(
+            "100540d0",
+            "_fread",
+            _fread((&raw mut DAT_100bd950).cast::<u8>(), 0x40, 1, file)
+        );
+        mech_trace::cr!(
+            "100540d0",
+            "_fread",
+            _fread((&raw mut DAT_100bfed8).cast::<u8>(), 0x10, 0x10, file)
+        );
+        mech_trace::cr!(
+            "100540d0",
+            "_fread",
+            _fread((&raw mut DAT_100beeb8).cast::<u8>(), 0xde0, 1, file)
+        );
+        mech_trace::cr!("100540d0", "_fclose", _fclose(file));
         let base = (&raw mut DAT_100beeb8).cast::<u8>();
         let tbl = (&raw mut DAT_100bdf90).cast::<u8>();
         FUN_10053df0(base as i32);
@@ -58,19 +83,27 @@ pub unsafe extern "stdcall" fn FUN_100540d0() {
                 let src = base
                     .byte_add(local_20[0].wrapping_add(i_var4).wrapping_mul(0x18) as usize)
                     .cast::<i32>();
-                if DAT_1009c558 == src.add(1).read_unaligned() {
+                if mech_trace::gr!("100540d0", "1009c558", DAT_1009c558)
+                    == mech_trace::rd!("100540d0", src.add(1), read_unaligned)
+                {
                     let mut i_var6: i32 = 0;
                     let mut i_var3: i32 = i_var2;
                     loop {
                         let dst = tbl.byte_add(i_var3 as usize).cast::<i32>();
-                        let differs = dst.add(1).read_unaligned() != src.add(1).read_unaligned()
-                            || src.read_unaligned() != dst.read_unaligned()
-                            || src.add(2).read_unaligned() != dst.add(2).read_unaligned()
-                            || src.add(4).read_unaligned() != dst.add(4).read_unaligned()
-                            || src.add(5).read_unaligned() != dst.add(5).read_unaligned()
-                            || src.add(3).read_unaligned() != dst.add(3).read_unaligned();
+                        let differs = mech_trace::rd!("100540d0", dst.add(1), read_unaligned)
+                            != mech_trace::rd!("100540d0", src.add(1), read_unaligned)
+                            || mech_trace::rd!("100540d0", src, read_unaligned)
+                                != mech_trace::rd!("100540d0", dst, read_unaligned)
+                            || mech_trace::rd!("100540d0", src.add(2), read_unaligned)
+                                != mech_trace::rd!("100540d0", dst.add(2), read_unaligned)
+                            || mech_trace::rd!("100540d0", src.add(4), read_unaligned)
+                                != mech_trace::rd!("100540d0", dst.add(4), read_unaligned)
+                            || mech_trace::rd!("100540d0", src.add(5), read_unaligned)
+                                != mech_trace::rd!("100540d0", dst.add(5), read_unaligned)
+                            || mech_trace::rd!("100540d0", src.add(3), read_unaligned)
+                                != mech_trace::rd!("100540d0", dst.add(3), read_unaligned);
                         if differs {
-                            if -1 < dst.add(1).read_unaligned() {
+                            if -1 < mech_trace::rd!("100540d0", dst.add(1), read_unaligned) {
                                 i_var3 = i_var3.wrapping_add(0x378);
                                 i_var6 = i_var6.wrapping_add(1);
                                 if 3 < i_var6 {
@@ -86,7 +119,12 @@ pub unsafe extern "stdcall" fn FUN_100540d0() {
                             let mut p7 = (&raw mut DAT_100bdf90).cast::<u32>().offset(off as isize);
                             let mut n = 6;
                             while n != 0 {
-                                p7.write_unaligned(p5.read_unaligned());
+                                mech_trace::wr!(
+                                    "100540d0",
+                                    p7,
+                                    write_unaligned,
+                                    mech_trace::rd!("100540d0", p5, read_unaligned)
+                                );
                                 p5 = p5.add(1);
                                 p7 = p7.add(1);
                                 n -= 1;
@@ -106,7 +144,12 @@ pub unsafe extern "stdcall" fn FUN_100540d0() {
                 break;
             }
         }
-        _DAT_1009c68c = 0;
-        DAT_1009c690 = (&raw mut DAT_100bdf90).cast::<u8>();
+        mech_trace::gw!("100540d0", "_DAT_1009c68c", _DAT_1009c68c, 0);
+        mech_trace::gw!(
+            "100540d0",
+            "1009c690",
+            DAT_1009c690,
+            (&raw mut DAT_100bdf90).cast::<u8>()
+        );
     }
 }

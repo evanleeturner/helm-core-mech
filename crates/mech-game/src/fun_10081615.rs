@@ -18,19 +18,28 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10081615() {
+    mech_trace::enter!("10081615");
     // SAFETY: the globals, the table at DAT_100c8240 and HeapFree are the
     // game's own; entries are read and cleared in the original's order.
     unsafe {
         let mut local_8: i32 = 0;
-        while local_8 < DAT_100b98a0 {
+        while local_8 < mech_trace::gr!("10081615", "100b98a0", DAT_100b98a0) {
             let entry = (&raw mut DAT_100c8240)
                 .cast::<u32>()
                 .offset(local_8.wrapping_mul(3) as isize);
-            HeapFree(DAT_100adf74, 1, entry.read_unaligned() as *mut c_void);
-            entry.write_unaligned(0);
+            mech_trace::cr!(
+                "10081615",
+                "HeapFree",
+                HeapFree(
+                    mech_trace::gr!("10081615", "100adf74", DAT_100adf74),
+                    1,
+                    mech_trace::rd!("10081615", entry, read_unaligned) as *mut c_void
+                )
+            );
+            mech_trace::wr!("10081615", entry, write_unaligned, 0);
             local_8 = local_8.wrapping_add(1);
         }
-        DAT_100b98a0 = 0;
-        DAT_100b98a4 = 0;
+        mech_trace::gw!("10081615", "100b98a0", DAT_100b98a0, 0);
+        mech_trace::gw!("10081615", "100b98a4", DAT_100b98a4, 0);
     }
 }

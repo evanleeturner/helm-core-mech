@@ -26,6 +26,7 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1002ce4e(param_1: *mut i8) -> *mut u8 {
+    mech_trace::enter!("1002ce4e", param_1);
     let mut buf: [u8; 16] = [0; 16];
     let mut local_40: [u32; 8] = [0; 8];
     let mut local_10: *mut u8 = core::ptr::null_mut();
@@ -34,30 +35,43 @@ pub unsafe extern "C" fn FUN_1002ce4e(param_1: *mut i8) -> *mut u8 {
     // are the game's own; buf and local_40 are local storage large enough for
     // the writes made here.
     unsafe {
-        strncpy(buf.as_mut_ptr().add(2).cast::<i8>(), param_1, 0xc);
-        *buf.as_mut_ptr().add(14) = 0;
-        let local_44: u32 = if DAT_100c2dec < 2 {
-            let addr = PTR_DAT_100c2be0.wrapping_add((*param_1 as i32).wrapping_mul(2) as u32);
-            (((addr as *const u16).read_unaligned()) & 4) as u32
+        mech_trace::cr!(
+            "1002ce4e",
+            "strncpy",
+            strncpy(buf.as_mut_ptr().add(2).cast::<i8>(), param_1, 0xc)
+        );
+        mech_trace::dw!("1002ce4e", buf.as_mut_ptr().add(14), 0);
+        let local_44: u32 = if mech_trace::gr!("1002ce4e", "100c2dec", DAT_100c2dec) < 2 {
+            let addr = mech_trace::gr!("1002ce4e", "PTR_DAT_100c2be0", PTR_DAT_100c2be0)
+                .wrapping_add((mech_trace::dr!("1002ce4e", param_1) as i32).wrapping_mul(2) as u32);
+            ((mech_trace::rd!("1002ce4e", (addr as *const u16), read_unaligned)) & 4) as u32
         } else {
-            _isctype(*param_1 as i32, 4) as u32
+            mech_trace::cr!(
+                "1002ce4e",
+                "_isctype",
+                _isctype(mech_trace::dr!("1002ce4e", param_1) as i32, 4)
+            ) as u32
         };
         if local_44 == 0 {
-            local_c.write_unaligned(-1);
+            mech_trace::wr!("1002ce4e", local_c, write_unaligned, -1);
         } else {
-            let i_var1 = atoi(param_1);
-            local_c.write_unaligned(i_var1 as i16);
+            let i_var1 = mech_trace::cr!("1002ce4e", "atoi", atoi(param_1));
+            mech_trace::wr!("1002ce4e", local_c, write_unaligned, i_var1 as i16);
         }
-        let local_8 = FUN_1001d9b0(local_c, local_40.as_mut_ptr()) as *mut i32;
+        let local_8 = mech_trace::cr!(
+            "1002ce4e",
+            "1001d9b0",
+            FUN_1001d9b0(local_c, local_40.as_mut_ptr())
+        ) as *mut i32;
         if !local_8.is_null() {
-            let u_var2 = FUN_1002cf43(local_8 as i32);
+            let u_var2 = mech_trace::cr!("1002ce4e", "1002cf43", FUN_1002cf43(local_8 as i32));
             if u_var2 != 0 {
-                local_10 = FUN_1002d233();
+                local_10 = mech_trace::cr!("1002ce4e", "1002d233", FUN_1002d233());
             }
             FUN_1001dd9f(local_8);
             FUN_1004726c();
             FUN_1003289f();
         }
     }
-    local_10
+    mech_trace::rt!("1002ce4e", local_10)
 }

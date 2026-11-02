@@ -43,11 +43,11 @@ unsafe fn pix(mode: i32, t: i32, c: u8, p: u32) {
     // SAFETY: p is a pixel address inside the caller's surface; t is the caller's table.
     unsafe {
         if mode == 1 {
-            let v = *(p as *const u8);
-            let nv = *((t as u32).wrapping_add(v as u32) as *const u8);
-            *(p as *mut u8) = nv;
+            let v = mech_trace::dr!("10056489", (p as *const u8));
+            let nv = mech_trace::dr!("10056489", ((t as u32).wrapping_add(v as u32) as *const u8));
+            mech_trace::dw!("10056489", (p as *mut u8), nv);
         } else {
-            *(p as *mut u8) = c;
+            mech_trace::dw!("10056489", (p as *mut u8), c);
         }
     }
 }
@@ -56,7 +56,7 @@ unsafe fn call(f: i32, x: i32, y: i32) {
     // SAFETY: f is the caller's plot callback with this cdecl signature.
     unsafe {
         let func = core::mem::transmute::<usize, unsafe extern "C" fn(i32, i32)>(f as u32 as usize);
-        func(x, y);
+        mech_trace::cr!("10056489", "ind", func(x, y));
     }
 }
 
@@ -71,39 +71,42 @@ pub unsafe extern "C" fn FUN_10056489(
     param_6: i32,
     param_7: i32,
 ) -> u32 {
+    mech_trace::enter!(
+        "10056489", param_1, param_2, param_3, param_4, param_5, param_6, param_7
+    );
     // SAFETY: param_1 points at the caller's surface/clip descriptor; the pixel
     // pointers derived from it stay inside the surface as in the original.
     unsafe {
-        let pi_var1 = param_1.read_unaligned() as u32 as *mut i32;
-        let mut i_var29 = pi_var1.add(1).read_unaligned();
+        let pi_var1 = mech_trace::rd!("10056489", param_1, read_unaligned) as u32 as *mut i32;
+        let mut i_var29 = mech_trace::rd!("10056489", pi_var1.add(1), read_unaligned);
         let u_var5 = (i_var29 as u32).wrapping_add(1);
         if u_var5 == 0 || i_var29 < -1 {
-            return 0xffffffff;
+            return mech_trace::rt!("10056489", 0xffffffff);
         }
-        let i_var16 = pi_var1.add(2).read_unaligned();
+        let i_var16 = mech_trace::rd!("10056489", pi_var1.add(2), read_unaligned);
         if i_var16 < 0 {
-            return 0xffffffff;
+            return mech_trace::rt!("10056489", 0xffffffff);
         }
-        let mut local_30 = param_1.add(1).read_unaligned();
+        let mut local_30 = mech_trace::rd!("10056489", param_1.add(1), read_unaligned);
         let mut i_var6 = local_30;
         if local_30 < 1 {
             i_var6 = 0;
         }
-        let mut local_34 = param_1.add(2).read_unaligned();
+        let mut local_34 = mech_trace::rd!("10056489", param_1.add(2), read_unaligned);
         let mut i_var7 = local_34;
         if local_34 < 1 {
             i_var7 = 0;
         }
-        let mut i_var8 = param_1.add(3).read_unaligned();
-        if i_var29 <= param_1.add(3).read_unaligned() {
+        let mut i_var8 = mech_trace::rd!("10056489", param_1.add(3), read_unaligned);
+        if i_var29 <= mech_trace::rd!("10056489", param_1.add(3), read_unaligned) {
             i_var8 = i_var29;
         }
-        i_var29 = param_1.add(4).read_unaligned();
-        if i_var16 <= param_1.add(4).read_unaligned() {
+        i_var29 = mech_trace::rd!("10056489", param_1.add(4), read_unaligned);
+        if i_var16 <= mech_trace::rd!("10056489", param_1.add(4), read_unaligned) {
             i_var29 = i_var16;
         }
         if i_var8 < i_var6 || i_var29 < i_var7 {
-            return 0xfffffffe;
+            return mech_trace::rt!("10056489", 0xfffffffe);
         }
         let mut i_var16 = param_2.wrapping_add(local_30);
         local_30 = param_4.wrapping_add(local_30);
@@ -122,21 +125,21 @@ pub unsafe extern "C" fn FUN_10056489(
 
         if u_var9 == 0 {
             if i_var16 < i_var6 || i_var8 < i_var16 {
-                return 2;
+                return mech_trace::rt!("10056489", 2);
             }
             let mut t = i_var17;
             if i_var17 <= local_34 {
                 t = local_34;
             }
             if t < i_var7 {
-                return 2;
+                return mech_trace::rt!("10056489", 2);
             }
             t = i_var17;
             if local_34 <= i_var17 {
                 t = local_34;
             }
             if i_var29 < t {
-                return 2;
+                return mech_trace::rt!("10056489", 2);
             }
             if i_var17 <= i_var7 {
                 i_var17 = i_var7;
@@ -157,24 +160,24 @@ pub unsafe extern "C" fn FUN_10056489(
             local_2c = i_var17;
             if u_var11 == 0 {
                 if i_var17 < i_var7 {
-                    return 2;
+                    return mech_trace::rt!("10056489", 2);
                 }
                 if i_var29 < i_var17 {
-                    return 2;
+                    return mech_trace::rt!("10056489", 2);
                 }
                 i_var29 = i_var16;
                 if i_var16 <= local_30 {
                     i_var29 = local_30;
                 }
                 if i_var29 < i_var6 {
-                    return 2;
+                    return mech_trace::rt!("10056489", 2);
                 }
                 i_var29 = i_var16;
                 if local_30 <= i_var16 {
                     i_var29 = local_30;
                 }
                 if i_var8 < i_var29 {
-                    return 2;
+                    return mech_trace::rt!("10056489", 2);
                 }
                 if i_var16 <= i_var6 {
                     i_var16 = i_var6;
@@ -229,7 +232,7 @@ pub unsafe extern "C" fn FUN_10056489(
                         break;
                     }
                     if (b22 & b18) != 0 {
-                        return 2;
+                        return mech_trace::rt!("10056489", 2);
                     }
                     if (u_var10 as i32) < (u_var12 as i32) {
                         if b18 & 8 != 0 {
@@ -311,7 +314,7 @@ pub unsafe extern "C" fn FUN_10056489(
                 }
                 let mut p = (local_2c as u32)
                     .wrapping_mul(u_var5)
-                    .wrapping_add(pi_var1.read_unaligned() as u32)
+                    .wrapping_add(mech_trace::rd!("10056489", pi_var1, read_unaligned) as u32)
                     .wrapping_add(local_28 as u32);
                 let stride = (u_var5 ^ u_var20).wrapping_sub(u_var20);
                 if u_var10 != u_var12 {
@@ -335,8 +338,16 @@ pub unsafe extern "C" fn FUN_10056489(
                                     }
                                 }
                             } else {
-                                local_28 = local_28.wrapping_sub(param_1.add(1).read_unaligned());
-                                local_2c = local_2c.wrapping_sub(param_1.add(2).read_unaligned());
+                                local_28 = local_28.wrapping_sub(mech_trace::rd!(
+                                    "10056489",
+                                    param_1.add(1),
+                                    read_unaligned
+                                ));
+                                local_2c = local_2c.wrapping_sub(mech_trace::rd!(
+                                    "10056489",
+                                    param_1.add(2),
+                                    read_unaligned
+                                ));
                                 loop {
                                     call(param_7, local_28, local_2c);
                                     let ns = acc.wrapping_add(u_var14);
@@ -367,8 +378,16 @@ pub unsafe extern "C" fn FUN_10056489(
                                 }
                             }
                         } else {
-                            local_28 = local_28.wrapping_sub(param_1.add(1).read_unaligned());
-                            local_2c = local_2c.wrapping_sub(param_1.add(2).read_unaligned());
+                            local_28 = local_28.wrapping_sub(mech_trace::rd!(
+                                "10056489",
+                                param_1.add(1),
+                                read_unaligned
+                            ));
+                            local_2c = local_2c.wrapping_sub(mech_trace::rd!(
+                                "10056489",
+                                param_1.add(2),
+                                read_unaligned
+                            ));
                             loop {
                                 call(param_7, local_28, local_2c);
                                 let ns = acc.wrapping_add(u_var14);
@@ -407,8 +426,16 @@ pub unsafe extern "C" fn FUN_10056489(
                                     }
                                 }
                             } else {
-                                local_28 = local_28.wrapping_sub(param_1.add(1).read_unaligned());
-                                local_2c = local_2c.wrapping_sub(param_1.add(2).read_unaligned());
+                                local_28 = local_28.wrapping_sub(mech_trace::rd!(
+                                    "10056489",
+                                    param_1.add(1),
+                                    read_unaligned
+                                ));
+                                local_2c = local_2c.wrapping_sub(mech_trace::rd!(
+                                    "10056489",
+                                    param_1.add(2),
+                                    read_unaligned
+                                ));
                                 loop {
                                     call(param_7, local_28, local_2c);
                                     let ns = acc.wrapping_add(u_var14);
@@ -441,8 +468,16 @@ pub unsafe extern "C" fn FUN_10056489(
                                 }
                             }
                         } else {
-                            local_28 = local_28.wrapping_sub(param_1.add(1).read_unaligned());
-                            local_2c = local_2c.wrapping_sub(param_1.add(2).read_unaligned());
+                            local_28 = local_28.wrapping_sub(mech_trace::rd!(
+                                "10056489",
+                                param_1.add(1),
+                                read_unaligned
+                            ));
+                            local_2c = local_2c.wrapping_sub(mech_trace::rd!(
+                                "10056489",
+                                param_1.add(2),
+                                read_unaligned
+                            ));
                             loop {
                                 call(param_7, local_28, local_2c);
                                 let ns = acc.wrapping_add(u_var14);
@@ -460,7 +495,7 @@ pub unsafe extern "C" fn FUN_10056489(
                             }
                         }
                     }
-                    return (local_34 != 0) as u32;
+                    return mech_trace::rt!("10056489", (local_34 != 0) as u32);
                 }
                 u_var12 = (u_var5 ^ u_var20)
                     .wrapping_sub(u_var20)
@@ -473,7 +508,7 @@ pub unsafe extern "C" fn FUN_10056489(
 
         let mut p = (local_2c as u32)
             .wrapping_mul(u_var5)
-            .wrapping_add(pi_var1.read_unaligned() as u32)
+            .wrapping_add(mech_trace::rd!("10056489", pi_var1, read_unaligned) as u32)
             .wrapping_add(local_28 as u32);
         if param_6 < 2 {
             loop {
@@ -485,8 +520,10 @@ pub unsafe extern "C" fn FUN_10056489(
                 }
             }
         } else {
-            local_28 = local_28.wrapping_sub(param_1.add(1).read_unaligned());
-            local_2c = local_2c.wrapping_sub(param_1.add(2).read_unaligned());
+            local_28 =
+                local_28.wrapping_sub(mech_trace::rd!("10056489", param_1.add(1), read_unaligned));
+            local_2c =
+                local_2c.wrapping_sub(mech_trace::rd!("10056489", param_1.add(2), read_unaligned));
             u_var19 = ((u_var9 != 0) as u32) | u_var19;
             loop {
                 call(param_7, local_28, local_2c);
@@ -498,6 +535,6 @@ pub unsafe extern "C" fn FUN_10056489(
                 }
             }
         }
-        (local_34 != 0) as u32
+        mech_trace::rt!("10056489", (local_34 != 0) as u32)
     }
 }

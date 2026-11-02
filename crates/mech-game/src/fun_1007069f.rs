@@ -36,6 +36,7 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1007069f() -> i16 {
+    mech_trace::enter!("1007069f");
     let mut local_24 = tagMSG {
         hwnd: core::ptr::null_mut(),
         message: 0,
@@ -48,14 +49,30 @@ pub unsafe extern "stdcall" fn FUN_1007069f() -> i16 {
     // SAFETY: the callees are the game's own and the OS's; the pointers
     // refer to live locals of the right size.
     unsafe {
-        FUN_100701b9(local_8.as_mut_ptr().cast::<u16>());
+        mech_trace::cr!(
+            "1007069f",
+            "100701b9",
+            FUN_100701b9(local_8.as_mut_ptr().cast::<u16>())
+        );
         if local_8[0] == 0 {
-            let b_var1 = PeekMessageA(&raw mut local_24, core::ptr::null_mut(), 0x100, 0x108, 1);
+            let b_var1 = mech_trace::cr!(
+                "1007069f",
+                "PeekMessageA",
+                PeekMessageA(&raw mut local_24, core::ptr::null_mut(), 0x100, 0x108, 1)
+            );
             if b_var1 != 0 {
-                FUN_10070276(local_24.message, local_24.w_param, local_24.l_param as u32);
-                FUN_100701b9(local_8.as_mut_ptr().cast::<u16>());
+                mech_trace::cr!(
+                    "1007069f",
+                    "10070276",
+                    FUN_10070276(local_24.message, local_24.w_param, local_24.l_param as u32)
+                );
+                mech_trace::cr!(
+                    "1007069f",
+                    "100701b9",
+                    FUN_100701b9(local_8.as_mut_ptr().cast::<u16>())
+                );
             }
         }
-        local_8[0]
+        mech_trace::rt!("1007069f", local_8[0])
     }
 }

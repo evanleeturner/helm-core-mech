@@ -29,23 +29,28 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_100035a8() {
+    mech_trace::enter!("100035a8");
     // SAFETY: the callees and the global are the game's own; arguments are
     // passed in the original's order.
     unsafe {
         let u_var3: u16 = 0x250;
         let i_var2: i32 = -1;
-        let u_var1 = FUN_1000387d();
-        FUN_10002ba7(
-            0,
-            0,
-            0xe3,
-            core::ptr::null_mut(),
-            100,
-            DAT_100b3c4c as i32,
-            0x40,
-            u_var1,
-            i_var2,
-            u_var3,
+        let u_var1 = mech_trace::cr!("100035a8", "1000387d", FUN_1000387d());
+        mech_trace::cr!(
+            "100035a8",
+            "10002ba7",
+            FUN_10002ba7(
+                0,
+                0,
+                0xe3,
+                core::ptr::null_mut(),
+                100,
+                mech_trace::gr!("100035a8", "100b3c4c", DAT_100b3c4c) as i32,
+                0x40,
+                u_var1,
+                i_var2,
+                u_var3,
+            )
         );
     }
 }

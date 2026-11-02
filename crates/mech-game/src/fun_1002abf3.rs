@@ -21,6 +21,7 @@ pub unsafe extern "C" fn FUN_1002abf3(
     param_3: i16,
     param_4: u16,
 ) -> u32 {
+    mech_trace::enter!("1002abf3", param_1, param_2, param_3, param_4);
     let mut local_1c: u16 = 0xffff;
     let mut local_8: u16 = 0;
     let mut b_var3: bool = true;
@@ -29,7 +30,11 @@ pub unsafe extern "C" fn FUN_1002abf3(
     // game object whose fields are read and written at the original offsets.
     unsafe {
         loop {
-            let u_var4 = FUN_10029e46(param_1, param_2, local_1c);
+            let u_var4 = mech_trace::cr!(
+                "1002abf3",
+                "10029e46",
+                FUN_10029e46(param_1, param_2, local_1c)
+            );
             local_1c = u_var4 as u16;
             if local_1c == 0xffff {
                 break;
@@ -38,9 +43,15 @@ pub unsafe extern "C" fn FUN_1002abf3(
                 if local_1c == param_4 {
                     local_8 = local_8.wrapping_add(1);
                 } else {
-                    let i_var1: i32 = DAT_100eef40[(((local_1c as i16) as i32) & 0xff) as usize];
+                    let i_var1: i32 = mech_trace::gr!(
+                        "1002abf3",
+                        "100eef40",
+                        DAT_100eef40[(((local_1c as i16) as i32) & 0xff) as usize]
+                    );
                     let p = i_var1 as usize as *mut u8;
-                    let b_var6 = p.byte_add(0xc).cast::<i32>().read_unaligned() == 4;
+                    let b_var6 =
+                        mech_trace::rd!("1002abf3", p.byte_add(0xc).cast::<i32>(), read_unaligned)
+                            == 4;
                     if param_3 == 2 || param_3 == 5 {
                         if b_var2 && b_var6 {
                             b_var3 = false;
@@ -48,35 +59,109 @@ pub unsafe extern "C" fn FUN_1002abf3(
                     } else if b_var6 {
                         b_var3 = false;
                     }
-                    if p.byte_add(4).cast::<i32>().read_unaligned() != DAT_100adf38 && b_var3 {
-                        if p.byte_add(0x176).cast::<i16>().read_unaligned() == 0xc
-                            || FUN_1002a446(i_var1, param_3) == 0
+                    if mech_trace::rd!("1002abf3", p.byte_add(4).cast::<i32>(), read_unaligned)
+                        != mech_trace::gr!("1002abf3", "100adf38", DAT_100adf38)
+                        && b_var3
+                    {
+                        if mech_trace::rd!(
+                            "1002abf3",
+                            p.byte_add(0x176).cast::<i16>(),
+                            read_unaligned
+                        ) == 0xc
+                            || mech_trace::cr!(
+                                "1002abf3",
+                                "1002a446",
+                                FUN_1002a446(i_var1, param_3)
+                            ) == 0
                         {
                             local_8 = local_8.wrapping_add(1);
                         } else if param_3 == 3 {
-                            let v182 = p.byte_add(0x182).cast::<i32>().read_unaligned();
+                            let v182 = mech_trace::rd!(
+                                "1002abf3",
+                                p.byte_add(0x182).cast::<i32>(),
+                                read_unaligned
+                            );
                             let t: u32 = if v182 == 0 { 1 } else { 0 };
-                            p.byte_add(0x182).cast::<u32>().write_unaligned(t);
-                            let t = p.byte_add(0x17e).cast::<u32>().read_unaligned() & 0xffff_fffc;
-                            p.byte_add(0x17e).cast::<u32>().write_unaligned(t);
+                            mech_trace::wr!(
+                                "1002abf3",
+                                p.byte_add(0x182).cast::<u32>(),
+                                write_unaligned,
+                                t
+                            );
+                            let t = mech_trace::rd!(
+                                "1002abf3",
+                                p.byte_add(0x17e).cast::<u32>(),
+                                read_unaligned
+                            ) & 0xffff_fffc;
+                            mech_trace::wr!(
+                                "1002abf3",
+                                p.byte_add(0x17e).cast::<u32>(),
+                                write_unaligned,
+                                t
+                            );
                         } else {
-                            p.byte_add(0x17e).cast::<u32>().write_unaligned(0);
+                            mech_trace::wr!(
+                                "1002abf3",
+                                p.byte_add(0x17e).cast::<u32>(),
+                                write_unaligned,
+                                0
+                            );
                             if param_3 == 7 {
-                                FUN_1002a4e0(i_var1, 7, param_4, 0);
+                                mech_trace::cr!(
+                                    "1002abf3",
+                                    "1002a4e0",
+                                    FUN_1002a4e0(i_var1, 7, param_4, 0)
+                                );
                             } else {
-                                FUN_1002a4e0(i_var1, param_3, param_4, 1);
+                                mech_trace::cr!(
+                                    "1002abf3",
+                                    "1002a4e0",
+                                    FUN_1002a4e0(i_var1, param_3, param_4, 1)
+                                );
                             }
                             if param_3 == 2 {
-                                let t = p.byte_add(0x17e).cast::<u32>().read_unaligned() | 0x11;
-                                p.byte_add(0x17e).cast::<u32>().write_unaligned(t);
+                                let t = mech_trace::rd!(
+                                    "1002abf3",
+                                    p.byte_add(0x17e).cast::<u32>(),
+                                    read_unaligned
+                                ) | 0x11;
+                                mech_trace::wr!(
+                                    "1002abf3",
+                                    p.byte_add(0x17e).cast::<u32>(),
+                                    write_unaligned,
+                                    t
+                                );
                             } else {
                                 if param_3 == 5 {
-                                    p.byte_add(0x182).cast::<u32>().write_unaligned(0);
-                                    let t = p.byte_add(0x17e).cast::<u32>().read_unaligned() | 0x11;
-                                    p.byte_add(0x17e).cast::<u32>().write_unaligned(t);
+                                    mech_trace::wr!(
+                                        "1002abf3",
+                                        p.byte_add(0x182).cast::<u32>(),
+                                        write_unaligned,
+                                        0
+                                    );
+                                    let t = mech_trace::rd!(
+                                        "1002abf3",
+                                        p.byte_add(0x17e).cast::<u32>(),
+                                        read_unaligned
+                                    ) | 0x11;
+                                    mech_trace::wr!(
+                                        "1002abf3",
+                                        p.byte_add(0x17e).cast::<u32>(),
+                                        write_unaligned,
+                                        t
+                                    );
                                 }
-                                let t = p.byte_add(0x17e).cast::<u32>().read_unaligned() | 0x12;
-                                p.byte_add(0x17e).cast::<u32>().write_unaligned(t);
+                                let t = mech_trace::rd!(
+                                    "1002abf3",
+                                    p.byte_add(0x17e).cast::<u32>(),
+                                    read_unaligned
+                                ) | 0x12;
+                                mech_trace::wr!(
+                                    "1002abf3",
+                                    p.byte_add(0x17e).cast::<u32>(),
+                                    write_unaligned,
+                                    t
+                                );
                             }
                         }
                     }
@@ -84,5 +169,5 @@ pub unsafe extern "C" fn FUN_1002abf3(
             }
         }
     }
-    0xffff_0000u32 | u32::from(local_8)
+    mech_trace::rt!("1002abf3", 0xffff_0000u32 | u32::from(local_8))
 }

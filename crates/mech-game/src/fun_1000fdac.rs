@@ -22,14 +22,24 @@ unsafe fn fault_div_zero() {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1000fdac(param_1: i32, param_2: i32) -> i32 {
+    mech_trace::enter!("1000fdac", param_1, param_2);
     let base = param_2 as *const u8;
     // SAFETY: param_2 is the address of the caller's structure; fields are
     // read at the original's offsets, and the callee is the system's own.
     unsafe {
-        let d1 = base.byte_add(0x98).cast::<i32>().read_unaligned();
-        let n1 = (base.byte_add(0x90).cast::<i32>().read_unaligned() as u32)
+        let d1 = mech_trace::rd!(
+            "1000fdac",
+            base.byte_add(0x98).cast::<i32>(),
+            read_unaligned
+        );
+        let n1 = (mech_trace::rd!(
+            "1000fdac",
+            base.byte_add(0x90).cast::<i32>(),
+            read_unaligned
+        ) as u32)
             .wrapping_sub(param_1 as u32) as i32 as i64
-            * (base.byte_add(100).cast::<i32>().read_unaligned() as i64);
+            * (mech_trace::rd!("1000fdac", base.byte_add(100).cast::<i32>(), read_unaligned)
+                as i64);
         if d1 == 0 {
             RaiseException(0xC0000094, 0, 0, core::ptr::null());
             fault_div_zero();
@@ -39,13 +49,26 @@ pub unsafe extern "C" fn FUN_1000fdac(param_1: i32, param_2: i32) -> i32 {
             RaiseException(0xC0000094, 0, 0, core::ptr::null());
         }
 
-        let mut r1 = (q1 as i32 as u32)
-            .wrapping_add((base.byte_add(0x70).cast::<i32>().read_unaligned() >> 0x10) as u32)
-            as i32;
+        let mut r1 = (q1 as i32 as u32).wrapping_add(
+            (mech_trace::rd!(
+                "1000fdac",
+                base.byte_add(0x70).cast::<i32>(),
+                read_unaligned
+            ) >> 0x10) as u32,
+        ) as i32;
         r1 = 0u32.wrapping_sub(r1 as u32) as i32;
 
-        let d2 = base.byte_add(0x58).cast::<i32>().read_unaligned();
-        let n2 = (r1 as i64) * (base.byte_add(0x94).cast::<i32>().read_unaligned() as i64);
+        let d2 = mech_trace::rd!(
+            "1000fdac",
+            base.byte_add(0x58).cast::<i32>(),
+            read_unaligned
+        );
+        let n2 = (r1 as i64)
+            * (mech_trace::rd!(
+                "1000fdac",
+                base.byte_add(0x94).cast::<i32>(),
+                read_unaligned
+            ) as i64);
         if d2 == 0 {
             RaiseException(0xC0000094, 0, 0, core::ptr::null());
             fault_div_zero();
@@ -55,7 +78,14 @@ pub unsafe extern "C" fn FUN_1000fdac(param_1: i32, param_2: i32) -> i32 {
             RaiseException(0xC0000094, 0, 0, core::ptr::null());
         }
 
-        (base.byte_add(0x8c).cast::<i32>().read_unaligned() as u32).wrapping_add(q2 as i32 as u32)
-            as i32
+        mech_trace::rt!(
+            "1000fdac",
+            (mech_trace::rd!(
+                "1000fdac",
+                base.byte_add(0x8c).cast::<i32>(),
+                read_unaligned
+            ) as u32)
+                .wrapping_add(q2 as i32 as u32) as i32
+        )
     }
 }

@@ -15,20 +15,33 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_100654db() {
+    mech_trace::enter!("100654db");
     // SAFETY: the globals and the callee are the game's own; each pointer is
     // freed through the game's routine and then cleared, in the original order.
     unsafe {
-        if !DAT_100b38e8.is_null() {
-            FUN_1008d9b0(DAT_100b38e8);
-            DAT_100b38e8 = core::ptr::null_mut();
+        if !mech_trace::gr!("100654db", "100b38e8", DAT_100b38e8).is_null() {
+            mech_trace::cr!(
+                "100654db",
+                "1008d9b0",
+                FUN_1008d9b0(mech_trace::gr!("100654db", "100b38e8", DAT_100b38e8))
+            );
+            mech_trace::gw!("100654db", "100b38e8", DAT_100b38e8, core::ptr::null_mut());
         }
-        if !DAT_100b38e4.is_null() {
-            FUN_1008d9b0(DAT_100b38e4);
-            DAT_100b38e4 = core::ptr::null_mut();
+        if !mech_trace::gr!("100654db", "100b38e4", DAT_100b38e4).is_null() {
+            mech_trace::cr!(
+                "100654db",
+                "1008d9b0",
+                FUN_1008d9b0(mech_trace::gr!("100654db", "100b38e4", DAT_100b38e4))
+            );
+            mech_trace::gw!("100654db", "100b38e4", DAT_100b38e4, core::ptr::null_mut());
         }
-        if !DAT_100b38e0.is_null() {
-            FUN_1008d9b0(DAT_100b38e0);
-            DAT_100b38e0 = core::ptr::null_mut();
+        if !mech_trace::gr!("100654db", "100b38e0", DAT_100b38e0).is_null() {
+            mech_trace::cr!(
+                "100654db",
+                "1008d9b0",
+                FUN_1008d9b0(mech_trace::gr!("100654db", "100b38e0", DAT_100b38e0))
+            );
+            mech_trace::gw!("100654db", "100b38e0", DAT_100b38e0, core::ptr::null_mut());
         }
     }
 }

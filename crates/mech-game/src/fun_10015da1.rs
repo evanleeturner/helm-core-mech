@@ -7,22 +7,42 @@ unsafe extern "C" {
 
 unsafe fn rd(base: i32, off: i32) -> i32 {
     // SAFETY: caller guarantees base points at the game's object.
-    unsafe { (base.wrapping_add(off) as *const i32).read_unaligned() }
+    unsafe {
+        mech_trace::rd!(
+            "10015da1",
+            (base.wrapping_add(off) as *const i32),
+            read_unaligned
+        )
+    }
 }
 
 unsafe fn wr(base: i32, off: i32, v: i32) {
     // SAFETY: caller guarantees base points at the game's object.
-    unsafe { (base.wrapping_add(off) as *mut i32).write_unaligned(v) }
+    unsafe {
+        mech_trace::wr!(
+            "10015da1",
+            (base.wrapping_add(off) as *mut i32),
+            write_unaligned,
+            v
+        )
+    }
 }
 
 unsafe fn rs(base: i32, off: i32) -> i32 {
     // SAFETY: caller guarantees base points at the game's object.
-    unsafe { (base.wrapping_add(off) as *const i16).read_unaligned() as i32 }
+    unsafe {
+        mech_trace::rd!(
+            "10015da1",
+            (base.wrapping_add(off) as *const i16),
+            read_unaligned
+        ) as i32
+    }
 }
 
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10015da1(param_1: i32) {
+    mech_trace::enter!("10015da1", param_1);
     // SAFETY: param_1 is the game's object; the callee is the game's own.
     unsafe {
         wr(param_1, 0x5c, 0x1e7a);

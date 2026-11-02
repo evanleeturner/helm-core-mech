@@ -32,48 +32,80 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1006aa37() {
+    mech_trace::enter!("1006aa37");
     // SAFETY: all globals and callees are the game's own memory and code;
     // accesses happen in the same order as the original.
     unsafe {
-        if DAT_100b3ca4 == 0 {
-            DAT_100b3ca4 = 1;
-            if (DAT_10165940 as i32) < 1 {
-                DAT_100b3ca4 = 1;
+        if mech_trace::gr!("1006aa37", "100b3ca4", DAT_100b3ca4) == 0 {
+            mech_trace::gw!("1006aa37", "100b3ca4", DAT_100b3ca4, 1);
+            if (mech_trace::gr!("1006aa37", "10165940", DAT_10165940) as i32) < 1 {
+                mech_trace::gw!("1006aa37", "100b3ca4", DAT_100b3ca4, 1);
                 return;
             }
-            let src = FUN_1008668b(0, DAT_10165940, DAT_100af104 as *mut i32);
+            let src = mech_trace::cr!(
+                "1006aa37",
+                "1008668b",
+                FUN_1008668b(
+                    0,
+                    mech_trace::gr!("1006aa37", "10165940", DAT_10165940),
+                    mech_trace::gr!("1006aa37", "100af104", DAT_100af104) as *mut i32
+                )
+            );
             if src.is_null() {
                 return;
             }
-            sscanf(
-                src as *const i8,
-                (&raw mut DAT_100b3cac) as *const i8,
-                &raw mut DAT_100b3c40,
-                &raw mut DAT_100b3c44,
+            mech_trace::cr!(
+                "1006aa37",
+                "sscanf",
+                sscanf(
+                    src as *const i8,
+                    (&raw mut DAT_100b3cac) as *const i8,
+                    &raw mut DAT_100b3c40,
+                    &raw mut DAT_100b3c44,
+                )
             );
-            FUN_1008664f(DAT_10165940, DAT_100af104 as *mut i32);
+            mech_trace::cr!(
+                "1006aa37",
+                "1008664f",
+                FUN_1008664f(
+                    mech_trace::gr!("1006aa37", "10165940", DAT_10165940),
+                    mech_trace::gr!("1006aa37", "100af104", DAT_100af104) as *mut i32
+                )
+            );
         }
-        let mut i_var1 = FUN_10046fb4();
+        let mut i_var1 = mech_trace::cr!("1006aa37", "10046fb4", FUN_10046fb4());
         if i_var1 == 0 {
-            DAT_100b3c40 = 0xffff_ffff;
+            mech_trace::gw!("1006aa37", "100b3c40", DAT_100b3c40, 0xffff_ffff);
         } else {
-            i_var1 = FUN_10046563();
+            i_var1 = mech_trace::cr!("1006aa37", "10046563", FUN_10046563());
             if i_var1 == 1 {
-                DAT_100b3c40 = 0xffff_ffff;
-                FUN_100108a0(0x53, (&raw mut DAT_100b3cb4) as *const i8);
+                mech_trace::gw!("1006aa37", "100b3c40", DAT_100b3c40, 0xffff_ffff);
+                mech_trace::cr!(
+                    "1006aa37",
+                    "100108a0",
+                    FUN_100108a0(0x53, (&raw mut DAT_100b3cb4) as *const i8)
+                );
             } else {
-                i_var1 = FUN_10046fc9(DAT_100b3c40 as i32);
+                i_var1 = mech_trace::cr!(
+                    "1006aa37",
+                    "10046fc9",
+                    FUN_10046fc9(mech_trace::gr!("1006aa37", "100b3c40", DAT_100b3c40) as i32)
+                );
                 if i_var1 == 0 {
-                    DAT_100b3c40 = 0xffff_ffff;
-                } else if (DAT_100b3c58 & 8) != 0 {
-                    FUN_10046b4d(DAT_100b3c40 as i32);
-                    i_var1 = FUN_1004663a();
+                    mech_trace::gw!("1006aa37", "100b3c40", DAT_100b3c40, 0xffff_ffff);
+                } else if (mech_trace::gr!("1006aa37", "100b3c58", DAT_100b3c58) & 8) != 0 {
+                    mech_trace::cr!(
+                        "1006aa37",
+                        "10046b4d",
+                        FUN_10046b4d(mech_trace::gr!("1006aa37", "100b3c40", DAT_100b3c40) as i32)
+                    );
+                    i_var1 = mech_trace::cr!("1006aa37", "1004663a", FUN_1004663a());
                     if i_var1 != 3 {
-                        DAT_100b3c40 = 0xffff_ffff;
+                        mech_trace::gw!("1006aa37", "100b3c40", DAT_100b3c40, 0xffff_ffff);
                     }
                 }
             }
         }
-        DAT_100b3c44 = 0xffff_ffff;
+        mech_trace::gw!("1006aa37", "100b3c44", DAT_100b3c44, 0xffff_ffff);
     }
 }

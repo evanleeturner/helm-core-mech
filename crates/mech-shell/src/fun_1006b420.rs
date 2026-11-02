@@ -8,16 +8,17 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1006b420() -> i32 {
+    mech_trace::enter!("1006b420");
     let mut i_var1: i32 = 0;
     let mut i_var2: i32 = -1;
     loop {
         // SAFETY: the global holds the address of the game's own structure;
         // the slot read lies within it.
         unsafe {
-            let addr = DAT_100aa6b8
+            let addr = mech_trace::gr!("1006b420", "100aa6b8", DAT_100aa6b8)
                 .wrapping_add(0x28c)
                 .wrapping_add((i_var1 as u32).wrapping_mul(4));
-            if (addr as *const i32).read_unaligned() == -1 {
+            if mech_trace::rd!("1006b420", (addr as *const i32), read_unaligned) == -1 {
                 i_var2 = i_var1;
             }
         }
@@ -30,5 +31,5 @@ pub unsafe extern "stdcall" fn FUN_1006b420() -> i32 {
     if -1 < i_var2 {
         i_var1 = i_var2;
     }
-    i_var1
+    mech_trace::rt!("1006b420", i_var1)
 }

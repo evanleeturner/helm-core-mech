@@ -9,9 +9,14 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_100070d0() {
+    mech_trace::enter!("100070d0");
     // SAFETY: the callee is the game's own memcpy; the fixed addresses are
     // the game's own memory regions, copied exactly as the original does.
     unsafe {
-        FID_conflict__memcpy(0xb0000 as *mut u8, 0xb00a0 as *const u8, 0xf00);
+        mech_trace::cr!(
+            "100070d0",
+            "FID_conflict__memcpy",
+            FID_conflict__memcpy(0xb0000 as *mut u8, 0xb00a0 as *const u8, 0xf00)
+        );
     }
 }

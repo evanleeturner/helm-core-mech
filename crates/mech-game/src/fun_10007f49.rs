@@ -19,6 +19,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10007f49(param_1: i32, param_2: i32) {
+    mech_trace::enter!("10007f49", param_1, param_2);
     // SAFETY: all globals and the callee are the game's own memory; the
     // table reads and pointer values mirror the original's accesses.
     unsafe {
@@ -27,46 +28,74 @@ pub unsafe extern "C" fn FUN_10007f49(param_1: i32, param_2: i32) {
         if -1 < param_1 && (param_1 < 3 || param_1 == 4) && -1 < param_2 && param_2 < 8 {
             let tbl = (&raw const PTR_DAT_100a4fa8).cast::<u32>();
             if param_1 == 0 {
-                if -1 < (DAT_100a5030 as i32) {
-                    let base = tbl.offset(DAT_100a5030 as i32 as isize).read_unaligned();
+                if -1 < (mech_trace::gr!("10007f49", "100a5030", DAT_100a5030) as i32) {
+                    let base = mech_trace::rd!(
+                        "10007f49",
+                        tbl.offset(
+                            mech_trace::gr!("10007f49", "100a5030", DAT_100a5030) as i32 as isize
+                        ),
+                        read_unaligned
+                    );
                     if param_2 == 0 {
-                        local_8 =
-                            base.wrapping_add(DAT_100a5034.wrapping_mul(0xc)) as usize as *mut i32;
-                        DAT_100a5034 = (DAT_100a5034 == 0) as u32;
+                        local_8 = base.wrapping_add(
+                            mech_trace::gr!("10007f49", "100a5034", DAT_100a5034).wrapping_mul(0xc),
+                        ) as usize as *mut i32;
+                        mech_trace::gw!(
+                            "10007f49",
+                            "100a5034",
+                            DAT_100a5034,
+                            (mech_trace::gr!("10007f49", "100a5034", DAT_100a5034) == 0) as u32
+                        );
                     } else {
                         local_8 = base.wrapping_add((param_2 as u32).wrapping_mul(0xc)) as usize
                             as *mut i32;
                     }
                 }
-                if -1 < (DAT_100a5038 as i32) {
-                    let base = tbl.offset(DAT_100a5038 as i32 as isize).read_unaligned();
+                if -1 < (mech_trace::gr!("10007f49", "100a5038", DAT_100a5038) as i32) {
+                    let base = mech_trace::rd!(
+                        "10007f49",
+                        tbl.offset(
+                            mech_trace::gr!("10007f49", "100a5038", DAT_100a5038) as i32 as isize
+                        ),
+                        read_unaligned
+                    );
                     if param_2 == 0 {
-                        local_c =
-                            base.wrapping_add(DAT_100a503c.wrapping_mul(0xc)) as usize as *mut i32;
-                        DAT_100a503c = (DAT_100a503c == 0) as u32;
+                        local_c = base.wrapping_add(
+                            mech_trace::gr!("10007f49", "100a503c", DAT_100a503c).wrapping_mul(0xc),
+                        ) as usize as *mut i32;
+                        mech_trace::gw!(
+                            "10007f49",
+                            "100a503c",
+                            DAT_100a503c,
+                            (mech_trace::gr!("10007f49", "100a503c", DAT_100a503c) == 0) as u32
+                        );
                     } else {
                         local_c = base.wrapping_add((param_2 as u32).wrapping_mul(0xc)) as usize
                             as *mut i32;
                     }
                 }
             } else {
-                let v = (&raw const PTR_DAT_100a5028)
-                    .cast::<u32>()
-                    .offset(param_1.wrapping_mul(2) as isize)
-                    .read_unaligned();
+                let v = mech_trace::rd!(
+                    "10007f49",
+                    (&raw const PTR_DAT_100a5028)
+                        .cast::<u32>()
+                        .offset(param_1.wrapping_mul(2) as isize),
+                    read_unaligned
+                );
                 if -1 < (v as i32) {
                     let p = (&raw mut DAT_100a502c)
                         .cast::<u8>()
                         .byte_offset(param_1.wrapping_mul(8) as isize)
                         .cast::<u32>();
-                    let base = tbl.offset(v as i32 as isize).read_unaligned();
+                    let base =
+                        mech_trace::rd!("10007f49", tbl.offset(v as i32 as isize), read_unaligned);
                     if param_2 == 0 {
-                        let cur = p.read_unaligned();
+                        let cur = mech_trace::rd!("10007f49", p, read_unaligned);
                         local_8 = base.wrapping_add(cur.wrapping_mul(0xc)) as usize as *mut i32;
-                        if p.read_unaligned() == 0 {
-                            p.write_unaligned(1);
+                        if mech_trace::rd!("10007f49", p, read_unaligned) == 0 {
+                            mech_trace::wr!("10007f49", p, write_unaligned, 1);
                         } else {
-                            p.write_unaligned(0);
+                            mech_trace::wr!("10007f49", p, write_unaligned, 0);
                         }
                     } else {
                         local_8 = base.wrapping_add((param_2 as u32).wrapping_mul(0xc)) as usize
@@ -76,7 +105,7 @@ pub unsafe extern "C" fn FUN_10007f49(param_1: i32, param_2: i32) {
                 local_c = core::ptr::null_mut();
             }
             if !local_8.is_null() || !local_c.is_null() {
-                FUN_10007440(local_8, local_c, -1);
+                mech_trace::cr!("10007f49", "10007440", FUN_10007440(local_8, local_c, -1));
             }
         }
     }

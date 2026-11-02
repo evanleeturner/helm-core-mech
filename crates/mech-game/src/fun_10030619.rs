@@ -42,35 +42,49 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10030619() {
+    mech_trace::enter!("10030619");
     // SAFETY: the globals and callees are the game's own; the table
     // addresses are the game's arrays, written where the original does.
     unsafe {
         let mut local_c: i32 = 0;
         let mut local_8: i32 = 0;
-        DAT_100ada5c = 0;
-        DAT_100ada58 = 0;
-        DAT_100ada64 = 0;
-        DAT_100ada60 = 0;
-        DAT_100ada54 = 0;
+        mech_trace::gw!("10030619", "100ada5c", DAT_100ada5c, 0);
+        mech_trace::gw!("10030619", "100ada58", DAT_100ada58, 0);
+        mech_trace::gw!("10030619", "100ada64", DAT_100ada64, 0);
+        mech_trace::gw!("10030619", "100ada60", DAT_100ada60, 0);
+        mech_trace::gw!("10030619", "100ada54", DAT_100ada54, 0);
         let mut u_var1: u16 = 0;
         while u_var1 < 0x40 && local_8 == 0 {
-            let pu2 = FUN_1001c5d1(4, 1, 0x10, &raw mut local_c);
+            let pu2 = mech_trace::cr!(
+                "10030619",
+                "1001c5d1",
+                FUN_1001c5d1(4, 1, 0x10, &raw mut local_c)
+            );
             if pu2.is_null() {
                 local_8 = 1;
             } else {
-                DAT_100ada50 = DAT_100ada50.wrapping_add(1);
+                mech_trace::gw!(
+                    "10030619",
+                    "100ada50",
+                    DAT_100ada50,
+                    mech_trace::gr!("10030619", "100ada50", DAT_100ada50).wrapping_add(1)
+                );
                 let p2 = pu2 as usize as i32;
                 FUN_1001c72d(p2, -1000, 0, 1000, 0, 0);
                 FUN_1001c72d(p2, -1000, 0, -1000, 0, 0);
                 FUN_1001c72d(p2, 1000, 0, -1000, 0, 0);
                 FUN_1001c72d(p2, 1000, 0, 1000, 0, 0);
-                let pu3 = FUN_1001c7df(p2, (u_var1 as u32) | 0x9000, local_c);
+                let pu3 = mech_trace::cr!(
+                    "10030619",
+                    "1001c7df",
+                    FUN_1001c7df(p2, (u_var1 as u32) | 0x9000, local_c)
+                );
                 let p3 = pu3 as usize as i32;
                 FUN_1001c85e(p2, p3, 0);
                 FUN_1001c85e(p2, p3, 1);
                 FUN_1001c85e(p2, p3, 2);
                 FUN_1001c85e(p2, p3, 3);
-                let pi4 = FUN_1002f010(0, 0xc);
+                let pi4 = mech_trace::cr!("10030619", "1002f010", FUN_1002f010(0, 0xc));
                 let p4 = pi4 as usize as i32;
                 FUN_1002f272(p4, pu2);
                 FUN_1001d5e1(p2, pi4);
@@ -84,23 +98,58 @@ pub unsafe extern "stdcall" fn FUN_10030619() {
                 let idx = u_var1 as usize;
                 let b8800 = (&raw mut DAT_10168800) as *mut u8;
                 let b8900 = (&raw mut DAT_10168900) as *mut u8;
-                b8800
-                    .byte_add(idx.wrapping_mul(4))
-                    .cast::<u32>()
-                    .write_unaligned(u_var1 as u32);
+                mech_trace::wr!(
+                    "10030619",
+                    b8800.byte_add(idx.wrapping_mul(4)).cast::<u32>(),
+                    write_unaligned,
+                    u_var1 as u32
+                );
                 let rec = b8900.byte_add(idx.wrapping_mul(0x34));
-                rec.cast::<u32>().write_unaligned(u_var1 as u32);
-                rec.byte_add(0x30)
-                    .cast::<u32>()
-                    .write_unaligned(pi4 as usize as u32);
-                rec.byte_add(0xc).cast::<u32>().write_unaligned(0);
-                rec.byte_add(0x10).cast::<u32>().write_unaligned(0);
-                rec.byte_add(0x8).cast::<u32>().write_unaligned(0);
-                rec.byte_add(0x4).cast::<u32>().write_unaligned(0);
+                mech_trace::wr!(
+                    "10030619",
+                    rec.cast::<u32>(),
+                    write_unaligned,
+                    u_var1 as u32
+                );
+                mech_trace::wr!(
+                    "10030619",
+                    rec.byte_add(0x30).cast::<u32>(),
+                    write_unaligned,
+                    pi4 as usize as u32
+                );
+                mech_trace::wr!(
+                    "10030619",
+                    rec.byte_add(0xc).cast::<u32>(),
+                    write_unaligned,
+                    0
+                );
+                mech_trace::wr!(
+                    "10030619",
+                    rec.byte_add(0x10).cast::<u32>(),
+                    write_unaligned,
+                    0
+                );
+                mech_trace::wr!(
+                    "10030619",
+                    rec.byte_add(0x8).cast::<u32>(),
+                    write_unaligned,
+                    0
+                );
+                mech_trace::wr!(
+                    "10030619",
+                    rec.byte_add(0x4).cast::<u32>(),
+                    write_unaligned,
+                    0
+                );
             }
             u_var1 = u_var1.wrapping_add(1);
         }
-        DAT_100ada4c = DAT_100ada50.wrapping_sub(1);
+        mech_trace::gw!(
+            "10030619",
+            "100ada4c",
+            DAT_100ada4c,
+            mech_trace::gr!("10030619", "100ada50", DAT_100ada50).wrapping_sub(1)
+        );
         let tbl = (&raw mut DAT_10169600) as *mut u8;
         u_var1 = 0;
         while u_var1 < 0x10 {
@@ -114,7 +163,7 @@ pub unsafe extern "stdcall" fn FUN_10030619() {
                 } else {
                     (local_18 as u8) | 0xf
                 };
-                tbl.add(off).write(v);
+                mech_trace::wr!("10030619", tbl.add(off), write, v);
                 local_18 = (local_18 as u16).wrapping_add(1) as u32;
             }
             u_var1 = u_var1.wrapping_add(1);

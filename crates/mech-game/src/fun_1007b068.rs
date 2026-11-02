@@ -45,8 +45,8 @@ unsafe fn clip_pass(
         // SAFETY: cur/prev point at vertices of 6 ints in the caller's buffers;
         // out points into the other buffer, which does not overlap.
         unsafe {
-            let pv = *prev.add(axis);
-            let cv = *c.add(axis);
+            let pv = mech_trace::dr!("1007b068", prev.add(axis));
+            let cv = mech_trace::dr!("1007b068", c.add(axis));
             let pv_out = if greater { bound < pv } else { pv < bound };
             let cv_out = if greater { bound < cv } else { cv < bound };
             let mut do_clip = false;
@@ -55,12 +55,36 @@ unsafe fn clip_pass(
                     do_clip = true;
                 }
             } else {
-                *out.add(0) = *prev.add(0);
-                *out.add(1) = *prev.add(1);
-                *out.add(2) = *prev.add(2);
-                *out.add(3) = *prev.add(3);
-                *out.add(4) = *prev.add(4);
-                *out.add(5) = *prev.add(5);
+                mech_trace::dw!(
+                    "1007b068",
+                    out.add(0),
+                    mech_trace::dr!("1007b068", prev.add(0))
+                );
+                mech_trace::dw!(
+                    "1007b068",
+                    out.add(1),
+                    mech_trace::dr!("1007b068", prev.add(1))
+                );
+                mech_trace::dw!(
+                    "1007b068",
+                    out.add(2),
+                    mech_trace::dr!("1007b068", prev.add(2))
+                );
+                mech_trace::dw!(
+                    "1007b068",
+                    out.add(3),
+                    mech_trace::dr!("1007b068", prev.add(3))
+                );
+                mech_trace::dw!(
+                    "1007b068",
+                    out.add(4),
+                    mech_trace::dr!("1007b068", prev.add(4))
+                );
+                mech_trace::dw!(
+                    "1007b068",
+                    out.add(5),
+                    mech_trace::dr!("1007b068", prev.add(5))
+                );
                 out = out.add(6);
                 produced = produced.wrapping_add(1);
                 if cv_out {
@@ -94,17 +118,57 @@ unsafe fn clip_pass(
                     q = 0u32.wrapping_sub(q);
                 }
                 let t = q as i32;
-                *out.add(axis) = bound;
-                *out.add(other) = interp(*c.add(other), *prev.add(other), t);
-                if DAT_100b67e4 != 0 {
-                    *out.add(3) = interp(*c.add(3), *prev.add(3), t);
-                    *out.add(4) = interp(*c.add(4), *prev.add(4), t);
+                mech_trace::dw!("1007b068", out.add(axis), bound);
+                mech_trace::dw!(
+                    "1007b068",
+                    out.add(other),
+                    interp(
+                        mech_trace::dr!("1007b068", c.add(other)),
+                        mech_trace::dr!("1007b068", prev.add(other)),
+                        t
+                    )
+                );
+                if mech_trace::gr!("1007b068", "100b67e4", DAT_100b67e4) != 0 {
+                    mech_trace::dw!(
+                        "1007b068",
+                        out.add(3),
+                        interp(
+                            mech_trace::dr!("1007b068", c.add(3)),
+                            mech_trace::dr!("1007b068", prev.add(3)),
+                            t
+                        )
+                    );
+                    mech_trace::dw!(
+                        "1007b068",
+                        out.add(4),
+                        interp(
+                            mech_trace::dr!("1007b068", c.add(4)),
+                            mech_trace::dr!("1007b068", prev.add(4)),
+                            t
+                        )
+                    );
                 }
-                if DAT_100b67e8 != 0 {
-                    *out.add(5) = interp(*c.add(5), *prev.add(5), t);
+                if mech_trace::gr!("1007b068", "100b67e8", DAT_100b67e8) != 0 {
+                    mech_trace::dw!(
+                        "1007b068",
+                        out.add(5),
+                        interp(
+                            mech_trace::dr!("1007b068", c.add(5)),
+                            mech_trace::dr!("1007b068", prev.add(5)),
+                            t
+                        )
+                    );
                 }
-                if DAT_100b67ec != 0 {
-                    *out.add(2) = interp(*c.add(2), *prev.add(2), t);
+                if mech_trace::gr!("1007b068", "100b67ec", DAT_100b67ec) != 0 {
+                    mech_trace::dw!(
+                        "1007b068",
+                        out.add(2),
+                        interp(
+                            mech_trace::dr!("1007b068", c.add(2)),
+                            mech_trace::dr!("1007b068", prev.add(2)),
+                            t
+                        )
+                    );
                 }
                 out = out.add(6);
                 produced = produced.wrapping_add(1);
@@ -132,26 +196,39 @@ pub unsafe extern "C" fn FUN_1007b068(
     param_7: i32,
     param_8: i32,
 ) {
+    mech_trace::enter!(
+        "1007b068", param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8
+    );
     let mut param_3 = param_3;
     // SAFETY: all globals and the callee are the game's own; param_1/param_2
     // point at the caller's structures, accessed as the original does.
     unsafe {
         let mut local_20: u32 = 0;
-        let xmax = *param_1.add(3);
-        let xmin = *param_1.add(1);
-        let ymax = *param_1.add(4);
-        let ymin = *param_1.add(2);
-        let hdr = *param_1 as u32 as *const i32;
-        DAT_100b4ee0 = (hdr.add(1).read() as u32).wrapping_add(1) as i32;
-        DAT_100b4ee8 = hdr.read();
+        let xmax = mech_trace::dr!("1007b068", param_1.add(3));
+        let xmin = mech_trace::dr!("1007b068", param_1.add(1));
+        let ymax = mech_trace::dr!("1007b068", param_1.add(4));
+        let ymin = mech_trace::dr!("1007b068", param_1.add(2));
+        let hdr = mech_trace::dr!("1007b068", param_1) as u32 as *const i32;
+        mech_trace::gw!(
+            "1007b068",
+            "100b4ee0",
+            DAT_100b4ee0,
+            (mech_trace::rd!("1007b068", hdr.add(1), read) as u32).wrapping_add(1) as i32
+        );
+        mech_trace::gw!(
+            "1007b068",
+            "100b4ee8",
+            DAT_100b4ee8,
+            mech_trace::rd!("1007b068", hdr, read)
+        );
 
         let scratch: *mut i32 = (&raw mut DAT_100b4fe4).cast::<i32>();
 
         let mut i7 = param_3;
         let mut p12 = param_2;
         loop {
-            let x = *p12;
-            let y = *p12.add(1);
+            let x = mech_trace::dr!("1007b068", p12);
+            let y = mech_trace::dr!("1007b068", p12.add(1));
             local_20 |= (((((xmax as u32).wrapping_sub(x as u32)) >> 31) << 1
                 | (((x as u32).wrapping_sub(xmin as u32)) >> 31))
                 << 1
@@ -171,12 +248,17 @@ pub unsafe extern "C" fn FUN_1007b068(
 
         if local_20 != 0 {
             let mut b4: u8 = 0;
-            DAT_100b67e4 = param_4 & 0x400;
-            DAT_100b67e8 = ((param_4 & 0x600) == 0x600) as u32;
-            DAT_100b67ec = 1;
+            mech_trace::gw!("1007b068", "100b67e4", DAT_100b67e4, param_4 & 0x400);
+            mech_trace::gw!(
+                "1007b068",
+                "100b67e8",
+                DAT_100b67e8,
+                ((param_4 & 0x600) == 0x600) as u32
+            );
+            mech_trace::gw!("1007b068", "100b67ec", DAT_100b67ec, 1);
             let u5 = param_4 & 0x1c0;
             if u5 != 0x40 && u5 != 0xc0 && u5 != 0x100 && (param_4 & 7) != 4 && (param_4 & 7) != 7 {
-                DAT_100b67ec = 0;
+                mech_trace::gw!("1007b068", "100b67ec", DAT_100b67ec, 0);
             }
 
             // x > xmax
@@ -185,7 +267,10 @@ pub unsafe extern "C" fn FUN_1007b068(
                 b4 = 1;
                 param_3 = c;
                 if c == 0 {
-                    return finish(p12, param_3, param_4, param_5, param_6, param_7, param_8);
+                    return mech_trace::rt!(
+                        "1007b068",
+                        finish(p12, param_3, param_4, param_5, param_6, param_7, param_8)
+                    );
                 }
                 p12 = scratch;
                 p14 = scratch.offset((c.wrapping_sub(1) as isize) * 6);
@@ -197,7 +282,10 @@ pub unsafe extern "C" fn FUN_1007b068(
                 let c = clip_pass(p12, p14, p15, param_3, 1, ymin, false);
                 param_3 = c;
                 if c == 0 {
-                    return finish(p12, param_3, param_4, param_5, param_6, param_7, param_8);
+                    return mech_trace::rt!(
+                        "1007b068",
+                        finish(p12, param_3, param_4, param_5, param_6, param_7, param_8)
+                    );
                 }
                 b4 ^= 1;
                 if b4 != 0 {
@@ -216,7 +304,10 @@ pub unsafe extern "C" fn FUN_1007b068(
                 let c = clip_pass(p12, p14, p15, param_3, 0, xmin, false);
                 param_3 = c;
                 if c == 0 {
-                    return finish(p12, param_3, param_4, param_5, param_6, param_7, param_8);
+                    return mech_trace::rt!(
+                        "1007b068",
+                        finish(p12, param_3, param_4, param_5, param_6, param_7, param_8)
+                    );
                 }
                 b4 = b4.wrapping_add(1);
                 if (b4 & 1) != 0 {
@@ -261,18 +352,26 @@ unsafe fn finish(
         // SAFETY: the globals are the game's own; the dispatch table is indexed
         // by param_4 exactly as the original does.
         unsafe {
-            DAT_100b4ef0 = p12.wrapping_offset((param_3 as isize) * 6);
-            DAT_100b4fd8 = param_6;
-            DAT_100b4fdc = param_7;
-            DAT_100b4fe0 = param_8;
-            DAT_100b4f70 = param_5;
-            DAT_100b4eec = p12;
-            let f = (&raw mut DAT_10074068)
-                .cast::<Option<unsafe extern "C" fn()>>()
-                .add(param_4 as usize)
-                .read();
+            mech_trace::gw!(
+                "1007b068",
+                "100b4ef0",
+                DAT_100b4ef0,
+                p12.wrapping_offset((param_3 as isize) * 6)
+            );
+            mech_trace::gw!("1007b068", "100b4fd8", DAT_100b4fd8, param_6);
+            mech_trace::gw!("1007b068", "100b4fdc", DAT_100b4fdc, param_7);
+            mech_trace::gw!("1007b068", "100b4fe0", DAT_100b4fe0, param_8);
+            mech_trace::gw!("1007b068", "100b4f70", DAT_100b4f70, param_5);
+            mech_trace::gw!("1007b068", "100b4eec", DAT_100b4eec, p12);
+            let f = mech_trace::rd!(
+                "1007b068",
+                (&raw mut DAT_10074068)
+                    .cast::<Option<unsafe extern "C" fn()>>()
+                    .add(param_4 as usize),
+                read
+            );
             if let Some(f) = f {
-                f();
+                mech_trace::cr!("1007b068", "ind", f());
             }
         }
     }

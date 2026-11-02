@@ -8,12 +8,13 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1000d260(param_1: i32, param_2: i32) -> i32 {
+    mech_trace::enter!("1000d260", param_1, param_2);
     if param_1 == 0 {
-        return param_2 / 100;
+        return mech_trace::rt!("1000d260", param_2 / 100);
     }
     if param_1 != 1 {
         if param_1 != 2 {
-            return -1;
+            return mech_trace::rt!("1000d260", -1);
         }
         let mut row_index: i32 = 0x16;
         // SAFETY: the table is the game's own memory; entries are read at
@@ -21,9 +22,9 @@ pub unsafe extern "C" fn FUN_1000d260(param_1: i32, param_2: i32) -> i32 {
         let mut entry: *mut i32 = unsafe { (&raw mut DAT_10082cf0).cast::<i32>() };
         loop {
             // SAFETY: entry lies within the game's table.
-            let v = unsafe { entry.read_unaligned() };
+            let v = unsafe { mech_trace::rd!("1000d260", entry, read_unaligned) };
             if v / 0x32 == param_2 / 0x32 {
-                return row_index;
+                return mech_trace::rt!("1000d260", row_index);
             }
             entry = entry.wrapping_sub(3);
             row_index = row_index.wrapping_sub(1);
@@ -31,7 +32,7 @@ pub unsafe extern "C" fn FUN_1000d260(param_1: i32, param_2: i32) -> i32 {
                 break;
             }
         }
-        return -1;
+        return mech_trace::rt!("1000d260", -1);
     }
-    param_2.wrapping_sub(10000) / 10000
+    mech_trace::rt!("1000d260", param_2.wrapping_sub(10000) / 10000)
 }

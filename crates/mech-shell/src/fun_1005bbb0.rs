@@ -9,7 +9,7 @@ unsafe fn str_len(text: *const i8) -> u32 {
     let mut n: u32 = 0;
     // SAFETY: text points at a NUL-terminated string owned by the caller.
     unsafe {
-        while *text.add(n as usize) != 0 {
+        while mech_trace::dr!("1005bbb0", text.add(n as usize)) != 0 {
             n = n.wrapping_add(1);
         }
     }
@@ -19,6 +19,7 @@ unsafe fn str_len(text: *const i8) -> u32 {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1005bbb0(text: *mut i8) -> *mut i8 {
+    mech_trace::enter!("1005bbb0", text);
     // SAFETY: text is the caller's NUL-terminated buffer; it is read and
     // written in place at the same indices as the original.
     unsafe {
@@ -27,8 +28,12 @@ pub unsafe extern "C" fn FUN_1005bbb0(text: *mut i8) -> *mut i8 {
         if len != 0 {
             loop {
                 let next_index = char_index.wrapping_add(1);
-                let up = _toupper(*text.add(char_index as usize) as i32);
-                *text.add(char_index as usize) = up as i8;
+                let up = mech_trace::cr!(
+                    "1005bbb0",
+                    "_toupper",
+                    _toupper(mech_trace::dr!("1005bbb0", text.add(char_index as usize)) as i32)
+                );
+                mech_trace::dw!("1005bbb0", text.add(char_index as usize), up as i8);
                 let l = str_len(text);
                 char_index = next_index;
                 if !(next_index < l) {
@@ -37,5 +42,5 @@ pub unsafe extern "C" fn FUN_1005bbb0(text: *mut i8) -> *mut i8 {
             }
         }
     }
-    text
+    mech_trace::rt!("1005bbb0", text)
 }

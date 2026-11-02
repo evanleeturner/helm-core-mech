@@ -22,21 +22,30 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1005ab30() {
+    mech_trace::enter!("1005ab30");
     // SAFETY: the globals and the C runtime functions are the game's own;
     // the file handle is checked for null before use.
     unsafe {
-        let cfg_file = __wfopen(
-            (&raw mut s_MW2DIF_CFG_100a50b0).cast::<u16>(),
-            (&raw mut DAT_100a50ac).cast::<u16>(),
+        let cfg_file = mech_trace::cr!(
+            "1005ab30",
+            "__wfopen",
+            __wfopen(
+                (&raw mut s_MW2DIF_CFG_100a50b0).cast::<u16>(),
+                (&raw mut DAT_100a50ac).cast::<u16>(),
+            )
         );
         if !cfg_file.is_null() {
-            _fread(
-                (&raw mut DAT_100a6848).cast::<core::ffi::c_void>(),
-                0x17,
-                1,
-                cfg_file,
+            mech_trace::cr!(
+                "1005ab30",
+                "_fread",
+                _fread(
+                    (&raw mut DAT_100a6848).cast::<core::ffi::c_void>(),
+                    0x17,
+                    1,
+                    cfg_file,
+                )
             );
-            _fclose(cfg_file);
+            mech_trace::cr!("1005ab30", "_fclose", _fclose(cfg_file));
         }
     }
 }

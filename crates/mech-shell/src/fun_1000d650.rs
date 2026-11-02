@@ -15,25 +15,36 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1000d650(param_1: i32) -> u32 {
+    mech_trace::enter!("1000d650", param_1);
     let mut code_text: [i8; 4] = [0; 4];
     let mut row_index: i32 = 0;
     // SAFETY: the table, its rows, and the helper functions are the game's own
     // memory; param_1 is the caller's record address, read where the original does.
     unsafe {
         let mut table_row: *const *mut i8 = (&raw mut DAT_10083d8c).cast::<*mut i8>();
-        strncpy(
-            code_text.as_mut_ptr(),
-            (param_1.wrapping_add(0x81c)) as *const i8,
-            3,
+        mech_trace::cr!(
+            "1000d650",
+            "strncpy",
+            strncpy(
+                code_text.as_mut_ptr(),
+                (param_1.wrapping_add(0x81c)) as *const i8,
+                3,
+            )
         );
         code_text[3] = 0;
         loop {
-            let mut entry_cursor = FUN_1005bbb0(table_row.read_unaligned()) as *const u8;
-            let mut code_cursor = FUN_1005bbb0(code_text.as_mut_ptr()) as *const u8;
+            let mut entry_cursor = mech_trace::cr!(
+                "1000d650",
+                "1005bbb0",
+                FUN_1005bbb0(mech_trace::rd!("1000d650", table_row, read_unaligned))
+            ) as *const u8;
+            let mut code_cursor =
+                mech_trace::cr!("1000d650", "1005bbb0", FUN_1005bbb0(code_text.as_mut_ptr()))
+                    as *const u8;
             let equal: bool;
             loop {
-                let mut entry_char = entry_cursor.read();
-                if entry_char != code_cursor.read() {
+                let mut entry_char = mech_trace::rd!("1000d650", entry_cursor, read);
+                if entry_char != mech_trace::rd!("1000d650", code_cursor, read) {
                     equal = false;
                     break;
                 }
@@ -41,8 +52,8 @@ pub unsafe extern "C" fn FUN_1000d650(param_1: i32) -> u32 {
                     equal = true;
                     break;
                 }
-                entry_char = entry_cursor.add(1).read();
-                if entry_char != code_cursor.add(1).read() {
+                entry_char = mech_trace::rd!("1000d650", entry_cursor.add(1), read);
+                if entry_char != mech_trace::rd!("1000d650", code_cursor.add(1), read) {
                     equal = false;
                     break;
                 }
@@ -54,15 +65,21 @@ pub unsafe extern "C" fn FUN_1000d650(param_1: i32) -> u32 {
                 }
             }
             if equal {
-                return (&raw mut DAT_10083da8)
-                    .cast::<u32>()
-                    .offset((row_index.wrapping_mul(10)) as isize)
-                    .read_unaligned();
+                return mech_trace::rt!(
+                    "1000d650",
+                    mech_trace::rd!(
+                        "1000d650",
+                        (&raw mut DAT_10083da8)
+                            .cast::<u32>()
+                            .offset((row_index.wrapping_mul(10)) as isize),
+                        read_unaligned
+                    )
+                );
             }
             table_row = table_row.add(10);
             row_index = row_index.wrapping_add(1);
             if 0x100848a3usize < table_row as usize {
-                return 1;
+                return mech_trace::rt!("1000d650", 1);
             }
         }
     }

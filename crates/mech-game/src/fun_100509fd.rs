@@ -14,6 +14,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_100509fd(param_1: i32, param_2: i32) {
+    mech_trace::enter!("100509fd", param_1, param_2);
     let i_var1 = param_1.wrapping_mul(0x48);
     // SAFETY: the globals are the game's own tables, indexed by the caller's
     // entry number at 0x48 bytes per entry; the callee is the game's own.
@@ -24,10 +25,19 @@ pub unsafe extern "C" fn FUN_100509fd(param_1: i32, param_2: i32) {
         let b = (&raw mut DAT_101155e4)
             .byte_offset(i_var1 as isize)
             .cast::<i32>();
-        if -1 < a.read_unaligned() && a.read_unaligned() == param_2 && b.read_unaligned() != 0 {
-            FUN_1001d671(b.read_unaligned() as u32 as usize as *mut u8);
-            b.write_unaligned(0);
-            a.write_unaligned(-1);
+        if -1 < mech_trace::rd!("100509fd", a, read_unaligned)
+            && mech_trace::rd!("100509fd", a, read_unaligned) == param_2
+            && mech_trace::rd!("100509fd", b, read_unaligned) != 0
+        {
+            mech_trace::cr!(
+                "100509fd",
+                "1001d671",
+                FUN_1001d671(
+                    mech_trace::rd!("100509fd", b, read_unaligned) as u32 as usize as *mut u8
+                )
+            );
+            mech_trace::wr!("100509fd", b, write_unaligned, 0);
+            mech_trace::wr!("100509fd", a, write_unaligned, -1);
         }
     }
 }

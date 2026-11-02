@@ -13,11 +13,12 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10007690() {
+    mech_trace::enter!("10007690");
     // SAFETY: the global and the callee are the game's own; the pointer is
     // passed on only when non-null.
     unsafe {
-        if !DAT_100ad4c8.is_null() {
-            FUN_1005f810(DAT_100ad4c8);
+        if !mech_trace::gr!("10007690", "100ad4c8", DAT_100ad4c8).is_null() {
+            FUN_1005f810(mech_trace::gr!("10007690", "100ad4c8", DAT_100ad4c8));
         }
     }
 }

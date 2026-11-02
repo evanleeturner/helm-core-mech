@@ -13,11 +13,20 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1001c8a3(mem: *mut core::ffi::c_void) {
+    mech_trace::enter!("1001c8a3", mem);
     if !mem.is_null() {
         // SAFETY: the heap handle is the game's own global; mem is a block
         // the caller allocated from that heap.
         unsafe {
-            HeapFree(DAT_100adf74, 1, mem);
+            mech_trace::cr!(
+                "1001c8a3",
+                "HeapFree",
+                HeapFree(
+                    mech_trace::gr!("1001c8a3", "100adf74", DAT_100adf74),
+                    1,
+                    mem
+                )
+            );
         }
     }
 }

@@ -17,17 +17,22 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1006ab7b() {
+    mech_trace::enter!("1006ab7b");
     // SAFETY: the globals and callees are the game's own memory and code,
     // accessed in the same order as the original.
     unsafe {
-        if DAT_100b3ca0 == 0 {
-            if DAT_100b3c44 != 0xFFFF_FFFF && (DAT_100b3c58 & 4) != 0 {
-                FUN_1003c32b();
+        if mech_trace::gr!("1006ab7b", "100b3ca0", DAT_100b3ca0) == 0 {
+            if mech_trace::gr!("1006ab7b", "100b3c44", DAT_100b3c44) != 0xFFFF_FFFF
+                && (mech_trace::gr!("1006ab7b", "100b3c58", DAT_100b3c58) & 4) != 0
+            {
+                mech_trace::cr!("1006ab7b", "1003c32b", FUN_1003c32b());
             }
-            if DAT_100b3c40 != 0xFFFF_FFFF && (DAT_100b3c58 & 8) != 0 {
-                FUN_1004668e();
+            if mech_trace::gr!("1006ab7b", "100b3c40", DAT_100b3c40) != 0xFFFF_FFFF
+                && (mech_trace::gr!("1006ab7b", "100b3c58", DAT_100b3c58) & 8) != 0
+            {
+                mech_trace::cr!("1006ab7b", "1004668e", FUN_1004668e());
             }
-            DAT_100b3ca0 = 1;
+            mech_trace::gw!("1006ab7b", "100b3ca0", DAT_100b3ca0, 1);
         }
     }
 }

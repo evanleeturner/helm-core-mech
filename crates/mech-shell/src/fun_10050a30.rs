@@ -8,6 +8,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10050a30(param_1: i32, param_2: i32, param_3: i32, param_4: i32) {
+    mech_trace::enter!("10050a30", param_1, param_2, param_3, param_4);
     if param_2 < 8 {
         let mut i_var1: i32 = param_3
             .wrapping_add(1)
@@ -33,8 +34,8 @@ pub unsafe extern "C" fn FUN_10050a30(param_1: i32, param_2: i32, param_3: i32, 
                     // SAFETY: the pointers walk the game's own tables exactly
                     // as the original does.
                     unsafe {
-                        if pi_var4.read_unaligned() == param_4 {
-                            pu_var3.write_unaligned(1);
+                        if mech_trace::rd!("10050a30", pi_var4, read_unaligned) == param_4 {
+                            mech_trace::wr!("10050a30", pu_var3, write_unaligned, 1);
                         }
                     }
                     pu_var3 = pu_var3.wrapping_add(1);

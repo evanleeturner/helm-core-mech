@@ -36,25 +36,37 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10037cb1() {
+    mech_trace::enter!("10037cb1");
     // SAFETY: the globals and Win32 calls are the game's own; local_20 is a
     // valid MSG buffer that is only read after PeekMessageA has filled it.
     unsafe {
         let mut local_20: TagMsg = core::mem::zeroed();
         let p = &raw mut local_20;
-        if DAT_100adf80 == 0 {
-            WaitMessage();
+        if mech_trace::gr!("10037cb1", "100adf80", DAT_100adf80) == 0 {
+            mech_trace::cr!("10037cb1", "WaitMessage", WaitMessage());
         }
-        if DAT_100adf28 == 0 {
-            let b_var1 = PeekMessageA(p.cast(), core::ptr::null_mut(), 0, 0, 1);
+        if mech_trace::gr!("10037cb1", "100adf28", DAT_100adf28) == 0 {
+            let b_var1 = mech_trace::cr!(
+                "10037cb1",
+                "PeekMessageA",
+                PeekMessageA(p.cast(), core::ptr::null_mut(), 0, 0, 1)
+            );
             if b_var1 != 0 {
-                while DAT_100adf94 == 0 && 0x1ff < (*p).message && (*p).message < 0x20a {
-                    PeekMessageA(p.cast(), core::ptr::null_mut(), 0, 0, 1);
+                while mech_trace::gr!("10037cb1", "100adf94", DAT_100adf94) == 0
+                    && 0x1ff < (*p).message
+                    && (*p).message < 0x20a
+                {
+                    mech_trace::cr!(
+                        "10037cb1",
+                        "PeekMessageA",
+                        PeekMessageA(p.cast(), core::ptr::null_mut(), 0, 0, 1)
+                    );
                 }
                 if (*p).hwnd.is_null() || (*p).message != 0x12 {
-                    TranslateMessage(p.cast());
-                    DispatchMessageA(p.cast());
+                    mech_trace::cr!("10037cb1", "TranslateMessage", TranslateMessage(p.cast()));
+                    mech_trace::cr!("10037cb1", "DispatchMessageA", DispatchMessageA(p.cast()));
                 } else {
-                    DAT_100adf28 = 1;
+                    mech_trace::gw!("10037cb1", "100adf28", DAT_100adf28, 1);
                 }
             }
         }

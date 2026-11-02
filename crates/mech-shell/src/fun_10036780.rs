@@ -23,19 +23,33 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10036780(param_1: *mut i8) {
+    mech_trace::enter!("10036780", param_1);
     // SAFETY: the globals and the C runtime functions are the game's own;
     // param_1 is the caller's file name string.
     unsafe {
-        DAT_100b529c = DAT_10093c60;
-        let file_stream = __wfopen(param_1, &raw mut DAT_10093c84);
+        mech_trace::gw!(
+            "10036780",
+            "100b529c",
+            DAT_100b529c,
+            mech_trace::gr!("10036780", "10093c60", DAT_10093c60)
+        );
+        let file_stream = mech_trace::cr!(
+            "10036780",
+            "__wfopen",
+            __wfopen(param_1, &raw mut DAT_10093c84)
+        );
         if !file_stream.is_null() {
-            _fread(
-                (&raw mut DAT_100b5298).cast::<core::ffi::c_void>(),
-                1,
-                DAT_10093c60,
-                file_stream,
+            mech_trace::cr!(
+                "10036780",
+                "_fread",
+                _fread(
+                    (&raw mut DAT_100b5298).cast::<core::ffi::c_void>(),
+                    1,
+                    mech_trace::gr!("10036780", "10093c60", DAT_10093c60),
+                    file_stream,
+                )
             );
-            _fclose(file_stream);
+            mech_trace::cr!("10036780", "_fclose", _fclose(file_stream));
         }
     }
 }

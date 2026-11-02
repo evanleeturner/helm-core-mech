@@ -36,23 +36,41 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1000df80() -> i32 {
+    mech_trace::enter!("1000df80");
     // SAFETY: the globals, the format string and the callees are the game's
     // own; the arguments are passed as the original passes them.
     unsafe {
-        DAT_100d1540 = BitBlt(
-            DAT_1008d150,
-            0,
-            0,
-            DAT_100c605c,
-            DAT_100c6060,
-            DAT_1008d55c,
-            0,
-            0,
-            0xcc0020,
+        mech_trace::gw!(
+            "1000df80",
+            "100d1540",
+            DAT_100d1540,
+            mech_trace::cr!(
+                "1000df80",
+                "BitBlt",
+                BitBlt(
+                    mech_trace::gr!("1000df80", "1008d150", DAT_1008d150),
+                    0,
+                    0,
+                    mech_trace::gr!("1000df80", "100c605c", DAT_100c605c),
+                    mech_trace::gr!("1000df80", "100c6060", DAT_100c6060),
+                    mech_trace::gr!("1000df80", "1008d55c", DAT_1008d55c),
+                    0,
+                    0,
+                    0xcc0020,
+                )
+            )
         );
-        if DAT_100d1540 == 0 {
-            FUN_100640a0((&raw mut DAT_1008da0c).cast_const(), GetLastError());
+        if mech_trace::gr!("1000df80", "100d1540", DAT_100d1540) == 0 {
+            FUN_100640a0(
+                (&raw mut DAT_1008da0c).cast_const(),
+                mech_trace::cr!("1000df80", "GetLastError", GetLastError()),
+            );
         }
-        ((DAT_100c6060 == DAT_100d1540) as u32).wrapping_sub(1) as i32
+        mech_trace::rt!(
+            "1000df80",
+            ((mech_trace::gr!("1000df80", "100c6060", DAT_100c6060)
+                == mech_trace::gr!("1000df80", "100d1540", DAT_100d1540)) as u32)
+                .wrapping_sub(1) as i32
+        )
     }
 }

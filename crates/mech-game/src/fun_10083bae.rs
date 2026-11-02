@@ -14,12 +14,13 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10083bae(param_1: i32) {
+    mech_trace::enter!("10083bae", param_1);
     // SAFETY: the globals and callee are the game's own; DAT_100eef40 is the
     // base of an i32 array indexed by DAT_100adf38.
     unsafe {
         let base = &raw mut DAT_100eef40;
-        let idx = DAT_100adf38;
-        let v = base.offset(idx as isize).read();
+        let idx = mech_trace::gr!("10083bae", "100adf38", DAT_100adf38);
+        let v = mech_trace::rd!("10083bae", base.offset(idx as isize), read);
         FUN_1008276d(v, param_1, 4);
     }
 }

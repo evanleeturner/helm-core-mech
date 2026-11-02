@@ -29,27 +29,43 @@ pub unsafe extern "C" fn FUN_10058400(
     param_3: i32,
     param_4: i32,
 ) -> *mut i32 {
+    mech_trace::enter!("10058400", param_1, param_2, param_3, param_4);
     if param_3 == 0 {
-        return core::ptr::null_mut();
+        return mech_trace::rt!("10058400", core::ptr::null_mut());
     }
     // SAFETY: globals, the allocator and the callee are the game's own; param_3
     // points at the caller's collection and the allocated block is sized for
     // every slot written.
     unsafe {
         let mut i_var4: i32 = 1;
-        let cnt = ((param_3 as u32).wrapping_add(4) as *const i32).read_unaligned();
-        let p = HeapAlloc(
-            DAT_10098224,
-            1,
-            (cnt.wrapping_mul(0x70).wrapping_add(0x118)) as u32,
+        let cnt = mech_trace::rd!(
+            "10058400",
+            ((param_3 as u32).wrapping_add(4) as *const i32),
+            read_unaligned
+        );
+        let p = mech_trace::cr!(
+            "10058400",
+            "HeapAlloc",
+            HeapAlloc(
+                mech_trace::gr!("10058400", "10098224", DAT_10098224),
+                1,
+                (cnt.wrapping_mul(0x70).wrapping_add(0x118)) as u32,
+            )
         ) as *mut i32;
         let set = |i: i32, v: i32| {
             // SAFETY: index lies within the block allocated above.
-            unsafe { p.offset(i as isize).write_unaligned(v) }
+            unsafe { mech_trace::wr!("10058400", p.offset(i as isize), write_unaligned, v) }
         };
         let row = || -> i32 {
             // SAFETY: DAT_100a6744 points at the game's structure.
-            unsafe { ((DAT_100a6744.wrapping_add(0x40c)) as *const i32).read_unaligned() }
+            unsafe {
+                mech_trace::rd!(
+                    "10058400",
+                    ((mech_trace::gr!("10058400", "100a6744", DAT_100a6744).wrapping_add(0x40c))
+                        as *const i32),
+                    read_unaligned
+                )
+            }
         };
         let c49d0 = (&raw mut DAT_100c49d0) as i32;
         set(0, param_1);
@@ -66,9 +82,13 @@ pub unsafe extern "C" fn FUN_10058400(
         set(9, -1);
         set(10, -1);
         set(11, -1);
-        if 0 < ((param_3 as u32).wrapping_add(4) as *const i32).read_unaligned() {
+        if 0 < mech_trace::rd!(
+            "10058400",
+            ((param_3 as u32).wrapping_add(4) as *const i32),
+            read_unaligned
+        ) {
             loop {
-                let i_var2 = FUN_10018060(param_3, i_var3);
+                let i_var2 = mech_trace::cr!("10058400", "10018060", FUN_10018060(param_3, i_var3));
                 let i_var5 = i_var4.wrapping_add(1);
                 let b4 = i_var4.wrapping_mul(0xe);
                 set(b4, param_1);
@@ -103,17 +123,27 @@ pub unsafe extern "C" fn FUN_10058400(
                 set(b5.wrapping_add(8), 0);
                 set(
                     b5.wrapping_add(9),
-                    (i_var2.wrapping_add(0x24) as *const i32).read_unaligned(),
+                    mech_trace::rd!(
+                        "10058400",
+                        (i_var2.wrapping_add(0x24) as *const i32),
+                        read_unaligned
+                    ),
                 );
                 local_8 = local_8.wrapping_add(1);
                 set(b5.wrapping_add(10), param_4);
                 set(b5.wrapping_add(11), 0);
-                if !(i_var3 < ((param_3 as u32).wrapping_add(4) as *const i32).read_unaligned()) {
+                if !(i_var3
+                    < mech_trace::rd!(
+                        "10058400",
+                        ((param_3 as u32).wrapping_add(4) as *const i32),
+                        read_unaligned
+                    ))
+                {
                     break;
                 }
             }
         }
         set(i_var4.wrapping_mul(0xe), -1);
-        p
+        mech_trace::rt!("10058400", p)
     }
 }

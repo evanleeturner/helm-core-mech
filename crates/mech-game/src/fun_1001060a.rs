@@ -22,24 +22,50 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1001060a(param_1: i32) {
+    mech_trace::enter!("1001060a", param_1);
     // SAFETY: the globals and callees are the game's own; the slot table and
     // the records it points to are read and written where the original does.
     unsafe {
         let slot = (&raw mut DAT_101ec430)
             .byte_offset(param_1.wrapping_mul(4) as isize)
             .cast::<i32>();
-        let rec = slot.read_unaligned();
+        let rec = mech_trace::rd!("1001060a", slot, read_unaligned);
         if rec != 0 {
-            let flag = ((rec as usize).wrapping_add(0x18) as *const i32).read_unaligned();
+            let flag = mech_trace::rd!(
+                "1001060a",
+                ((rec as usize).wrapping_add(0x18) as *const i32),
+                read_unaligned
+            );
             if flag != 0 {
-                let off = ((rec as usize).wrapping_add(0x14) as *const i32).read_unaligned();
-                FUN_1008664f(
-                    (off as u32).wrapping_add(DAT_101686f0),
-                    PTR_DAT_100af0b4 as *mut i32,
+                let off = mech_trace::rd!(
+                    "1001060a",
+                    ((rec as usize).wrapping_add(0x14) as *const i32),
+                    read_unaligned
+                );
+                mech_trace::cr!(
+                    "1001060a",
+                    "1008664f",
+                    FUN_1008664f(
+                        (off as u32).wrapping_add(mech_trace::gr!(
+                            "1001060a",
+                            "101686f0",
+                            DAT_101686f0
+                        )),
+                        mech_trace::gr!("1001060a", "PTR_DAT_100af0b4", PTR_DAT_100af0b4)
+                            as *mut i32,
+                    )
                 );
             }
-            HeapFree(DAT_100adf74, 1, slot.read_unaligned() as *mut c_void);
-            slot.write_unaligned(0);
+            mech_trace::cr!(
+                "1001060a",
+                "HeapFree",
+                HeapFree(
+                    mech_trace::gr!("1001060a", "100adf74", DAT_100adf74),
+                    1,
+                    mech_trace::rd!("1001060a", slot, read_unaligned) as *mut c_void
+                )
+            );
+            mech_trace::wr!("1001060a", slot, write_unaligned, 0);
         }
     }
 }

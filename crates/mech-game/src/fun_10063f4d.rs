@@ -15,6 +15,7 @@ pub unsafe extern "C" fn FUN_10063f4d(
     param_3: *mut i32,
     param_4: *mut i32,
 ) {
+    mech_trace::enter!("10063f4d", param_1, param_2, param_3, param_4);
     let mut local_48: [i32; 6] = [0; 6];
     let mut local_10: i32 = 0;
     let mut local_c: i32 = 0;
@@ -23,7 +24,7 @@ pub unsafe extern "C" fn FUN_10063f4d(
     // writes they make, and the output pointers are the caller's.
     unsafe {
         FUN_10063fbd(param_1, local_48.as_mut_ptr());
-        let i_var1 = FUN_10063f34(param_1);
+        let i_var1 = mech_trace::cr!("10063f4d", "10063f34", FUN_10063f34(param_1));
         FUN_1002650e(local_48.as_mut_ptr(), i_var1);
         FUN_100640ee(
             param_1,
@@ -31,8 +32,23 @@ pub unsafe extern "C" fn FUN_10063f4d(
             &raw mut local_c,
             &raw mut local_10,
         );
-        param_2.write_unaligned(local_48[3].wrapping_sub(local_8));
-        param_3.write_unaligned(local_48[4].wrapping_sub(local_c));
-        param_4.write_unaligned(local_48[5].wrapping_sub(local_10));
+        mech_trace::wr!(
+            "10063f4d",
+            param_2,
+            write_unaligned,
+            local_48[3].wrapping_sub(local_8)
+        );
+        mech_trace::wr!(
+            "10063f4d",
+            param_3,
+            write_unaligned,
+            local_48[4].wrapping_sub(local_c)
+        );
+        mech_trace::wr!(
+            "10063f4d",
+            param_4,
+            write_unaligned,
+            local_48[5].wrapping_sub(local_10)
+        );
     }
 }

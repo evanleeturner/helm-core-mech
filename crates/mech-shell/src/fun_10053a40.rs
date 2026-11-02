@@ -36,17 +36,18 @@ unsafe extern "C" {
 
 unsafe fn rd(p: *mut u32, i: isize) -> u32 {
     // SAFETY: the caller passes a pointer into the game's tables.
-    unsafe { p.wrapping_offset(i).read_unaligned() }
+    unsafe { mech_trace::rd!("10053a40", p.wrapping_offset(i), read_unaligned) }
 }
 
 unsafe fn wr(p: *mut u32, i: isize, v: u32) {
     // SAFETY: the caller passes a pointer into the game's tables.
-    unsafe { p.wrapping_offset(i).write_unaligned(v) }
+    unsafe { mech_trace::wr!("10053a40", p.wrapping_offset(i), write_unaligned, v) }
 }
 
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10053a40() -> u32 {
+    mech_trace::enter!("10053a40");
     // SAFETY: all globals, tables and callees are the game's own memory;
     // table walks read and write where the original does.
     unsafe {
@@ -142,19 +143,31 @@ pub unsafe extern "stdcall" fn FUN_10053a40() -> u32 {
             p4 = p4.wrapping_add(6);
             i7 = i7.wrapping_add(1);
             if 0x100bed7fusize < (p4 as usize) {
-                let file = FID_conflict___wfopen(&raw const DAT_1009fdc4, &raw const DAT_1009fdc0);
-                DAT_1009f378 = 0;
-                DAT_1009f37c = 0;
+                let file = mech_trace::cr!(
+                    "10053a40",
+                    "FID_conflict___wfopen",
+                    FID_conflict___wfopen(&raw const DAT_1009fdc4, &raw const DAT_1009fdc0)
+                );
+                mech_trace::gw!("10053a40", "1009f378", DAT_1009f378, 0);
+                mech_trace::gw!("10053a40", "1009f37c", DAT_1009f37c, 0);
                 if file.is_null() {
                     FUN_1005b1b0(&raw const DAT_1009fe70);
                 } else {
                     let mut u5: u32 = 0;
                     let mut p = (&raw mut DAT_100bdf98) as *mut u32;
-                    FID_conflict__fwprintf(file, &raw const DAT_1009fdd0);
+                    mech_trace::cr!(
+                        "10053a40",
+                        "FID_conflict__fwprintf",
+                        FID_conflict__fwprintf(file, &raw const DAT_1009fdd0)
+                    );
                     loop {
                         if (rd(p, -1) as i32) > -1 {
                             let tbl = &raw const DAT_1009c5f8;
-                            let s = tbl.wrapping_add((u5 % 0x25) as usize).read_unaligned();
+                            let s = mech_trace::rd!(
+                                "10053a40",
+                                tbl.wrapping_add((u5 % 0x25) as usize),
+                                read_unaligned
+                            );
                             FUN_10053780(
                                 file,
                                 s as usize as *const u8,
@@ -170,21 +183,46 @@ pub unsafe extern "stdcall" fn FUN_10053a40() -> u32 {
                             break;
                         }
                     }
-                    let mut loc: [u32; 6] = [1, DAT_1009c6ac, 0, 0xffff_ffff, 0x66, 0xffff_ffff];
+                    let mut loc: [u32; 6] = [
+                        1,
+                        mech_trace::gr!("10053a40", "1009c6ac", DAT_1009c6ac),
+                        0,
+                        0xffff_ffff,
+                        0x66,
+                        0xffff_ffff,
+                    ];
                     let lp = loc.as_mut_ptr() as *mut i32;
                     FUN_10053780(file, &raw const DAT_1009fe00, lp);
                     FUN_10053780(file, &raw const DAT_1009fe10, lp);
                     loc[4] = 100;
                     FUN_10053780(file, &raw const DAT_1009fe20, lp);
                     FUN_10053780(file, &raw const DAT_1009fe30, lp);
-                    FID_conflict__fwprintf(file, &raw const DAT_1009fe40, DAT_1009f378);
-                    FID_conflict__fwprintf(file, &raw const DAT_1009fe58, DAT_1009f37c);
-                    _fclose(file);
+                    mech_trace::cr!(
+                        "10053a40",
+                        "FID_conflict__fwprintf",
+                        FID_conflict__fwprintf(
+                            file,
+                            &raw const DAT_1009fe40,
+                            mech_trace::gr!("10053a40", "1009f378", DAT_1009f378)
+                        )
+                    );
+                    mech_trace::cr!(
+                        "10053a40",
+                        "FID_conflict__fwprintf",
+                        FID_conflict__fwprintf(
+                            file,
+                            &raw const DAT_1009fe58,
+                            mech_trace::gr!("10053a40", "1009f37c", DAT_1009f37c)
+                        )
+                    );
+                    mech_trace::cr!("10053a40", "_fclose", _fclose(file));
                 }
-                if DAT_1009f378 < 0x29 && DAT_1009f37c < 0x5b {
-                    return 1;
+                if mech_trace::gr!("10053a40", "1009f378", DAT_1009f378) < 0x29
+                    && mech_trace::gr!("10053a40", "1009f37c", DAT_1009f37c) < 0x5b
+                {
+                    return mech_trace::rt!("10053a40", 1);
                 }
-                return 0;
+                return mech_trace::rt!("10053a40", 0);
             }
         }
     }

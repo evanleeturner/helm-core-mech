@@ -18,17 +18,18 @@ unsafe extern "C" {
 
 unsafe fn rd(addr: i32) -> i32 {
     // SAFETY: the caller passes an address of readable game memory.
-    unsafe { (addr as *const i32).read_unaligned() }
+    unsafe { mech_trace::rd!("1000f651", (addr as *const i32), read_unaligned) }
 }
 
 unsafe fn wr(addr: i32, v: i32) {
     // SAFETY: the caller passes an address of writable game memory.
-    unsafe { (addr as *mut i32).write_unaligned(v) }
+    unsafe { mech_trace::wr!("1000f651", (addr as *mut i32), write_unaligned, v) }
 }
 
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1000f651(param_1: i32, param_2: i32, param_3: i32) -> u32 {
+    mech_trace::enter!("1000f651", param_1, param_2, param_3);
     let mut local_c: i32 = 0;
     let mut local_10: i32 = 0;
     let mut local_18: i32 = 0;
@@ -36,7 +37,11 @@ pub unsafe extern "C" fn FUN_1000f651(param_1: i32, param_2: i32, param_3: i32) 
     // at the caller's structures, accessed where the original does.
     unsafe {
         if rd(param_3.wrapping_add(8)) == 1 {
-            let i_var1 = FUN_1004d5e3(rd(param_1.wrapping_add(4)));
+            let i_var1 = mech_trace::cr!(
+                "1000f651",
+                "1004d5e3",
+                FUN_1004d5e3(rd(param_1.wrapping_add(4)))
+            );
             let b750 = (&raw mut DAT_101ec750) as i32;
             let b780 = (&raw mut DAT_101ec780) as i32;
             let b78c = (&raw mut DAT_101ec78c) as i32;
@@ -48,7 +53,11 @@ pub unsafe extern "C" fn FUN_1000f651(param_1: i32, param_2: i32, param_3: i32) 
                 if rd(b78c.wrapping_add(off)) != 0 && rd(b780.wrapping_add(off)) != 0 {
                     let t = rd(local_14);
                     if (t == 3 || t == 4 || t == 10 || t == 0xc || t == 9)
-                        && FUN_1004d5e3(rd(b794.wrapping_add(off))) != i_var1
+                        && mech_trace::cr!(
+                            "1000f651",
+                            "1004d5e3",
+                            FUN_1004d5e3(rd(b794.wrapping_add(off)))
+                        ) != i_var1
                     {
                         FUN_1002f322(
                             rd(local_14.wrapping_add(0x30)),
@@ -59,7 +68,11 @@ pub unsafe extern "C" fn FUN_1000f651(param_1: i32, param_2: i32, param_3: i32) 
                         let i_var2 = rd(param_1.wrapping_add(0x50)).wrapping_sub(local_c);
                         let i_var3 = rd(param_1.wrapping_add(0x54)).wrapping_sub(local_10);
                         let local_8 = rd(param_1.wrapping_add(0x58)).wrapping_sub(local_18);
-                        let i_var4 = FUN_1000fc30(i_var2, i_var3, local_8);
+                        let i_var4 = mech_trace::cr!(
+                            "1000f651",
+                            "1000fc30",
+                            FUN_1000fc30(i_var2, i_var3, local_8)
+                        );
                         if i_var4 < 0xc351 {
                             let sum = rd(local_14.wrapping_add(0x14))
                                 .wrapping_mul(local_8)
@@ -80,5 +93,5 @@ pub unsafe extern "C" fn FUN_1000f651(param_1: i32, param_2: i32, param_3: i32) 
             }
         }
     }
-    1
+    mech_trace::rt!("1000f651", 1)
 }

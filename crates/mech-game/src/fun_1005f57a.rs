@@ -14,23 +14,37 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1005f57a() {
+    mech_trace::enter!("1005f57a");
     let mut local_8: i32 = 0;
     // SAFETY: the table and the pointer global are the game's own memory;
     // the table is read until its -1 terminator, as the original does.
     unsafe {
         loop {
-            let v = (&raw mut DAT_100b3530)
-                .byte_add(local_8.wrapping_mul(4) as isize as usize)
-                .cast::<i32>()
-                .read_unaligned();
+            let v = mech_trace::rd!(
+                "1005f57a",
+                (&raw mut DAT_100b3530)
+                    .byte_add(local_8.wrapping_mul(4) as isize as usize)
+                    .cast::<i32>(),
+                read_unaligned
+            );
             if v == -1 {
                 break;
             }
-            let v2 = (&raw mut DAT_100b3530)
-                .byte_add(local_8.wrapping_mul(4) as isize as usize)
-                .cast::<u32>()
-                .read_unaligned();
-            FUN_1003eb02(v2, DAT_100af0ac as *mut i32);
+            let v2 = mech_trace::rd!(
+                "1005f57a",
+                (&raw mut DAT_100b3530)
+                    .byte_add(local_8.wrapping_mul(4) as isize as usize)
+                    .cast::<u32>(),
+                read_unaligned
+            );
+            mech_trace::cr!(
+                "1005f57a",
+                "1003eb02",
+                FUN_1003eb02(
+                    v2,
+                    mech_trace::gr!("1005f57a", "100af0ac", DAT_100af0ac) as *mut i32
+                )
+            );
             local_8 = local_8.wrapping_add(1);
         }
     }

@@ -34,22 +34,52 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_100169fb(param_1: i32) {
+    mech_trace::enter!("100169fb", param_1);
     // SAFETY: param_1 is the address of the caller's structure; the globals
     // and callees are the game's own, and reads and calls keep the original order.
     unsafe {
-        let rd = |off: i32| -> i32 { ((param_1.wrapping_add(off)) as *const i32).read_unaligned() };
+        let rd = |off: i32| -> i32 {
+            mech_trace::rd!(
+                "100169fb",
+                ((param_1.wrapping_add(off)) as *const i32),
+                read_unaligned
+            )
+        };
         let pi_var1 = rd(0xa4) as *mut i32;
-        let table = (&raw mut DAT_100eef40).add(DAT_100adf38 as usize);
-        let mut i_var2 = (table.read().wrapping_add(0x20) as *const i32).read_unaligned();
+        let table =
+            (&raw mut DAT_100eef40)
+                .add(mech_trace::gr!("100169fb", "100adf38", DAT_100adf38) as usize);
+        let mut i_var2 = mech_trace::rd!(
+            "100169fb",
+            (mech_trace::rd!("100169fb", table, read).wrapping_add(0x20) as *const i32),
+            read_unaligned
+        );
         FUN_10056489(pi_var1, rd(0x64), rd(0x68), rd(0x64), rd(0x70), 0, 10);
         FUN_10056489(pi_var1, rd(0x6c), rd(0x68), rd(0x6c), rd(0x70), 0, 10);
         FUN_10056489(pi_var1, rd(0x64), rd(0x68), rd(0x6c), rd(0x68), 0, 10);
         FUN_10056489(pi_var1, rd(0x64), rd(0x70), rd(0x6c), rd(0x70), 0, 10);
-        let v = ((i_var2.wrapping_add(0x3f4)) as *const i32).read_unaligned();
+        let v = mech_trace::rd!(
+            "100169fb",
+            ((i_var2.wrapping_add(0x3f4)) as *const i32),
+            read_unaligned
+        );
         if -1 < v {
-            DAT_100aa59c = ((i_var2.wrapping_add(0x3f4)) as *const i32).read_unaligned();
-            i_var2 = FUN_10067d51(&raw mut DAT_100aa598);
-            let mut local_8 = FUN_10011e60(rd(0x60).wrapping_add(1), i_var2, 0x712);
+            mech_trace::gw!(
+                "100169fb",
+                "100aa59c",
+                DAT_100aa59c,
+                mech_trace::rd!(
+                    "100169fb",
+                    ((i_var2.wrapping_add(0x3f4)) as *const i32),
+                    read_unaligned
+                )
+            );
+            i_var2 = mech_trace::cr!("100169fb", "10067d51", FUN_10067d51(&raw mut DAT_100aa598));
+            let mut local_8 = mech_trace::cr!(
+                "100169fb",
+                "10011e60",
+                FUN_10011e60(rd(0x60).wrapping_add(1), i_var2, 0x712)
+            );
             if rd(0x60) < local_8 {
                 local_8 = rd(0x60);
             }

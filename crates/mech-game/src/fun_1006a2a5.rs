@@ -8,6 +8,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1006a2a5(source: *mut i8) {
+    mech_trace::enter!("1006a2a5", source);
     let mut local_54: [i8; 80] = [0; 80];
     let mut local_58: i32 = 0;
     while local_58 < 0x50 {
@@ -18,7 +19,11 @@ pub unsafe extern "C" fn FUN_1006a2a5(source: *mut i8) {
     // SAFETY: local_54 has 80 bytes; writing at most 0x4e bytes from offset 1 stays in bounds;
     // source is the caller's string.
     unsafe {
-        _strncpy(local_54.as_mut_ptr().add(1), source, 0x4e);
+        mech_trace::cr!(
+            "1006a2a5",
+            "_strncpy",
+            _strncpy(local_54.as_mut_ptr().add(1), source, 0x4e)
+        );
     }
     local_58 = 0;
     while local_58 < 0x4f {

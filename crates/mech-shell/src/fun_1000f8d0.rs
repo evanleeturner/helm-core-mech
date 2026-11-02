@@ -18,6 +18,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1000f8d0() -> u32 {
+    mech_trace::enter!("1000f8d0");
     // SAFETY: the globals and callees are the game's own memory and code;
     // the scan stays within the 8-entry table at DAT_1008e3f0.
     unsafe {
@@ -26,7 +27,7 @@ pub unsafe extern "stdcall" fn FUN_1000f8d0() -> u32 {
         let mut entry_ptr = base;
         let mut entry_index: i32 = 0;
         loop {
-            if entry_ptr.read() != 0 {
+            if mech_trace::rd!("1000f8d0", entry_ptr, read) != 0 {
                 break;
             }
             entry_ptr = entry_ptr.add(1);
@@ -36,14 +37,22 @@ pub unsafe extern "stdcall" fn FUN_1000f8d0() -> u32 {
             }
         }
         if entry_index == 8 {
-            return 1;
+            return mech_trace::rt!("1000f8d0", 1);
         }
         let slot = base.offset(entry_index as isize);
-        FUN_1000e8f0(slot.read(), DAT_100b0588, DAT_100b0588);
-        let menu_handle = DAT_100d08ec;
-        slot.write(0);
+        mech_trace::cr!(
+            "1000f8d0",
+            "1000e8f0",
+            FUN_1000e8f0(
+                mech_trace::rd!("1000f8d0", slot, read),
+                mech_trace::gr!("1000f8d0", "100b0588", DAT_100b0588),
+                mech_trace::gr!("1000f8d0", "100b0588", DAT_100b0588)
+            )
+        );
+        let menu_handle = mech_trace::gr!("1000f8d0", "100d08ec", DAT_100d08ec);
+        mech_trace::wr!("1000f8d0", slot, write, 0);
         FUN_100166c0(menu_handle);
-        DAT_100a6ba4 = 1;
-        0
+        mech_trace::gw!("1000f8d0", "100a6ba4", DAT_100a6ba4, 1);
+        mech_trace::rt!("1000f8d0", 0)
     }
 }

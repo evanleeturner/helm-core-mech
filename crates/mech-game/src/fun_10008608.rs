@@ -21,25 +21,44 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10008608() {
+    mech_trace::enter!("10008608");
     // SAFETY: the globals and callees are the game's own memory and code;
     // the table at DAT_100a7b30 holds six pointers, read as the original does.
     unsafe {
         let mut local_8: i32 = 0;
         while local_8 < 6 {
-            let p = (&raw mut DAT_100a7b30)
-                .cast::<u8>()
-                .byte_add(local_8.wrapping_mul(4) as usize)
-                .cast::<*mut u32>()
-                .read_unaligned();
-            FUN_100083d0(local_8, p);
+            let p = mech_trace::rd!(
+                "10008608",
+                (&raw mut DAT_100a7b30)
+                    .cast::<u8>()
+                    .byte_add(local_8.wrapping_mul(4) as usize)
+                    .cast::<*mut u32>(),
+                read_unaligned
+            );
+            mech_trace::cr!("10008608", "100083d0", FUN_100083d0(local_8, p));
             local_8 = local_8.wrapping_add(1);
         }
-        DAT_10215658 = 0;
-        DAT_10215660 = 1;
-        DAT_10215650 = 0;
-        let q = DAT_100a761c.wrapping_add(0x14) as *mut i32;
-        FUN_100660e1(0x101f52e0, q, q);
-        DAT_100a7178 = DAT_100a7178.wrapping_add(-1000i32 as u32);
-        DAT_100a7180 = DAT_100a717c.wrapping_sub(DAT_100a7178);
+        mech_trace::gw!("10008608", "10215658", DAT_10215658, 0);
+        mech_trace::gw!("10008608", "10215660", DAT_10215660, 1);
+        mech_trace::gw!("10008608", "10215650", DAT_10215650, 0);
+        let q =
+            mech_trace::gr!("10008608", "100a761c", DAT_100a761c).wrapping_add(0x14) as *mut i32;
+        mech_trace::cr!("10008608", "100660e1", FUN_100660e1(0x101f52e0, q, q));
+        mech_trace::gw!(
+            "10008608",
+            "100a7178",
+            DAT_100a7178,
+            mech_trace::gr!("10008608", "100a7178", DAT_100a7178).wrapping_add(-1000i32 as u32)
+        );
+        mech_trace::gw!(
+            "10008608",
+            "100a7180",
+            DAT_100a7180,
+            mech_trace::gr!("10008608", "100a717c", DAT_100a717c).wrapping_sub(mech_trace::gr!(
+                "10008608",
+                "100a7178",
+                DAT_100a7178
+            ))
+        );
     }
 }

@@ -18,14 +18,29 @@ pub unsafe extern "C" fn FUN_10066004(
     source: *mut i32,
     out: *mut i32,
 ) -> *mut i32 {
+    mech_trace::enter!("10066004", _unused_arg1, source, out);
     // SAFETY: the callee and the globals are the game's own; source and out
     // point at the caller's two-int buffers, read and written where the
     // original does.
     unsafe {
-        let i_var1 = FUN_10003d60(DAT_101f52f4, source.read_unaligned());
-        out.write_unaligned(i_var1);
-        let i_var1 = FUN_10003d60(DAT_101f52d4, source.add(1).read_unaligned());
-        out.add(1).write_unaligned(i_var1);
-        out
+        let i_var1 = mech_trace::cr!(
+            "10066004",
+            "10003d60",
+            FUN_10003d60(
+                mech_trace::gr!("10066004", "101f52f4", DAT_101f52f4),
+                mech_trace::rd!("10066004", source, read_unaligned)
+            )
+        );
+        mech_trace::wr!("10066004", out, write_unaligned, i_var1);
+        let i_var1 = mech_trace::cr!(
+            "10066004",
+            "10003d60",
+            FUN_10003d60(
+                mech_trace::gr!("10066004", "101f52d4", DAT_101f52d4),
+                mech_trace::rd!("10066004", source.add(1), read_unaligned)
+            )
+        );
+        mech_trace::wr!("10066004", out.add(1), write_unaligned, i_var1);
+        mech_trace::rt!("10066004", out)
     }
 }

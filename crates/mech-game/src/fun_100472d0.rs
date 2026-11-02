@@ -38,33 +38,102 @@ pub unsafe extern "C" fn FUN_100472d0(
     param_7: *mut u32,
     param_8: *mut u32,
 ) -> u32 {
+    mech_trace::enter!(
+        "100472d0", param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8
+    );
     let mut local_8: u32 = 0;
     // SAFETY: the callees and globals are the game's own; the out pointers and
     // the returned buffer are valid for the reads and writes the original does.
     unsafe {
-        let lp_mem = FUN_1007bbed(
-            param_1,
-            DAT_100af0dc as *mut i32,
-            DAT_100af148,
-            7,
-            &raw mut local_8,
-            core::ptr::null_mut(),
+        let lp_mem = mech_trace::cr!(
+            "100472d0",
+            "1007bbed",
+            FUN_1007bbed(
+                param_1,
+                mech_trace::gr!("100472d0", "100af0dc", DAT_100af0dc) as *mut i32,
+                mech_trace::gr!("100472d0", "100af148", DAT_100af148),
+                7,
+                &raw mut local_8,
+                core::ptr::null_mut(),
+            )
         );
         if lp_mem.is_null() {
-            return 0;
+            return mech_trace::rt!("100472d0", 0);
         }
-        param_2.write_unaligned(lp_mem.byte_add(0).cast::<u32>().read_unaligned());
-        param_3.write_unaligned(lp_mem.byte_add(4).cast::<u32>().read_unaligned());
-        param_4.write_unaligned(lp_mem.byte_add(8).cast::<u32>().read_unaligned());
-        param_5.write_unaligned(lp_mem.byte_add(12).cast::<u32>().read_unaligned());
-        param_6.write_unaligned(lp_mem.byte_add(16).cast::<u32>().read_unaligned());
-        param_7.write_unaligned(lp_mem.byte_add(20).cast::<u32>().read_unaligned());
-        param_8.write_unaligned(lp_mem.byte_add(24).cast::<u32>().read_unaligned());
-        if param_1.read() == -1 {
-            HeapFree(DAT_100adf74, 1, lp_mem.cast::<c_void>());
+        mech_trace::wr!(
+            "100472d0",
+            param_2,
+            write_unaligned,
+            mech_trace::rd!("100472d0", lp_mem.byte_add(0).cast::<u32>(), read_unaligned)
+        );
+        mech_trace::wr!(
+            "100472d0",
+            param_3,
+            write_unaligned,
+            mech_trace::rd!("100472d0", lp_mem.byte_add(4).cast::<u32>(), read_unaligned)
+        );
+        mech_trace::wr!(
+            "100472d0",
+            param_4,
+            write_unaligned,
+            mech_trace::rd!("100472d0", lp_mem.byte_add(8).cast::<u32>(), read_unaligned)
+        );
+        mech_trace::wr!(
+            "100472d0",
+            param_5,
+            write_unaligned,
+            mech_trace::rd!(
+                "100472d0",
+                lp_mem.byte_add(12).cast::<u32>(),
+                read_unaligned
+            )
+        );
+        mech_trace::wr!(
+            "100472d0",
+            param_6,
+            write_unaligned,
+            mech_trace::rd!(
+                "100472d0",
+                lp_mem.byte_add(16).cast::<u32>(),
+                read_unaligned
+            )
+        );
+        mech_trace::wr!(
+            "100472d0",
+            param_7,
+            write_unaligned,
+            mech_trace::rd!(
+                "100472d0",
+                lp_mem.byte_add(20).cast::<u32>(),
+                read_unaligned
+            )
+        );
+        mech_trace::wr!(
+            "100472d0",
+            param_8,
+            write_unaligned,
+            mech_trace::rd!(
+                "100472d0",
+                lp_mem.byte_add(24).cast::<u32>(),
+                read_unaligned
+            )
+        );
+        if mech_trace::rd!("100472d0", param_1, read) == -1 {
+            mech_trace::cr!(
+                "100472d0",
+                "HeapFree",
+                HeapFree(
+                    mech_trace::gr!("100472d0", "100adf74", DAT_100adf74),
+                    1,
+                    lp_mem.cast::<c_void>()
+                )
+            );
         } else {
-            FUN_1008664f(param_1.read() as u32, DAT_100af0dc as *mut i32);
+            FUN_1008664f(
+                mech_trace::rd!("100472d0", param_1, read) as u32,
+                mech_trace::gr!("100472d0", "100af0dc", DAT_100af0dc) as *mut i32,
+            );
         }
-        1
+        mech_trace::rt!("100472d0", 1)
     }
 }

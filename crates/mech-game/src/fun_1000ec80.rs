@@ -22,6 +22,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1000ec80() {
+    mech_trace::enter!("1000ec80");
     // SAFETY: the callees and globals are the game's own memory; the table
     // pointer in DAT_100b9a1c holds function pointers at the slots read, and
     // the 5-dword blocks are copied within their bounds.
@@ -31,36 +32,56 @@ pub unsafe extern "stdcall" fn FUN_1000ec80() {
         FUN_100605d6();
         FUN_10060517();
 
-        if DAT_101f52d0 != 0 {
+        if mech_trace::gr!("1000ec80", "101f52d0", DAT_101f52d0) != 0 {
             let base = &raw mut DAT_101f52e0 as *mut i32;
-            let slot = DAT_100b9a1c
-                .byte_add(0x20)
-                .cast::<unsafe extern "C" fn(i32, i32, i32, i32)>()
-                .read_unaligned();
-            slot(
-                base.add(1).read_unaligned().wrapping_add(1),
-                base.add(2).read_unaligned().wrapping_add(1),
-                base.add(3).read_unaligned(),
-                base.add(4).read_unaligned(),
+            let slot = mech_trace::rd!(
+                "1000ec80",
+                mech_trace::gr!("1000ec80", "100b9a1c", DAT_100b9a1c)
+                    .byte_add(0x20)
+                    .cast::<unsafe extern "C" fn(i32, i32, i32, i32)>(),
+                read_unaligned
+            );
+            mech_trace::cr!(
+                "1000ec80",
+                "ind",
+                slot(
+                    mech_trace::rd!("1000ec80", base.add(1), read_unaligned).wrapping_add(1),
+                    mech_trace::rd!("1000ec80", base.add(2), read_unaligned).wrapping_add(1),
+                    mech_trace::rd!("1000ec80", base.add(3), read_unaligned),
+                    mech_trace::rd!("1000ec80", base.add(4), read_unaligned),
+                )
             );
 
             let mut src = &raw mut DAT_100c4f38 as *const i32;
             let mut dst = base;
             let mut i = 5i32;
             while i != 0 {
-                dst.write_unaligned(src.read_unaligned());
+                mech_trace::wr!(
+                    "1000ec80",
+                    dst,
+                    write_unaligned,
+                    mech_trace::rd!("1000ec80", src, read_unaligned)
+                );
                 src = src.add(1);
                 dst = dst.add(1);
                 i = i.wrapping_sub(1);
             }
-            DAT_100adcd0 = DAT_100a716c;
-            DAT_101f52d0 = 0;
-        } else if DAT_100adf80 != 0 {
-            let slot = DAT_100b9a1c
-                .byte_add(0x18)
-                .cast::<unsafe extern "C" fn()>()
-                .read_unaligned();
-            slot();
+            mech_trace::gw!(
+                "1000ec80",
+                "100adcd0",
+                DAT_100adcd0,
+                mech_trace::gr!("1000ec80", "100a716c", DAT_100a716c)
+            );
+            mech_trace::gw!("1000ec80", "101f52d0", DAT_101f52d0, 0);
+        } else if mech_trace::gr!("1000ec80", "100adf80", DAT_100adf80) != 0 {
+            let slot = mech_trace::rd!(
+                "1000ec80",
+                mech_trace::gr!("1000ec80", "100b9a1c", DAT_100b9a1c)
+                    .byte_add(0x18)
+                    .cast::<unsafe extern "C" fn()>(),
+                read_unaligned
+            );
+            mech_trace::cr!("1000ec80", "ind", slot());
         }
     }
 }

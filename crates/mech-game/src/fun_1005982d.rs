@@ -26,13 +26,13 @@ unsafe fn fill_row(row: i32, stride: i32, base: i32, left: i32, right: i32, word
     // where the original writes.
     unsafe {
         while cnt != 0 {
-            p.write_unaligned(word);
+            mech_trace::wr!("1005982d", p, write_unaligned, word);
             p = p.add(1);
             cnt -= 1;
         }
         let mut pb = p as *mut u8;
         while rem != 0 {
-            pb.write(byte);
+            mech_trace::wr!("1005982d", pb, write, byte);
             pb = pb.add(1);
             rem -= 1;
         }
@@ -49,55 +49,65 @@ pub unsafe extern "C" fn FUN_1005982d(
     param_5: i32,
     param_6: i32,
 ) -> u32 {
+    mech_trace::enter!(
+        "1005982d", param_1, param_2, param_3, param_4, param_5, param_6
+    );
     // SAFETY: param_1 points at the game's clip/surface structure; all
     // reads and writes follow the original.
     unsafe {
         if param_4 == 0 || param_5 == 0 {
-            return FUN_10056489(
-                param_1,
-                param_2.wrapping_sub(param_4),
-                param_3.wrapping_sub(param_5),
-                param_2.wrapping_add(param_4),
-                param_3.wrapping_add(param_5),
-                0,
-                param_6,
+            return mech_trace::rt!(
+                "1005982d",
+                mech_trace::cr!(
+                    "1005982d",
+                    "10056489",
+                    FUN_10056489(
+                        param_1,
+                        param_2.wrapping_sub(param_4),
+                        param_3.wrapping_sub(param_5),
+                        param_2.wrapping_add(param_4),
+                        param_3.wrapping_add(param_5),
+                        0,
+                        param_6,
+                    )
+                )
             );
         }
         let mut param_5 = param_5;
-        let surf = param_1.read() as *mut i32;
-        let mut iv12 = surf.add(1).read();
+        let surf = mech_trace::rd!("1005982d", param_1, read) as *mut i32;
+        let mut iv12 = mech_trace::rd!("1005982d", surf.add(1), read);
         let iv8 = iv12.wrapping_add(1);
         if iv8 == 0 || iv12 < -1 {
-            return 0xffff_ffff;
+            return mech_trace::rt!("1005982d", 0xffff_ffff);
         }
-        let iv1 = surf.add(2).read();
+        let iv1 = mech_trace::rd!("1005982d", surf.add(2), read);
         if iv1 < 0 {
-            return 0xffff_ffff;
+            return mech_trace::rt!("1005982d", 0xffff_ffff);
         }
-        let iv2 = param_1.add(1).read();
+        let iv2 = mech_trace::rd!("1005982d", param_1.add(1), read);
         let mut iv9 = iv2;
         if iv2 < 1 {
             iv9 = 0;
         }
-        let iv3 = param_1.add(2).read();
+        let iv3 = mech_trace::rd!("1005982d", param_1.add(2), read);
         let mut iv10 = iv3;
         if iv3 < 1 {
             iv10 = 0;
         }
-        let mut iv11 = param_1.add(3).read();
-        if iv12 <= param_1.add(3).read() {
+        let mut iv11 = mech_trace::rd!("1005982d", param_1.add(3), read);
+        if iv12 <= mech_trace::rd!("1005982d", param_1.add(3), read) {
             iv11 = iv12;
         }
         let iv12b = iv12;
-        iv12 = param_1.add(4).read();
-        if iv1 <= param_1.add(4).read() {
+        iv12 = mech_trace::rd!("1005982d", param_1.add(4), read);
+        if iv1 <= mech_trace::rd!("1005982d", param_1.add(4), read) {
             iv12 = iv1;
         }
         let _ = iv12b;
         if iv11 < iv9 || iv12 < iv10 {
-            return 0xffff_fffe;
+            return mech_trace::rt!("1005982d", 0xffff_fffe);
         }
-        let base = surf.read();
+        let base = mech_trace::rd!("1005982d", surf, read);
         let b = param_6 as u8;
         let word =
             (((b as u32) << 24) | ((b as u32) << 16) | ((b as u32) << 8) | (b as u32)) as i32;
@@ -190,6 +200,6 @@ pub unsafe extern "C" fn FUN_1005982d(
                 break;
             }
         }
-        u7
+        mech_trace::rt!("1005982d", u7)
     }
 }

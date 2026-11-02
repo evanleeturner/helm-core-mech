@@ -9,6 +9,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10025e99(param_1: i32, param_2: i32, param_3: *mut i32) -> i32 {
+    mech_trace::enter!("10025e99", param_1, param_2, param_3);
     let mut local_8: i32 = 0x7fffffff;
     let mut local_40: [i32; 14] = [0; 14];
     let mut local_78: [i32; 14] = [0; 14];
@@ -23,9 +24,18 @@ pub unsafe extern "C" fn FUN_10025e99(param_1: i32, param_2: i32, param_3: *mut 
                 .wrapping_add(0x1c)
                 .wrapping_add((local_7c as u32).wrapping_mul(4)))
                 as *const *mut i32;
-            let i_var2 = FUN_10025c83(p.read_unaligned(), param_2, local_40.as_mut_ptr());
+            let i_var2 = mech_trace::cr!(
+                "10025e99",
+                "10025c83",
+                FUN_10025c83(
+                    mech_trace::rd!("10025e99", p, read_unaligned),
+                    param_2,
+                    local_40.as_mut_ptr()
+                )
+            );
             if i_var2 != 0 {
-                let i_var2 = FUN_1002634e(local_40.as_mut_ptr());
+                let i_var2 =
+                    mech_trace::cr!("10025e99", "1002634e", FUN_1002634e(local_40.as_mut_ptr()));
                 if i_var2 < local_8 {
                     local_8 = i_var2;
                     FUN_100267fd(local_78.as_mut_ptr().cast(), local_40.as_mut_ptr().cast());
@@ -38,6 +48,6 @@ pub unsafe extern "C" fn FUN_10025e99(param_1: i32, param_2: i32, param_3: *mut 
         if b_var1 != 0 {
             FUN_100267fd(param_3.cast(), local_78.as_mut_ptr().cast());
         }
-        b_var1
+        mech_trace::rt!("10025e99", b_var1)
     }
 }

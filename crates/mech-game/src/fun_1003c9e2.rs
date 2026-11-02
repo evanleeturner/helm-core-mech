@@ -23,19 +23,33 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1003c9e2() {
+    mech_trace::enter!("1003c9e2");
     // SAFETY: the globals and the AIL callees are the game's own; they are
     // read, called and written in the original's order.
     unsafe {
-        if DAT_100aefb0 != 0 && (DAT_100aefac as i8) >= 0 {
-            _AIL_send_channel_voice_message_20(
-                DAT_100aefb0,
-                0,
-                (DAT_100aefac as u32) | 0x80,
-                0x26,
-                0x7f,
+        if mech_trace::gr!("1003c9e2", "100aefb0", DAT_100aefb0) != 0
+            && (mech_trace::gr!("1003c9e2", "100aefac", DAT_100aefac) as i8) >= 0
+        {
+            mech_trace::cr!(
+                "1003c9e2",
+                "_AIL_send_channel_voice_message_20",
+                _AIL_send_channel_voice_message_20(
+                    mech_trace::gr!("1003c9e2", "100aefb0", DAT_100aefb0),
+                    0,
+                    (mech_trace::gr!("1003c9e2", "100aefac", DAT_100aefac) as u32) | 0x80,
+                    0x26,
+                    0x7f,
+                )
             );
-            _AIL_release_channel_8(DAT_100aefb0, (DAT_100aefac as u32).wrapping_add(1));
-            DAT_100aefac = 0xff;
+            mech_trace::cr!(
+                "1003c9e2",
+                "_AIL_release_channel_8",
+                _AIL_release_channel_8(
+                    mech_trace::gr!("1003c9e2", "100aefb0", DAT_100aefb0),
+                    (mech_trace::gr!("1003c9e2", "100aefac", DAT_100aefac) as u32).wrapping_add(1)
+                )
+            );
+            mech_trace::gw!("1003c9e2", "100aefac", DAT_100aefac, 0xff);
         }
     }
 }

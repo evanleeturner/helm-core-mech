@@ -23,18 +23,25 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1003e1b7() {
+    mech_trace::enter!("1003e1b7");
     // SAFETY: the globals and callees are the game's own; the table at
     // DAT_100c6d50 is read at the same offsets the original uses.
     unsafe {
-        if DAT_100aefc0 == 0 {
-            if DAT_100af098 == (&raw mut DAT_100c6d00) as *mut u8 {
+        if mech_trace::gr!("1003e1b7", "100aefc0", DAT_100aefc0) == 0 {
+            if mech_trace::gr!("1003e1b7", "100af098", DAT_100af098)
+                == (&raw mut DAT_100c6d00) as *mut u8
+            {
                 loop {
-                    let p = DAT_100c6d08;
+                    let p = mech_trace::gr!("1003e1b7", "100c6d08", DAT_100c6d08);
                     if p.is_null() {
                         break;
                     }
-                    FUN_1003dce5(DAT_100c6d08);
-                    FUN_1001c989(p as *mut c_void);
+                    mech_trace::cr!(
+                        "1003e1b7",
+                        "1003dce5",
+                        FUN_1003dce5(mech_trace::gr!("1003e1b7", "100c6d08", DAT_100c6d08))
+                    );
+                    mech_trace::cr!("1003e1b7", "1001c989", FUN_1001c989(p as *mut c_void));
                 }
             }
         } else {
@@ -46,40 +53,63 @@ pub unsafe extern "stdcall" fn FUN_1003e1b7() {
                     let addr = base
                         .byte_add(local_c.wrapping_mul(0x18) as usize)
                         .byte_add(local_8.wrapping_mul(0x120) as usize);
-                    while addr.cast::<i32>().read_unaligned() != 0 {
-                        let p = addr.cast::<u32>().read_unaligned() as *mut c_void;
-                        FUN_1003dce5(addr.cast::<u32>().read_unaligned() as *mut u8);
-                        FUN_1001c989(p);
+                    while mech_trace::rd!("1003e1b7", addr.cast::<i32>(), read_unaligned) != 0 {
+                        let p = mech_trace::rd!("1003e1b7", addr.cast::<u32>(), read_unaligned)
+                            as *mut c_void;
+                        mech_trace::cr!(
+                            "1003e1b7",
+                            "1003dce5",
+                            FUN_1003dce5(mech_trace::rd!(
+                                "1003e1b7",
+                                addr.cast::<u32>(),
+                                read_unaligned
+                            ) as *mut u8)
+                        );
+                        mech_trace::cr!("1003e1b7", "1001c989", FUN_1001c989(p));
                     }
                     local_c = local_c.wrapping_add(1);
                 }
                 local_8 = local_8.wrapping_add(1);
             }
             loop {
-                let p = DAT_100c6d20;
+                let p = mech_trace::gr!("1003e1b7", "100c6d20", DAT_100c6d20);
                 if p.is_null() {
                     break;
                 }
-                FUN_1003dce5(DAT_100c6d20);
-                FUN_1001c989(p as *mut c_void);
+                mech_trace::cr!(
+                    "1003e1b7",
+                    "1003dce5",
+                    FUN_1003dce5(mech_trace::gr!("1003e1b7", "100c6d20", DAT_100c6d20))
+                );
+                mech_trace::cr!("1003e1b7", "1001c989", FUN_1001c989(p as *mut c_void));
             }
         }
-        if DAT_100af098 == (&raw mut DAT_100c6d00) as *mut u8 {
+        if mech_trace::gr!("1003e1b7", "100af098", DAT_100af098)
+            == (&raw mut DAT_100c6d00) as *mut u8
+        {
             loop {
-                let p = DAT_100c6d38;
+                let p = mech_trace::gr!("1003e1b7", "100c6d38", DAT_100c6d38);
                 if p.is_null() {
                     break;
                 }
-                FUN_1003dce5(DAT_100c6d38);
-                FUN_1001c989(p as *mut c_void);
+                mech_trace::cr!(
+                    "1003e1b7",
+                    "1003dce5",
+                    FUN_1003dce5(mech_trace::gr!("1003e1b7", "100c6d38", DAT_100c6d38))
+                );
+                mech_trace::cr!("1003e1b7", "1001c989", FUN_1001c989(p as *mut c_void));
             }
             loop {
-                let p = DAT_100c7ad0;
+                let p = mech_trace::gr!("1003e1b7", "100c7ad0", DAT_100c7ad0);
                 if p.is_null() {
                     break;
                 }
-                FUN_1003dce5(DAT_100c7ad0);
-                FUN_1001c989(p as *mut c_void);
+                mech_trace::cr!(
+                    "1003e1b7",
+                    "1003dce5",
+                    FUN_1003dce5(mech_trace::gr!("1003e1b7", "100c7ad0", DAT_100c7ad0))
+                );
+                mech_trace::cr!("1003e1b7", "1001c989", FUN_1001c989(p as *mut c_void));
             }
         }
     }

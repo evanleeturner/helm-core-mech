@@ -37,13 +37,17 @@ unsafe fn copy_str(src: *const i8, dst: *mut i8) {
     // SAFETY: caller guarantees src is NUL-terminated and dst has room.
     unsafe {
         let mut n: usize = 0;
-        while *src.add(n) != 0 {
+        while mech_trace::dr!("10041b10", src.add(n)) != 0 {
             n += 1;
         }
         n += 1;
         let mut i = 0;
         while i < n {
-            *dst.add(i) = *src.add(i);
+            mech_trace::dw!(
+                "10041b10",
+                dst.add(i),
+                mech_trace::dr!("10041b10", src.add(i))
+            );
             i += 1;
         }
     }
@@ -52,83 +56,155 @@ unsafe fn copy_str(src: *const i8, dst: *mut i8) {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10041b10() -> u32 {
+    mech_trace::enter!("10041b10");
     // SAFETY: all globals and callees are the game's own memory; pointers
     // are read and written at the offsets the original uses.
     unsafe {
-        *DAT_10083508.add(1) = 1;
-        *DAT_10083508 = 1;
-        DAT_100983cc = HeapAlloc(DAT_10098224, 1, 0x2066) as *mut i8;
+        mech_trace::dw!(
+            "10041b10",
+            mech_trace::gr!("10041b10", "10083508", DAT_10083508).add(1),
+            1
+        );
+        mech_trace::dw!(
+            "10041b10",
+            mech_trace::gr!("10041b10", "10083508", DAT_10083508),
+            1
+        );
+        mech_trace::gw!(
+            "10041b10",
+            "100983cc",
+            DAT_100983cc,
+            mech_trace::cr!(
+                "10041b10",
+                "HeapAlloc",
+                HeapAlloc(
+                    mech_trace::gr!("10041b10", "10098224", DAT_10098224),
+                    1,
+                    0x2066
+                )
+            ) as *mut i8
+        );
         FUN_1005bbb0(&raw mut DAT_100ba1d8 as *mut i8);
 
-        copy_str(&raw const DAT_100ba1d8 as *const i8, DAT_100983cc);
+        copy_str(
+            &raw const DAT_100ba1d8 as *const i8,
+            mech_trace::gr!("10041b10", "100983cc", DAT_100983cc),
+        );
 
-        let p = DAT_100983cc;
-        *p.add(0x20) = -1;
-        *p.add(0x21) = -1;
-        *p.add(0x22) = -1;
-        *p.add(0x23) = -1;
-        let u_var2 = FUN_1000be10();
-        DAT_100983cc.add(0x24).cast::<i32>().write_unaligned(u_var2);
+        let p = mech_trace::gr!("10041b10", "100983cc", DAT_100983cc);
+        mech_trace::dw!("10041b10", p.add(0x20), -1);
+        mech_trace::dw!("10041b10", p.add(0x21), -1);
+        mech_trace::dw!("10041b10", p.add(0x22), -1);
+        mech_trace::dw!("10041b10", p.add(0x23), -1);
+        let u_var2 = mech_trace::cr!("10041b10", "1000be10", FUN_1000be10());
+        mech_trace::wr!(
+            "10041b10",
+            mech_trace::gr!("10041b10", "100983cc", DAT_100983cc)
+                .add(0x24)
+                .cast::<i32>(),
+            write_unaligned,
+            u_var2
+        );
 
         let mut i_var3: i32 = 0;
         loop {
             let i_var4 = i_var3.wrapping_add(2);
-            let q = DAT_100983cc.offset(i_var3 as isize).add(0x28);
-            *q = -1;
-            *q.add(1) = -1;
+            let q = mech_trace::gr!("10041b10", "100983cc", DAT_100983cc)
+                .offset(i_var3 as isize)
+                .add(0x28);
+            mech_trace::dw!("10041b10", q, -1);
+            mech_trace::dw!("10041b10", q.add(1), -1);
             i_var3 = i_var4;
             if i_var4 >= 0x10 {
                 break;
             }
         }
 
-        let p = DAT_100983cc;
-        *p.add(0x38) = 0;
-        *p.add(0x39) = 0;
-        *p.add(0x3a) = 0;
-        *p.add(0x3b) = 0;
-        let p = DAT_100983cc;
-        *p.add(0x3c) = 0;
-        *p.add(0x3d) = 0;
-        *p.add(0x3e) = 0;
-        *p.add(0x3f) = 0;
-        let p = DAT_100983cc;
-        *p.add(0x40) = 0;
-        *p.add(0x41) = 0;
-        *p.add(0x42) = 0;
-        *p.add(0x43) = 0;
-        *DAT_100983cc.add(0x2064) = 1;
+        let p = mech_trace::gr!("10041b10", "100983cc", DAT_100983cc);
+        mech_trace::dw!("10041b10", p.add(0x38), 0);
+        mech_trace::dw!("10041b10", p.add(0x39), 0);
+        mech_trace::dw!("10041b10", p.add(0x3a), 0);
+        mech_trace::dw!("10041b10", p.add(0x3b), 0);
+        let p = mech_trace::gr!("10041b10", "100983cc", DAT_100983cc);
+        mech_trace::dw!("10041b10", p.add(0x3c), 0);
+        mech_trace::dw!("10041b10", p.add(0x3d), 0);
+        mech_trace::dw!("10041b10", p.add(0x3e), 0);
+        mech_trace::dw!("10041b10", p.add(0x3f), 0);
+        let p = mech_trace::gr!("10041b10", "100983cc", DAT_100983cc);
+        mech_trace::dw!("10041b10", p.add(0x40), 0);
+        mech_trace::dw!("10041b10", p.add(0x41), 0);
+        mech_trace::dw!("10041b10", p.add(0x42), 0);
+        mech_trace::dw!("10041b10", p.add(0x43), 0);
+        mech_trace::dw!(
+            "10041b10",
+            mech_trace::gr!("10041b10", "100983cc", DAT_100983cc).add(0x2064),
+            1
+        );
 
-        copy_str(&raw const DAT_10098494 as *const i8, DAT_100983cc.add(100));
+        copy_str(
+            &raw const DAT_10098494 as *const i8,
+            mech_trace::gr!("10041b10", "100983cc", DAT_100983cc).add(100),
+        );
 
-        FUN_10017df0(DAT_100a67a4, DAT_100983cc);
+        FUN_10017df0(
+            mech_trace::gr!("10041b10", "100a67a4", DAT_100a67a4),
+            mech_trace::gr!("10041b10", "100983cc", DAT_100983cc),
+        );
 
         copy_str(
             &raw const DAT_100ba1f8 as *const i8,
-            DAT_10083508.add(0x102),
+            mech_trace::gr!("10041b10", "10083508", DAT_10083508).add(0x102),
         );
 
-        let i_var3 = DAT_10083508.add(0x23bb).cast::<i32>().read_unaligned();
+        let i_var3 = mech_trace::rd!(
+            "10041b10",
+            mech_trace::gr!("10041b10", "10083508", DAT_10083508)
+                .add(0x23bb)
+                .cast::<i32>(),
+            read_unaligned
+        );
         if i_var3 == 0 {
             FUN_1000c2b0();
             FUN_1000c250();
             FUN_1000c410();
-            return 0xc026;
+            return mech_trace::rt!("10041b10", 0xc026);
         }
         if i_var3 == 1 {
-            DAT_100983d0 = FUN_10018060(DAT_100a6798, 0);
-            if DAT_100983d0 != 0 {
-                let d = DAT_100983d0 as usize as *mut u8;
-                let v = DAT_100983cc.add(0x24).cast::<i32>().read_unaligned();
-                d.add(0x80c).cast::<i32>().write_unaligned(v);
-                let w = d.add(0x810).cast::<i32>().read_unaligned();
-                DAT_100983cc.add(0x20).cast::<i32>().write_unaligned(w);
+            mech_trace::gw!(
+                "10041b10",
+                "100983d0",
+                DAT_100983d0,
+                mech_trace::cr!(
+                    "10041b10",
+                    "10018060",
+                    FUN_10018060(mech_trace::gr!("10041b10", "100a6798", DAT_100a6798), 0)
+                )
+            );
+            if mech_trace::gr!("10041b10", "100983d0", DAT_100983d0) != 0 {
+                let d = mech_trace::gr!("10041b10", "100983d0", DAT_100983d0) as usize as *mut u8;
+                let v = mech_trace::rd!(
+                    "10041b10",
+                    mech_trace::gr!("10041b10", "100983cc", DAT_100983cc)
+                        .add(0x24)
+                        .cast::<i32>(),
+                    read_unaligned
+                );
+                mech_trace::wr!("10041b10", d.add(0x80c).cast::<i32>(), write_unaligned, v);
+                let w = mech_trace::rd!("10041b10", d.add(0x810).cast::<i32>(), read_unaligned);
+                mech_trace::wr!(
+                    "10041b10",
+                    mech_trace::gr!("10041b10", "100983cc", DAT_100983cc)
+                        .add(0x20)
+                        .cast::<i32>(),
+                    write_unaligned,
+                    w
+                );
             }
-            return 0xc026;
+            return mech_trace::rt!("10041b10", 0xc026);
         }
         if i_var3 != 2 {
-            return 0;
+            return mech_trace::rt!("10041b10", 0);
         }
-        0xc029
+        mech_trace::rt!("10041b10", 0xc029)
     }
 }

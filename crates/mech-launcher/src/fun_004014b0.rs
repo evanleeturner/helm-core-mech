@@ -28,30 +28,52 @@ pub unsafe extern "C" fn FUN_004014b0(
     param_3: u32,
     param_4: u32,
 ) -> i32 {
+    mech_trace::enter!("004014b0", param_1, param_2, param_3, param_4);
     // SAFETY: the Win32 and game functions and the global are the game's own;
     // the strings are NUL-terminated literals, and the resolved SimMain has
     // the stdcall signature the original casts it to.
     unsafe {
-        let h_module = LoadLibraryA(c"MERCSW.DLL".as_ptr());
+        let h_module = mech_trace::cr!(
+            "004014b0",
+            "LoadLibraryA",
+            LoadLibraryA(c"MERCSW.DLL".as_ptr())
+        );
         if h_module.is_null() {
-            return 1;
+            return mech_trace::rt!("004014b0", 1);
         }
-        let p_fvar1 = GetProcAddress(h_module, c"SimMain".as_ptr());
+        let p_fvar1 = mech_trace::cr!(
+            "004014b0",
+            "GetProcAddress",
+            GetProcAddress(h_module, c"SimMain".as_ptr())
+        );
         let sim_main = match p_fvar1 {
-            None => return 1,
+            None => return mech_trace::rt!("004014b0", 1),
             Some(f) => f,
         };
-        DAT_004081b0 = GetProcAddress(h_module, c"SimWindowProc".as_ptr());
-        let window_proc = DAT_004081b0;
+        mech_trace::gw!(
+            "004014b0",
+            "004081b0",
+            DAT_004081b0,
+            mech_trace::cr!(
+                "004014b0",
+                "GetProcAddress",
+                GetProcAddress(h_module, c"SimWindowProc".as_ptr())
+            )
+        );
+        let window_proc = mech_trace::gr!("004014b0", "004081b0", DAT_004081b0);
         if window_proc.is_none() {
-            return 1;
+            return mech_trace::rt!("004014b0", 1);
         }
         FUN_00401200(c"Entering Sim...\n".as_ptr());
         let f: unsafe extern "stdcall" fn(*mut core::ffi::c_void, i32, u32, u32, u32, u32) -> i32 =
             core::mem::transmute(sim_main);
-        let i_var2 = f(h_module, 0, param_2, param_3, param_4, param_1);
+        let i_var2 = mech_trace::cr!(
+            "004014b0",
+            "ind",
+            f(h_module, 0, param_2, param_3, param_4, param_1)
+        );
         FUN_00401200(c"Returned from Sim, retval=%d.\n".as_ptr(), i_var2);
-        FreeLibrary(h_module);
-        i_var2
+        mech_trace::cr!("004014b0", "FreeLibrary", FreeLibrary(h_module));
+        mech_trace::rt!("004014b0", i_var2)
     }
 }

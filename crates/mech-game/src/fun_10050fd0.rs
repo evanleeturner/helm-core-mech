@@ -20,16 +20,25 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10050fd0() {
+    mech_trace::enter!("10050fd0");
     // SAFETY: the globals and callees are the game's own; values are passed
     // and written exactly where the original does.
     unsafe {
-        let p_var1 = FUN_1008668b(DAT_100af17c, DAT_101686f0.wrapping_add(0x43), DAT_100af0b4);
+        let p_var1 = mech_trace::cr!(
+            "10050fd0",
+            "1008668b",
+            FUN_1008668b(
+                mech_trace::gr!("10050fd0", "100af17c", DAT_100af17c),
+                mech_trace::gr!("10050fd0", "101686f0", DAT_101686f0).wrapping_add(0x43),
+                mech_trace::gr!("10050fd0", "100af0b4", DAT_100af0b4)
+            )
+        );
         if p_var1 != 0 {
-            if DAT_100b0894 != 0 {
-                DAT_100b0880 = 0x101f5300;
+            if mech_trace::gr!("10050fd0", "100b0894", DAT_100b0894) != 0 {
+                mech_trace::gw!("10050fd0", "100b0880", DAT_100b0880, 0x101f5300);
                 FUN_10065e40(0x101f5300, 0x100b0880, 0x100b0880);
                 FUN_100664ef(0x100b0880, 0x100b0880, p_var1, 0);
-                DAT_100b0894 = 0;
+                mech_trace::gw!("10050fd0", "100b0894", DAT_100b0894, 0);
             }
             FUN_10056fc4(0x100b0880, p_var1, 0, 0, 0);
         }

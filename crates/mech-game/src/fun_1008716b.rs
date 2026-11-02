@@ -27,8 +27,8 @@ unsafe fn copy_name(src: *const i8, dst: *mut i8) {
     unsafe {
         let mut i = 0usize;
         loop {
-            let c = *src.add(i);
-            *dst.add(i) = c;
+            let c = mech_trace::dr!("1008716b", src.add(i));
+            mech_trace::dw!("1008716b", dst.add(i), c);
             i += 1;
             if c == 0 {
                 break;
@@ -41,7 +41,7 @@ unsafe fn end_of(buf: *mut i8) -> usize {
     // SAFETY: buf holds a NUL-terminated string.
     unsafe {
         let mut n = 0usize;
-        while *buf.add(n) != 0 {
+        while mech_trace::dr!("1008716b", buf.add(n)) != 0 {
             n += 1;
         }
         n
@@ -53,7 +53,11 @@ unsafe fn put(buf: *mut i8, off: usize, src: *const i8, len: usize) {
     unsafe {
         let mut i = 0usize;
         while i < len {
-            *buf.add(off + i) = *src.add(i);
+            mech_trace::dw!(
+                "1008716b",
+                buf.add(off + i),
+                mech_trace::dr!("1008716b", src.add(i))
+            );
             i += 1;
         }
     }
@@ -62,11 +66,11 @@ unsafe fn put(buf: *mut i8, off: usize, src: *const i8, len: usize) {
 unsafe fn lookup(buf: *mut i8) -> u32 {
     // SAFETY: the callee is the game's own.
     unsafe {
-        let p = FUN_10086a00(buf);
+        let p = mech_trace::cr!("1008716b", "10086a00", FUN_10086a00(buf));
         if p.is_null() {
             0
         } else {
-            p.add(1).read_unaligned()
+            mech_trace::rd!("1008716b", p.add(1), read_unaligned)
         }
     }
 }
@@ -74,116 +78,209 @@ unsafe fn lookup(buf: *mut i8) -> u32 {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1008716b(param_1: *mut u32) -> *mut u8 {
+    mech_trace::enter!("1008716b", param_1);
     // SAFETY: globals and callees are the game's own; param_1 points at the
     // caller's record; the table and local buffer are accessed as the original does.
     unsafe {
         let base = &raw mut DAT_100bc310 as *mut u8;
         let mut local_8: i32 = 0;
-        while local_8 < DAT_100ba9fc {
+        while local_8 < mech_trace::gr!("1008716b", "100ba9fc", DAT_100ba9fc) {
             let p = base.byte_add(local_8.wrapping_mul(0x32) as usize);
-            let k = p.cast::<u32>().read_unaligned();
-            if k == param_1.add(1).read_unaligned() {
-                return p;
+            let k = mech_trace::rd!("1008716b", p.cast::<u32>(), read_unaligned);
+            if k == mech_trace::rd!("1008716b", param_1.add(1), read_unaligned) {
+                return mech_trace::rt!("1008716b", p);
             }
             local_8 = local_8.wrapping_add(1);
         }
-        local_8 = DAT_100ba9fc;
-        DAT_100ba9fc = DAT_100ba9fc.wrapping_add(1);
-        if DAT_100ba9fc < 0x33 {
-            let e = base.byte_add(local_8.wrapping_mul(0x32) as usize);
-            let name = param_1.read_unaligned() as usize as *const i8;
-            let pc = _strstr(name, &raw const DAT_100c243c as *const i8);
-            if pc.is_null() {
-                e.byte_add(4)
-                    .cast::<u32>()
-                    .write_unaligned(e.byte_add(0x16) as usize as u32);
+        local_8 = mech_trace::gr!("1008716b", "100ba9fc", DAT_100ba9fc);
+        mech_trace::gw!(
+            "1008716b",
+            "100ba9fc",
+            DAT_100ba9fc,
+            mech_trace::gr!("1008716b", "100ba9fc", DAT_100ba9fc).wrapping_add(1)
+        );
+        mech_trace::rt!(
+            "1008716b",
+            if mech_trace::gr!("1008716b", "100ba9fc", DAT_100ba9fc) < 0x33 {
+                let e = base.byte_add(local_8.wrapping_mul(0x32) as usize);
+                let name =
+                    mech_trace::rd!("1008716b", param_1, read_unaligned) as usize as *const i8;
+                let pc = mech_trace::cr!(
+                    "1008716b",
+                    "_strstr",
+                    _strstr(name, &raw const DAT_100c243c as *const i8)
+                );
+                if pc.is_null() {
+                    mech_trace::wr!(
+                        "1008716b",
+                        e.byte_add(4).cast::<u32>(),
+                        write_unaligned,
+                        e.byte_add(0x16) as usize as u32
+                    );
+                } else {
+                    mech_trace::wr!(
+                        "1008716b",
+                        e.byte_add(4).cast::<u32>(),
+                        write_unaligned,
+                        e.byte_add(0x1a) as usize as u32
+                    );
+                }
+                let p1 = mech_trace::rd!("1008716b", param_1.add(1), read_unaligned);
+                mech_trace::wr!("1008716b", e.cast::<u32>(), write_unaligned, p1);
+                let p4 = mech_trace::rd!("1008716b", param_1.add(4), read_unaligned);
+                let p5 = mech_trace::rd!("1008716b", param_1.add(5), read_unaligned);
+                mech_trace::wr!(
+                    "1008716b",
+                    e.byte_add(8).cast::<u32>(),
+                    write_unaligned,
+                    p5.wrapping_sub(p4)
+                );
+                mech_trace::wr!(
+                    "1008716b",
+                    e.byte_add(0xc).cast::<u32>(),
+                    write_unaligned,
+                    p4.wrapping_shl(16)
+                );
+                mech_trace::dw!(
+                    "1008716b",
+                    e.byte_add(0x14),
+                    mech_trace::rd!("1008716b", param_1.add(7), read_unaligned) as u8
+                );
+                let p3 = mech_trace::rd!("1008716b", param_1.add(3), read_unaligned);
+                mech_trace::wr!(
+                    "1008716b",
+                    e.byte_add(0x10).cast::<u32>(),
+                    write_unaligned,
+                    p3.wrapping_shl(16)
+                );
+                let a = p3.wrapping_shl(16).wrapping_sub(p4.wrapping_shl(16));
+                mech_trace::wr!(
+                    "1008716b",
+                    e.byte_add(0x10).cast::<u32>(),
+                    write_unaligned,
+                    a
+                );
+                let a = a.wrapping_shl(1);
+                mech_trace::wr!(
+                    "1008716b",
+                    e.byte_add(0x10).cast::<u32>(),
+                    write_unaligned,
+                    a
+                );
+                let b = mech_trace::rd!("1008716b", e.byte_add(8).cast::<u32>(), read_unaligned);
+                let q: i32;
+                // SAFETY: the machine's own idiv, faulting as the original does.
+                core::arch::asm!(
+                    "cdq",
+                    "idiv {d:e}",
+                    d = in(reg) b,
+                    inout("eax") a => q,
+                    out("edx") _,
+                );
+                mech_trace::wr!(
+                    "1008716b",
+                    e.byte_add(0x10).cast::<u32>(),
+                    write_unaligned,
+                    q as u32
+                );
+                let r = (q as u32).wrapping_add(0xffff0000);
+                mech_trace::wr!(
+                    "1008716b",
+                    e.byte_add(0x10).cast::<u32>(),
+                    write_unaligned,
+                    r
+                );
+                mech_trace::wr!(
+                    "1008716b",
+                    e.byte_add(0x1e).cast::<u32>(),
+                    write_unaligned,
+                    mech_trace::rd!("1008716b", param_1.add(6), read_unaligned)
+                );
+                let t = mech_trace::rd!("1008716b", e.byte_add(0x10).cast::<u32>(), read_unaligned);
+                mech_trace::wr!(
+                    "1008716b",
+                    e.byte_add(0x1a).cast::<u32>(),
+                    write_unaligned,
+                    t
+                );
+
+                let mut buf = [0i8; 40];
+                let lb = buf.as_mut_ptr();
+
+                // _plus
+                copy_name(name, lb);
+                let lc = mech_trace::cr!(
+                    "1008716b",
+                    "_strstr",
+                    _strstr(lb, &raw const DAT_100c2444 as *const i8)
+                );
+                if !lc.is_null() {
+                    mech_trace::dw!("1008716b", lc, 0);
+                }
+                let n = end_of(lb);
+                put(lb, n, &raw const DAT_100c244c as *const i8, 6);
+                let v = lookup(lb);
+                mech_trace::wr!(
+                    "1008716b",
+                    e.byte_add(0x22).cast::<u32>(),
+                    write_unaligned,
+                    v
+                );
+
+                // _minus
+                copy_name(name, lb);
+                let lc = mech_trace::cr!(
+                    "1008716b",
+                    "_strstr",
+                    _strstr(lb, &raw const DAT_100c2454 as *const i8)
+                );
+                if !lc.is_null() {
+                    mech_trace::dw!("1008716b", lc, 0);
+                }
+                let n = end_of(lb);
+                put(lb, n, &raw const DAT_100c245c as *const i8, 7);
+                let v = lookup(lb);
+                mech_trace::wr!(
+                    "1008716b",
+                    e.byte_add(0x26).cast::<u32>(),
+                    write_unaligned,
+                    v
+                );
+
+                // suffix
+                copy_name(name, lb);
+                let n = end_of(lb);
+                put(lb, n, &raw const DAT_100c2464 as *const i8, 4);
+                mech_trace::dw!(
+                    "1008716b",
+                    lb.add(n + 4),
+                    mech_trace::gr!("1008716b", "100c2468", DAT_100c2468)
+                );
+                let v = lookup(lb);
+                mech_trace::wr!(
+                    "1008716b",
+                    e.byte_add(0x2e).cast::<u32>(),
+                    write_unaligned,
+                    v
+                );
+
+                // _reset
+                copy_name(name, lb);
+                let n = end_of(lb);
+                put(lb, n, &raw const DAT_100c246c as *const i8, 7);
+                let v = lookup(lb);
+                mech_trace::wr!(
+                    "1008716b",
+                    e.byte_add(0x2a).cast::<u32>(),
+                    write_unaligned,
+                    v
+                );
+
+                base.byte_add(local_8.wrapping_mul(0x32) as usize)
             } else {
-                e.byte_add(4)
-                    .cast::<u32>()
-                    .write_unaligned(e.byte_add(0x1a) as usize as u32);
+                FUN_100108a0(0x11, &raw const DAT_100c241c as *const i8);
+                core::ptr::null_mut()
             }
-            let p1 = param_1.add(1).read_unaligned();
-            e.cast::<u32>().write_unaligned(p1);
-            let p4 = param_1.add(4).read_unaligned();
-            let p5 = param_1.add(5).read_unaligned();
-            e.byte_add(8)
-                .cast::<u32>()
-                .write_unaligned(p5.wrapping_sub(p4));
-            e.byte_add(0xc)
-                .cast::<u32>()
-                .write_unaligned(p4.wrapping_shl(16));
-            *e.byte_add(0x14) = param_1.add(7).read_unaligned() as u8;
-            let p3 = param_1.add(3).read_unaligned();
-            e.byte_add(0x10)
-                .cast::<u32>()
-                .write_unaligned(p3.wrapping_shl(16));
-            let a = p3.wrapping_shl(16).wrapping_sub(p4.wrapping_shl(16));
-            e.byte_add(0x10).cast::<u32>().write_unaligned(a);
-            let a = a.wrapping_shl(1);
-            e.byte_add(0x10).cast::<u32>().write_unaligned(a);
-            let b = e.byte_add(8).cast::<u32>().read_unaligned();
-            let q: i32;
-            // SAFETY: the machine's own idiv, faulting as the original does.
-            core::arch::asm!(
-                "cdq",
-                "idiv {d:e}",
-                d = in(reg) b,
-                inout("eax") a => q,
-                out("edx") _,
-            );
-            e.byte_add(0x10).cast::<u32>().write_unaligned(q as u32);
-            let r = (q as u32).wrapping_add(0xffff0000);
-            e.byte_add(0x10).cast::<u32>().write_unaligned(r);
-            e.byte_add(0x1e)
-                .cast::<u32>()
-                .write_unaligned(param_1.add(6).read_unaligned());
-            let t = e.byte_add(0x10).cast::<u32>().read_unaligned();
-            e.byte_add(0x1a).cast::<u32>().write_unaligned(t);
-
-            let mut buf = [0i8; 40];
-            let lb = buf.as_mut_ptr();
-
-            // _plus
-            copy_name(name, lb);
-            let lc = _strstr(lb, &raw const DAT_100c2444 as *const i8);
-            if !lc.is_null() {
-                *lc = 0;
-            }
-            let n = end_of(lb);
-            put(lb, n, &raw const DAT_100c244c as *const i8, 6);
-            let v = lookup(lb);
-            e.byte_add(0x22).cast::<u32>().write_unaligned(v);
-
-            // _minus
-            copy_name(name, lb);
-            let lc = _strstr(lb, &raw const DAT_100c2454 as *const i8);
-            if !lc.is_null() {
-                *lc = 0;
-            }
-            let n = end_of(lb);
-            put(lb, n, &raw const DAT_100c245c as *const i8, 7);
-            let v = lookup(lb);
-            e.byte_add(0x26).cast::<u32>().write_unaligned(v);
-
-            // suffix
-            copy_name(name, lb);
-            let n = end_of(lb);
-            put(lb, n, &raw const DAT_100c2464 as *const i8, 4);
-            *lb.add(n + 4) = DAT_100c2468;
-            let v = lookup(lb);
-            e.byte_add(0x2e).cast::<u32>().write_unaligned(v);
-
-            // _reset
-            copy_name(name, lb);
-            let n = end_of(lb);
-            put(lb, n, &raw const DAT_100c246c as *const i8, 7);
-            let v = lookup(lb);
-            e.byte_add(0x2a).cast::<u32>().write_unaligned(v);
-
-            base.byte_add(local_8.wrapping_mul(0x32) as usize)
-        } else {
-            FUN_100108a0(0x11, &raw const DAT_100c241c as *const i8);
-            core::ptr::null_mut()
-        }
+        )
     }
 }

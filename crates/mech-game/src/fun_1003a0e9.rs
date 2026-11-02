@@ -33,6 +33,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1003a0e9(param_1: i32, param_2: i32) {
+    mech_trace::enter!("1003a0e9", param_1, param_2);
     if !(-1 < param_2 && param_2 < 9) {
         return;
     }
@@ -73,7 +74,12 @@ pub unsafe extern "C" fn FUN_1003a0e9(param_1: i32, param_2: i32) {
             let mut d = (&raw mut DAT_10160ff8).byte_add(off).cast::<u32>();
             let mut n: i32 = 0x20;
             while n != 0 {
-                d.write_unaligned(s.read_unaligned());
+                mech_trace::wr!(
+                    "1003a0e9",
+                    d,
+                    write_unaligned,
+                    mech_trace::rd!("1003a0e9", s, read_unaligned)
+                );
                 s = s.add(1);
                 d = d.add(1);
                 n -= 1;

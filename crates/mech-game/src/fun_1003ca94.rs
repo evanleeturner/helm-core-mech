@@ -27,17 +27,31 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1003ca94() {
+    mech_trace::enter!("1003ca94");
     // SAFETY: the globals and callees are the game's own memory and code;
     // values are read and passed in the original's order.
     unsafe {
-        if DAT_100aefb0 != 0 && (DAT_100aefac as i8) >= 0 {
-            let u_var1 = FUN_10003d60(DAT_100b3c4c as i32, 100) as u32;
-            AIL_send_channel_voice_message_20(
-                DAT_100aefb0,
-                0,
-                (DAT_100aefac as i32 | 0xb0) as u32,
-                7,
-                u_var1 & 0xff,
+        if mech_trace::gr!("1003ca94", "100aefb0", DAT_100aefb0) != 0
+            && (mech_trace::gr!("1003ca94", "100aefac", DAT_100aefac) as i8) >= 0
+        {
+            let u_var1 = mech_trace::cr!(
+                "1003ca94",
+                "10003d60",
+                FUN_10003d60(
+                    mech_trace::gr!("1003ca94", "100b3c4c", DAT_100b3c4c) as i32,
+                    100
+                )
+            ) as u32;
+            mech_trace::cr!(
+                "1003ca94",
+                "AIL_send_channel_voice_message_20",
+                AIL_send_channel_voice_message_20(
+                    mech_trace::gr!("1003ca94", "100aefb0", DAT_100aefb0),
+                    0,
+                    (mech_trace::gr!("1003ca94", "100aefac", DAT_100aefac) as i32 | 0xb0) as u32,
+                    7,
+                    u_var1 & 0xff,
+                )
             );
         }
     }

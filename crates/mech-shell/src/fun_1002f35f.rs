@@ -25,23 +25,41 @@ pub unsafe extern "C" fn FUN_1002f35f(
     param_7: u32,
     param_8: u32,
 ) {
+    mech_trace::enter!(
+        "1002f35f", param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8
+    );
     // SAFETY: the globals and the handler table are the game's own memory;
     // param_1 points at a pointer to the caller's u32 pair, read as the original does.
     unsafe {
-        let p = param_1.read_unaligned() as usize as *const u32;
-        DAT_10090420 = p.add(1).read_unaligned().wrapping_add(1);
-        let p = param_1.read_unaligned() as usize as *const u32;
-        DAT_10090428 = p.read_unaligned();
-        DAT_10090430 = param_3.wrapping_mul(0x18).wrapping_add(param_2) as u32;
-        DAT_1009042c = param_2 as u32;
-        DAT_10090518 = param_6;
-        DAT_1009051c = param_7;
-        DAT_10090520 = param_8;
-        DAT_100904b0 = param_5;
+        let p = mech_trace::rd!("1002f35f", param_1, read_unaligned) as usize as *const u32;
+        mech_trace::gw!(
+            "1002f35f",
+            "10090420",
+            DAT_10090420,
+            mech_trace::rd!("1002f35f", p.add(1), read_unaligned).wrapping_add(1)
+        );
+        let p = mech_trace::rd!("1002f35f", param_1, read_unaligned) as usize as *const u32;
+        mech_trace::gw!(
+            "1002f35f",
+            "10090428",
+            DAT_10090428,
+            mech_trace::rd!("1002f35f", p, read_unaligned)
+        );
+        mech_trace::gw!(
+            "1002f35f",
+            "10090430",
+            DAT_10090430,
+            param_3.wrapping_mul(0x18).wrapping_add(param_2) as u32
+        );
+        mech_trace::gw!("1002f35f", "1009042c", DAT_1009042c, param_2 as u32);
+        mech_trace::gw!("1002f35f", "10090518", DAT_10090518, param_6);
+        mech_trace::gw!("1002f35f", "1009051c", DAT_1009051c, param_7);
+        mech_trace::gw!("1002f35f", "10090520", DAT_10090520, param_8);
+        mech_trace::gw!("1002f35f", "100904b0", DAT_100904b0, param_5);
         let table = (&raw mut DAT_1001e6f0).cast::<Option<unsafe extern "C" fn()>>();
-        let entry = table.offset(param_4 as isize).read_unaligned();
+        let entry = mech_trace::rd!("1002f35f", table.offset(param_4 as isize), read_unaligned);
         if let Some(f) = entry {
-            f();
+            mech_trace::cr!("1002f35f", "ind", f());
         }
     }
 }

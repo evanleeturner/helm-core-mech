@@ -34,7 +34,7 @@ unsafe fn copy_cstr(src: *const i8, dst: *mut i8) {
                 break;
             }
             u_var2 = u_var2.wrapping_sub(1);
-            let c = pc4.read();
+            let c = mech_trace::rd!("100416d0", pc4, read);
             pc4 = pc4.add(1);
             if c == 0 {
                 break;
@@ -45,15 +45,19 @@ unsafe fn copy_cstr(src: *const i8, dst: *mut i8) {
         let mut d = dst;
         let mut n = len >> 2;
         while n != 0 {
-            d.cast::<u32>()
-                .write_unaligned(s.cast::<u32>().read_unaligned());
+            mech_trace::wr!(
+                "100416d0",
+                d.cast::<u32>(),
+                write_unaligned,
+                mech_trace::rd!("100416d0", s.cast::<u32>(), read_unaligned)
+            );
             s = s.byte_add(4);
             d = d.byte_add(4);
             n = n.wrapping_sub(1);
         }
         let mut r = len & 3;
         while r != 0 {
-            d.write(s.read());
+            mech_trace::wr!("100416d0", d, write, mech_trace::rd!("100416d0", s, read));
             s = s.add(1);
             d = d.add(1);
             r = r.wrapping_sub(1);
@@ -64,15 +68,16 @@ unsafe fn copy_cstr(src: *const i8, dst: *mut i8) {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_100416d0() {
+    mech_trace::enter!("100416d0");
     // SAFETY: all globals and buffers are the game's own memory; strings are
     // copied exactly as the original does.
     unsafe {
-        DAT_100983b0 = 0;
-        DAT_100983b4 = 0;
-        DAT_100983b8 = 0;
-        DAT_100983bc = 0;
-        _DAT_100983c0 = 0;
-        DAT_100983c4 = 0;
+        mech_trace::gw!("100416d0", "100983b0", DAT_100983b0, 0);
+        mech_trace::gw!("100416d0", "100983b4", DAT_100983b4, 0);
+        mech_trace::gw!("100416d0", "100983b8", DAT_100983b8, 0);
+        mech_trace::gw!("100416d0", "100983bc", DAT_100983bc, 0);
+        mech_trace::gw!("100416d0", "_DAT_100983c0", _DAT_100983c0, 0);
+        mech_trace::gw!("100416d0", "100983c4", DAT_100983c4, 0);
         copy_cstr(
             (&raw mut DAT_1009845c).cast::<i8>(),
             (&raw mut DAT_100ba1d8).cast::<i8>(),
@@ -81,12 +86,12 @@ pub unsafe extern "stdcall" fn FUN_100416d0() {
             (&raw mut DAT_10098460).cast::<i8>(),
             (&raw mut DAT_100ba1f8).cast::<i8>(),
         );
-        DAT_100983c8 = 0;
-        DAT_100983cc = 0;
-        DAT_100983d0 = 0;
-        DAT_100ba1d0 = 0;
-        _DAT_100983d4 = 0;
-        DAT_100983d8 = 0;
-        _DAT_100983e4 = 0;
+        mech_trace::gw!("100416d0", "100983c8", DAT_100983c8, 0);
+        mech_trace::gw!("100416d0", "100983cc", DAT_100983cc, 0);
+        mech_trace::gw!("100416d0", "100983d0", DAT_100983d0, 0);
+        mech_trace::gw!("100416d0", "100ba1d0", DAT_100ba1d0, 0);
+        mech_trace::gw!("100416d0", "_DAT_100983d4", _DAT_100983d4, 0);
+        mech_trace::gw!("100416d0", "100983d8", DAT_100983d8, 0);
+        mech_trace::gw!("100416d0", "_DAT_100983e4", _DAT_100983e4, 0);
     }
 }

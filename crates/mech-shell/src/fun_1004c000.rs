@@ -17,22 +17,37 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1004c000(param_1: *mut u32) {
+    mech_trace::enter!("1004c000", param_1);
     // SAFETY: the callees and globals are the game's own; param_1 points at a
     // caller buffer of at least 0x9d4 bytes, and the destination is the game's
     // memory at DAT_10083508 + 0x23d3.
     unsafe {
-        let file = FID_conflict___wfopen(
-            (&raw mut DAT_1009b6d8).cast::<i8>(),
-            (&raw mut DAT_1009b6d4).cast::<i8>(),
+        let file = mech_trace::cr!(
+            "1004c000",
+            "FID_conflict___wfopen",
+            FID_conflict___wfopen(
+                (&raw mut DAT_1009b6d8).cast::<i8>(),
+                (&raw mut DAT_1009b6d4).cast::<i8>(),
+            )
         );
         if !file.is_null() {
-            _fread(param_1.cast::<u8>(), 0x9d4, 1, file);
-            _fclose(file);
+            mech_trace::cr!(
+                "1004c000",
+                "_fread",
+                _fread(param_1.cast::<u8>(), 0x9d4, 1, file)
+            );
+            mech_trace::cr!("1004c000", "_fclose", _fclose(file));
             let mut src = param_1;
-            let mut dst = DAT_10083508.wrapping_add(0x23d3) as *mut u32;
+            let mut dst = mech_trace::gr!("1004c000", "10083508", DAT_10083508).wrapping_add(0x23d3)
+                as *mut u32;
             let mut count: i32 = 0x275;
             while count != 0 {
-                dst.write_unaligned(src.read_unaligned());
+                mech_trace::wr!(
+                    "1004c000",
+                    dst,
+                    write_unaligned,
+                    mech_trace::rd!("1004c000", src, read_unaligned)
+                );
                 src = src.wrapping_add(1);
                 dst = dst.wrapping_add(1);
                 count -= 1;

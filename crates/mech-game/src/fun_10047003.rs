@@ -13,16 +13,24 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10047003() -> u32 {
+    mech_trace::enter!("10047003");
     let mut local_8: u32 = 0;
     // SAFETY: the global is the game's own memory; auxGetVolume is the system
     // import and writes through a pointer to a valid local.
     unsafe {
-        if DAT_100b04b4 != 0xffff_ffff {
-            let m_var1 = auxGetVolume(DAT_100b04b4, &raw mut local_8);
+        if mech_trace::gr!("10047003", "100b04b4", DAT_100b04b4) != 0xffff_ffff {
+            let m_var1 = mech_trace::cr!(
+                "10047003",
+                "auxGetVolume",
+                auxGetVolume(
+                    mech_trace::gr!("10047003", "100b04b4", DAT_100b04b4),
+                    &raw mut local_8
+                )
+            );
             if m_var1 == 0 {
-                return local_8 & 0xffff;
+                return mech_trace::rt!("10047003", local_8 & 0xffff);
             }
         }
     }
-    0xffff_ffff
+    mech_trace::rt!("10047003", 0xffff_ffff)
 }

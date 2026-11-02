@@ -22,11 +22,12 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1003109e(param_1: i32, param_2: u8, param_3: *const u32) {
+    mech_trace::enter!("1003109e", param_1, param_2, param_3);
     // SAFETY: the globals and callees are the game's own; param_3 points at the
     // caller's record, and the table entries are read and written where the
     // original does.
     unsafe {
-        if -1 < param_1 && param_1 < DAT_100ada50 {
+        if -1 < param_1 && param_1 < mech_trace::gr!("1003109e", "100ada50", DAT_100ada50) {
             let i_var1 = param_1.wrapping_mul(0x34) as isize;
             let f14 = (&raw mut DAT_10168914).byte_offset(i_var1).cast::<u32>();
             let f18 = (&raw mut DAT_10168918).byte_offset(i_var1).cast::<u32>();
@@ -39,36 +40,77 @@ pub unsafe extern "C" fn FUN_1003109e(param_1: i32, param_2: u8, param_3: *const
                 .byte_offset(i_var1)
                 .cast::<*mut i32>();
             if (param_2 & 1) != 0 {
-                f14.write_unaligned(param_3.read_unaligned());
-                f18.write_unaligned(param_3.add(1).read_unaligned());
-                f1c.write_unaligned(param_3.add(2).read_unaligned());
-                let pi_var2 = f30.read_unaligned();
+                mech_trace::wr!(
+                    "1003109e",
+                    f14,
+                    write_unaligned,
+                    mech_trace::rd!("1003109e", param_3, read_unaligned)
+                );
+                mech_trace::wr!(
+                    "1003109e",
+                    f18,
+                    write_unaligned,
+                    mech_trace::rd!("1003109e", param_3.add(1), read_unaligned)
+                );
+                mech_trace::wr!(
+                    "1003109e",
+                    f1c,
+                    write_unaligned,
+                    mech_trace::rd!("1003109e", param_3.add(2), read_unaligned)
+                );
+                let pi_var2 = mech_trace::rd!("1003109e", f30, read_unaligned);
                 if !pi_var2.is_null() {
-                    let i_var3 = pi_var2.add(0x1b).read_unaligned();
+                    let i_var3 = mech_trace::rd!("1003109e", pi_var2.add(0x1b), read_unaligned);
                     if i_var3 != 0 {
-                        (i_var3.wrapping_add(0x34) as *mut u32)
-                            .write_unaligned(param_3.read_unaligned());
-                        (i_var3.wrapping_add(0x38) as *mut u32)
-                            .write_unaligned(param_3.add(1).read_unaligned());
-                        (i_var3.wrapping_add(0x3c) as *mut u32)
-                            .write_unaligned(param_3.add(2).read_unaligned());
+                        mech_trace::wr!(
+                            "1003109e",
+                            (i_var3.wrapping_add(0x34) as *mut u32),
+                            write_unaligned,
+                            mech_trace::rd!("1003109e", param_3, read_unaligned)
+                        );
+                        mech_trace::wr!(
+                            "1003109e",
+                            (i_var3.wrapping_add(0x38) as *mut u32),
+                            write_unaligned,
+                            mech_trace::rd!("1003109e", param_3.add(1), read_unaligned)
+                        );
+                        mech_trace::wr!(
+                            "1003109e",
+                            (i_var3.wrapping_add(0x3c) as *mut u32),
+                            write_unaligned,
+                            mech_trace::rd!("1003109e", param_3.add(2), read_unaligned)
+                        );
                     }
-                    FUN_1002f37a(
-                        pi_var2 as i32,
-                        f14.read_unaligned(),
-                        f18.read_unaligned(),
-                        f1c.read_unaligned(),
+                    mech_trace::cr!(
+                        "1003109e",
+                        "1002f37a",
+                        FUN_1002f37a(
+                            pi_var2 as i32,
+                            mech_trace::rd!("1003109e", f14, read_unaligned),
+                            mech_trace::rd!("1003109e", f18, read_unaligned),
+                            mech_trace::rd!("1003109e", f1c, read_unaligned),
+                        )
                     );
-                    FUN_1002fbc0(pi_var2);
+                    mech_trace::cr!("1003109e", "1002fbc0", FUN_1002fbc0(pi_var2));
                 }
             }
             if (param_2 & 2) != 0 {
-                f20.write_unaligned(param_3.add(3).read_unaligned());
-                f28.write_unaligned(0);
+                mech_trace::wr!(
+                    "1003109e",
+                    f20,
+                    write_unaligned,
+                    mech_trace::rd!("1003109e", param_3.add(3), read_unaligned)
+                );
+                mech_trace::wr!("1003109e", f28, write_unaligned, 0);
             }
             if (param_2 & 4) != 0 {
-                f24.write_unaligned(param_3.add(4).read_unaligned());
-                f2c.write_unaligned(1);
+                mech_trace::wr!(
+                    "1003109e",
+                    f24,
+                    write_unaligned,
+                    mech_trace::rd!("1003109e", param_3.add(4), read_unaligned)
+                );
+                mech_trace::wr!("1003109e", f2c, write_unaligned, 1);
             }
         }
     }

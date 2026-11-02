@@ -11,10 +11,15 @@ pub unsafe extern "C" fn FUN_10067af3(
     dst_y: i32,
     fill_value: u32,
 ) -> u32 {
+    mech_trace::enter!(
+        "10067af3", src_view, src_x, src_y, dst_view, dst_x, dst_y, fill_value
+    );
     // SAFETY: all pointers are the caller's view/bitmap structures and pixel
     // buffers, read and written exactly where the original does.
     unsafe {
-        let rd = |p: *const i32, i: usize| -> i32 { p.add(i).read_unaligned() };
+        let rd = |p: *const i32, i: usize| -> i32 {
+            mech_trace::rd!("10067af3", p.add(i), read_unaligned)
+        };
 
         let src_bitmap = rd(src_view, 0) as u32 as usize as *const i32;
         let mut src_clip_bottom = rd(src_bitmap, 1);
@@ -24,7 +29,7 @@ pub unsafe extern "C" fn FUN_10067af3(
             t = rd(src_bitmap, 2);
             t < 0
         } {
-            return 0xffffffff;
+            return mech_trace::rt!("10067af3", 0xffffffff);
         }
         let dst_clip_bottom_tmp = t;
         let src_view_left = rd(src_view, 1);
@@ -46,7 +51,7 @@ pub unsafe extern "C" fn FUN_10067af3(
             src_clip_bottom = dst_clip_bottom_tmp;
         }
         if src_clip_right < src_clip_left || src_clip_bottom < src_clip_top {
-            return 0xfffffffe;
+            return mech_trace::rt!("10067af3", 0xfffffffe);
         }
         src_clip_left = src_clip_left.wrapping_sub(src_view_left);
         src_clip_right = src_clip_right.wrapping_sub(src_view_left);
@@ -61,7 +66,7 @@ pub unsafe extern "C" fn FUN_10067af3(
             src_overlap_left = rd(dst_bitmap, 2);
             src_overlap_left < 0
         } {
-            return 0xffffffff;
+            return mech_trace::rt!("10067af3", 0xffffffff);
         }
         let dst_view_left = rd(dst_view, 1);
         let mut dst_overlap_left = dst_view_left;
@@ -82,7 +87,7 @@ pub unsafe extern "C" fn FUN_10067af3(
             dst_clip_bottom = src_overlap_left;
         }
         if !(dst_overlap_left <= dst_start_col && dst_start_row <= dst_clip_bottom) {
-            return 0xfffffffe;
+            return mech_trace::rt!("10067af3", 0xfffffffe);
         }
         dst_overlap_left = dst_overlap_left.wrapping_sub(dst_view_left);
         dst_start_col = dst_start_col.wrapping_sub(dst_view_left);
@@ -107,7 +112,7 @@ pub unsafe extern "C" fn FUN_10067af3(
             src_overlap_bottom = dst_clip_bottom.wrapping_add(smd_y);
         }
         if !(src_overlap_left <= src_start_col && src_start_row <= src_overlap_bottom) {
-            return 0xfffffffd;
+            return mech_trace::rt!("10067af3", 0xfffffffd);
         }
         if dst_overlap_left <= src_clip_left.wrapping_sub(smd_x) {
             dst_overlap_left = src_clip_left.wrapping_sub(smd_x);
@@ -154,13 +159,13 @@ pub unsafe extern "C" fn FUN_10067af3(
 
         let mut dst_cursor: u32 = (dst_view_top as u32)
             .wrapping_mul(dst_pitch as u32)
-            .wrapping_add(dst_bitmap.read_unaligned() as u32)
+            .wrapping_add(mech_trace::rd!("10067af3", dst_bitmap, read_unaligned) as u32)
             .wrapping_add(dst_view_left as u32)
             .wrapping_add((dst_start_row as u32).wrapping_mul(dst_pitch as u32))
             .wrapping_add(dst_start_col as u32);
         let mut src_cursor: u32 = (src_view_top as u32)
             .wrapping_mul(src_pitch as u32)
-            .wrapping_add(src_bitmap.read_unaligned() as u32)
+            .wrapping_add(mech_trace::rd!("10067af3", src_bitmap, read_unaligned) as u32)
             .wrapping_add(src_view_left as u32)
             .wrapping_add((src_start_row as u32).wrapping_mul(src_pitch as u32))
             .wrapping_add(src_start_col as u32);
@@ -171,14 +176,24 @@ pub unsafe extern "C" fn FUN_10067af3(
             loop {
                 let mut n = row_bytes & 3;
                 while n != 0 {
-                    (dst_cursor as usize as *mut u8).write(fill_byte);
+                    mech_trace::wr!(
+                        "10067af3",
+                        (dst_cursor as usize as *mut u8),
+                        write,
+                        fill_byte
+                    );
                     dst_cursor = dst_cursor.wrapping_add(step);
                     n -= 1;
                 }
                 let mut dw = dst_cursor.wrapping_sub(back);
                 let mut n = row_bytes >> 2;
                 while n != 0 {
-                    (dw as usize as *mut u32).write_unaligned(pattern);
+                    mech_trace::wr!(
+                        "10067af3",
+                        (dw as usize as *mut u32),
+                        write_unaligned,
+                        pattern
+                    );
                     dw = dw.wrapping_add(step4);
                     n -= 1;
                 }
@@ -192,8 +207,8 @@ pub unsafe extern "C" fn FUN_10067af3(
             loop {
                 let mut n = row_bytes & 3;
                 while n != 0 {
-                    let b = (src_cursor as usize as *const u8).read();
-                    (dst_cursor as usize as *mut u8).write(b);
+                    let b = mech_trace::rd!("10067af3", (src_cursor as usize as *const u8), read);
+                    mech_trace::wr!("10067af3", (dst_cursor as usize as *mut u8), write, b);
                     src_cursor = src_cursor.wrapping_add(step);
                     dst_cursor = dst_cursor.wrapping_add(step);
                     n -= 1;
@@ -202,8 +217,9 @@ pub unsafe extern "C" fn FUN_10067af3(
                 let mut dw = dst_cursor.wrapping_sub(back);
                 let mut n = row_bytes >> 2;
                 while n != 0 {
-                    let v = (sw as usize as *const u32).read_unaligned();
-                    (dw as usize as *mut u32).write_unaligned(v);
+                    let v =
+                        mech_trace::rd!("10067af3", (sw as usize as *const u32), read_unaligned);
+                    mech_trace::wr!("10067af3", (dw as usize as *mut u32), write_unaligned, v);
                     sw = sw.wrapping_add(step4);
                     dw = dw.wrapping_add(step4);
                     n -= 1;
@@ -216,6 +232,6 @@ pub unsafe extern "C" fn FUN_10067af3(
                 }
             }
         }
-        0
+        mech_trace::rt!("10067af3", 0)
     }
 }

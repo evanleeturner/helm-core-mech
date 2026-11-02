@@ -10,20 +10,31 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1005fb90() {
+    mech_trace::enter!("1005fb90");
     // SAFETY: the globals are the game's own; the non-zero ones hold pointers
     // to objects whose function-pointer slots at 0x14 and 0x10 are called
     // exactly as the original does.
     unsafe {
-        if DAT_100a724c != 0 {
-            let f = ((DAT_100a724c.wrapping_add(0x14)) as *const u32).read_unaligned();
+        if mech_trace::gr!("1005fb90", "100a724c", DAT_100a724c) != 0 {
+            let f = mech_trace::rd!(
+                "1005fb90",
+                ((mech_trace::gr!("1005fb90", "100a724c", DAT_100a724c).wrapping_add(0x14))
+                    as *const u32),
+                read_unaligned
+            );
             let f: unsafe extern "stdcall" fn() = core::mem::transmute(f as usize);
-            f();
+            mech_trace::cr!("1005fb90", "ind", f());
         }
-        if DAT_100a7248 != 0 {
-            let f = ((DAT_100a7248.wrapping_add(0x10)) as *const u32).read_unaligned();
+        if mech_trace::gr!("1005fb90", "100a7248", DAT_100a7248) != 0 {
+            let f = mech_trace::rd!(
+                "1005fb90",
+                ((mech_trace::gr!("1005fb90", "100a7248", DAT_100a7248).wrapping_add(0x10))
+                    as *const u32),
+                read_unaligned
+            );
             let f: unsafe extern "stdcall" fn() = core::mem::transmute(f as usize);
-            f();
+            mech_trace::cr!("1005fb90", "ind", f());
         }
-        DAT_100a7580 = 1;
+        mech_trace::gw!("1005fb90", "100a7580", DAT_100a7580, 1);
     }
 }

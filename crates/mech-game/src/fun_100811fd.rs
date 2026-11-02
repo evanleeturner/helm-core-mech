@@ -14,14 +14,19 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_100811fd(param_1: u32, param_2: i32) {
+    mech_trace::enter!("100811fd", param_1, param_2);
     // SAFETY: the callees and the global are the game's own; DAT_100b3c9c
     // holds a pointer to a structure whose field at offset 0x1c is written.
     unsafe {
         FUN_1003c13a(param_1, param_2);
         FUN_1002cdde(param_1, param_2);
-        (DAT_100b3c9c as usize as *mut u8)
-            .byte_add(0x1c)
-            .cast::<i32>()
-            .write_unaligned(param_2);
+        mech_trace::wr!(
+            "100811fd",
+            (mech_trace::gr!("100811fd", "100b3c9c", DAT_100b3c9c) as usize as *mut u8)
+                .byte_add(0x1c)
+                .cast::<i32>(),
+            write_unaligned,
+            param_2
+        );
     }
 }

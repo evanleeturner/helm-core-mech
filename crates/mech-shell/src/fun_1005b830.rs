@@ -22,50 +22,72 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1005b830(code: u32) {
+    mech_trace::enter!("1005b830", code);
     // SAFETY: the globals and callees are the game's own memory and the
     // system's API; the table reads and ring-buffer write are at the
     // offsets the original uses.
     unsafe {
-        let mut u_var4: u16 = (&raw mut DAT_100a55d8)
-            .cast::<u8>()
-            .byte_add(code.wrapping_mul(2) as usize)
-            .cast::<u16>()
-            .read_unaligned();
+        let mut u_var4: u16 = mech_trace::rd!(
+            "1005b830",
+            (&raw mut DAT_100a55d8)
+                .cast::<u8>()
+                .byte_add(code.wrapping_mul(2) as usize)
+                .cast::<u16>(),
+            read_unaligned
+        );
         if u_var4 == 0 {
-            let u_var2 = MapVirtualKeyA(code, 2);
-            let i_var3 = _tolower((u_var2 as i8) as i32);
+            let u_var2 = mech_trace::cr!("1005b830", "MapVirtualKeyA", MapVirtualKeyA(code, 2));
+            let i_var3 = mech_trace::cr!("1005b830", "_tolower", _tolower((u_var2 as i8) as i32));
             u_var4 = i_var3 as u16;
             if u_var4 == 0 {
                 return;
             }
         }
-        let mut u_var1 = GetKeyState(0x11) as u16;
+        let mut u_var1 = mech_trace::cr!("1005b830", "GetKeyState", GetKeyState(0x11)) as u16;
         if (u_var1 & 0x1000) != 0 {
             u_var4 |= 0x100;
         }
-        u_var1 = GetKeyState(0x12) as u16;
+        u_var1 = mech_trace::cr!("1005b830", "GetKeyState", GetKeyState(0x12)) as u16;
         if (u_var1 & 0x1000) != 0 {
             u_var4 |= 0x400;
         }
-        u_var1 = GetKeyState(0x10) as u16;
+        u_var1 = mech_trace::cr!("1005b830", "GetKeyState", GetKeyState(0x10)) as u16;
         if (u_var1 & 0x1000) != 0 {
             u_var4 |= 0x200;
         }
-        (&raw mut DAT_100c6080)
-            .cast::<u8>()
-            .byte_add(DAT_100c40c4.wrapping_mul(2) as usize)
-            .cast::<u16>()
-            .write_unaligned(u_var4);
-        DAT_100c40c4 = DAT_100c40c4.wrapping_add(1);
-        if DAT_100c40c4 != 0x40 {
-            if DAT_100c40c0 == DAT_100c40c4 {
-                DAT_100c40c0 = DAT_100c40c0.wrapping_add(1);
-                if DAT_100c40c0 == 0x40 {
-                    DAT_100c40c0 = 0;
+        mech_trace::wr!(
+            "1005b830",
+            (&raw mut DAT_100c6080)
+                .cast::<u8>()
+                .byte_add(
+                    mech_trace::gr!("1005b830", "100c40c4", DAT_100c40c4).wrapping_mul(2) as usize
+                )
+                .cast::<u16>(),
+            write_unaligned,
+            u_var4
+        );
+        mech_trace::gw!(
+            "1005b830",
+            "100c40c4",
+            DAT_100c40c4,
+            mech_trace::gr!("1005b830", "100c40c4", DAT_100c40c4).wrapping_add(1)
+        );
+        if mech_trace::gr!("1005b830", "100c40c4", DAT_100c40c4) != 0x40 {
+            if mech_trace::gr!("1005b830", "100c40c0", DAT_100c40c0)
+                == mech_trace::gr!("1005b830", "100c40c4", DAT_100c40c4)
+            {
+                mech_trace::gw!(
+                    "1005b830",
+                    "100c40c0",
+                    DAT_100c40c0,
+                    mech_trace::gr!("1005b830", "100c40c0", DAT_100c40c0).wrapping_add(1)
+                );
+                if mech_trace::gr!("1005b830", "100c40c0", DAT_100c40c0) == 0x40 {
+                    mech_trace::gw!("1005b830", "100c40c0", DAT_100c40c0, 0);
                 }
             }
             return;
         }
-        DAT_100c40c4 = 0;
+        mech_trace::gw!("1005b830", "100c40c4", DAT_100c40c4, 0);
     }
 }

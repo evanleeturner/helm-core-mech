@@ -21,19 +21,40 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10067e7c() {
+    mech_trace::enter!("10067e7c");
     // SAFETY: the globals and the C runtime functions are the game's own;
     // the buffers are the game's arrays, filled by fread from the open file.
     unsafe {
-        let file = _fopen(&raw mut s_mercs_hud_100b3974, &raw mut DAT_100b3970);
+        let file = mech_trace::cr!(
+            "10067e7c",
+            "_fopen",
+            _fopen(&raw mut s_mercs_hud_100b3974, &raw mut DAT_100b3970)
+        );
         if file.is_null() {
-            DAT_100b3958 = 0;
+            mech_trace::gw!("10067e7c", "100b3958", DAT_100b3958, 0);
         } else {
-            DAT_100b3958 = 1;
-            _fread(&raw mut DAT_100eef20, 4, 7, file);
-            _fread(&raw mut DAT_100eeee0, 4, 1, file);
-            _fread(&raw mut DAT_100eef0c, 4, 1, file);
-            _fread(&raw mut DAT_100eef10, 4, 1, file);
-            _fclose(file);
+            mech_trace::gw!("10067e7c", "100b3958", DAT_100b3958, 1);
+            mech_trace::cr!(
+                "10067e7c",
+                "_fread",
+                _fread(&raw mut DAT_100eef20, 4, 7, file)
+            );
+            mech_trace::cr!(
+                "10067e7c",
+                "_fread",
+                _fread(&raw mut DAT_100eeee0, 4, 1, file)
+            );
+            mech_trace::cr!(
+                "10067e7c",
+                "_fread",
+                _fread(&raw mut DAT_100eef0c, 4, 1, file)
+            );
+            mech_trace::cr!(
+                "10067e7c",
+                "_fread",
+                _fread(&raw mut DAT_100eef10, 4, 1, file)
+            );
+            mech_trace::cr!("10067e7c", "_fclose", _fclose(file));
         }
     }
 }

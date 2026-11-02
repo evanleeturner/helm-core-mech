@@ -22,20 +22,32 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10007e8a() {
+    mech_trace::enter!("10007e8a");
     // SAFETY: the globals and callees are the game's own; the table write
     // goes where the original computes it from DAT_100a40f8.
     unsafe {
-        if DAT_100a5538 != 0 {
-            let i_var1 = FUN_10003d60(DAT_100b3c50, 100);
-            let i_var2 = AIL_sample_user_data(DAT_100a5538, 2);
+        if mech_trace::gr!("10007e8a", "100a5538", DAT_100a5538) != 0 {
+            let i_var1 = mech_trace::cr!(
+                "10007e8a",
+                "10003d60",
+                FUN_10003d60(mech_trace::gr!("10007e8a", "100b3c50", DAT_100b3c50), 100)
+            );
+            let i_var2 = mech_trace::cr!(
+                "10007e8a",
+                "AIL_sample_user_data",
+                AIL_sample_user_data(mech_trace::gr!("10007e8a", "100a5538", DAT_100a5538), 2)
+            );
             if -1 < i_var2 {
-                let addr = (DAT_100a40f8 as u32)
+                let addr = (mech_trace::gr!("10007e8a", "100a40f8", DAT_100a40f8) as u32)
                     .wrapping_add(0x468)
                     .wrapping_add((i_var2 as u32).wrapping_mul(4));
-                (addr as *mut i32).write_unaligned(i_var1);
+                mech_trace::wr!("10007e8a", (addr as *mut i32), write_unaligned, i_var1);
             }
-            AIL_set_sample_volume(DAT_100a5538, i_var1);
-            AIL_resume_sample(DAT_100a5538);
+            AIL_set_sample_volume(
+                mech_trace::gr!("10007e8a", "100a5538", DAT_100a5538),
+                i_var1,
+            );
+            AIL_resume_sample(mech_trace::gr!("10007e8a", "100a5538", DAT_100a5538));
         }
     }
 }

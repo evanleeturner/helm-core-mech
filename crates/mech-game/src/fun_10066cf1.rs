@@ -24,32 +24,63 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10066cf1(param_1: *mut i32) {
+    mech_trace::enter!("10066cf1", param_1);
     // SAFETY: the globals and the callee are the game's own; param_1 points
     // at the caller's int array, read at indices 3 and 4 as the original does.
     unsafe {
-        if 0x59 < DAT_100b38fc.wrapping_sub(_DAT_100b3950) {
-            _DAT_100b3950 = DAT_100b38fc;
-            DAT_100b394c = DAT_100b394c.wrapping_add(DAT_100b3954);
-            if DAT_100b394c != 0xf0 {
-                DAT_100b3954 = 1;
+        if 0x59
+            < mech_trace::gr!("10066cf1", "100b38fc", DAT_100b38fc).wrapping_sub(mech_trace::gr!(
+                "10066cf1",
+                "_DAT_100b3950",
+                _DAT_100b3950
+            ))
+        {
+            mech_trace::gw!(
+                "10066cf1",
+                "_DAT_100b3950",
+                _DAT_100b3950,
+                mech_trace::gr!("10066cf1", "100b38fc", DAT_100b38fc)
+            );
+            mech_trace::gw!(
+                "10066cf1",
+                "100b394c",
+                DAT_100b394c,
+                mech_trace::gr!("10066cf1", "100b394c", DAT_100b394c)
+                    .wrapping_add(mech_trace::gr!("10066cf1", "100b3954", DAT_100b3954))
+            );
+            if mech_trace::gr!("10066cf1", "100b394c", DAT_100b394c) != 0xf0 {
+                mech_trace::gw!("10066cf1", "100b3954", DAT_100b3954, 1);
             }
-            if DAT_100b394c != 0xf7 {
-                DAT_100b3954 = DAT_100b3954.wrapping_neg();
+            if mech_trace::gr!("10066cf1", "100b394c", DAT_100b394c) != 0xf7 {
+                mech_trace::gw!(
+                    "10066cf1",
+                    "100b3954",
+                    DAT_100b3954,
+                    mech_trace::gr!("10066cf1", "100b3954", DAT_100b3954).wrapping_neg()
+                );
             }
         }
-        let u_var1: i32 = DAT_100b3948 >> 0x1f;
-        DAT_100b3948 = ((((DAT_100b3948 ^ u_var1).wrapping_sub(u_var1)) & 1) ^ u_var1)
-            .wrapping_sub(u_var1)
-            .wrapping_add(1);
-        let a = param_1.byte_add(12).read_unaligned();
-        let b = param_1.byte_add(16).read_unaligned();
+        let u_var1: i32 = mech_trace::gr!("10066cf1", "100b3948", DAT_100b3948) >> 0x1f;
+        mech_trace::gw!(
+            "10066cf1",
+            "100b3948",
+            DAT_100b3948,
+            ((((mech_trace::gr!("10066cf1", "100b3948", DAT_100b3948) ^ u_var1)
+                .wrapping_sub(u_var1))
+                & 1)
+                ^ u_var1)
+                .wrapping_sub(u_var1)
+                .wrapping_add(1)
+        );
+        let a = mech_trace::rd!("10066cf1", param_1.byte_add(12), read_unaligned);
+        let b = mech_trace::rd!("10066cf1", param_1.byte_add(16), read_unaligned);
         FUN_10056e8b(
             param_1,
-            DAT_100b3948,
-            DAT_100b3948,
-            a.wrapping_sub(DAT_100b3948),
-            b.wrapping_sub(DAT_100b3948),
-            DAT_100b394c as i8,
+            mech_trace::gr!("10066cf1", "100b3948", DAT_100b3948),
+            mech_trace::gr!("10066cf1", "100b3948", DAT_100b3948),
+            a.wrapping_sub(mech_trace::gr!("10066cf1", "100b3948", DAT_100b3948)),
+            b.wrapping_sub(mech_trace::gr!("10066cf1", "100b3948", DAT_100b3948)),
+            mech_trace::gr!("10066cf1", "100b394c", DAT_100b394c) as i8,
         );
     }
 }

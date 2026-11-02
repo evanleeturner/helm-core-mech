@@ -17,12 +17,22 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_100071f6() {
+    mech_trace::enter!("100071f6");
     // SAFETY: the callee and the globals are the game's own memory; the two
     // string buffers are passed by address as the original does.
     unsafe {
-        DAT_100a41ec = _fopen(
-            (&raw mut DAT_100a41f0).cast_const(),
-            (&raw mut DAT_100a4340).cast_const(),
+        mech_trace::gw!(
+            "100071f6",
+            "100a41ec",
+            DAT_100a41ec,
+            mech_trace::cr!(
+                "100071f6",
+                "_fopen",
+                _fopen(
+                    (&raw mut DAT_100a41f0).cast_const(),
+                    (&raw mut DAT_100a4340).cast_const(),
+                )
+            )
         );
     }
 }

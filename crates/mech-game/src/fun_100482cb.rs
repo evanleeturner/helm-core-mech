@@ -13,17 +13,18 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_100482cb(param_1: i32) -> u32 {
+    mech_trace::enter!("100482cb", param_1);
     let mut local_8: u32 = 0;
     // SAFETY: the global and the callee are the game's own; the returned
     // pointer, when non-null, points at a record whose third dword is written.
     unsafe {
-        if DAT_10160bd8 == 0 {
-            let pi_var1 = FUN_100496bb(param_1);
+        if mech_trace::gr!("100482cb", "10160bd8", DAT_10160bd8) == 0 {
+            let pi_var1 = mech_trace::cr!("100482cb", "100496bb", FUN_100496bb(param_1));
             if !pi_var1.is_null() {
-                pi_var1.add(2).write_unaligned(1);
+                mech_trace::wr!("100482cb", pi_var1.add(2), write_unaligned, 1);
                 local_8 = 1;
             }
         }
     }
-    local_8
+    mech_trace::rt!("100482cb", local_8)
 }

@@ -9,16 +9,30 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1003cc40() {
+    mech_trace::enter!("1003cc40");
     // SAFETY: the globals are the game's own memory; DAT_100a6798 points at
     // a structure whose field at offset 4 is read as an i32.
     unsafe {
-        DAT_100b9d88 = DAT_100b9d88.wrapping_sub(1);
-        if DAT_100b9d88 >= 0 {
-            DAT_100b9d88 = DAT_100a6798
-                .byte_add(4)
-                .cast::<i32>()
-                .read_unaligned()
-                .wrapping_sub(1);
+        mech_trace::gw!(
+            "1003cc40",
+            "100b9d88",
+            DAT_100b9d88,
+            mech_trace::gr!("1003cc40", "100b9d88", DAT_100b9d88).wrapping_sub(1)
+        );
+        if mech_trace::gr!("1003cc40", "100b9d88", DAT_100b9d88) >= 0 {
+            mech_trace::gw!(
+                "1003cc40",
+                "100b9d88",
+                DAT_100b9d88,
+                mech_trace::rd!(
+                    "1003cc40",
+                    mech_trace::gr!("1003cc40", "100a6798", DAT_100a6798)
+                        .byte_add(4)
+                        .cast::<i32>(),
+                    read_unaligned
+                )
+                .wrapping_sub(1)
+            );
         }
     }
 }

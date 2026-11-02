@@ -15,20 +15,29 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1003c3a4() {
+    mech_trace::enter!("1003c3a4");
     // SAFETY: the globals and the AIL functions are the game's own; the
     // table holds eight 4-byte entries read at the original's offsets.
     unsafe {
-        if DAT_100aefb4 == 0 {
+        if mech_trace::gr!("1003c3a4", "100aefb4", DAT_100aefb4) == 0 {
             let mut local_8: i32 = 0;
             while local_8 < 8 {
                 let p = (&raw mut DAT_10160e90)
                     .cast::<u8>()
                     .byte_add(local_8.wrapping_mul(4) as usize);
-                if p.cast::<i32>().read_unaligned() != -1 {
-                    let u_var1 = p.cast::<u32>().read_unaligned();
-                    let i_var2 = _AIL_sequence_status_4(u_var1) as i32;
+                if mech_trace::rd!("1003c3a4", p.cast::<i32>(), read_unaligned) != -1 {
+                    let u_var1 = mech_trace::rd!("1003c3a4", p.cast::<u32>(), read_unaligned);
+                    let i_var2 = mech_trace::cr!(
+                        "1003c3a4",
+                        "_AIL_sequence_status_4",
+                        _AIL_sequence_status_4(u_var1)
+                    ) as i32;
                     if i_var2 == 8 {
-                        _AIL_resume_sequence_4(u_var1);
+                        mech_trace::cr!(
+                            "1003c3a4",
+                            "_AIL_resume_sequence_4",
+                            _AIL_resume_sequence_4(u_var1)
+                        );
                     }
                 }
                 local_8 = local_8.wrapping_add(1);

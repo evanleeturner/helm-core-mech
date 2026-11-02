@@ -16,55 +16,72 @@ pub unsafe extern "C" fn FUN_100696b7(
     char_code: i32,
     remap_table: i32,
 ) -> i32 {
+    mech_trace::enter!(
+        "100696b7",
+        dest_surface,
+        dest_x,
+        dest_y,
+        font_record,
+        char_code,
+        remap_table
+    );
     // SAFETY: all pointers come from the caller's surface, font and remap data;
     // they are read and written exactly where the original does.
     unsafe {
         let mut dest_x = dest_x;
         let mut dest_y = dest_y;
-        let bitmap_header = dest_surface.read_unaligned() as usize as *mut i32;
-        let mut i_var10 = bitmap_header.add(1).read_unaligned();
+        let bitmap_header =
+            mech_trace::rd!("100696b7", dest_surface, read_unaligned) as usize as *mut i32;
+        let mut i_var10 = mech_trace::rd!("100696b7", bitmap_header.add(1), read_unaligned);
         let row_pitch = i_var10.wrapping_add(1);
         if row_pitch == 0 || i_var10 < -1 {
-            return -1;
+            return mech_trace::rt!("100696b7", -1);
         }
-        let i_var9 = bitmap_header.add(2).read_unaligned();
+        let i_var9 = mech_trace::rd!("100696b7", bitmap_header.add(2), read_unaligned);
         if i_var9 < 0 {
-            return -1;
+            return mech_trace::rt!("100696b7", -1);
         }
-        let rect_left = dest_surface.add(1).read_unaligned();
+        let rect_left = mech_trace::rd!("100696b7", dest_surface.add(1), read_unaligned);
         let mut i_var6 = rect_left;
         if rect_left < 1 {
             i_var6 = 0;
         }
-        let rect_top = dest_surface.add(2).read_unaligned();
+        let rect_top = mech_trace::rd!("100696b7", dest_surface.add(2), read_unaligned);
         let mut i_var7 = rect_top;
         if rect_top < 1 {
             i_var7 = 0;
         }
-        let mut clamped_right = dest_surface.add(3).read_unaligned();
-        if i_var10 <= dest_surface.add(3).read_unaligned() {
+        let mut clamped_right = mech_trace::rd!("100696b7", dest_surface.add(3), read_unaligned);
+        if i_var10 <= mech_trace::rd!("100696b7", dest_surface.add(3), read_unaligned) {
             clamped_right = i_var10;
         }
-        i_var10 = dest_surface.add(4).read_unaligned();
-        if i_var9 <= dest_surface.add(4).read_unaligned() {
+        i_var10 = mech_trace::rd!("100696b7", dest_surface.add(4), read_unaligned);
+        if i_var9 <= mech_trace::rd!("100696b7", dest_surface.add(4), read_unaligned) {
             i_var10 = i_var9;
         }
         if clamped_right < i_var6 || i_var10 < i_var7 {
-            return -2;
+            return mech_trace::rt!("100696b7", -2);
         }
         dest_x = dest_x.wrapping_add(rect_left);
         dest_y = dest_y.wrapping_add(rect_top);
-        let mut rows_left: u32 =
-            ((font_record as u32).wrapping_add(8) as usize as *const u32).read_unaligned();
+        let mut rows_left: u32 = mech_trace::rd!(
+            "100696b7",
+            ((font_record as u32).wrapping_add(8) as usize as *const u32),
+            read_unaligned
+        );
         let off_addr = (char_code as u32)
             .wrapping_mul(4)
             .wrapping_add(font_record as u32)
             .wrapping_add(0x10);
-        let mut src: u32 = (off_addr as usize as *const i32)
-            .read_unaligned()
-            .wrapping_add(font_record) as u32;
+        let mut src: u32 = mech_trace::rd!(
+            "100696b7",
+            (off_addr as usize as *const i32),
+            read_unaligned
+        )
+        .wrapping_add(font_record) as u32;
         let mut saved_visible_width: u32 = 0;
-        let mut local_8: u32 = (src as usize as *const u32).read_unaligned();
+        let mut local_8: u32 =
+            mech_trace::rd!("100696b7", (src as usize as *const u32), read_unaligned);
         'end: {
             if local_8 == 0 {
                 break 'end;
@@ -118,7 +135,7 @@ pub unsafe extern "C" fn FUN_100696b7(
             }
             let mut dest: u32 = (dest_y as u32)
                 .wrapping_mul(row_pitch as u32)
-                .wrapping_add(bitmap_header.read_unaligned() as u32)
+                .wrapping_add(mech_trace::rd!("100696b7", bitmap_header, read_unaligned) as u32)
                 .wrapping_add(dest_x as u32);
             local_8 = local_8.wrapping_sub(visible_width);
             let mut u_var13: u32 = visible_width;
@@ -126,16 +143,25 @@ pub unsafe extern "C" fn FUN_100696b7(
                 loop {
                     u_var13 = visible_width >> 1;
                     while u_var13 != 0 {
-                        let v = (src as usize as *const u16).read_unaligned();
-                        (dest as usize as *mut u16).write_unaligned(v);
+                        let v = mech_trace::rd!(
+                            "100696b7",
+                            (src as usize as *const u16),
+                            read_unaligned
+                        );
+                        mech_trace::wr!(
+                            "100696b7",
+                            (dest as usize as *mut u16),
+                            write_unaligned,
+                            v
+                        );
                         src = src.wrapping_add(2);
                         dest = dest.wrapping_add(2);
                         u_var13 = u_var13.wrapping_sub(1);
                     }
                     u_var13 = ((visible_width & 1) != 0) as u32;
                     while u_var13 != 0 {
-                        let v = (src as usize as *const u8).read();
-                        (dest as usize as *mut u8).write(v);
+                        let v = mech_trace::rd!("100696b7", (src as usize as *const u8), read);
+                        mech_trace::wr!("100696b7", (dest as usize as *mut u8), write, v);
                         src = src.wrapping_add(1);
                         dest = dest.wrapping_add(1);
                         u_var13 = u_var13.wrapping_sub(1);
@@ -147,7 +173,7 @@ pub unsafe extern "C" fn FUN_100696b7(
                         break;
                     }
                 }
-                return local_8.wrapping_add(visible_width) as i32;
+                return mech_trace::rt!("100696b7", local_8.wrapping_add(visible_width) as i32);
             }
             loop {
                 let mut pixels_left = visible_width;
@@ -156,11 +182,14 @@ pub unsafe extern "C" fn FUN_100696b7(
                     break;
                 }
                 loop {
-                    let s = (src as usize as *const u8).read();
-                    let mapped =
-                        ((remap_table as u32).wrapping_add(s as u32) as usize as *const u8).read();
+                    let s = mech_trace::rd!("100696b7", (src as usize as *const u8), read);
+                    let mapped = mech_trace::rd!(
+                        "100696b7",
+                        ((remap_table as u32).wrapping_add(s as u32) as usize as *const u8),
+                        read
+                    );
                     if mapped != 0xff {
-                        (dest as usize as *mut u8).write(mapped);
+                        mech_trace::wr!("100696b7", (dest as usize as *mut u8), write, mapped);
                     }
                     src = src.wrapping_add(1);
                     dest = dest.wrapping_add(1);
@@ -175,6 +204,6 @@ pub unsafe extern "C" fn FUN_100696b7(
                 u_var13 = rows_left;
             }
         }
-        local_8.wrapping_add(saved_visible_width) as i32
+        mech_trace::rt!("100696b7", local_8.wrapping_add(saved_visible_width) as i32)
     }
 }

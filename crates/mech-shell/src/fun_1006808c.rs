@@ -29,7 +29,7 @@ unsafe fn plot(
         let addr = y.wrapping_mul(stride).wrapping_add(base).wrapping_add(x);
         // SAFETY: the address is inside the caller's clipped pixel buffer.
         unsafe {
-            (addr as *mut u8).write(v);
+            mech_trace::wr!("1006808c", (addr as *mut u8), write, v);
         }
     }
 }
@@ -44,56 +44,63 @@ pub unsafe extern "C" fn FUN_1006808c(
     param_5: i32,
     param_6: i32,
 ) -> u32 {
+    mech_trace::enter!(
+        "1006808c", param_1, param_2, param_3, param_4, param_5, param_6
+    );
     let mut param_5 = param_5;
     if param_4 == 0 || param_5 == 0 {
         // SAFETY: the callee is the game's own function.
-        return unsafe {
-            FUN_10065029(
-                param_1,
-                param_2.wrapping_sub(param_4),
-                param_3.wrapping_sub(param_5),
-                param_2.wrapping_add(param_4),
-                param_3.wrapping_add(param_5),
-                0,
-                param_6,
+        return mech_trace::rt!("1006808c", unsafe {
+            mech_trace::cr!(
+                "1006808c",
+                "10065029",
+                FUN_10065029(
+                    param_1,
+                    param_2.wrapping_sub(param_4),
+                    param_3.wrapping_sub(param_5),
+                    param_2.wrapping_add(param_4),
+                    param_3.wrapping_add(param_5),
+                    0,
+                    param_6,
+                )
             )
-        };
+        });
     }
     // SAFETY: param_1 points at the caller's surface descriptor and its
     // header; the pixel writes are clipped to the surface bounds.
     unsafe {
-        let p1 = *param_1 as *const i32;
-        let i13 = p1.add(1).read();
+        let p1 = mech_trace::dr!("1006808c", param_1) as *const i32;
+        let i13 = mech_trace::rd!("1006808c", p1.add(1), read);
         let i9 = i13.wrapping_add(1);
         if i9 == 0 || i13 < -1 {
-            return 0xffff_ffff;
+            return mech_trace::rt!("1006808c", 0xffff_ffff);
         }
-        let i2 = p1.add(2).read();
+        let i2 = mech_trace::rd!("1006808c", p1.add(2), read);
         if i2 < 0 {
-            return 0xffff_ffff;
+            return mech_trace::rt!("1006808c", 0xffff_ffff);
         }
-        let i3 = param_1.add(1).read();
+        let i3 = mech_trace::rd!("1006808c", param_1.add(1), read);
         let mut i10 = i3;
         if i3 < 1 {
             i10 = 0;
         }
-        let i4 = param_1.add(2).read();
+        let i4 = mech_trace::rd!("1006808c", param_1.add(2), read);
         let mut i11 = i4;
         if i4 < 1 {
             i11 = 0;
         }
-        let mut i12 = param_1.add(3).read();
-        if i13 <= param_1.add(3).read() {
+        let mut i12 = mech_trace::rd!("1006808c", param_1.add(3), read);
+        if i13 <= mech_trace::rd!("1006808c", param_1.add(3), read) {
             i12 = i13;
         }
-        let mut i13b = param_1.add(4).read();
-        if i2 <= param_1.add(4).read() {
+        let mut i13b = mech_trace::rd!("1006808c", param_1.add(4), read);
+        if i2 <= mech_trace::rd!("1006808c", param_1.add(4), read) {
             i13b = i2;
         }
         if i12 < i10 || i13b < i11 {
-            return 0xffff_fffe;
+            return mech_trace::rt!("1006808c", 0xffff_fffe);
         }
-        let base = p1.read();
+        let base = mech_trace::rd!("1006808c", p1, read);
         let v = param_6 as u8;
         let cx = param_2.wrapping_add(i3);
         let cy = param_3.wrapping_add(i4);
@@ -230,6 +237,6 @@ pub unsafe extern "C" fn FUN_1006808c(
                 break;
             }
         }
-        u8_ret
+        mech_trace::rt!("1006808c", u8_ret)
     }
 }

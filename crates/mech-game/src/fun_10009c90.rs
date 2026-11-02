@@ -9,13 +9,18 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10009c90() {
+    mech_trace::enter!("10009c90");
     // SAFETY: the globals are the game's own memory, read and written
     // where the original does.
     unsafe {
-        if DAT_10215658 == 4 && DAT_10215660 == 4 {
-            DAT_10215660 = 5;
-        } else if DAT_10215658 < 3 && DAT_10215660 < 3 {
-            DAT_10215660 = 3;
+        if mech_trace::gr!("10009c90", "10215658", DAT_10215658) == 4
+            && mech_trace::gr!("10009c90", "10215660", DAT_10215660) == 4
+        {
+            mech_trace::gw!("10009c90", "10215660", DAT_10215660, 5);
+        } else if mech_trace::gr!("10009c90", "10215658", DAT_10215658) < 3
+            && mech_trace::gr!("10009c90", "10215660", DAT_10215660) < 3
+        {
+            mech_trace::gw!("10009c90", "10215660", DAT_10215660, 3);
         }
     }
 }

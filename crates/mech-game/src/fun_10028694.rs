@@ -14,6 +14,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10028694(param_1: i32, param_2: u16) -> u16 {
+    mech_trace::enter!("10028694", param_1, param_2);
     let mut param_2 = param_2;
     let mut local_c: [u16; 2] = [0; 2];
     let mut local_8: [u16; 2] = [0; 2];
@@ -23,20 +24,32 @@ pub unsafe extern "C" fn FUN_10028694(param_1: i32, param_2: u16) -> u16 {
         // local arrays, and param_1 points at the game's object, read at the
         // offsets the original reads.
         unsafe {
-            FUN_10028bde(
-                param_1,
-                param_2,
-                -3,
-                local_c.as_mut_ptr(),
-                local_8.as_mut_ptr(),
+            mech_trace::cr!(
+                "10028694",
+                "10028bde",
+                FUN_10028bde(
+                    param_1,
+                    param_2,
+                    -3,
+                    local_c.as_mut_ptr(),
+                    local_8.as_mut_ptr(),
+                )
             );
             param_2 = local_8[0];
-            if ((param_1 as u32).wrapping_add(0x176) as *const i16).read_unaligned() == 2
-                && ((param_1 as u32).wrapping_add(0x1a8) as *const i32).read_unaligned() != 0
+            if mech_trace::rd!(
+                "10028694",
+                ((param_1 as u32).wrapping_add(0x176) as *const i16),
+                read_unaligned
+            ) == 2
+                && mech_trace::rd!(
+                    "10028694",
+                    ((param_1 as u32).wrapping_add(0x1a8) as *const i32),
+                    read_unaligned
+                ) != 0
             {
                 param_2 = local_c[0];
             }
         }
     }
-    param_2
+    mech_trace::rt!("10028694", param_2)
 }

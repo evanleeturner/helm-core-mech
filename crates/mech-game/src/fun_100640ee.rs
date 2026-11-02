@@ -13,10 +13,15 @@ pub unsafe extern "C" fn FUN_100640ee(
     param_3: *mut u32,
     param_4: *mut u32,
 ) {
+    mech_trace::enter!("100640ee", param_1, param_2, param_3, param_4);
     // SAFETY: param_1 is an address of the game's own object; its field at
     // offset 0x48 is read and passed to the game's callee with the caller's pointers.
     unsafe {
-        let a = ((param_1 as usize).wrapping_add(0x48) as *const i32).read_unaligned();
+        let a = mech_trace::rd!(
+            "100640ee",
+            ((param_1 as usize).wrapping_add(0x48) as *const i32),
+            read_unaligned
+        );
         FUN_1002f322(a, param_2, param_3, param_4);
     }
 }

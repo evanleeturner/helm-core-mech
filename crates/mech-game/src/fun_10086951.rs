@@ -17,9 +17,18 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10086951(bytes: u32) {
+    mech_trace::enter!("10086951", bytes);
     // SAFETY: the heap handle global and HeapAlloc are the game's own; the
     // result is discarded as in the original.
     unsafe {
-        HeapAlloc(DAT_100adf74, 9, bytes);
+        mech_trace::cr!(
+            "10086951",
+            "HeapAlloc",
+            HeapAlloc(
+                mech_trace::gr!("10086951", "100adf74", DAT_100adf74),
+                9,
+                bytes
+            )
+        );
     }
 }

@@ -15,41 +15,55 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1005f5c6(param_1: i32, param_2: i32) -> u32 {
+    mech_trace::enter!("1005f5c6", param_1, param_2);
     let mut param_2 = param_2;
     // SAFETY: the globals are the game's own memory; the table entries are
     // 0xe bytes each and param_1 is bounds-checked to 0..=0x1ff before use.
     unsafe {
         if param_2 == -1 {
-            param_2 = DAT_100b3520 as i32;
-            DAT_100b3524 = 1;
+            param_2 = mech_trace::gr!("1005f5c6", "100b3520", DAT_100b3520) as i32;
+            mech_trace::gw!("1005f5c6", "100b3524", DAT_100b3524, 1);
         }
-        if param_2 < 0 || 0x1ff < param_2 || param_1 < 0 || 0x1ff < param_1 {
-            0
-        } else {
-            let off = (param_1 as usize).wrapping_mul(0xe);
-            (&raw mut DAT_10113170)
-                .byte_add(off)
-                .cast::<i16>()
-                .write_unaligned(param_2 as i16);
-            (&raw mut DAT_10113178)
-                .byte_add(off)
-                .cast::<u16>()
-                .write_unaligned(1);
-            (&raw mut DAT_10113176)
-                .byte_add(off)
-                .cast::<u16>()
-                .write_unaligned(1);
-            (&raw mut DAT_10113172)
-                .byte_add(off)
-                .cast::<u16>()
-                .write_unaligned(0);
-            if DAT_100b3528 != 0 {
-                (&raw mut DAT_10113174)
-                    .byte_add(off)
-                    .cast::<u16>()
-                    .write_unaligned(0x2d);
+        mech_trace::rt!(
+            "1005f5c6",
+            if param_2 < 0 || 0x1ff < param_2 || param_1 < 0 || 0x1ff < param_1 {
+                0
+            } else {
+                let off = (param_1 as usize).wrapping_mul(0xe);
+                mech_trace::wr!(
+                    "1005f5c6",
+                    (&raw mut DAT_10113170).byte_add(off).cast::<i16>(),
+                    write_unaligned,
+                    param_2 as i16
+                );
+                mech_trace::wr!(
+                    "1005f5c6",
+                    (&raw mut DAT_10113178).byte_add(off).cast::<u16>(),
+                    write_unaligned,
+                    1
+                );
+                mech_trace::wr!(
+                    "1005f5c6",
+                    (&raw mut DAT_10113176).byte_add(off).cast::<u16>(),
+                    write_unaligned,
+                    1
+                );
+                mech_trace::wr!(
+                    "1005f5c6",
+                    (&raw mut DAT_10113172).byte_add(off).cast::<u16>(),
+                    write_unaligned,
+                    0
+                );
+                if mech_trace::gr!("1005f5c6", "100b3528", DAT_100b3528) != 0 {
+                    mech_trace::wr!(
+                        "1005f5c6",
+                        (&raw mut DAT_10113174).byte_add(off).cast::<u16>(),
+                        write_unaligned,
+                        0x2d
+                    );
+                }
+                1
             }
-            1
-        }
+        )
     }
 }

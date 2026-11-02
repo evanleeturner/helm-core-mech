@@ -69,28 +69,31 @@ unsafe extern "thiscall" {
 #[inline(always)]
 unsafe fn rd(p: *mut i32, i: usize) -> i32 {
     // SAFETY: p points at a record in the game's table; i is within the record.
-    unsafe { p.add(i).read_unaligned() }
+    unsafe { mech_trace::rd!("1000ee30", p.add(i), read_unaligned) }
 }
 
 #[inline(always)]
 unsafe fn wr(p: *mut i32, i: usize, v: i32) {
     // SAFETY: p points at a record in the game's table; i is within the record.
-    unsafe { p.add(i).write_unaligned(v) }
+    unsafe { mech_trace::wr!("1000ee30", p.add(i), write_unaligned, v) }
 }
 
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1000ee30() {
+    mech_trace::enter!("1000ee30");
     // SAFETY: all globals and callees are the game's own; the record pointer
     // walks the game's 0x20-record table exactly as the original does.
     unsafe {
-        if DAT_100a6724 != 0 {
+        if mech_trace::gr!("1000ee30", "100a6724", DAT_100a6724) != 0 {
             AIL_serve();
         }
-        if DAT_1009821c != 0 {
+        if mech_trace::gr!("1000ee30", "1009821c", DAT_1009821c) != 0 {
             return;
         }
-        if (DAT_1008da7c as u32 & 0x80000000) != 0 && (DAT_1008da7c as u32 & 0x1000) != 0 {
+        if (mech_trace::gr!("1000ee30", "1008da7c", DAT_1008da7c) as u32 & 0x80000000) != 0
+            && (mech_trace::gr!("1000ee30", "1008da7c", DAT_1008da7c) as u32 & 0x1000) != 0
+        {
             FUN_1000ed70();
             return;
         }
@@ -116,7 +119,13 @@ pub unsafe extern "stdcall" fn FUN_1000ee30() {
                     || (rd(p, 7) as u32 & 0x40000020) != 0
                 {
                     if (rd(p, 7) as u32 & 0x10) != 0 {
-                        FUN_10012f10(DAT_100a672c, rd(p, 0xc), rd(p, 0xd), rd(p, 10), rd(p, 0xb));
+                        FUN_10012f10(
+                            mech_trace::gr!("1000ee30", "100a672c", DAT_100a672c),
+                            rd(p, 0xc),
+                            rd(p, 0xd),
+                            rd(p, 10),
+                            rd(p, 0xb),
+                        );
                     }
                     wr(p, 7, (rd(p, 7) as u32 | 0x100) as i32);
                 }
@@ -136,7 +145,7 @@ pub unsafe extern "stdcall" fn FUN_1000ee30() {
             }
         }
         p = (&raw mut DAT_1008da60).cast::<i32>();
-        FUN_10013380(DAT_100a672c, 0);
+        FUN_10013380(mech_trace::gr!("1000ee30", "100a672c", DAT_100a672c), 0);
         let mut n: i32 = 0x20;
         loop {
             let u_var3 = rd(p, 7) as u32;
@@ -147,7 +156,7 @@ pub unsafe extern "stdcall" fn FUN_1000ee30() {
                             wr(p, 7, (u_var3 | 0x10) as i32);
                             if (u_var3 & 0x100) == 0 {
                                 FUN_10013100(
-                                    DAT_100a672c,
+                                    mech_trace::gr!("1000ee30", "100a672c", DAT_100a672c),
                                     rd(p, 5),
                                     rd(p, 0xf),
                                     rd(p, 8),
@@ -157,7 +166,7 @@ pub unsafe extern "stdcall" fn FUN_1000ee30() {
                                 );
                             } else {
                                 FUN_10013090(
-                                    DAT_100a672c,
+                                    mech_trace::gr!("1000ee30", "100a672c", DAT_100a672c),
                                     rd(p, 5),
                                     rd(p, 0xf),
                                     rd(p, 8),
@@ -169,8 +178,12 @@ pub unsafe extern "stdcall" fn FUN_1000ee30() {
                             wr(p, 7, (rd(p, 7) as u32 & 0xfffffeff) as i32);
                         }
                         if (rd(p, 7) as u32 & 1) == 0 {
-                            let d_var4 = timeGetTime();
-                            let i_var1 = FUN_1000ece0(p as i32, d_var4);
+                            let d_var4 = mech_trace::cr!("1000ee30", "timeGetTime", timeGetTime());
+                            let i_var1 = mech_trace::cr!(
+                                "1000ee30",
+                                "1000ece0",
+                                FUN_1000ece0(p as i32, d_var4)
+                            );
                             if i_var1 == 0 {
                                 let i_var1 = rd(p, 0xf);
                                 let i_var2 = i_var1.wrapping_add(1);
@@ -200,7 +213,7 @@ pub unsafe extern "stdcall" fn FUN_1000ee30() {
                         wr(p, 7, (u_var3 | 0x10) as i32);
                         if (u_var3 & 0x100) == 0 {
                             FUN_10012d40(
-                                DAT_100a672c,
+                                mech_trace::gr!("1000ee30", "100a672c", DAT_100a672c),
                                 rd(p, 6) as u32,
                                 rd(p, 8),
                                 rd(p, 9),
@@ -209,7 +222,7 @@ pub unsafe extern "stdcall" fn FUN_1000ee30() {
                             );
                         } else {
                             FUN_10012ca0(
-                                DAT_100a672c,
+                                mech_trace::gr!("1000ee30", "100a672c", DAT_100a672c),
                                 rd(p, 6) as u32,
                                 rd(p, 8),
                                 rd(p, 9),
@@ -220,7 +233,8 @@ pub unsafe extern "stdcall" fn FUN_1000ee30() {
                         wr(p, 7, (rd(p, 7) as u32 & 0xfffffeff) as i32);
                     }
                     if (rd(p, 7) as u32 & 1) == 0 {
-                        let i_var1 = FUN_1006e76a(rd(p, 0) as u32);
+                        let i_var1 =
+                            mech_trace::cr!("1000ee30", "1006e76a", FUN_1006e76a(rd(p, 0) as u32));
                         if i_var1 == 0 {
                             let i_var1 = rd(p, 0xf);
                             let i_var2 = i_var1.wrapping_add(1);
@@ -266,6 +280,6 @@ pub unsafe extern "stdcall" fn FUN_1000ee30() {
                 break;
             }
         }
-        FUN_10013380(DAT_100a672c, 1);
+        FUN_10013380(mech_trace::gr!("1000ee30", "100a672c", DAT_100a672c), 1);
     }
 }

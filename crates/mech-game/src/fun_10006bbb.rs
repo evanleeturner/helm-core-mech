@@ -14,6 +14,7 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10006bbb(param_1: u32) -> i32 {
+    mech_trace::enter!("10006bbb", param_1);
     let mut param_1 = param_1;
     let mut local_c: i32;
 
@@ -30,41 +31,42 @@ pub unsafe extern "C" fn FUN_10006bbb(param_1: u32) -> i32 {
             unsafe {
                 let mut p3: *const u32 = (&raw mut DAT_10167250) as *const u32;
                 let mut u_var2: u32 = 0;
-                if DAT_10167450 <= param_1 {
+                if mech_trace::gr!("10006bbb", "10167450", DAT_10167450) <= param_1 {
                     p3 = (&raw mut DAT_10167450) as *const u32;
                     u_var2 = 0x800000;
                 }
-                if p3.add(0x40).read_unaligned() <= param_1 {
+                if mech_trace::rd!("10006bbb", p3.add(0x40), read_unaligned) <= param_1 {
                     p3 = p3.add(0x40);
                     u_var2 |= 0x400000;
                 }
-                if p3.add(0x20).read_unaligned() <= param_1 {
+                if mech_trace::rd!("10006bbb", p3.add(0x20), read_unaligned) <= param_1 {
                     p3 = p3.add(0x20);
                     u_var2 |= 0x200000;
                 }
-                if p3.add(0x10).read_unaligned() <= param_1 {
+                if mech_trace::rd!("10006bbb", p3.add(0x10), read_unaligned) <= param_1 {
                     p3 = p3.add(0x10);
                     u_var2 |= 0x100000;
                 }
-                if p3.add(8).read_unaligned() <= param_1 {
+                if mech_trace::rd!("10006bbb", p3.add(8), read_unaligned) <= param_1 {
                     p3 = p3.add(8);
                     u_var2 |= 0x80000;
                 }
-                if p3.add(4).read_unaligned() <= param_1 {
+                if mech_trace::rd!("10006bbb", p3.add(4), read_unaligned) <= param_1 {
                     p3 = p3.add(4);
                     u_var2 |= 0x40000;
                 }
-                if p3.add(2).read_unaligned() <= param_1 {
+                if mech_trace::rd!("10006bbb", p3.add(2), read_unaligned) <= param_1 {
                     p3 = p3.add(2);
                     u_var2 |= 0x20000;
                 }
-                if p3.add(1).read_unaligned() <= param_1 {
+                if mech_trace::rd!("10006bbb", p3.add(1), read_unaligned) <= param_1 {
                     p3 = p3.add(1);
                     u_var2 |= 0x10000;
                 }
-                let u_var1 = param_1.wrapping_sub(p3.read_unaligned());
+                let u_var1 = param_1.wrapping_sub(mech_trace::rd!("10006bbb", p3, read_unaligned));
                 if u_var1 != 0 {
-                    let u_var4 = p3.add(1).read_unaligned().wrapping_sub(p3.read_unaligned());
+                    let u_var4 = mech_trace::rd!("10006bbb", p3.add(1), read_unaligned)
+                        .wrapping_sub(mech_trace::rd!("10006bbb", p3, read_unaligned));
                     if u_var4 == 0 || u_var1 < u_var4 {
                         let n: i64 = ((u_var1 as i32 as i64) as u64).wrapping_shl(16) as i64;
                         let d: i32 = u_var4 as i32;
@@ -91,5 +93,5 @@ pub unsafe extern "C" fn FUN_10006bbb(param_1: u32) -> i32 {
             local_c = 0u32.wrapping_sub(local_c as u32) as i32;
         }
     }
-    local_c
+    mech_trace::rt!("10006bbb", local_c)
 }

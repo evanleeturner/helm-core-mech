@@ -24,23 +24,45 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1006f885() -> i32 {
+    mech_trace::enter!("1006f885");
     let mut local: [u32; 3] = [0; 3];
     // SAFETY: the globals and callees are the game's own; the message
     // argument points at a local buffer that outlives the call.
     unsafe {
         local[0] = 0x2400401;
-        if DAT_100b9d30 == 0 {
+        if mech_trace::gr!("1006f885", "100b9d30", DAT_100b9d30) == 0 {
             local[1] = 0;
         } else {
-            local[1] = DAT_100c9678;
+            local[1] = mech_trace::gr!("1006f885", "100c9678", DAT_100c9678);
         }
-        local[2] = DAT_100b9d30;
-        DAT_100eee30 =
-            SendMessageA(DAT_100b3de0, 0x4a, 0, (&raw mut local) as *mut u32 as i32) as u32;
-        if DAT_100eee30 != 0 {
+        local[2] = mech_trace::gr!("1006f885", "100b9d30", DAT_100b9d30);
+        mech_trace::gw!(
+            "1006f885",
+            "100eee30",
+            DAT_100eee30,
+            mech_trace::cr!(
+                "1006f885",
+                "SendMessageA",
+                SendMessageA(
+                    mech_trace::gr!("1006f885", "100b3de0", DAT_100b3de0),
+                    0x4a,
+                    0,
+                    (&raw mut local) as *mut u32 as i32
+                )
+            ) as u32
+        );
+        if mech_trace::gr!("1006f885", "100eee30", DAT_100eee30) != 0 {
             FUN_10002168((&raw mut DAT_100b3f7c) as *mut i8);
         }
-        DAT_100b9a2c.write_unaligned(0);
-        DAT_100eee30 as i32
+        mech_trace::wr!(
+            "1006f885",
+            mech_trace::gr!("1006f885", "100b9a2c", DAT_100b9a2c),
+            write_unaligned,
+            0
+        );
+        mech_trace::rt!(
+            "1006f885",
+            mech_trace::gr!("1006f885", "100eee30", DAT_100eee30) as i32
+        )
     }
 }

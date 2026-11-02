@@ -24,34 +24,75 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1000c73b() {
+    mech_trace::enter!("1000c73b");
     // SAFETY: the globals and HeapFree are the game's own; each non-null
     // block is freed on the game's heap and its pointer cleared.
     unsafe {
-        if !DAT_100a7580.is_null() {
-            HeapFree(DAT_100adf74, 1, DAT_100a7580);
-            DAT_100a7580 = core::ptr::null_mut();
+        if !mech_trace::gr!("1000c73b", "100a7580", DAT_100a7580).is_null() {
+            mech_trace::cr!(
+                "1000c73b",
+                "HeapFree",
+                HeapFree(
+                    mech_trace::gr!("1000c73b", "100adf74", DAT_100adf74),
+                    1,
+                    mech_trace::gr!("1000c73b", "100a7580", DAT_100a7580)
+                )
+            );
+            mech_trace::gw!("1000c73b", "100a7580", DAT_100a7580, core::ptr::null_mut());
         }
-        if !DAT_100a7570.is_null() {
-            HeapFree(DAT_100adf74, 1, DAT_100a7570);
-            DAT_100a7570 = core::ptr::null_mut();
+        if !mech_trace::gr!("1000c73b", "100a7570", DAT_100a7570).is_null() {
+            mech_trace::cr!(
+                "1000c73b",
+                "HeapFree",
+                HeapFree(
+                    mech_trace::gr!("1000c73b", "100adf74", DAT_100adf74),
+                    1,
+                    mech_trace::gr!("1000c73b", "100a7570", DAT_100a7570)
+                )
+            );
+            mech_trace::gw!("1000c73b", "100a7570", DAT_100a7570, core::ptr::null_mut());
         }
-        if !DAT_100a7560.is_null() {
-            HeapFree(DAT_100adf74, 1, DAT_100a7560);
-            DAT_100a7560 = core::ptr::null_mut();
+        if !mech_trace::gr!("1000c73b", "100a7560", DAT_100a7560).is_null() {
+            mech_trace::cr!(
+                "1000c73b",
+                "HeapFree",
+                HeapFree(
+                    mech_trace::gr!("1000c73b", "100adf74", DAT_100adf74),
+                    1,
+                    mech_trace::gr!("1000c73b", "100a7560", DAT_100a7560)
+                )
+            );
+            mech_trace::gw!("1000c73b", "100a7560", DAT_100a7560, core::ptr::null_mut());
         }
-        if !DAT_100a7574.is_null() {
-            HeapFree(DAT_100adf74, 1, DAT_100a7574);
-            DAT_100a7574 = core::ptr::null_mut();
+        if !mech_trace::gr!("1000c73b", "100a7574", DAT_100a7574).is_null() {
+            mech_trace::cr!(
+                "1000c73b",
+                "HeapFree",
+                HeapFree(
+                    mech_trace::gr!("1000c73b", "100adf74", DAT_100adf74),
+                    1,
+                    mech_trace::gr!("1000c73b", "100a7574", DAT_100a7574)
+                )
+            );
+            mech_trace::gw!("1000c73b", "100a7574", DAT_100a7574, core::ptr::null_mut());
         }
-        if !DAT_100a7564.is_null() {
-            HeapFree(DAT_100adf74, 1, DAT_100a7564);
-            DAT_100a7564 = core::ptr::null_mut();
+        if !mech_trace::gr!("1000c73b", "100a7564", DAT_100a7564).is_null() {
+            mech_trace::cr!(
+                "1000c73b",
+                "HeapFree",
+                HeapFree(
+                    mech_trace::gr!("1000c73b", "100adf74", DAT_100adf74),
+                    1,
+                    mech_trace::gr!("1000c73b", "100a7564", DAT_100a7564)
+                )
+            );
+            mech_trace::gw!("1000c73b", "100a7564", DAT_100a7564, core::ptr::null_mut());
         }
-        DAT_100a7578 = 0;
-        DAT_100a757c = 0;
-        DAT_101f5510 = 0;
-        DAT_10215624 = 0;
-        DAT_10215620 = 0;
-        DAT_101f5518 = 0;
+        mech_trace::gw!("1000c73b", "100a7578", DAT_100a7578, 0);
+        mech_trace::gw!("1000c73b", "100a757c", DAT_100a757c, 0);
+        mech_trace::gw!("1000c73b", "101f5510", DAT_101f5510, 0);
+        mech_trace::gw!("1000c73b", "10215624", DAT_10215624, 0);
+        mech_trace::gw!("1000c73b", "10215620", DAT_10215620, 0);
+        mech_trace::gw!("1000c73b", "101f5518", DAT_101f5518, 0);
     }
 }

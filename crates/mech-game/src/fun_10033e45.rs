@@ -8,5 +8,6 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10033e45() -> *mut u32 {
-    &raw mut DAT_100adca0
+    mech_trace::enter!("10033e45");
+    mech_trace::rt!("10033e45", &raw mut DAT_100adca0)
 }

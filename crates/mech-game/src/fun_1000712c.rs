@@ -14,6 +14,7 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1000712c(param_1: *mut i8) {
+    mech_trace::enter!("1000712c", param_1);
     // SAFETY: the callees and the global are the game's own; param_1 points at
     // a NUL-terminated string, and the destination buffer is the game's own
     // memory, written where the original does.
@@ -27,7 +28,7 @@ pub unsafe extern "C" fn FUN_1000712c(param_1: *mut i8) {
                 break;
             }
             u_var2 = u_var2.wrapping_sub(1);
-            let c_var1 = p.read();
+            let c_var1 = mech_trace::rd!("1000712c", p, read);
             p = p.byte_add(1);
             if c_var1 == 0 {
                 break;
@@ -41,7 +42,12 @@ pub unsafe extern "C" fn FUN_1000712c(param_1: *mut i8) {
         FUN_100070f2();
         let mut local_c: i32 = 0;
         while local_c < local_14 {
-            local_8.write(local_10.read());
+            mech_trace::wr!(
+                "1000712c",
+                local_8,
+                write,
+                mech_trace::rd!("1000712c", local_10, read)
+            );
             local_10 = local_10.byte_add(1);
             local_8 = local_8.byte_add(2);
             local_c = local_c.wrapping_add(1);

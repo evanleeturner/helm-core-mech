@@ -18,6 +18,7 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1001c110(param_1: i32) {
+    mech_trace::enter!("1001c110", param_1);
     if param_1 == 0 {
         return;
     }
@@ -25,18 +26,41 @@ pub unsafe extern "C" fn FUN_1001c110(param_1: i32) {
     // written where the original does, and the callees and global are the game's.
     unsafe {
         let base = param_1 as *mut u8;
-        let lp_mem = base
-            .byte_add(0x4c)
-            .cast::<*mut core::ffi::c_void>()
-            .read_unaligned();
+        let lp_mem = mech_trace::rd!(
+            "1001c110",
+            base.byte_add(0x4c).cast::<*mut core::ffi::c_void>(),
+            read_unaligned
+        );
         if !lp_mem.is_null() {
-            let kind = base.byte_add(0x24).cast::<i32>().read_unaligned();
+            let kind = mech_trace::rd!(
+                "1001c110",
+                base.byte_add(0x24).cast::<i32>(),
+                read_unaligned
+            );
             if kind == 0 {
-                HeapFree(DAT_100adf74, 1, lp_mem);
-            } else if base.byte_add(0x24).cast::<i32>().read_unaligned() == 5 {
+                mech_trace::cr!(
+                    "1001c110",
+                    "HeapFree",
+                    HeapFree(
+                        mech_trace::gr!("1001c110", "100adf74", DAT_100adf74),
+                        1,
+                        lp_mem
+                    )
+                );
+            } else if mech_trace::rd!(
+                "1001c110",
+                base.byte_add(0x24).cast::<i32>(),
+                read_unaligned
+            ) == 5
+            {
                 FUN_1002587d(lp_mem);
             }
-            base.byte_add(0x4c).cast::<u32>().write_unaligned(0);
+            mech_trace::wr!(
+                "1001c110",
+                base.byte_add(0x4c).cast::<u32>(),
+                write_unaligned,
+                0
+            );
         }
     }
 }

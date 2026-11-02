@@ -22,30 +22,52 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_100140da() {
+    mech_trace::enter!("100140da");
     // SAFETY: the globals and callees are the game's own; DAT_100aa208 is
     // non-null when dereferenced, and the call target is computed as in the original.
     unsafe {
-        if !DAT_100aa208.is_null() {
-            DAT_100aa210 = DAT_100aa20c;
-            DAT_101eb518 = 0;
-            let vt = DAT_100aa208.cast::<*mut i32>().read_unaligned();
+        if !mech_trace::gr!("100140da", "100aa208", DAT_100aa208).is_null() {
+            mech_trace::gw!(
+                "100140da",
+                "100aa210",
+                DAT_100aa210,
+                mech_trace::gr!("100140da", "100aa20c", DAT_100aa20c)
+            );
+            mech_trace::gw!("100140da", "101eb518", DAT_101eb518, 0);
+            let vt = mech_trace::rd!(
+                "100140da",
+                mech_trace::gr!("100140da", "100aa208", DAT_100aa208).cast::<*mut i32>(),
+                read_unaligned
+            );
             let target = vt.wrapping_add(0x34) as usize;
             let f: unsafe extern "stdcall" fn(*mut i32, i32, u32, i32, i32) =
                 core::mem::transmute(target);
-            f(DAT_100aa208, 0, FUN_10013a57 as usize as u32, 0, 0x20);
+            mech_trace::cr!(
+                "100140da",
+                "ind",
+                f(
+                    mech_trace::gr!("100140da", "100aa208", DAT_100aa208),
+                    0,
+                    FUN_10013a57 as usize as u32,
+                    0,
+                    0x20
+                )
+            );
         }
         FUN_10002168(&raw mut DAT_100aa4a8);
-        if DAT_101eb518 == 1 {
-            DAT_100aa1f0 = 2;
-            DAT_100aa1f4 = 0;
-            DAT_100b3908 = 0;
-            DAT_100adf98 |= 1;
-        } else if DAT_100aa210 == DAT_100aa20c {
-            DAT_100aa1f4 = 1;
-            DAT_100b3908 = 0;
+        if mech_trace::gr!("100140da", "101eb518", DAT_101eb518) == 1 {
+            mech_trace::gw!("100140da", "100aa1f0", DAT_100aa1f0, 2);
+            mech_trace::gw!("100140da", "100aa1f4", DAT_100aa1f4, 0);
+            mech_trace::gw!("100140da", "100b3908", DAT_100b3908, 0);
+            mech_trace::gu!("100140da", "100adf98", DAT_100adf98, |=, 1);
+        } else if mech_trace::gr!("100140da", "100aa210", DAT_100aa210)
+            == mech_trace::gr!("100140da", "100aa20c", DAT_100aa20c)
+        {
+            mech_trace::gw!("100140da", "100aa1f4", DAT_100aa1f4, 1);
+            mech_trace::gw!("100140da", "100b3908", DAT_100b3908, 0);
         } else {
-            DAT_100aa1f4 = 2;
-            DAT_100b3908 = 2;
+            mech_trace::gw!("100140da", "100aa1f4", DAT_100aa1f4, 2);
+            mech_trace::gw!("100140da", "100b3908", DAT_100b3908, 2);
         }
     }
 }

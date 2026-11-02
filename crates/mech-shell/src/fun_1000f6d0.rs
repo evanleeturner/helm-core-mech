@@ -34,6 +34,15 @@ pub unsafe extern "C" fn FUN_1000f6d0(
     extra_flags: u32,
     rate_per_second: u32,
 ) -> i32 {
+    mech_trace::enter!(
+        "1000f6d0",
+        slot_index,
+        param_2,
+        param_3,
+        param_4,
+        extra_flags,
+        rate_per_second
+    );
     let mut rate = rate_per_second;
     // SAFETY: the globals and callees are the game's own; the slot tables are
     // indexed only after the range check, exactly as the original does.
@@ -51,13 +60,13 @@ pub unsafe extern "C" fn FUN_1000f6d0(
             let p90 = (&raw mut DAT_1008da90).offset(off);
             let p94 = (&raw mut DAT_1008da94).offset(off);
 
-            if (p7c.read_unaligned() & 0x8000_0000) != 0 {
-                if (p7c.read_unaligned() & 0x10) != 0 {
-                    let this = DAT_100a672c;
-                    let a1 = p90.read_unaligned();
-                    let a2 = p94.read_unaligned();
-                    let a3 = p88.read_unaligned();
-                    let a4 = p8c.read_unaligned();
+            if (mech_trace::rd!("1000f6d0", p7c, read_unaligned) & 0x8000_0000) != 0 {
+                if (mech_trace::rd!("1000f6d0", p7c, read_unaligned) & 0x10) != 0 {
+                    let this = mech_trace::gr!("1000f6d0", "100a672c", DAT_100a672c);
+                    let a1 = mech_trace::rd!("1000f6d0", p90, read_unaligned);
+                    let a2 = mech_trace::rd!("1000f6d0", p94, read_unaligned);
+                    let a3 = mech_trace::rd!("1000f6d0", p88, read_unaligned);
+                    let a4 = mech_trace::rd!("1000f6d0", p8c, read_unaligned);
                     core::arch::asm!(
                         "push {a4}",
                         "push {a3}",
@@ -75,38 +84,61 @@ pub unsafe extern "C" fn FUN_1000f6d0(
                 }
                 FUN_1000f290(slot_index);
             }
-            p80.write_unaligned(param_3);
-            p84.write_unaligned(param_4);
-            p7c.write_unaligned(extra_flags | 0x8000_0100);
+            mech_trace::wr!("1000f6d0", p80, write_unaligned, param_3);
+            mech_trace::wr!("1000f6d0", p84, write_unaligned, param_4);
+            mech_trace::wr!("1000f6d0", p7c, write_unaligned, extra_flags | 0x8000_0100);
             if rate == 0 {
                 rate = 10;
             }
-            (&raw mut DAT_1008daa4)
-                .offset(slot_index.wrapping_mul(0x4c) as isize)
-                .cast::<i32>()
-                .write_unaligned((1000u32 / rate) as i32);
-            let mut call_result = FUN_1000e790(param_2);
+            mech_trace::wr!(
+                "1000f6d0",
+                (&raw mut DAT_1008daa4)
+                    .offset(slot_index.wrapping_mul(0x4c) as isize)
+                    .cast::<i32>(),
+                write_unaligned,
+                (1000u32 / rate) as i32
+            );
+            let mut call_result = mech_trace::cr!("1000f6d0", "1000e790", FUN_1000e790(param_2));
             if call_result == 0 {
-                call_result = FUN_1000f640(slot_record as i32, param_2);
+                call_result = mech_trace::cr!(
+                    "1000f6d0",
+                    "1000f640",
+                    FUN_1000f640(slot_record as i32, param_2)
+                );
                 if call_result == 0 {
-                    DAT_1008e3e0 = 1;
-                    call_result = FUN_1000f640(slot_record as i32, param_2);
+                    mech_trace::gw!("1000f6d0", "1008e3e0", DAT_1008e3e0, 1);
+                    call_result = mech_trace::cr!(
+                        "1000f6d0",
+                        "1000f640",
+                        FUN_1000f640(slot_record as i32, param_2)
+                    );
                     if call_result == 0 {
-                        p7c.write_unaligned(0);
-                        return -1;
+                        mech_trace::wr!("1000f6d0", p7c, write_unaligned, 0);
+                        return mech_trace::rt!("1000f6d0", -1);
                     }
                 }
             } else {
-                call_result = FUN_1000f3f0(slot_record, param_2);
+                call_result =
+                    mech_trace::cr!("1000f6d0", "1000f3f0", FUN_1000f3f0(slot_record, param_2));
                 if call_result == 0 {
-                    p7c.write_unaligned(0);
-                    return -1;
+                    mech_trace::wr!("1000f6d0", p7c, write_unaligned, 0);
+                    return mech_trace::rt!("1000f6d0", -1);
                 }
             }
-            p90.write_unaligned(p80.read_unaligned());
-            p94.write_unaligned(p84.read_unaligned());
-            return slot_index;
+            mech_trace::wr!(
+                "1000f6d0",
+                p90,
+                write_unaligned,
+                mech_trace::rd!("1000f6d0", p80, read_unaligned)
+            );
+            mech_trace::wr!(
+                "1000f6d0",
+                p94,
+                write_unaligned,
+                mech_trace::rd!("1000f6d0", p84, read_unaligned)
+            );
+            return mech_trace::rt!("1000f6d0", slot_index);
         }
     }
-    -1
+    mech_trace::rt!("1000f6d0", -1)
 }

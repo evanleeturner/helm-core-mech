@@ -26,10 +26,11 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1004ab11(param_1: u32, param_2: u32) {
+    mech_trace::enter!("1004ab11", param_1, param_2);
     // SAFETY: the global and the callee are the game's own; the call passes
     // the same arguments in the same order as the original.
     unsafe {
-        DAT_100b06f4 = param_2;
+        mech_trace::gw!("1004ab11", "100b06f4", DAT_100b06f4, param_2);
         FUN_1004ab46(0xfffffffe, 0, param_1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     }
 }

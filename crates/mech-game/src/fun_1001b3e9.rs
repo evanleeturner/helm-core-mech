@@ -22,6 +22,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1001b3e9() {
+    mech_trace::enter!("1001b3e9");
     let mut local_28: i32;
     let mut local_24: i32;
     let mut local_20: i32 = 0;
@@ -35,15 +36,24 @@ pub unsafe extern "stdcall" fn FUN_1001b3e9() {
     // game memory addressed and read exactly where the original does.
     unsafe {
         FUN_1003cc75();
-        local_c = DAT_10160c00;
+        local_c = mech_trace::gr!("1001b3e9", "10160c00", DAT_10160c00);
         while local_c != 0 {
             local_20 = local_20.wrapping_add(1);
-            local_24 = ((local_c.wrapping_add(8)) as *const i32).read_unaligned();
+            local_24 = mech_trace::rd!(
+                "1001b3e9",
+                ((local_c.wrapping_add(8)) as *const i32),
+                read_unaligned
+            );
             while local_24 != 0 {
-                let b = ((local_24.wrapping_add(2)) as *const u8).read() & 0xf0;
+                let b =
+                    mech_trace::rd!("1001b3e9", ((local_24.wrapping_add(2)) as *const u8), read)
+                        & 0xf0;
                 if b == 0x10 || b == 0x60 {
-                    let p1 =
-                        ((local_24.wrapping_add(0x18)) as *const i32).read_unaligned() as *mut i32;
+                    let p1 = mech_trace::rd!(
+                        "1001b3e9",
+                        ((local_24.wrapping_add(0x18)) as *const i32),
+                        read_unaligned
+                    ) as *mut i32;
                     if !p1.is_null() {
                         FUN_1002f322(
                             p1 as i32,
@@ -51,8 +61,8 @@ pub unsafe extern "stdcall" fn FUN_1001b3e9() {
                             &raw mut local_14,
                             &raw mut local_18,
                         );
-                        if FUN_10009bd5() == 0 {
-                            local_8 = FUN_10006d3e();
+                        if mech_trace::cr!("1001b3e9", "10009bd5", FUN_10009bd5()) == 0 {
+                            local_8 = mech_trace::cr!("1001b3e9", "10006d3e", FUN_10006d3e());
                             local_28 = 0;
                         } else {
                             local_8 = 0xb40000;
@@ -62,11 +72,17 @@ pub unsafe extern "stdcall" fn FUN_1001b3e9() {
                         FUN_1002fbc0(p1);
                     }
                 }
-                local_24 = ((local_24.wrapping_add(8)) as *const i32).read_unaligned();
+                local_24 = mech_trace::rd!(
+                    "1001b3e9",
+                    ((local_24.wrapping_add(8)) as *const i32),
+                    read_unaligned
+                );
             }
-            local_c = (&raw mut DAT_10160c00)
-                .wrapping_offset(local_20.wrapping_mul(4) as isize)
-                .read_unaligned();
+            local_c = mech_trace::rd!(
+                "1001b3e9",
+                (&raw mut DAT_10160c00).wrapping_offset(local_20.wrapping_mul(4) as isize),
+                read_unaligned
+            );
         }
     }
     let _ = (local_10, local_14, local_18);

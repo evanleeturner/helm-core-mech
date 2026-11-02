@@ -14,13 +14,27 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10031c80(param_1: *mut i32) {
+    mech_trace::enter!("10031c80", param_1);
     // SAFETY: param_1 points at the caller's two ints; the globals and the
     // callee are the game's own, and PTR_DAT_100aaf68 holds a valid address
     // whose +0x44 slot is written where the original does.
     unsafe {
-        let a = ((param_1.add(1).read_unaligned() as u32).wrapping_shl(0x10)) as i32;
-        let b = ((param_1.read_unaligned() as u32).wrapping_shl(0x10)) as i32;
-        DAT_101686ec = FUN_10011e60(a, 0x15555, b);
-        ((PTR_DAT_100aaf68.wrapping_add(0x44)) as *mut u32).write_unaligned(DAT_101686ec);
+        let a = ((mech_trace::rd!("10031c80", param_1.add(1), read_unaligned) as u32)
+            .wrapping_shl(0x10)) as i32;
+        let b = ((mech_trace::rd!("10031c80", param_1, read_unaligned) as u32).wrapping_shl(0x10))
+            as i32;
+        mech_trace::gw!(
+            "10031c80",
+            "101686ec",
+            DAT_101686ec,
+            mech_trace::cr!("10031c80", "10011e60", FUN_10011e60(a, 0x15555, b))
+        );
+        mech_trace::wr!(
+            "10031c80",
+            ((mech_trace::gr!("10031c80", "PTR_DAT_100aaf68", PTR_DAT_100aaf68).wrapping_add(0x44))
+                as *mut u32),
+            write_unaligned,
+            mech_trace::gr!("10031c80", "101686ec", DAT_101686ec)
+        );
     }
 }

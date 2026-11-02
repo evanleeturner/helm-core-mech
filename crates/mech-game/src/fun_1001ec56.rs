@@ -25,20 +25,45 @@ pub unsafe extern "C" fn FUN_1001ec56(
     param_3: u16,
     param_4: *mut u8,
 ) -> u32 {
+    mech_trace::enter!("1001ec56", param_1, param_2, param_3, param_4);
     if param_3 < 0xf000 {
         // SAFETY: the callee is the game's own function; arguments are passed through unchanged.
-        return unsafe { FUN_1001ead0(param_1, param_2, param_3, param_4) };
+        return mech_trace::rt!("1001ec56", unsafe {
+            mech_trace::cr!(
+                "1001ec56",
+                "1001ead0",
+                FUN_1001ead0(param_1, param_2, param_3, param_4)
+            )
+        });
     }
     // SAFETY: the callees and the global are the game's own; the stream pointer
     // is read from the game's global and passed on as the original does.
     unsafe {
-        let s_var2 = FUN_10071045(DAT_100ab2d4, (param_3 as i32).wrapping_sub(0xf000));
-        if s_var2 == 0xffffffff {
-            0xffffffff
-        } else {
-            let s_var3 = FUN_10071107(DAT_100ab2d4, param_4, s_var2);
-            FUN_100710f7();
-            if s_var3 == s_var2 { 0 } else { 0xffffffff }
-        }
+        let s_var2 = mech_trace::cr!(
+            "1001ec56",
+            "10071045",
+            FUN_10071045(
+                mech_trace::gr!("1001ec56", "100ab2d4", DAT_100ab2d4),
+                (param_3 as i32).wrapping_sub(0xf000)
+            )
+        );
+        mech_trace::rt!(
+            "1001ec56",
+            if s_var2 == 0xffffffff {
+                0xffffffff
+            } else {
+                let s_var3 = mech_trace::cr!(
+                    "1001ec56",
+                    "10071107",
+                    FUN_10071107(
+                        mech_trace::gr!("1001ec56", "100ab2d4", DAT_100ab2d4),
+                        param_4,
+                        s_var2
+                    )
+                );
+                FUN_100710f7();
+                if s_var3 == s_var2 { 0 } else { 0xffffffff }
+            }
+        )
     }
 }

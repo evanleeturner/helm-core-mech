@@ -33,6 +33,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_100142b4(param_1: i32, param_2: i32, param_3: i32) -> i32 {
+    mech_trace::enter!("100142b4", param_1, param_2, param_3);
     let mut local_18: i32 = 0;
     let mut local_c: i32 = -0x7fffffff;
     let mut local_10: i32 = -0x7fffffff;
@@ -40,8 +41,8 @@ pub unsafe extern "C" fn FUN_100142b4(param_1: i32, param_2: i32, param_3: i32) 
     // SAFETY: callees and globals are the game's own; list nodes are game
     // memory read at the same offsets as the original.
     unsafe {
-        FUN_1003d2d3(param_1, param_3);
-        let mut local_8: i32 = DAT_10160c00;
+        mech_trace::cr!("100142b4", "1003d2d3", FUN_1003d2d3(param_1, param_3));
+        let mut local_8: i32 = mech_trace::gr!("100142b4", "10160c00", DAT_10160c00);
         loop {
             if local_8 == 0 {
                 if local_c < -0x7ffffffe {
@@ -50,47 +51,99 @@ pub unsafe extern "C" fn FUN_100142b4(param_1: i32, param_2: i32, param_3: i32) 
                         local_c = 0;
                     }
                 }
-                return local_c;
+                return mech_trace::rt!("100142b4", local_c);
             }
             local_18 = local_18.wrapping_add(1);
             if local_8 == 0 {
-                return 0;
+                return mech_trace::rt!("100142b4", 0);
             }
-            let mut local_1c: i32 = ((local_8.wrapping_add(0x10)) as *const i32).read_unaligned();
+            let mut local_1c: i32 = mech_trace::rd!(
+                "100142b4",
+                ((local_8.wrapping_add(0x10)) as *const i32),
+                read_unaligned
+            );
             while local_1c != 0 {
-                let kind = ((local_1c.wrapping_add(0x24)) as *const i32).read_unaligned();
+                let kind = mech_trace::rd!(
+                    "100142b4",
+                    ((local_1c.wrapping_add(0x24)) as *const i32),
+                    read_unaligned
+                );
                 let local_20: unsafe extern "C" fn(i32, i32, i32, i32, *mut i32) -> i32;
                 if kind == 5 {
                     local_20 = FUN_10060161;
                 } else if kind == 0 {
                     local_20 = FUN_1005fb3a;
                 } else {
-                    local_1c = ((local_1c.wrapping_add(0x10)) as *const i32).read_unaligned();
+                    local_1c = mech_trace::rd!(
+                        "100142b4",
+                        ((local_1c.wrapping_add(0x10)) as *const i32),
+                        read_unaligned
+                    );
                     continue;
                 }
-                let i_var1 = local_20(local_1c, param_1, param_2, param_3, &raw mut local_14);
+                let i_var1 = mech_trace::cr!(
+                    "100142b4",
+                    "ind",
+                    local_20(local_1c, param_1, param_2, param_3, &raw mut local_14)
+                );
                 if i_var1 != 0 {
                     if local_c == -0x7fffffff && local_14 < param_2 && local_10 < local_14 {
                         local_10 = local_14;
-                        DAT_100aa54c = DAT_100aa540;
-                        DAT_100aa550 = DAT_100aa544;
-                        DAT_100aa554 = DAT_100aa548;
+                        mech_trace::gw!(
+                            "100142b4",
+                            "100aa54c",
+                            DAT_100aa54c,
+                            mech_trace::gr!("100142b4", "100aa540", DAT_100aa540)
+                        );
+                        mech_trace::gw!(
+                            "100142b4",
+                            "100aa550",
+                            DAT_100aa550,
+                            mech_trace::gr!("100142b4", "100aa544", DAT_100aa544)
+                        );
+                        mech_trace::gw!(
+                            "100142b4",
+                            "100aa554",
+                            DAT_100aa554,
+                            mech_trace::gr!("100142b4", "100aa548", DAT_100aa548)
+                        );
                     }
                     if param_2 < local_14.wrapping_add(1000)
                         && local_14.wrapping_add(-1000) < param_2
                         && local_c < local_14
                     {
                         local_c = local_14;
-                        DAT_100aa54c = DAT_100aa540;
-                        DAT_100aa550 = DAT_100aa544;
-                        DAT_100aa554 = DAT_100aa548;
+                        mech_trace::gw!(
+                            "100142b4",
+                            "100aa54c",
+                            DAT_100aa54c,
+                            mech_trace::gr!("100142b4", "100aa540", DAT_100aa540)
+                        );
+                        mech_trace::gw!(
+                            "100142b4",
+                            "100aa550",
+                            DAT_100aa550,
+                            mech_trace::gr!("100142b4", "100aa544", DAT_100aa544)
+                        );
+                        mech_trace::gw!(
+                            "100142b4",
+                            "100aa554",
+                            DAT_100aa554,
+                            mech_trace::gr!("100142b4", "100aa548", DAT_100aa548)
+                        );
                     }
                 }
-                local_1c = ((local_1c.wrapping_add(0x10)) as *const i32).read_unaligned();
+                local_1c = mech_trace::rd!(
+                    "100142b4",
+                    ((local_1c.wrapping_add(0x10)) as *const i32),
+                    read_unaligned
+                );
             }
-            local_8 = (&raw mut DAT_10160c00)
-                .wrapping_offset(local_18.wrapping_mul(4) as isize)
-                .read_unaligned();
+            local_8 = mech_trace::rd!(
+                "100142b4",
+                (&raw mut DAT_10160c00).wrapping_offset(local_18.wrapping_mul(4) as isize),
+                read_unaligned
+            );
         }
     }
 }

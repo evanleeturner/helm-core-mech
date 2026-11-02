@@ -31,6 +31,7 @@ pub unsafe extern "C" fn FUN_1006403e(
     param_3: *mut i32,
     param_4: *mut i32,
 ) {
+    mech_trace::enter!("1006403e", param_1, param_2, param_3, param_4);
     let mut local_44: [i32; 12] = [0; 12];
     let mut local_14: i32 = 0;
     let mut local_10: i32 = 0;
@@ -40,19 +41,40 @@ pub unsafe extern "C" fn FUN_1006403e(
     // SAFETY: the pointers are the caller's outputs and param_1 points at the
     // game's own object; the callees are the game's own functions.
     unsafe {
-        param_3.write_unaligned(0);
-        param_2.write_unaligned(param_3.read_unaligned());
-        param_4.write_unaligned(0x10000);
+        mech_trace::wr!("1006403e", param_3, write_unaligned, 0);
+        mech_trace::wr!(
+            "1006403e",
+            param_2,
+            write_unaligned,
+            mech_trace::rd!("1006403e", param_3, read_unaligned)
+        );
+        mech_trace::wr!("1006403e", param_4, write_unaligned, 0x10000);
         FUN_1002f2d6(
             param_2,
-            ((param_1 as u32).wrapping_add(0x44) as *const i32).read_unaligned(),
+            mech_trace::rd!(
+                "1006403e",
+                ((param_1 as u32).wrapping_add(0x44) as *const i32),
+                read_unaligned
+            ),
             &raw mut local_8,
             &raw mut local_10,
             &raw mut local_14,
         );
-        local_c = ((param_1 as u32).wrapping_add(0x20) as *const i32).read_unaligned();
-        let flags = ((local_c as u32).wrapping_add(0x442) as *const u16).read_unaligned();
-        let base = ((local_c as u32).wrapping_add(0x1c) as *const i32).read_unaligned();
+        local_c = mech_trace::rd!(
+            "1006403e",
+            ((param_1 as u32).wrapping_add(0x20) as *const i32),
+            read_unaligned
+        );
+        let flags = mech_trace::rd!(
+            "1006403e",
+            ((local_c as u32).wrapping_add(0x442) as *const u16),
+            read_unaligned
+        );
+        let base = mech_trace::rd!(
+            "1006403e",
+            ((local_c as u32).wrapping_add(0x1c) as *const i32),
+            read_unaligned
+        );
         if (flags & 4) == 0 {
             local_8 = base;
         } else {

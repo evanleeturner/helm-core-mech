@@ -16,26 +16,32 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_100652b6() -> u32 {
+    mech_trace::enter!("100652b6");
     // SAFETY: the globals and callees are the game's own memory and code;
     // they are read, written and called in the original's order.
     unsafe {
-        let b_var1: u8 = ((DAT_100c7fa0 != 8) as u8).wrapping_add(DAT_100c7f98 as u8);
+        let b_var1: u8 = ((mech_trace::gr!("100652b6", "100c7fa0", DAT_100c7fa0) != 8) as u8)
+            .wrapping_add(mech_trace::gr!("100652b6", "100c7f98", DAT_100c7f98) as u8);
         if b_var1 != 0 {
-            let i_var2 = FUN_10064e6a(b_var1);
+            let i_var2 = mech_trace::cr!("100652b6", "10064e6a", FUN_10064e6a(b_var1));
             if i_var2 != 0 {
-                return 0xffffffff;
+                return mech_trace::rt!("100652b6", 0xffffffff);
             }
-            let i_var2 = FUN_10064cd8(
-                (&raw mut DAT_100c7e88).cast::<core::ffi::c_void>(),
-                b_var1 as u32,
+            let i_var2 = mech_trace::cr!(
+                "100652b6",
+                "10064cd8",
+                FUN_10064cd8(
+                    (&raw mut DAT_100c7e88).cast::<core::ffi::c_void>(),
+                    b_var1 as u32,
+                )
             );
             if i_var2 != 0 {
-                return 0xffffffff;
+                return mech_trace::rt!("100652b6", 0xffffffff);
             }
-            DAT_100c7f98 = 0;
-            DAT_100c7e88 = 0;
-            DAT_100c7fa0 = 8;
+            mech_trace::gw!("100652b6", "100c7f98", DAT_100c7f98, 0);
+            mech_trace::gw!("100652b6", "100c7e88", DAT_100c7e88, 0);
+            mech_trace::gw!("100652b6", "100c7fa0", DAT_100c7fa0, 8);
         }
-        0
+        mech_trace::rt!("100652b6", 0)
     }
 }

@@ -21,53 +21,77 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10086f02(param_1: i32, param_2: *mut i8) -> i32 {
+    mech_trace::enter!("10086f02", param_1, param_2);
     // SAFETY: globals and callees are the game's own; param_2 points at the
     // caller's NUL-terminated string, and the channel tables are read as the
     // original does.
     unsafe {
         let local_c: u32;
-        if DAT_100c2dec < 2 {
-            let c = param_2.read() as i32;
-            let addr = DAT_100c2be0.wrapping_add(c.wrapping_mul(2) as u32);
-            local_c = (u32::from((addr as *const u16).read_unaligned())) & 4;
+        if mech_trace::gr!("10086f02", "100c2dec", DAT_100c2dec) < 2 {
+            let c = mech_trace::rd!("10086f02", param_2, read) as i32;
+            let addr = mech_trace::gr!("10086f02", "100c2be0", DAT_100c2be0)
+                .wrapping_add(c.wrapping_mul(2) as u32);
+            local_c = (u32::from(mech_trace::rd!(
+                "10086f02",
+                (addr as *const u16),
+                read_unaligned
+            ))) & 4;
         } else {
-            local_c = __isctype(param_2.read() as i32, 4) as u32;
+            local_c = mech_trace::cr!(
+                "10086f02",
+                "__isctype",
+                __isctype(mech_trace::rd!("10086f02", param_2, read) as i32, 4)
+            ) as u32;
         }
-        if local_c == 0 {
-            if param_1 == -1 {
-                return -1;
-            }
-            let off = param_1.wrapping_mul(0x74) as isize;
-            let p898c = (&raw mut DAT_100c898c).byte_offset(off);
-            let p897c = (&raw mut DAT_100c897c).byte_offset(off);
-            if p898c.cast::<i32>().read_unaligned() == 0 {
-                FUN_100108a0(0x11, &raw mut DAT_100c23fc as *mut i8);
-                return -1;
-            }
-            let mut local_8: i32 = 0;
-            while local_8 < p897c.cast::<i32>().read_unaligned() {
-                let table = p898c.cast::<i32>().read_unaligned();
-                let entry =
-                    (table.wrapping_add(local_8.wrapping_mul(4)) as *const i32).read_unaligned();
-                if entry != 0 {
-                    let table2 = p898c.cast::<i32>().read_unaligned();
-                    let entry2 = (table2.wrapping_add(local_8.wrapping_mul(4)) as *const i32)
-                        .read_unaligned();
-                    let r = __strcmpi(entry2 as *mut i8, param_2);
-                    if r == 0 {
-                        return local_8;
-                    }
+        mech_trace::rt!(
+            "10086f02",
+            if local_c == 0 {
+                if param_1 == -1 {
+                    return mech_trace::rt!("10086f02", -1);
                 }
-                local_8 = local_8.wrapping_add(1);
+                let off = param_1.wrapping_mul(0x74) as isize;
+                let p898c = (&raw mut DAT_100c898c).byte_offset(off);
+                let p897c = (&raw mut DAT_100c897c).byte_offset(off);
+                if mech_trace::rd!("10086f02", p898c.cast::<i32>(), read_unaligned) == 0 {
+                    FUN_100108a0(0x11, &raw mut DAT_100c23fc as *mut i8);
+                    return mech_trace::rt!("10086f02", -1);
+                }
+                let mut local_8: i32 = 0;
+                while local_8 < mech_trace::rd!("10086f02", p897c.cast::<i32>(), read_unaligned) {
+                    let table = mech_trace::rd!("10086f02", p898c.cast::<i32>(), read_unaligned);
+                    let entry = mech_trace::rd!(
+                        "10086f02",
+                        (table.wrapping_add(local_8.wrapping_mul(4)) as *const i32),
+                        read_unaligned
+                    );
+                    if entry != 0 {
+                        let table2 =
+                            mech_trace::rd!("10086f02", p898c.cast::<i32>(), read_unaligned);
+                        let entry2 = mech_trace::rd!(
+                            "10086f02",
+                            (table2.wrapping_add(local_8.wrapping_mul(4)) as *const i32),
+                            read_unaligned
+                        );
+                        let r = mech_trace::cr!(
+                            "10086f02",
+                            "__strcmpi",
+                            __strcmpi(entry2 as *mut i8, param_2)
+                        );
+                        if r == 0 {
+                            return mech_trace::rt!("10086f02", local_8);
+                        }
+                    }
+                    local_8 = local_8.wrapping_add(1);
+                }
+                FUN_10088ec7(
+                    0x6f,
+                    param_2 as u32,
+                    param_1.wrapping_mul(0x74).wrapping_add(0x100c892c) as *mut i8,
+                );
+                -1
+            } else {
+                mech_trace::cr!("10086f02", "_atoi", _atoi(param_2))
             }
-            FUN_10088ec7(
-                0x6f,
-                param_2 as u32,
-                param_1.wrapping_mul(0x74).wrapping_add(0x100c892c) as *mut i8,
-            );
-            -1
-        } else {
-            _atoi(param_2)
-        }
+        )
     }
 }

@@ -16,17 +16,22 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10010b46(param_1: u32, param_2: u32) -> *mut u8 {
+    mech_trace::enter!("10010b46", param_1, param_2);
     // SAFETY: the buffer, the format string and the callees are the game's own;
     // the calls run in the original's order on the same buffer.
     unsafe {
-        _sprintf(
-            &raw mut DAT_100c6588,
-            &raw mut DAT_100a9e8c,
-            param_1,
-            param_2,
+        mech_trace::cr!(
+            "10010b46",
+            "_sprintf",
+            _sprintf(
+                &raw mut DAT_100c6588,
+                &raw mut DAT_100a9e8c,
+                param_1,
+                param_2,
+            )
         );
         FUN_1005dd5a(&raw mut DAT_100c6588);
         FUN_1006a38c(&raw mut DAT_100c6588);
-        &raw mut DAT_100c6588
+        mech_trace::rt!("10010b46", &raw mut DAT_100c6588)
     }
 }

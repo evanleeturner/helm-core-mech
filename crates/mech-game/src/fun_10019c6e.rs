@@ -22,32 +22,36 @@ pub unsafe extern "C" fn FUN_10019c6e(
     param_10: u32,
     param_11: u32,
 ) {
+    mech_trace::enter!(
+        "10019c6e", param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
+        param_9, param_10, param_11
+    );
     let mut local_7c = MaybeUninit::<[u32; 30]>::uninit();
     let p = local_7c.as_mut_ptr().cast::<u32>();
     // SAFETY: p points at a 30-word local buffer, every index written is in
     // range; the callback global is the game's own.
     unsafe {
-        p.add(3).write(param_1);
-        p.add(0).write(param_1);
-        p.add(4).write(param_2);
-        p.add(1).write(param_2);
-        p.add(9).write(param_3);
-        p.add(6).write(param_3);
-        p.add(10).write(param_4);
-        p.add(7).write(param_4);
-        p.add(15).write(param_5);
-        p.add(12).write(param_5);
-        p.add(16).write(param_6);
-        p.add(13).write(param_6);
-        p.add(21).write(param_7);
-        p.add(18).write(param_7);
-        p.add(22).write(param_8);
-        p.add(19).write(param_8);
-        p.add(27).write(param_9);
-        p.add(24).write(param_9);
-        p.add(28).write(param_10);
-        p.add(25).write(param_10);
-        let f = DAT_100aafd4;
-        f(5, p, param_11);
+        mech_trace::wr!("10019c6e", p.add(3), write, param_1);
+        mech_trace::wr!("10019c6e", p.add(0), write, param_1);
+        mech_trace::wr!("10019c6e", p.add(4), write, param_2);
+        mech_trace::wr!("10019c6e", p.add(1), write, param_2);
+        mech_trace::wr!("10019c6e", p.add(9), write, param_3);
+        mech_trace::wr!("10019c6e", p.add(6), write, param_3);
+        mech_trace::wr!("10019c6e", p.add(10), write, param_4);
+        mech_trace::wr!("10019c6e", p.add(7), write, param_4);
+        mech_trace::wr!("10019c6e", p.add(15), write, param_5);
+        mech_trace::wr!("10019c6e", p.add(12), write, param_5);
+        mech_trace::wr!("10019c6e", p.add(16), write, param_6);
+        mech_trace::wr!("10019c6e", p.add(13), write, param_6);
+        mech_trace::wr!("10019c6e", p.add(21), write, param_7);
+        mech_trace::wr!("10019c6e", p.add(18), write, param_7);
+        mech_trace::wr!("10019c6e", p.add(22), write, param_8);
+        mech_trace::wr!("10019c6e", p.add(19), write, param_8);
+        mech_trace::wr!("10019c6e", p.add(27), write, param_9);
+        mech_trace::wr!("10019c6e", p.add(24), write, param_9);
+        mech_trace::wr!("10019c6e", p.add(28), write, param_10);
+        mech_trace::wr!("10019c6e", p.add(25), write, param_10);
+        let f = mech_trace::gr!("10019c6e", "100aafd4", DAT_100aafd4);
+        mech_trace::cr!("10019c6e", "ind", f(5, p, param_11));
     }
 }

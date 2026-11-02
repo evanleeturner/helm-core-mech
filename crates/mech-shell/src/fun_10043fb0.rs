@@ -39,17 +39,18 @@ unsafe fn call_thiscall(this: *mut c_void) {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10043fb0(param_1: u32) {
+    mech_trace::enter!("10043fb0", param_1);
     // SAFETY: the globals and the callee are the game's own memory and code.
     unsafe {
         match param_1 {
-            0 => call_thiscall(DAT_10098bb0),
-            1 => call_thiscall(DAT_10098bb4),
-            2 => call_thiscall(DAT_10098bb8),
-            3 => call_thiscall(DAT_10098bac),
-            4 => call_thiscall(DAT_10098bbc),
-            5 => call_thiscall(DAT_10098bd4),
-            6 => call_thiscall(DAT_10098bcc),
-            7 => call_thiscall(DAT_10098bd0),
+            0 => call_thiscall(mech_trace::gr!("10043fb0", "10098bb0", DAT_10098bb0)),
+            1 => call_thiscall(mech_trace::gr!("10043fb0", "10098bb4", DAT_10098bb4)),
+            2 => call_thiscall(mech_trace::gr!("10043fb0", "10098bb8", DAT_10098bb8)),
+            3 => call_thiscall(mech_trace::gr!("10043fb0", "10098bac", DAT_10098bac)),
+            4 => call_thiscall(mech_trace::gr!("10043fb0", "10098bbc", DAT_10098bbc)),
+            5 => call_thiscall(mech_trace::gr!("10043fb0", "10098bd4", DAT_10098bd4)),
+            6 => call_thiscall(mech_trace::gr!("10043fb0", "10098bcc", DAT_10098bcc)),
+            7 => call_thiscall(mech_trace::gr!("10043fb0", "10098bd0", DAT_10098bd0)),
             _ => {}
         }
     }

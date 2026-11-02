@@ -15,6 +15,7 @@ pub unsafe extern "C" fn FUN_10034b8e(
     param_2: *mut i32,
     param_3: *mut i32,
 ) -> i32 {
+    mech_trace::enter!("10034b8e", param_1, param_2, param_3);
     let mut local_48: [i32; 14] = [0; 14];
     let mut local_10: i32;
     let mut local_c: i32;
@@ -22,15 +23,26 @@ pub unsafe extern "C" fn FUN_10034b8e(
     // SAFETY: the callees are the game's own; param_1, param_2 and param_3
     // point at the caller's integers, read and written where the original does.
     unsafe {
-        FUN_10063fbd(param_1.read(), local_48.as_mut_ptr());
-        let i_var1 = FUN_10063f34(param_1.read());
+        FUN_10063fbd(
+            mech_trace::rd!("10034b8e", param_1, read),
+            local_48.as_mut_ptr(),
+        );
+        let i_var1 = mech_trace::cr!(
+            "10034b8e",
+            "10063f34",
+            FUN_10063f34(mech_trace::rd!("10034b8e", param_1, read))
+        );
         FUN_1002650e(local_48.as_mut_ptr(), i_var1);
         local_8 = local_48[3];
         local_c = local_48[4];
         local_10 = local_48[5];
-        let u_var2 = FUN_1003ba89(&raw mut local_8, &raw mut local_c, &raw mut local_10);
-        param_2.write(local_8);
-        param_3.write(local_c);
-        u_var2
+        let u_var2 = mech_trace::cr!(
+            "10034b8e",
+            "1003ba89",
+            FUN_1003ba89(&raw mut local_8, &raw mut local_c, &raw mut local_10)
+        );
+        mech_trace::wr!("10034b8e", param_2, write, local_8);
+        mech_trace::wr!("10034b8e", param_3, write, local_c);
+        mech_trace::rt!("10034b8e", u_var2)
     }
 }

@@ -30,6 +30,7 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1005ba70() -> i16 {
+    mech_trace::enter!("1005ba70");
     let mut key_code: i16 = 0;
     let mut key_message = tagMSG {
         hwnd: core::ptr::null_mut(),
@@ -42,19 +43,34 @@ pub unsafe extern "stdcall" fn FUN_1005ba70() -> i16 {
     // SAFETY: the callees are the game's own and the Win32 API; the pointers
     // refer to live locals of this frame.
     unsafe {
-        FUN_1005b6c0((&raw mut key_code).cast::<u16>());
+        mech_trace::cr!(
+            "1005ba70",
+            "1005b6c0",
+            FUN_1005b6c0((&raw mut key_code).cast::<u16>())
+        );
         if key_code == 0 {
-            let got_message =
-                PeekMessageA(&raw mut key_message, core::ptr::null_mut(), 0x100, 0x108, 1);
+            let got_message = mech_trace::cr!(
+                "1005ba70",
+                "PeekMessageA",
+                PeekMessageA(&raw mut key_message, core::ptr::null_mut(), 0x100, 0x108, 1)
+            );
             if got_message != 0 {
-                FUN_1005b760(
-                    key_message.message,
-                    key_message.w_param,
-                    key_message.l_param as u32,
+                mech_trace::cr!(
+                    "1005ba70",
+                    "1005b760",
+                    FUN_1005b760(
+                        key_message.message,
+                        key_message.w_param,
+                        key_message.l_param as u32,
+                    )
                 );
-                FUN_1005b6c0((&raw mut key_code).cast::<u16>());
+                mech_trace::cr!(
+                    "1005ba70",
+                    "1005b6c0",
+                    FUN_1005b6c0((&raw mut key_code).cast::<u16>())
+                );
             }
         }
-        key_code
+        mech_trace::rt!("1005ba70", key_code)
     }
 }

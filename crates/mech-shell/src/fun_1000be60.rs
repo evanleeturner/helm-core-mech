@@ -16,6 +16,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1000be60(record: i32, collection: i32) {
+    mech_trace::enter!("1000be60", record, collection);
     let mut prefix: [i8; 4] = [0; 4];
     let mut tail: [i8; 16] = [0; 16];
     let mut number_text: [i8; 4] = [0; 4];
@@ -28,23 +29,40 @@ pub unsafe extern "C" fn FUN_1000be60(record: i32, collection: i32) {
         loop {
             let mut number_taken = false;
             let mut item_index: i32 = 0;
-            if 0 < ((collection.wrapping_add(4)) as *const i32).read_unaligned() {
+            if 0 < mech_trace::rd!(
+                "1000be60",
+                ((collection.wrapping_add(4)) as *const i32),
+                read_unaligned
+            ) {
                 loop {
-                    let item = FUN_10018060(collection, item_index) as i32;
-                    strncpy(
-                        number_text.as_mut_ptr(),
-                        item.wrapping_add(0x826) as *const i8,
-                        2,
+                    let item = mech_trace::cr!(
+                        "1000be60",
+                        "10018060",
+                        FUN_10018060(collection, item_index)
+                    ) as i32;
+                    mech_trace::cr!(
+                        "1000be60",
+                        "strncpy",
+                        strncpy(
+                            number_text.as_mut_ptr(),
+                            item.wrapping_add(0x826) as *const i8,
+                            2,
+                        )
                     );
                     number_text[2] = 0;
-                    let parsed = atoi(number_text.as_ptr());
+                    let parsed = mech_trace::cr!("1000be60", "atoi", atoi(number_text.as_ptr()));
                     if parsed == candidate_number {
                         candidate_number = candidate_number.wrapping_add(1);
                         number_taken = true;
                         break;
                     }
                     item_index = item_index.wrapping_add(1);
-                    if !(item_index < ((collection.wrapping_add(4)) as *const i32).read_unaligned())
+                    if !(item_index
+                        < mech_trace::rd!(
+                            "1000be60",
+                            ((collection.wrapping_add(4)) as *const i32),
+                            read_unaligned
+                        ))
                     {
                         break;
                     }
@@ -55,29 +73,37 @@ pub unsafe extern "C" fn FUN_1000be60(record: i32, collection: i32) {
                 break;
             }
         }
-        strncpy(
-            prefix.as_mut_ptr(),
-            record.wrapping_add(0x823) as *const i8,
-            3,
+        mech_trace::cr!(
+            "1000be60",
+            "strncpy",
+            strncpy(
+                prefix.as_mut_ptr(),
+                record.wrapping_add(0x823) as *const i8,
+                3,
+            )
         );
         prefix[3] = 0;
         let mut src = record.wrapping_add(0x828) as *const i8;
         let mut dst = tail.as_mut_ptr();
         loop {
-            let c = *src;
-            *dst = c;
+            let c = mech_trace::dr!("1000be60", src);
+            mech_trace::dw!("1000be60", dst, c);
             src = src.add(1);
             dst = dst.add(1);
             if c == 0 {
                 break;
             }
         }
-        sprintf(
-            record.wrapping_add(0x823) as *mut i8,
-            &raw mut DAT_1008d02c as *const i8,
-            prefix.as_ptr(),
-            unused_number,
-            tail.as_ptr(),
+        mech_trace::cr!(
+            "1000be60",
+            "sprintf",
+            sprintf(
+                record.wrapping_add(0x823) as *mut i8,
+                &raw mut DAT_1008d02c as *const i8,
+                prefix.as_ptr(),
+                unused_number,
+                tail.as_ptr(),
+            )
         );
     }
 }

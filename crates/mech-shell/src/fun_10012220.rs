@@ -27,13 +27,14 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10012220(param_1: i32) {
+    mech_trace::enter!("10012220", param_1);
     // SAFETY: the callees and globals are the game's own memory; the
     // calls and reads happen in the original's order.
     unsafe {
         FUN_1005fb90();
-        let pc_var1 = DAT_100a6724;
-        if !DAT_100a6724.is_null() {
-            FUN_10010790(DAT_100a6724);
+        let pc_var1 = mech_trace::gr!("10012220", "100a6724", DAT_100a6724);
+        if !mech_trace::gr!("10012220", "100a6724", DAT_100a6724).is_null() {
+            FUN_10010790(mech_trace::gr!("10012220", "100a6724", DAT_100a6724));
             FUN_1006ec30(pc_var1.cast::<u8>());
         }
         FUN_1000f360();

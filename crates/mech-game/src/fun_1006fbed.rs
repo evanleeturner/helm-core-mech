@@ -29,8 +29,9 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1006fbed(param_1: i32) -> i32 {
+    mech_trace::enter!("1006fbed", param_1);
     if param_1 == 0 {
-        return -1;
+        return mech_trace::rt!("1006fbed", -1);
     }
     // SAFETY: the globals and callees are the game's own; param_1 points at
     // a 256-entry palette of 3-byte entries, read and written as the original does.
@@ -39,29 +40,64 @@ pub unsafe extern "C" fn FUN_1006fbed(param_1: i32) -> i32 {
         while local_8 < 0x100 {
             let off = local_8.wrapping_mul(3);
             let src = (off.wrapping_add(param_1)) as usize as *mut u8;
-            let s_var: u16 = src.cast::<u16>().read_unaligned();
-            (&raw mut DAT_101e86b0)
-                .byte_add(off as usize)
-                .cast::<u16>()
-                .write_unaligned(s_var);
-            *(&raw mut DAT_101e86b2).byte_add(off as usize) = src.byte_add(2).read();
+            let s_var: u16 = mech_trace::rd!("1006fbed", src.cast::<u16>(), read_unaligned);
+            mech_trace::wr!(
+                "1006fbed",
+                (&raw mut DAT_101e86b0).byte_add(off as usize).cast::<u16>(),
+                write_unaligned,
+                s_var
+            );
+            mech_trace::dw!(
+                "1006fbed",
+                (&raw mut DAT_101e86b2).byte_add(off as usize),
+                mech_trace::rd!("1006fbed", src.byte_add(2), read)
+            );
             FUN_1001d94c(src, (&raw mut DAT_100b9a30).byte_add(off as usize));
             let off4 = local_8.wrapping_mul(4) as usize;
-            *(&raw mut DAT_100c927a).byte_add(off4) =
-                (*(&raw mut DAT_100b9a30).byte_add(off as usize)).wrapping_mul(4);
-            *(&raw mut DAT_100c9279).byte_add(off4) =
-                (*(&raw mut DAT_100b9a31).byte_add(off as usize)).wrapping_mul(4);
-            *(&raw mut DAT_100c9278).byte_add(off4) =
-                (*(&raw mut DAT_100b9a32).byte_add(off as usize)).wrapping_mul(4);
+            mech_trace::dw!(
+                "1006fbed",
+                (&raw mut DAT_100c927a).byte_add(off4),
+                (mech_trace::dr!("1006fbed", (&raw mut DAT_100b9a30).byte_add(off as usize)))
+                    .wrapping_mul(4)
+            );
+            mech_trace::dw!(
+                "1006fbed",
+                (&raw mut DAT_100c9279).byte_add(off4),
+                (mech_trace::dr!("1006fbed", (&raw mut DAT_100b9a31).byte_add(off as usize)))
+                    .wrapping_mul(4)
+            );
+            mech_trace::dw!(
+                "1006fbed",
+                (&raw mut DAT_100c9278).byte_add(off4),
+                (mech_trace::dr!("1006fbed", (&raw mut DAT_100b9a32).byte_add(off as usize)))
+                    .wrapping_mul(4)
+            );
             local_8 += 1;
         }
         let mut local_14: i32 = 0x400;
-        DAT_100eee30 = SendMessageA(DAT_100b3de0, 0x4a, 0, (&raw mut local_14) as usize as i32);
-        if DAT_100eee30 == 0 {
-            0
-        } else {
-            FUN_10002168((&raw const DAT_100b4004).cast::<i8>());
-            -1
-        }
+        mech_trace::gw!(
+            "1006fbed",
+            "100eee30",
+            DAT_100eee30,
+            mech_trace::cr!(
+                "1006fbed",
+                "SendMessageA",
+                SendMessageA(
+                    mech_trace::gr!("1006fbed", "100b3de0", DAT_100b3de0),
+                    0x4a,
+                    0,
+                    (&raw mut local_14) as usize as i32
+                )
+            )
+        );
+        mech_trace::rt!(
+            "1006fbed",
+            if mech_trace::gr!("1006fbed", "100eee30", DAT_100eee30) == 0 {
+                0
+            } else {
+                FUN_10002168((&raw const DAT_100b4004).cast::<i8>());
+                -1
+            }
+        )
     }
 }

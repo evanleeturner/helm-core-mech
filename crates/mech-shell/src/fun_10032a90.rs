@@ -9,18 +9,24 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10032a90(param_1: i32) -> i32 {
+    mech_trace::enter!("10032a90", param_1);
     // SAFETY: param_1 is the address of the game's own structure; fields are
     // read and written at the same offsets as the original, and the callees
     // are the game's own functions.
     unsafe {
         let base = param_1 as usize;
-        let limit = ((base + 0x280) as *const i32).read_unaligned();
-        let cur = ((base + 0x288) as *const i32).read_unaligned();
+        let limit = mech_trace::rd!("10032a90", ((base + 0x280) as *const i32), read_unaligned);
+        let cur = mech_trace::rd!("10032a90", ((base + 0x288) as *const i32), read_unaligned);
         if limit <= cur {
-            return 0;
+            return mech_trace::rt!("10032a90", 0);
         }
-        let cur = ((base + 0x288) as *const i32).read_unaligned();
-        ((base + 0x288) as *mut i32).write_unaligned(cur.wrapping_add(1));
+        let cur = mech_trace::rd!("10032a90", ((base + 0x288) as *const i32), read_unaligned);
+        mech_trace::wr!(
+            "10032a90",
+            ((base + 0x288) as *mut i32),
+            write_unaligned,
+            cur.wrapping_add(1)
+        );
         let mut i_var3: i32 = 0;
         'outer: loop {
             let i_var4 = i_var3;
@@ -31,7 +37,7 @@ pub unsafe extern "C" fn FUN_10032a90(param_1: i32) -> i32 {
                 let mut i_var1: i32 = 0;
                 let mut p = local_c;
                 loop {
-                    let v = (p as *const i32).read_unaligned();
+                    let v = mech_trace::rd!("10032a90", (p as *const i32), read_unaligned);
                     if (v / 100)
                         .wrapping_mul(4)
                         .wrapping_sub(0x154)
@@ -50,9 +56,9 @@ pub unsafe extern "C" fn FUN_10032a90(param_1: i32) -> i32 {
                 local_c = local_c.wrapping_add(0x30);
                 local_8 = local_8.wrapping_add(1);
                 if 7 < local_8 {
-                    FUN_1000a800(param_1);
-                    FUN_1000a890(param_1);
-                    return i_var4.wrapping_add(0x2135);
+                    mech_trace::cr!("10032a90", "1000a800", FUN_1000a800(param_1));
+                    mech_trace::cr!("10032a90", "1000a890", FUN_1000a890(param_1));
+                    return mech_trace::rt!("10032a90", i_var4.wrapping_add(0x2135));
                 }
             }
         }

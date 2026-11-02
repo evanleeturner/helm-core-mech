@@ -33,11 +33,12 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10088ec7(code: i32, param_2: u32, param_3: *mut i8) {
+    mech_trace::enter!("10088ec7", code, param_2, param_3);
     // SAFETY: the globals, strings and callees are the game's own memory and
     // functions; param_3 points at the caller's NUL-terminated string.
     unsafe {
-        if DAT_100c0f64 == 0 {
-            DAT_100c0f64 = 1;
+        if mech_trace::gr!("10088ec7", "100c0f64", DAT_100c0f64) == 0 {
+            mech_trace::gw!("10088ec7", "100c0f64", DAT_100c0f64, 1);
             let mut i_var1: i32 = 6;
             let mut b_var4: bool = true;
             let mut pc_var2: *const i8 = (&raw mut DAT_100c27a4).cast::<i8>().cast_const();
@@ -47,7 +48,8 @@ pub unsafe extern "C" fn FUN_10088ec7(code: i32, param_2: u32, param_3: *mut i8)
                     break;
                 }
                 i_var1 = i_var1.wrapping_sub(1);
-                b_var4 = *pc_var2 == *pc_var3;
+                b_var4 =
+                    mech_trace::dr!("10088ec7", pc_var2) == mech_trace::dr!("10088ec7", pc_var3);
                 pc_var2 = pc_var2.add(1);
                 pc_var3 = pc_var3.add(1);
                 if !b_var4 {
@@ -57,45 +59,73 @@ pub unsafe extern "C" fn FUN_10088ec7(code: i32, param_2: u32, param_3: *mut i8)
             if !b_var4 {
                 let buf = (&raw mut DAT_100c8508).cast::<i8>();
                 if code == 0x6e {
-                    sprintf(
-                        buf,
-                        (&raw mut DAT_100c27ac).cast::<i8>().cast_const(),
-                        param_3,
-                        param_3,
+                    mech_trace::cr!(
+                        "10088ec7",
+                        "sprintf",
+                        sprintf(
+                            buf,
+                            (&raw mut DAT_100c27ac).cast::<i8>().cast_const(),
+                            param_3,
+                            param_3,
+                        )
                     );
                 } else if code == 0x6f {
-                    sprintf(
-                        buf,
-                        (&raw mut DAT_100c28d8).cast::<i8>().cast_const(),
-                        param_2,
-                        param_3,
+                    mech_trace::cr!(
+                        "10088ec7",
+                        "sprintf",
+                        sprintf(
+                            buf,
+                            (&raw mut DAT_100c28d8).cast::<i8>().cast_const(),
+                            param_2,
+                            param_3,
+                        )
                     );
                 } else if code == 0x70 {
-                    sprintf(
-                        buf,
-                        (&raw mut DAT_100c29c8).cast::<i8>().cast_const(),
-                        param_3,
-                        param_3,
+                    mech_trace::cr!(
+                        "10088ec7",
+                        "sprintf",
+                        sprintf(
+                            buf,
+                            (&raw mut DAT_100c29c8).cast::<i8>().cast_const(),
+                            param_3,
+                            param_3,
+                        )
                     );
                 } else {
-                    sprintf(buf, (&raw mut DAT_100c2b20).cast::<i8>().cast_const());
+                    mech_trace::cr!(
+                        "10088ec7",
+                        "sprintf",
+                        sprintf(buf, (&raw mut DAT_100c2b20).cast::<i8>().cast_const())
+                    );
                 }
                 FUN_1005dd5a(buf);
-                if DAT_100b9d4c == 1 {
-                    ShowWindow(DAT_100adf6c, 7);
+                if mech_trace::gr!("10088ec7", "100b9d4c", DAT_100b9d4c) == 1 {
+                    mech_trace::cr!(
+                        "10088ec7",
+                        "ShowWindow",
+                        ShowWindow(mech_trace::gr!("10088ec7", "100adf6c", DAT_100adf6c), 7)
+                    );
                 }
-                let r = MessageBoxA(
-                    DAT_100adf6c,
-                    buf.cast_const(),
-                    (&raw mut DAT_100c2bcc).cast::<i8>().cast_const(),
-                    0x41,
+                let r = mech_trace::cr!(
+                    "10088ec7",
+                    "MessageBoxA",
+                    MessageBoxA(
+                        mech_trace::gr!("10088ec7", "100adf6c", DAT_100adf6c),
+                        buf.cast_const(),
+                        (&raw mut DAT_100c2bcc).cast::<i8>().cast_const(),
+                        0x41,
+                    )
                 );
                 if r == 2 {
                     FUN_10010a8e();
                     _exit(code);
                 }
-                if DAT_100b9d4c == 1 {
-                    ShowWindow(DAT_100adf6c, 9);
+                if mech_trace::gr!("10088ec7", "100b9d4c", DAT_100b9d4c) == 1 {
+                    mech_trace::cr!(
+                        "10088ec7",
+                        "ShowWindow",
+                        ShowWindow(mech_trace::gr!("10088ec7", "100adf6c", DAT_100adf6c), 9)
+                    );
                 }
             }
         }

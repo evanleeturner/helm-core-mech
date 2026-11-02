@@ -45,19 +45,19 @@ enum S {
 #[inline(always)]
 unsafe fn rd(p: u32) -> u32 {
     // SAFETY: the address is inside the sprite data or bitmap, as in the original.
-    unsafe { (p as usize as *const u8).read() as u32 }
+    unsafe { mech_trace::rd!("100574ca", (p as usize as *const u8), read) as u32 }
 }
 
 #[inline(always)]
 unsafe fn wr(p: u32, v: u8) {
     // SAFETY: the address is inside the destination bitmap, as in the original.
-    unsafe { (p as usize as *mut u8).write(v) }
+    unsafe { mech_trace::wr!("100574ca", (p as usize as *mut u8), write, v) }
 }
 
 #[inline(always)]
 unsafe fn tbl(i: u32) -> u8 {
     // SAFETY: i is a byte value; the table is the game's 256-entry remap table.
-    unsafe { DAT_100b2b10[(i & 0xff) as usize] }
+    unsafe { mech_trace::gr!("100574ca", "100b2b10", DAT_100b2b10[(i & 0xff) as usize]) }
 }
 
 #[inline(always)]
@@ -74,7 +74,7 @@ unsafe fn fill(mut dst: u32, cnt: u32, c: u8) -> u32 {
         let v = cu | (cu << 8) | (cu << 16) | (cu << 24);
         let mut q = cnt >> 2;
         while q != 0 {
-            (dst as usize as *mut u32).write_unaligned(v);
+            mech_trace::wr!("100574ca", (dst as usize as *mut u32), write_unaligned, v);
             dst = dst.wrapping_add(4);
             q = q.wrapping_sub(1);
         }
@@ -91,21 +91,23 @@ pub unsafe extern "C" fn FUN_100574ca(
     param_4: i32,
     param_5: i32,
 ) -> i32 {
+    mech_trace::enter!("100574ca", param_1, param_2, param_3, param_4, param_5);
     // SAFETY: all pointers are the game's own bitmap, clip rectangle and sprite
     // data; reads and writes happen where the original performs them.
     unsafe {
-        let bmp = param_1.read_unaligned() as u32 as usize as *const i32;
-        let w = bmp.add(1).read_unaligned();
+        let bmp =
+            mech_trace::rd!("100574ca", param_1, read_unaligned) as u32 as usize as *const i32;
+        let w = mech_trace::rd!("100574ca", bmp.add(1), read_unaligned);
         let stride = (w as u32).wrapping_add(1) as i32;
         if stride == 0 || w < -1 {
-            return -1;
+            return mech_trace::rt!("100574ca", -1);
         }
-        let h = bmp.add(2).read_unaligned();
+        let h = mech_trace::rd!("100574ca", bmp.add(2), read_unaligned);
         if h < 0 {
-            return -1;
+            return mech_trace::rt!("100574ca", -1);
         }
-        let p1 = param_1.add(1).read_unaligned();
-        let p2 = param_1.add(2).read_unaligned();
+        let p1 = mech_trace::rd!("100574ca", param_1.add(1), read_unaligned);
+        let p2 = mech_trace::rd!("100574ca", param_1.add(2), read_unaligned);
         let mut xmin = p1;
         if xmin < 1 {
             xmin = 0;
@@ -114,37 +116,47 @@ pub unsafe extern "C" fn FUN_100574ca(
         if ymin < 1 {
             ymin = 0;
         }
-        let mut xmax = param_1.add(3).read_unaligned();
-        if w <= param_1.add(3).read_unaligned() {
+        let mut xmax = mech_trace::rd!("100574ca", param_1.add(3), read_unaligned);
+        if w <= mech_trace::rd!("100574ca", param_1.add(3), read_unaligned) {
             xmax = w;
         }
-        let mut ymax = param_1.add(4).read_unaligned();
-        if h <= param_1.add(4).read_unaligned() {
+        let mut ymax = mech_trace::rd!("100574ca", param_1.add(4), read_unaligned);
+        if h <= mech_trace::rd!("100574ca", param_1.add(4), read_unaligned) {
             ymax = h;
         }
         if xmax < xmin || ymax < ymin {
-            return -2;
+            return mech_trace::rt!("100574ca", -2);
         }
 
-        let ox = (param_4 as u32).wrapping_add(param_1.add(1).read_unaligned() as u32) as i32;
-        let oy = (param_5 as u32).wrapping_add(param_1.add(2).read_unaligned() as u32) as i32;
+        let ox = (param_4 as u32).wrapping_add(mech_trace::rd!(
+            "100574ca",
+            param_1.add(1),
+            read_unaligned
+        ) as u32) as i32;
+        let oy = (param_5 as u32).wrapping_add(mech_trace::rd!(
+            "100574ca",
+            param_1.add(2),
+            read_unaligned
+        ) as u32) as i32;
         let ra = (param_3 as u32)
             .wrapping_mul(8)
             .wrapping_add(8)
             .wrapping_add(param_2 as u32);
-        let rec =
-            ((ra as usize as *const i32).read_unaligned() as u32).wrapping_add(param_2 as u32);
+        let rec = (mech_trace::rd!("100574ca", (ra as usize as *const i32), read_unaligned) as u32)
+            .wrapping_add(param_2 as u32);
         let rp = rec as usize as *const u8;
-        let left = (rp.add(8).cast::<i32>().read_unaligned() as u32).wrapping_add(ox as u32) as i32;
-        let top =
-            (rp.add(0xc).cast::<i32>().read_unaligned() as u32).wrapping_add(oy as u32) as i32;
-        let right =
-            (rp.add(0x10).cast::<i32>().read_unaligned() as u32).wrapping_add(ox as u32) as i32;
-        let bottom =
-            (rp.add(0x14).cast::<i32>().read_unaligned() as u32).wrapping_add(oy as u32) as i32;
+        let left = (mech_trace::rd!("100574ca", rp.add(8).cast::<i32>(), read_unaligned) as u32)
+            .wrapping_add(ox as u32) as i32;
+        let top = (mech_trace::rd!("100574ca", rp.add(0xc).cast::<i32>(), read_unaligned) as u32)
+            .wrapping_add(oy as u32) as i32;
+        let right = (mech_trace::rd!("100574ca", rp.add(0x10).cast::<i32>(), read_unaligned) as u32)
+            .wrapping_add(ox as u32) as i32;
+        let bottom = (mech_trace::rd!("100574ca", rp.add(0x14).cast::<i32>(), read_unaligned)
+            as u32)
+            .wrapping_add(oy as u32) as i32;
         let mut src: u32 = rec.wrapping_add(0x18);
         if right < left || bottom < top {
-            return -4;
+            return mech_trace::rt!("100574ca", -4);
         }
 
         let bit = |v: i32| -> u8 { (v < 0) as u8 };
@@ -161,22 +173,34 @@ pub unsafe extern "C" fn FUN_100574ca(
             * 2)
             + bit((ymax as u32).wrapping_sub(bottom as u32) as i32)) as u8;
         if (code_r & code_l) != 0 {
-            return -3;
+            return mech_trace::rt!("100574ca", -3);
         }
         if code_l == 0 && code_r == 0 {
-            FUN_100579a2(
-                param_1,
-                rec as i32,
-                (ox as u32).wrapping_sub(param_1.add(1).read_unaligned() as u32) as i32,
-                (oy as u32).wrapping_sub(param_1.add(2).read_unaligned() as u32) as i32,
+            mech_trace::cr!(
+                "100574ca",
+                "100579a2",
+                FUN_100579a2(
+                    param_1,
+                    rec as i32,
+                    (ox as u32).wrapping_sub(mech_trace::rd!(
+                        "100574ca",
+                        param_1.add(1),
+                        read_unaligned
+                    ) as u32) as i32,
+                    (oy as u32).wrapping_sub(mech_trace::rd!(
+                        "100574ca",
+                        param_1.add(2),
+                        read_unaligned
+                    ) as u32) as i32,
+                )
             );
-            return 0;
+            return mech_trace::rt!("100574ca", 0);
         }
 
         let stride_u = stride as u32;
         let mut row: u32 = (top as u32)
             .wrapping_mul(stride_u)
-            .wrapping_add(bmp.read_unaligned() as u32)
+            .wrapping_add(mech_trace::rd!("100574ca", bmp, read_unaligned) as u32)
             .wrapping_add(left as u32);
         let mut y = top;
 
@@ -215,10 +239,10 @@ pub unsafe extern "C" fn FUN_100574ca(
 
         loop {
             if bottom < y {
-                return 0;
+                return mech_trace::rt!("100574ca", 0);
             }
             if ymax < y {
-                return 0;
+                return mech_trace::rt!("100574ca", 0);
             }
             dst = row;
             let mut st = if (code_l & 8) != 0 {

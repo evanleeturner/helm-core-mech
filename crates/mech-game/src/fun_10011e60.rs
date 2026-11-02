@@ -8,6 +8,7 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10011e60(param_1: i32, param_2: i32, param_3: i32) -> i32 {
+    mech_trace::enter!("10011e60", param_1, param_2, param_3);
     let prod: i64 = (param_1 as i64).wrapping_mul(param_2 as i64);
     let den: i64 = param_3 as i64;
 
@@ -17,7 +18,7 @@ pub unsafe extern "C" fn FUN_10011e60(param_1: i32, param_2: i32, param_3: i32) 
         unsafe {
             RaiseException(0xC0000094u32, 0, 0, core::ptr::null());
         }
-        return 0;
+        return mech_trace::rt!("10011e60", 0);
     }
 
     // The product of two i32 values never equals i64::MIN, and den is nonzero,
@@ -30,8 +31,8 @@ pub unsafe extern "C" fn FUN_10011e60(param_1: i32, param_2: i32, param_3: i32) 
         unsafe {
             RaiseException(0xC0000094u32, 0, 0, core::ptr::null());
         }
-        return 0;
+        return mech_trace::rt!("10011e60", 0);
     }
 
-    quot as i32
+    mech_trace::rt!("10011e60", quot as i32)
 }

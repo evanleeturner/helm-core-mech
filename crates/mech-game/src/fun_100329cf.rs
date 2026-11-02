@@ -27,15 +27,18 @@ pub unsafe extern "C" fn FUN_100329cf(
     param_7: *mut i32,
     param_8: *mut i32,
 ) {
+    mech_trace::enter!(
+        "100329cf", param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8
+    );
     // SAFETY: the global is the game's own memory; the output pointers are
     // supplied by the caller and written where the original does.
     unsafe {
-        let limit = DAT_100a1148 as f32;
+        let limit = mech_trace::gr!("100329cf", "100a1148", DAT_100a1148) as f32;
         if limit < param_4.abs() + (param_3.abs() + (param_2.abs() + param_1.abs())) {
-            param_5.write_unaligned(ftol_low(param_1));
-            param_6.write_unaligned(ftol_low(param_2));
-            param_7.write_unaligned(ftol_low(param_3));
-            param_8.write_unaligned(ftol_low(param_4));
+            mech_trace::wr!("100329cf", param_5, write_unaligned, ftol_low(param_1));
+            mech_trace::wr!("100329cf", param_6, write_unaligned, ftol_low(param_2));
+            mech_trace::wr!("100329cf", param_7, write_unaligned, ftol_low(param_3));
+            mech_trace::wr!("100329cf", param_8, write_unaligned, ftol_low(param_4));
         }
     }
 }

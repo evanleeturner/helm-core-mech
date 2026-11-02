@@ -10,14 +10,21 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10035e60(param_1: i32) -> u32 {
+    mech_trace::enter!("10035e60", param_1);
     // SAFETY: the globals are the game's own memory, read by value.
     unsafe {
         if param_1 != 0 {
-            return DAT_10093a24 as u32;
+            return mech_trace::rt!(
+                "10035e60",
+                mech_trace::gr!("10035e60", "10093a24", DAT_10093a24) as u32
+            );
         }
-        if DAT_10093914 < 0 {
-            return 0xffffffff;
+        if mech_trace::gr!("10035e60", "10093914", DAT_10093914) < 0 {
+            return mech_trace::rt!("10035e60", 0xffffffff);
         }
-        DAT_1009390c as u32
+        mech_trace::rt!(
+            "10035e60",
+            mech_trace::gr!("10035e60", "1009390c", DAT_1009390c) as u32
+        )
     }
 }

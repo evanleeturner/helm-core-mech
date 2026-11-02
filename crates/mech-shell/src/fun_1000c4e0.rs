@@ -14,7 +14,7 @@ unsafe fn c_strlen(p: *const i8) -> usize {
     let mut n = 0usize;
     // SAFETY: p points at a NUL-terminated buffer.
     unsafe {
-        while *p.add(n) != 0 {
+        while mech_trace::dr!("1000c4e0", p.add(n)) != 0 {
             n += 1;
         }
     }
@@ -24,18 +24,23 @@ unsafe fn c_strlen(p: *const i8) -> usize {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1000c4e0(value: u32, out_buffer: i32) -> i32 {
+    mech_trace::enter!("1000c4e0", value, out_buffer);
     if out_buffer == 0 {
-        return 0;
+        return mech_trace::rt!("1000c4e0", 0);
     }
     let mut number_text = [0i8; 32];
     let mut reversed = [0i8; 32];
     // SAFETY: the format string is the game's own; the local buffers are
     // the original's scratch space and the output buffer is the caller's.
     unsafe {
-        sprintf(
-            number_text.as_mut_ptr(),
-            (&raw const DAT_1008d038).cast::<i8>(),
-            value,
+        mech_trace::cr!(
+            "1000c4e0",
+            "sprintf",
+            sprintf(
+                number_text.as_mut_ptr(),
+                (&raw const DAT_1008d038).cast::<i8>(),
+                value,
+            )
         );
         let len = c_strlen(number_text.as_ptr()) as i32;
         let neg = number_text[0] == b'-' as i8;
@@ -57,11 +62,12 @@ pub unsafe extern "C" fn FUN_1000c4e0(value: u32, out_buffer: i32) -> i32 {
         reversed[grouped_len] = 0;
         if neg {
             let n = c_strlen(reversed.as_ptr());
-            reversed
-                .as_mut_ptr()
-                .add(n)
-                .cast::<u16>()
-                .write_unaligned(DAT_1008d03c);
+            mech_trace::wr!(
+                "1000c4e0",
+                reversed.as_mut_ptr().add(n).cast::<u16>(),
+                write_unaligned,
+                mech_trace::gr!("1000c4e0", "1008d03c", DAT_1008d03c)
+            );
         }
         let out = out_buffer as usize as *mut u8;
         let rlen = c_strlen(reversed.as_ptr());
@@ -70,14 +76,14 @@ pub unsafe extern "C" fn FUN_1000c4e0(value: u32, out_buffer: i32) -> i32 {
             loop {
                 let l = c_strlen(reversed.as_ptr());
                 let src = l - count;
-                *out.add(count) = reversed[src - 1] as u8;
+                mech_trace::dw!("1000c4e0", out.add(count), reversed[src - 1] as u8);
                 count += 1;
                 if count >= c_strlen(reversed.as_ptr()) {
                     break;
                 }
             }
         }
-        *out.add(count) = 0;
+        mech_trace::dw!("1000c4e0", out.add(count), 0);
     }
-    out_buffer
+    mech_trace::rt!("1000c4e0", out_buffer)
 }

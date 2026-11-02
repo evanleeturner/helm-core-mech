@@ -28,6 +28,7 @@ pub unsafe extern "C" fn FUN_10055f9e(
     param_4: i32,
     param_5: i32,
 ) -> u32 {
+    mech_trace::enter!("10055f9e", param_1, param_2, param_3, param_4, param_5);
     let mut param_3 = param_3;
     let mut local_24: i32 = 0;
     let mut local_30: i32 = 0;
@@ -38,24 +39,24 @@ pub unsafe extern "C" fn FUN_10055f9e(
     let mut local_20: i32 = 0;
 
     if param_2 < 2 {
-        return 0;
+        return mech_trace::rt!("10055f9e", 0);
     }
     // SAFETY: param_3 points at the caller's array of three 6-int records;
     // globals and callee are the game's own.
     unsafe {
         for _ in 0..3 {
-            let f3 = param_3.byte_add(12).read_unaligned();
-            let f4 = param_3.byte_add(16).read_unaligned();
+            let f3 = mech_trace::rd!("10055f9e", param_3.byte_add(12), read_unaligned);
+            let f4 = mech_trace::rd!("10055f9e", param_3.byte_add(16), read_unaligned);
             if f3 == 0 {
                 if f4 == 0 {
                     if param_5 == 0 {
-                        local_8 = param_3.read_unaligned();
-                        local_c = param_3.byte_add(4).read_unaligned();
+                        local_8 = mech_trace::rd!("10055f9e", param_3, read_unaligned);
+                        local_c = mech_trace::rd!("10055f9e", param_3.byte_add(4), read_unaligned);
                         local_24 = 1;
                     }
                 } else {
-                    local_10 = param_3.read_unaligned();
-                    local_20 = param_3.byte_add(4).read_unaligned();
+                    local_10 = mech_trace::rd!("10055f9e", param_3, read_unaligned);
+                    local_20 = mech_trace::rd!("10055f9e", param_3.byte_add(4), read_unaligned);
                     local_30 = 1;
                     if f4 < 0 {
                         local_18 = 1;
@@ -63,8 +64,8 @@ pub unsafe extern "C" fn FUN_10055f9e(
                 }
             } else {
                 if param_5 == 1 {
-                    local_8 = param_3.read_unaligned();
-                    local_c = param_3.byte_add(4).read_unaligned();
+                    local_8 = mech_trace::rd!("10055f9e", param_3, read_unaligned);
+                    local_c = mech_trace::rd!("10055f9e", param_3.byte_add(4), read_unaligned);
                     local_24 = 1;
                 }
                 if f3 < 0 {
@@ -74,7 +75,7 @@ pub unsafe extern "C" fn FUN_10055f9e(
             param_3 = param_3.byte_add(24);
         }
         if local_24 == 0 || local_30 == 0 {
-            return 0;
+            return mech_trace::rt!("10055f9e", 0);
         }
         let local_2c: i32 = local_20.wrapping_sub(local_c) >> 1;
         let mut local_28: i32 = local_10.wrapping_sub(local_8) >> 1;
@@ -107,19 +108,32 @@ pub unsafe extern "C" fn FUN_10055f9e(
         let base1 = &raw mut DAT_100b1264 as *const u8;
         for i in 0..4i32 {
             let iu = i as usize;
-            buf[iu * 6 + 4] = base1.byte_add(iu * 8).cast::<i32>().read_unaligned();
+            buf[iu * 6 + 4] = mech_trace::rd!(
+                "10055f9e",
+                base1.byte_add(iu * 8).cast::<i32>(),
+                read_unaligned
+            );
             if local_18 == 0 {
-                buf[iu * 6 + 3] = base0.byte_add(iu * 8).cast::<i32>().read_unaligned();
+                buf[iu * 6 + 3] = mech_trace::rd!(
+                    "10055f9e",
+                    base0.byte_add(iu * 8).cast::<i32>(),
+                    read_unaligned
+                );
             } else {
                 let local_14: i32 = if (i & 1) == 0 { 1 } else { -1 };
                 let off = local_14.wrapping_add(i).wrapping_mul(8);
-                buf[iu * 6 + 3] = base0
-                    .byte_offset(off as isize)
-                    .cast::<i32>()
-                    .read_unaligned();
+                buf[iu * 6 + 3] = mech_trace::rd!(
+                    "10055f9e",
+                    base0.byte_offset(off as isize).cast::<i32>(),
+                    read_unaligned
+                );
             }
         }
-        FUN_1005f040(param_1, 4, buf.as_mut_ptr().cast::<u32>(), param_4, 1, 0, 0);
-        local_2c as u32
+        mech_trace::cr!(
+            "10055f9e",
+            "1005f040",
+            FUN_1005f040(param_1, 4, buf.as_mut_ptr().cast::<u32>(), param_4, 1, 0, 0)
+        );
+        mech_trace::rt!("10055f9e", local_2c as u32)
     }
 }

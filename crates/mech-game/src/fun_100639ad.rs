@@ -17,30 +17,57 @@ unsafe extern "C" {
 #[inline(always)]
 unsafe fn rd(base: usize, off: usize) -> i32 {
     // SAFETY: caller supplies a valid game-memory address.
-    unsafe { ((base.wrapping_add(off)) as *const i32).read_unaligned() }
+    unsafe {
+        mech_trace::rd!(
+            "100639ad",
+            ((base.wrapping_add(off)) as *const i32),
+            read_unaligned
+        )
+    }
 }
 
 #[inline(always)]
 unsafe fn rd_u16(base: usize, off: usize) -> u16 {
     // SAFETY: caller supplies a valid game-memory address.
-    unsafe { ((base.wrapping_add(off)) as *const u16).read_unaligned() }
+    unsafe {
+        mech_trace::rd!(
+            "100639ad",
+            ((base.wrapping_add(off)) as *const u16),
+            read_unaligned
+        )
+    }
 }
 
 #[inline(always)]
 unsafe fn wr_u16(base: usize, off: usize, v: u16) {
     // SAFETY: caller supplies a valid game-memory address.
-    unsafe { ((base.wrapping_add(off)) as *mut u16).write_unaligned(v) }
+    unsafe {
+        mech_trace::wr!(
+            "100639ad",
+            ((base.wrapping_add(off)) as *mut u16),
+            write_unaligned,
+            v
+        )
+    }
 }
 
 #[inline(always)]
 unsafe fn wr(base: usize, off: usize, v: i32) {
     // SAFETY: caller supplies a valid game-memory address.
-    unsafe { ((base.wrapping_add(off)) as *mut i32).write_unaligned(v) }
+    unsafe {
+        mech_trace::wr!(
+            "100639ad",
+            ((base.wrapping_add(off)) as *mut i32),
+            write_unaligned,
+            v
+        )
+    }
 }
 
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_100639ad(param_1: *mut i32) {
+    mech_trace::enter!("100639ad", param_1);
     let p = param_1 as usize;
     // SAFETY: param_1 and everything reachable from it are the game's own
     // structures; globals are the game's memory, accessed as the original does.
@@ -58,7 +85,7 @@ pub unsafe extern "C" fn FUN_100639ad(param_1: *mut i32) {
             let a_bc8 = (&raw mut DAT_100a7bc8) as usize;
             let a_bec = (&raw mut DAT_100a7bec) as usize;
             let a_bf0 = (&raw mut DAT_100a7bf0) as usize;
-            let b_dd = (s.wrapping_add(0xdd) as *const u8).read();
+            let b_dd = mech_trace::rd!("100639ad", (s.wrapping_add(0xdd) as *const u8), read);
             if idx == -1
                 || rd(s, 0xdc) == 0
                 || (b_dd & 0x10) != 0
@@ -70,9 +97,11 @@ pub unsafe extern "C" fn FUN_100639ad(param_1: *mut i32) {
             } else if (b_dd & 2) == 0
                 || (rd_u16(
                     rd(
-                        (&raw mut DAT_100eef40)
-                            .add((rd(s, 0xdc) as u32 & 0xff) as usize)
-                            .read() as usize,
+                        mech_trace::rd!(
+                            "100639ad",
+                            (&raw mut DAT_100eef40).add((rd(s, 0xdc) as u32 & 0xff) as usize),
+                            read
+                        ) as usize,
                         0x20,
                     ) as usize,
                     0x442,
@@ -82,12 +111,20 @@ pub unsafe extern "C" fn FUN_100639ad(param_1: *mut i32) {
                 let iv2 = rd(s, 0x50).wrapping_sub(rd(s, 200));
                 let iv3 = rd(s, 0x54).wrapping_sub(rd(s, 0xcc));
                 let iv4 = rd(s, 0x58).wrapping_sub(rd(s, 0xd0));
-                let iv5 = FUN_1003c190(iv2, iv3, iv4, rd(a_bec.wrapping_add(iv6 as usize), 0));
+                let iv5 = mech_trace::cr!(
+                    "100639ad",
+                    "1003c190",
+                    FUN_1003c190(iv2, iv3, iv4, rd(a_bec.wrapping_add(iv6 as usize), 0))
+                );
                 let b1: bool;
                 let mut local_14: u32;
                 let local_10: u32;
                 if iv5 == 0
-                    && FUN_1003c190(iv2, iv3, iv4, rd(a_bf0.wrapping_add(iv6 as usize), 0)) != 0
+                    && mech_trace::cr!(
+                        "100639ad",
+                        "1003c190",
+                        FUN_1003c190(iv2, iv3, iv4, rd(a_bf0.wrapping_add(iv6 as usize), 0))
+                    ) != 0
                 {
                     b1 = true;
                     let m = (rd(s, 0x60) % 0x1680000).wrapping_add(0x1680000) % 0x1680000;
@@ -131,12 +168,28 @@ pub unsafe extern "C" fn FUN_100639ad(param_1: *mut i32) {
                         wr(p, 0x3bc, 0);
                         wr_u16(p, 0x440, rd_u16(p, 0x440) | 0x80);
                     } else {
-                        wr(p, 0x3bc, rd(p, 0x3bc).wrapping_sub(DAT_100b3904 as i32));
+                        wr(
+                            p,
+                            0x3bc,
+                            rd(p, 0x3bc).wrapping_sub(mech_trace::gr!(
+                                "100639ad",
+                                "100b3904",
+                                DAT_100b3904
+                            ) as i32),
+                        );
                     }
                 } else {
                     wr_u16(p, 0x440, rd_u16(p, 0x440) & 0x7fff);
                     if (rd_u16(p, 0x440) & 0x40) != 0 {
-                        wr(p, 0x3bc, rd(p, 0x3bc).wrapping_add(DAT_100b3904 as i32));
+                        wr(
+                            p,
+                            0x3bc,
+                            rd(p, 0x3bc).wrapping_add(mech_trace::gr!(
+                                "100639ad",
+                                "100b3904",
+                                DAT_100b3904
+                            ) as i32),
+                        );
                         if 0x169 < rd(p, 0x3bc) {
                             wr_u16(p, 0x440, rd_u16(p, 0x440) & 0xffbf);
                         }

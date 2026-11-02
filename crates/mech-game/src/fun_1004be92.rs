@@ -20,6 +20,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1004be92(param_1: u32, param_2: u32, param_3: u32, param_4: i32) {
+    mech_trace::enter!("1004be92", param_1, param_2, param_3, param_4);
     let mut param_4 = param_4;
     let mut local_8: i32 = 0;
     if param_4 == 0 {
@@ -34,21 +35,27 @@ pub unsafe extern "C" fn FUN_1004be92(param_1: u32, param_2: u32, param_3: u32, 
             let a08 = (&raw mut DAT_101f2708).byte_add(i_var2).cast::<i32>();
             let a14 = (&raw mut DAT_101f2714).byte_add(i_var2).cast::<i32>();
             let a26 = (&raw mut DAT_101f26f0).byte_add(i_var2).cast::<*mut i32>();
-            if a08.read_unaligned() == 0
-                && a14.read_unaligned() == 0xb
-                && !a26.read_unaligned().is_null()
+            if mech_trace::rd!("1004be92", a08, read_unaligned) == 0
+                && mech_trace::rd!("1004be92", a14, read_unaligned) == 0xb
+                && !mech_trace::rd!("1004be92", a26, read_unaligned).is_null()
             {
-                let pi_var1 = a26.read_unaligned();
-                let i_var3 = FUN_1007be21(pi_var1, 1);
+                let pi_var1 = mech_trace::rd!("1004be92", a26, read_unaligned);
+                let i_var3 = mech_trace::cr!("1004be92", "1007be21", FUN_1007be21(pi_var1, 1));
                 if i_var3 != -1 {
-                    a08.write_unaligned(1);
-                    (&raw mut DAT_101f2704)
-                        .byte_add(i_var2)
-                        .cast::<u32>()
-                        .write_unaligned(DAT_100a9854);
-                    FUN_1002f37a(pi_var1 as i32, param_1, param_2, param_3);
-                    FUN_1007bf28(i_var3);
-                    FUN_1002fbc0(pi_var1);
+                    mech_trace::wr!("1004be92", a08, write_unaligned, 1);
+                    mech_trace::wr!(
+                        "1004be92",
+                        (&raw mut DAT_101f2704).byte_add(i_var2).cast::<u32>(),
+                        write_unaligned,
+                        mech_trace::gr!("1004be92", "100a9854", DAT_100a9854)
+                    );
+                    mech_trace::cr!(
+                        "1004be92",
+                        "1002f37a",
+                        FUN_1002f37a(pi_var1 as i32, param_1, param_2, param_3)
+                    );
+                    mech_trace::cr!("1004be92", "1007bf28", FUN_1007bf28(i_var3));
+                    mech_trace::cr!("1004be92", "1002fbc0", FUN_1002fbc0(pi_var1));
                     local_8 = local_8.wrapping_add(1);
                 }
             }

@@ -11,12 +11,23 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10035f13() {
+    mech_trace::enter!("10035f13");
     // SAFETY: the globals are the game's own memory, read and written
     // where the original does.
     unsafe {
-        DAT_10168288 = DAT_1016765c;
-        DAT_10167660 = (DAT_100adcec as u32)
-            .wrapping_add(DAT_1016765c as u32)
-            .wrapping_add(0xffffffd0u32) as i32;
+        mech_trace::gw!(
+            "10035f13",
+            "10168288",
+            DAT_10168288,
+            mech_trace::gr!("10035f13", "1016765c", DAT_1016765c)
+        );
+        mech_trace::gw!(
+            "10035f13",
+            "10167660",
+            DAT_10167660,
+            (mech_trace::gr!("10035f13", "100adcec", DAT_100adcec) as u32)
+                .wrapping_add(mech_trace::gr!("10035f13", "1016765c", DAT_1016765c) as u32)
+                .wrapping_add(0xffffffd0u32) as i32
+        );
     }
 }

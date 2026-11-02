@@ -30,28 +30,50 @@ pub unsafe extern "C" fn FUN_10008fb3(
     _param_4: u32,
     param_5: i32,
 ) {
+    mech_trace::enter!("10008fb3", param_1, param_2, param_3, _param_4, param_5);
     // SAFETY: param_1 points at the caller's object; the globals and callees
     // are the game's own; the callback slot holds a cdecl function pointer.
     unsafe {
-        let pi_var1 = param_1.read_unaligned() as *mut i32;
-        let mut local_8: i32 = FUN_100357e3(&raw mut param_2) as i32;
-        let cb = param_1.add(0x20).read_unaligned();
+        let pi_var1 = mech_trace::rd!("10008fb3", param_1, read_unaligned) as *mut i32;
+        let mut local_8: i32 =
+            mech_trace::cr!("10008fb3", "100357e3", FUN_100357e3(&raw mut param_2)) as i32;
+        let cb = mech_trace::rd!("10008fb3", param_1.add(0x20), read_unaligned);
         if local_8 != 0 && cb != 0 {
             let f: unsafe extern "C" fn(*mut i32, i32, i32) -> i32 =
                 core::mem::transmute(cb as usize);
-            local_8 = f(pi_var1, param_2, param_3);
+            local_8 = mech_trace::cr!("10008fb3", "ind", f(pi_var1, param_2, param_3));
         }
         if local_8 != 0 {
-            let p_var2 = FUN_1008668b(
-                DAT_100af17c as i32,
-                (param_5 as u32).wrapping_add(DAT_101686f0),
-                DAT_100af0b4 as *mut i32,
+            let p_var2 = mech_trace::cr!(
+                "10008fb3",
+                "1008668b",
+                FUN_1008668b(
+                    mech_trace::gr!("10008fb3", "100af17c", DAT_100af17c) as i32,
+                    (param_5 as u32).wrapping_add(mech_trace::gr!(
+                        "10008fb3",
+                        "101686f0",
+                        DAT_101686f0
+                    )),
+                    mech_trace::gr!("10008fb3", "100af0b4", DAT_100af0b4) as *mut i32,
+                )
             );
             if !p_var2.is_null() {
-                FUN_10056fc4(pi_var1, p_var2 as i32, 0, param_2, param_3);
-                FUN_1008664f(
-                    (param_5 as u32).wrapping_add(DAT_101686f0),
-                    DAT_100af0b4 as *mut i32,
+                mech_trace::cr!(
+                    "10008fb3",
+                    "10056fc4",
+                    FUN_10056fc4(pi_var1, p_var2 as i32, 0, param_2, param_3)
+                );
+                mech_trace::cr!(
+                    "10008fb3",
+                    "1008664f",
+                    FUN_1008664f(
+                        (param_5 as u32).wrapping_add(mech_trace::gr!(
+                            "10008fb3",
+                            "101686f0",
+                            DAT_101686f0
+                        )),
+                        mech_trace::gr!("10008fb3", "100af0b4", DAT_100af0b4) as *mut i32,
+                    )
                 );
             }
         }

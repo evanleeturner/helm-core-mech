@@ -23,6 +23,9 @@ pub unsafe extern "C" fn FUN_10016b61(
     param_5: i32,
     param_6: i32,
 ) {
+    mech_trace::enter!(
+        "10016b61", param_1, param_2, param_3, param_4, param_5, param_6
+    );
     let i_var1 = param_4 / 2;
     let i_var2 = param_3.wrapping_sub(param_5);
     if 0 < param_5 {
@@ -31,14 +34,18 @@ pub unsafe extern "C" fn FUN_10016b61(
         while l < half {
             // SAFETY: calls the game's own function with the original's arguments.
             unsafe {
-                FUN_10056489(
-                    param_1,
-                    l.wrapping_add(param_2),
-                    param_3,
-                    l.wrapping_add(param_2),
-                    i_var2,
-                    0,
-                    param_6.wrapping_sub(1),
+                mech_trace::cr!(
+                    "10016b61",
+                    "10056489",
+                    FUN_10056489(
+                        param_1,
+                        l.wrapping_add(param_2),
+                        param_3,
+                        l.wrapping_add(param_2),
+                        i_var2,
+                        0,
+                        param_6.wrapping_sub(1),
+                    )
                 );
             }
             l = l.wrapping_add(1);
@@ -47,14 +54,18 @@ pub unsafe extern "C" fn FUN_10016b61(
         while l < i_var1 {
             // SAFETY: calls the game's own function with the original's arguments.
             unsafe {
-                FUN_10056489(
-                    param_1,
-                    l.wrapping_add(param_2),
-                    param_3,
-                    l.wrapping_add(param_2),
-                    i_var2,
-                    0,
-                    param_6,
+                mech_trace::cr!(
+                    "10016b61",
+                    "10056489",
+                    FUN_10056489(
+                        param_1,
+                        l.wrapping_add(param_2),
+                        param_3,
+                        l.wrapping_add(param_2),
+                        i_var2,
+                        0,
+                        param_6,
+                    )
                 );
             }
             l = l.wrapping_add(1);
@@ -64,14 +75,18 @@ pub unsafe extern "C" fn FUN_10016b61(
         while l < i_var3 {
             // SAFETY: calls the game's own function with the original's arguments.
             unsafe {
-                FUN_10056489(
-                    param_1,
-                    l.wrapping_add(param_2),
-                    param_3,
-                    l.wrapping_add(param_2),
-                    i_var2,
-                    0,
-                    param_6.wrapping_sub(1),
+                mech_trace::cr!(
+                    "10016b61",
+                    "10056489",
+                    FUN_10056489(
+                        param_1,
+                        l.wrapping_add(param_2),
+                        param_3,
+                        l.wrapping_add(param_2),
+                        i_var2,
+                        0,
+                        param_6.wrapping_sub(1),
+                    )
                 );
             }
             l = l.wrapping_add(1);
@@ -80,14 +95,18 @@ pub unsafe extern "C" fn FUN_10016b61(
         while l < param_4 {
             // SAFETY: calls the game's own function with the original's arguments.
             unsafe {
-                FUN_10056489(
-                    param_1,
-                    l.wrapping_add(param_2),
-                    param_3,
-                    l.wrapping_add(param_2),
-                    i_var2,
-                    0,
-                    param_6.wrapping_sub(2),
+                mech_trace::cr!(
+                    "10016b61",
+                    "10056489",
+                    FUN_10056489(
+                        param_1,
+                        l.wrapping_add(param_2),
+                        param_3,
+                        l.wrapping_add(param_2),
+                        i_var2,
+                        0,
+                        param_6.wrapping_sub(2),
+                    )
                 );
             }
             l = l.wrapping_add(1);

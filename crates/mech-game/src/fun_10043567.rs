@@ -11,30 +11,41 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10043567(param_1: *mut i32, param_2: u16) -> u8 {
+    mech_trace::enter!("10043567", param_1, param_2);
     // SAFETY: the callees are the game's own; param_1 points at the game's
     // object, read and written at the same offsets as the original.
     unsafe {
         FUN_1002950f(param_1 as i32, param_2 as i16);
-        let u_var1 = FUN_10044054(param_1);
+        let u_var1 = mech_trace::cr!("10043567", "10044054", FUN_10044054(param_1));
         let mut skip = false;
         if u_var1 != 0 {
-            let i_var2 = FUN_10044c17(param_2);
-            if i_var2 == param_1.add(0x77).read_unaligned() {
+            let i_var2 = mech_trace::cr!("10043567", "10044c17", FUN_10044c17(param_2));
+            if i_var2 == mech_trace::rd!("10043567", param_1.add(0x77), read_unaligned) {
                 skip = true;
             }
         }
         if !skip {
             FUN_100297b4(param_1 as i32);
-            let u_var3 = FUN_100295f4(param_1, 0);
-            let p = param_1.add(0x13).read_unaligned();
+            let u_var3 = mech_trace::cr!("10043567", "100295f4", FUN_100295f4(param_1, 0));
+            let p = mech_trace::rd!("10043567", param_1.add(0x13), read_unaligned);
             (p as usize).wrapping_add(8) as *mut i32;
-            ((p as u32).wrapping_add(8) as *mut i32).write_unaligned(u_var3);
+            mech_trace::wr!(
+                "10043567",
+                ((p as u32).wrapping_add(8) as *mut i32),
+                write_unaligned,
+                u_var3
+            );
         }
-        let i_var2 = param_1.add(0x31).read_unaligned();
+        let i_var2 = mech_trace::rd!("10043567", param_1.add(0x31), read_unaligned);
         if i_var2 < 0x7d1 {
-            let p = param_1.add(0x13).read_unaligned();
-            ((p as u32).wrapping_add(0x44) as *mut u8).write(1);
+            let p = mech_trace::rd!("10043567", param_1.add(0x13), read_unaligned);
+            mech_trace::wr!(
+                "10043567",
+                ((p as u32).wrapping_add(0x44) as *mut u8),
+                write,
+                1
+            );
         }
-        (i_var2 < 0x7d1) as u8
+        mech_trace::rt!("10043567", (i_var2 < 0x7d1) as u8)
     }
 }

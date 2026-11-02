@@ -9,12 +9,15 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10027c05(param_1: *mut i32) {
+    mech_trace::enter!("10027c05", param_1);
     // SAFETY: param_1 points at the caller's structure; the callees are the
     // game's own and receive the pointer as an integer, as the original does.
     unsafe {
-        if param_1.read_unaligned() == 8 || param_1.read_unaligned() == 2 {
+        if mech_trace::rd!("10027c05", param_1, read_unaligned) == 8
+            || mech_trace::rd!("10027c05", param_1, read_unaligned) == 2
+        {
             FUN_10027c4c(param_1 as i32);
-            if param_1.read_unaligned() == 8 {
+            if mech_trace::rd!("10027c05", param_1, read_unaligned) == 8 {
                 FUN_10027e20(param_1 as i32);
             }
         }

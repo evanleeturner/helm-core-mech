@@ -9,9 +9,10 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1003689b() {
+    mech_trace::enter!("1003689b");
     // SAFETY: the callees are the game's own functions, called in the original order.
     unsafe {
-        let i_var1 = FUN_10036142(4);
+        let i_var1 = mech_trace::cr!("1003689b", "10036142", FUN_10036142(4));
         if i_var1 != 0 {
             FUN_1002ae60(4, 5);
         }

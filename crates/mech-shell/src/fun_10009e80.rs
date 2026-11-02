@@ -37,12 +37,18 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10009e80(str: *mut i8) -> *mut u8 {
+    mech_trace::enter!("10009e80", str);
     let mut local_20: [i8; 32] = [0; 32];
     // SAFETY: the globals and callees are the game's own; str points at the
     // caller's NUL-terminated string; local_20 is written where the original does.
     unsafe {
-        if __strnicmp(str.byte_add(5), (&raw mut DAT_1008cfec).cast::<i8>(), 3) == 0 {
-            let this = DAT_100a6738;
+        if mech_trace::cr!(
+            "10009e80",
+            "__strnicmp",
+            __strnicmp(str.byte_add(5), (&raw mut DAT_1008cfec).cast::<i8>(), 3)
+        ) == 0
+        {
+            let this = mech_trace::gr!("10009e80", "100a6738", DAT_100a6738);
             let p3 = &raw mut DAT_1008d004;
             let ret: *mut i8;
             asm!(
@@ -58,14 +64,14 @@ pub unsafe extern "C" fn FUN_10009e80(str: *mut i8) -> *mut u8 {
                 lateout("eax") ret,
                 clobber_abi("C"),
             );
-            return ret.cast::<u8>();
+            return mech_trace::rt!("10009e80", ret.cast::<u8>());
         }
 
         // copy prefix including terminator
         let prefix = (&raw mut DAT_1008cff0).cast::<i8>();
         let mut i = 0usize;
         loop {
-            let c = *prefix.add(i);
+            let c = mech_trace::dr!("10009e80", prefix.add(i));
             local_20[i] = c;
             i += 1;
             if c == 0 {
@@ -80,7 +86,7 @@ pub unsafe extern "C" fn FUN_10009e80(str: *mut i8) -> *mut u8 {
         }
         let mut j = 0usize;
         loop {
-            let c = *str.add(j);
+            let c = mech_trace::dr!("10009e80", str.add(j));
             local_20[end + j] = c;
             j += 1;
             if c == 0 {
@@ -88,23 +94,40 @@ pub unsafe extern "C" fn FUN_10009e80(str: *mut i8) -> *mut u8 {
             }
         }
 
-        if _strchr(str, 0x2e).is_null() {
+        if mech_trace::cr!("10009e80", "_strchr", _strchr(str, 0x2e)).is_null() {
             let mut e = 0usize;
             while local_20[e] != 0 {
                 e += 1;
             }
             let p = local_20.as_mut_ptr().add(e);
-            p.cast::<u32>().write_unaligned(DAT_1008cff8);
-            *p.add(4) = DAT_1008cffc;
+            mech_trace::wr!(
+                "10009e80",
+                p.cast::<u32>(),
+                write_unaligned,
+                mech_trace::gr!("10009e80", "1008cff8", DAT_1008cff8)
+            );
+            mech_trace::dw!(
+                "10009e80",
+                p.add(4),
+                mech_trace::gr!("10009e80", "1008cffc", DAT_1008cffc)
+            );
         }
 
-        let file = FID_conflict___wfopen(local_20.as_ptr(), (&raw mut DAT_1008d000).cast::<i8>());
+        let file = mech_trace::cr!(
+            "10009e80",
+            "FID_conflict___wfopen",
+            FID_conflict___wfopen(local_20.as_ptr(), (&raw mut DAT_1008d000).cast::<i8>())
+        );
         if file.is_null() {
-            return core::ptr::null_mut();
+            return mech_trace::rt!("10009e80", core::ptr::null_mut());
         }
         let buf = (&raw mut DAT_100ae1e0).cast::<u8>();
-        _fread(buf.cast::<core::ffi::c_void>(), 1, 0x800, file);
-        _fclose(file);
-        buf
+        mech_trace::cr!(
+            "10009e80",
+            "_fread",
+            _fread(buf.cast::<core::ffi::c_void>(), 1, 0x800, file)
+        );
+        mech_trace::cr!("10009e80", "_fclose", _fclose(file));
+        mech_trace::rt!("10009e80", buf)
     }
 }

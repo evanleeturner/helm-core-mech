@@ -8,6 +8,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1000a3a0(param_1: i32) -> i32 {
+    mech_trace::enter!("1000a3a0", param_1);
     let mut i_var1: i32 = 0;
     let i_target: i32 =
         ((((param_1 as u32).wrapping_mul(4)).wrapping_add(400)).wrapping_mul(0x19) as i32) / 100;
@@ -18,9 +19,9 @@ pub unsafe extern "C" fn FUN_1000a3a0(param_1: i32) -> i32 {
         let end = base.add(25);
         let mut pi_var2 = base;
         loop {
-            let v = pi_var2.read_unaligned();
+            let v = mech_trace::rd!("1000a3a0", pi_var2, read_unaligned);
             if v == -1 {
-                return i_var1;
+                return mech_trace::rt!("1000a3a0", i_var1);
             }
             if v / 100 == i_target {
                 i_var1 = i_var1.wrapping_add(1);
@@ -31,5 +32,5 @@ pub unsafe extern "C" fn FUN_1000a3a0(param_1: i32) -> i32 {
             }
         }
     }
-    i_var1
+    mech_trace::rt!("1000a3a0", i_var1)
 }

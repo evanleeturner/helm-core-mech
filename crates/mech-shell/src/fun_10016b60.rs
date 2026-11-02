@@ -15,20 +15,25 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10016b60(param_1: i32) {
+    mech_trace::enter!("10016b60", param_1);
     // SAFETY: the globals and the callee are the game's own memory and code;
     // the string is the game's array at its address.
     unsafe {
-        let stashed = DAT_1008ee2c;
-        DAT_1008edf4 = param_1 as u32;
+        let stashed = mech_trace::gr!("10016b60", "1008ee2c", DAT_1008ee2c);
+        mech_trace::gw!("10016b60", "1008edf4", DAT_1008edf4, param_1 as u32);
         if param_1 == 0 {
-            FUN_100640a0(&raw mut DAT_1008f110 as *mut i8);
+            mech_trace::cr!(
+                "10016b60",
+                "100640a0",
+                FUN_100640a0(&raw mut DAT_1008f110 as *mut i8)
+            );
             return;
         }
-        if DAT_1008ee2c != 0 {
-            DAT_1008ee2c = 0;
-            DAT_1008edf4 = stashed;
+        if mech_trace::gr!("10016b60", "1008ee2c", DAT_1008ee2c) != 0 {
+            mech_trace::gw!("10016b60", "1008ee2c", DAT_1008ee2c, 0);
+            mech_trace::gw!("10016b60", "1008edf4", DAT_1008edf4, stashed);
             return;
         }
-        DAT_1008edf4 = 0;
+        mech_trace::gw!("10016b60", "1008edf4", DAT_1008edf4, 0);
     }
 }

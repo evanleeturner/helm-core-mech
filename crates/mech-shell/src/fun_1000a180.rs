@@ -11,6 +11,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1000a180(param_1: i32) -> *mut u32 {
+    mech_trace::enter!("1000a180", param_1);
     let i_var2: i32 = param_1 / 100;
     let mut local_14: *mut u32 = i_var2 as usize as *mut u32;
     let i_var4: i32 = param_1 % 100;
@@ -23,7 +24,7 @@ pub unsafe extern "C" fn FUN_1000a180(param_1: i32) -> *mut u32 {
             loop {
                 let mut local_c: i32 = 0xc;
                 loop {
-                    let mut i_var6: i32 = pi_var5.read_unaligned();
+                    let mut i_var6: i32 = mech_trace::rd!("1000a180", pi_var5, read_unaligned);
                     if param_1 == i_var6 {
                         i_var6 = 0;
                     } else if 0 < i_var6 && (i_var6 < 7000 || 9999 < i_var6) {
@@ -39,7 +40,7 @@ pub unsafe extern "C" fn FUN_1000a180(param_1: i32) -> *mut u32 {
                             }
                         }
                     }
-                    pi_var5.write_unaligned(i_var6);
+                    mech_trace::wr!("1000a180", pi_var5, write_unaligned, i_var6);
                     pi_var5 = pi_var5.wrapping_add(1);
                     local_c = local_c.wrapping_sub(1);
                     if local_c == 0 {
@@ -56,17 +57,28 @@ pub unsafe extern "C" fn FUN_1000a180(param_1: i32) -> *mut u32 {
             pi_var5 = pi_var3;
             let end: *mut i32 = (&raw mut DAT_10083c70) as *mut i32;
             loop {
-                let mut i_var6: i32 = pi_var3.read_unaligned();
+                let mut i_var6: i32 = mech_trace::rd!("1000a180", pi_var3, read_unaligned);
                 if param_1 == i_var6 {
                     i_var6 = -1;
-                    DAT_100839fc = DAT_100839fc.wrapping_sub(1);
+                    mech_trace::gw!(
+                        "1000a180",
+                        "100839fc",
+                        DAT_100839fc,
+                        mech_trace::gr!("1000a180", "100839fc", DAT_100839fc).wrapping_sub(1)
+                    );
                 } else if 0 < i_var6 && (i_var6 < 7000 || 9999 < i_var6) {
                     if i_var6 / 100 == i_var2 && i_var4 < i_var6 % 100 {
                         i_var6 = i_var6.wrapping_sub(1);
                     } else if param_1 < 7000 && 9999 < i_var6 {
                         if i_var6.wrapping_sub(10000) / 100 == param_1 {
                             i_var6 = -1;
-                            DAT_100839fc = DAT_100839fc.wrapping_sub(1);
+                            mech_trace::gw!(
+                                "1000a180",
+                                "100839fc",
+                                DAT_100839fc,
+                                mech_trace::gr!("1000a180", "100839fc", DAT_100839fc)
+                                    .wrapping_sub(1)
+                            );
                         } else if i_var6.wrapping_sub(10000) / 10000 == i_var2
                             && i_var4 < (i_var6 / 100) % 100
                         {
@@ -74,14 +86,15 @@ pub unsafe extern "C" fn FUN_1000a180(param_1: i32) -> *mut u32 {
                         }
                     }
                 }
-                pi_var3.write_unaligned(i_var6);
+                mech_trace::wr!("1000a180", pi_var3, write_unaligned, i_var6);
                 let mut pi_var7: *mut i32 = pi_var5;
                 if i_var6 != -1 {
-                    let i_var1: i32 = pi_var3.wrapping_add(1).read_unaligned();
-                    pi_var5.write_unaligned(i_var6);
+                    let i_var1: i32 =
+                        mech_trace::rd!("1000a180", pi_var3.wrapping_add(1), read_unaligned);
+                    mech_trace::wr!("1000a180", pi_var5, write_unaligned, i_var6);
                     pi_var7 = pi_var5.wrapping_add(2);
                     count = count.wrapping_add(1);
-                    pi_var5.wrapping_add(1).write_unaligned(i_var1);
+                    mech_trace::wr!("1000a180", pi_var5.wrapping_add(1), write_unaligned, i_var1);
                 }
                 pi_var3 = pi_var3.wrapping_add(2);
                 pi_var5 = pi_var7;
@@ -95,7 +108,7 @@ pub unsafe extern "C" fn FUN_1000a180(param_1: i32) -> *mut u32 {
                     .wrapping_byte_add((count as usize).wrapping_mul(2))
                     as *mut u32;
                 loop {
-                    p.write_unaligned(0xffff_ffff);
+                    mech_trace::wr!("1000a180", p, write_unaligned, 0xffff_ffff);
                     p = p.wrapping_add(2);
                     local_14 = p;
                     if !(p < end as *mut u32) {
@@ -105,5 +118,5 @@ pub unsafe extern "C" fn FUN_1000a180(param_1: i32) -> *mut u32 {
             }
         }
     }
-    local_14
+    mech_trace::rt!("1000a180", local_14)
 }

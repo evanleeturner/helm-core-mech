@@ -17,6 +17,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1006b24e(param_1: i32) {
+    mech_trace::enter!("1006b24e", param_1);
     let local_8: i32 = if param_1 == 0 { 0x10 } else { 0x11 };
     // SAFETY: the globals and callees are the game's own; the table at
     // DAT_100f3120 is read at the same offset the original uses.
@@ -25,14 +26,25 @@ pub unsafe extern "C" fn FUN_1006b24e(param_1: i32) {
             .cast::<u8>()
             .byte_add(local_8.wrapping_mul(4) as usize)
             .cast::<u32>();
-        let puv1 = FUN_1008668b(
-            DAT_100af17c as i32,
-            p.read_unaligned(),
-            DAT_100af0c8 as usize as *mut i32,
+        let puv1 = mech_trace::cr!(
+            "1006b24e",
+            "1008668b",
+            FUN_1008668b(
+                mech_trace::gr!("1006b24e", "100af17c", DAT_100af17c) as i32,
+                mech_trace::rd!("1006b24e", p, read_unaligned),
+                mech_trace::gr!("1006b24e", "100af0c8", DAT_100af0c8) as usize as *mut i32,
+            )
         );
         if !puv1.is_null() {
-            FUN_1008664f(p.read_unaligned(), DAT_100af0c8 as usize as *mut i32);
-            FUN_10060563(local_8);
+            mech_trace::cr!(
+                "1006b24e",
+                "1008664f",
+                FUN_1008664f(
+                    mech_trace::rd!("1006b24e", p, read_unaligned),
+                    mech_trace::gr!("1006b24e", "100af0c8", DAT_100af0c8) as usize as *mut i32
+                )
+            );
+            mech_trace::cr!("1006b24e", "10060563", FUN_10060563(local_8));
         }
     }
 }

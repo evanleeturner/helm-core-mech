@@ -13,6 +13,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10007f02(param_1: i32) {
+    mech_trace::enter!("10007f02", param_1);
     if -1 < param_1 && param_1 < 3 {
         // SAFETY: the global and the callee are the game's own; the offset
         // stays within the three-entry table the original indexes.

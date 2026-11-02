@@ -3,6 +3,7 @@
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_100447bf(param_1: i32, limit: i32) -> i32 {
+    mech_trace::enter!("100447bf", param_1, limit);
     let mut param_1 = param_1;
     if limit < param_1 {
         param_1 = limit;
@@ -11,5 +12,5 @@ pub unsafe extern "C" fn FUN_100447bf(param_1: i32, limit: i32) -> i32 {
     {
         param_1 = (limit as u32).wrapping_neg() as i32;
     }
-    param_1
+    mech_trace::rt!("100447bf", param_1)
 }

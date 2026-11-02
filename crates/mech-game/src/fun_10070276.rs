@@ -32,6 +32,7 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10070276(param_1: u32, param_2: u32, param_3: u32) {
+    mech_trace::enter!("10070276", param_1, param_2, param_3);
     let mut param_1 = param_1;
     let mut param_2 = param_2;
     let mut param_3 = param_3;
@@ -50,23 +51,34 @@ pub unsafe extern "C" fn FUN_10070276(param_1: u32, param_2: u32, param_3: u32) 
         unsafe {
             match param_1 {
                 0x100 | 0x104 => {
-                    FUN_100704a0(param_2, param_3, 1);
+                    mech_trace::cr!("10070276", "100704a0", FUN_100704a0(param_2, param_3, 1));
                 }
                 0x101 | 0x105 => {
-                    FUN_10070381(param_2);
-                    FUN_100704a0(param_2, param_3, 0);
+                    mech_trace::cr!("10070276", "10070381", FUN_10070381(param_2));
+                    mech_trace::cr!("10070276", "100704a0", FUN_100704a0(param_2, param_3, 0));
                 }
                 _ => {}
             }
             if 0x103 < param_1 {
-                DefWindowProcA(msg.hwnd, msg.message, msg.w_param, msg.l_param);
+                mech_trace::cr!(
+                    "10070276",
+                    "DefWindowProcA",
+                    DefWindowProcA(msg.hwnd, msg.message, msg.w_param, msg.l_param)
+                );
             }
-            let message_available =
-                PeekMessageA(&raw mut msg, core::ptr::null_mut(), 0x100, 0x108, 1);
+            let message_available = mech_trace::cr!(
+                "10070276",
+                "PeekMessageA",
+                PeekMessageA(&raw mut msg, core::ptr::null_mut(), 0x100, 0x108, 1)
+            );
             if message_available == 0 {
                 local_8 = 1;
             } else {
-                TranslateMessage(&raw const msg);
+                mech_trace::cr!(
+                    "10070276",
+                    "TranslateMessage",
+                    TranslateMessage(&raw const msg)
+                );
                 param_1 = msg.message;
                 param_2 = msg.w_param;
                 param_3 = msg.l_param as u32;

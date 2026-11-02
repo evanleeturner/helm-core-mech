@@ -15,24 +15,34 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1007cde0() -> *mut u32 {
+    mech_trace::enter!("1007cde0");
     // SAFETY: the globals and the callee are the game's own; the table and
     // pool offsets are read and used as the original does.
     unsafe {
         let mut local_8: *mut u32 = core::ptr::null_mut();
-        if -1 < (DAT_100c96b8 as i32) {
-            let idx = DAT_100c96b8 as i32;
-            let entry = (&raw mut DAT_100c9ac0)
-                .cast::<u8>()
-                .byte_offset((idx.wrapping_mul(4)) as isize)
-                .cast::<i32>()
-                .read_unaligned();
+        if -1 < (mech_trace::gr!("1007cde0", "100c96b8", DAT_100c96b8) as i32) {
+            let idx = mech_trace::gr!("1007cde0", "100c96b8", DAT_100c96b8) as i32;
+            let entry = mech_trace::rd!(
+                "1007cde0",
+                (&raw mut DAT_100c9ac0)
+                    .cast::<u8>()
+                    .byte_offset((idx.wrapping_mul(4)) as isize)
+                    .cast::<i32>(),
+                read_unaligned
+            );
             local_8 = (&raw mut DAT_100c9ed0)
                 .cast::<u8>()
                 .byte_offset(entry.wrapping_mul(0x40) as isize)
                 .cast::<u32>();
-            FUN_1007cc00(local_8);
-            DAT_100c96b8 = (DAT_100c96b8 as i32).wrapping_add(-1) as u32;
+            mech_trace::cr!("1007cde0", "1007cc00", FUN_1007cc00(local_8));
+            mech_trace::gw!(
+                "1007cde0",
+                "100c96b8",
+                DAT_100c96b8,
+                (mech_trace::gr!("1007cde0", "100c96b8", DAT_100c96b8) as i32).wrapping_add(-1)
+                    as u32
+            );
         }
-        local_8
+        mech_trace::rt!("1007cde0", local_8)
     }
 }

@@ -25,34 +25,43 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10007c2b() {
+    mech_trace::enter!("10007c2b");
     // SAFETY: the globals and the callee are the game's own; arguments
     // match the original call.
     unsafe {
-        if (DAT_100b3c58 & 2) == 0 {
-            FUN_10002ba7(
-                0,
-                0,
-                0x4f,
-                core::ptr::null_mut(),
-                100,
-                0x10000,
-                0x40,
-                0x2b11,
-                -1,
-                0x250,
+        if (mech_trace::gr!("10007c2b", "100b3c58", DAT_100b3c58) & 2) == 0 {
+            mech_trace::cr!(
+                "10007c2b",
+                "10002ba7",
+                FUN_10002ba7(
+                    0,
+                    0,
+                    0x4f,
+                    core::ptr::null_mut(),
+                    100,
+                    0x10000,
+                    0x40,
+                    0x2b11,
+                    -1,
+                    0x250,
+                )
             );
         } else {
-            FUN_10002ba7(
-                0,
-                0,
-                0x31,
-                core::ptr::null_mut(),
-                100,
-                DAT_100b3c50 as i32,
-                0x40,
-                0x2b11,
-                -1,
-                0x250,
+            mech_trace::cr!(
+                "10007c2b",
+                "10002ba7",
+                FUN_10002ba7(
+                    0,
+                    0,
+                    0x31,
+                    core::ptr::null_mut(),
+                    100,
+                    mech_trace::gr!("10007c2b", "100b3c50", DAT_100b3c50) as i32,
+                    0x40,
+                    0x2b11,
+                    -1,
+                    0x250,
+                )
             );
         }
     }

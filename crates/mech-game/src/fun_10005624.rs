@@ -37,27 +37,27 @@ unsafe extern "C" {
 
 unsafe fn l32(a: i32) -> i32 {
     // SAFETY: the address is a game structure field.
-    unsafe { (a as *const i32).read_unaligned() }
+    unsafe { mech_trace::rd!("10005624", (a as *const i32), read_unaligned) }
 }
 
 unsafe fn l16s(a: i32) -> i32 {
     // SAFETY: the address is a game structure field.
-    unsafe { (a as *const i16).read_unaligned() as i32 }
+    unsafe { mech_trace::rd!("10005624", (a as *const i16), read_unaligned) as i32 }
 }
 
 unsafe fn l16u(a: i32) -> u32 {
     // SAFETY: the address is a game structure field.
-    unsafe { (a as *const u16).read_unaligned() as u32 }
+    unsafe { mech_trace::rd!("10005624", (a as *const u16), read_unaligned) as u32 }
 }
 
 unsafe fn s32(a: i32, v: i32) {
     // SAFETY: the address is a game structure field.
-    unsafe { (a as *mut i32).write_unaligned(v) }
+    unsafe { mech_trace::wr!("10005624", (a as *mut i32), write_unaligned, v) }
 }
 
 unsafe fn s16(a: i32, v: i32) {
     // SAFETY: the address is a game structure field.
-    unsafe { (a as *mut i16).write_unaligned(v as i16) }
+    unsafe { mech_trace::wr!("10005624", (a as *mut i16), write_unaligned, v as i16) }
 }
 
 fn pw(b: i32, k: i32) -> i32 {
@@ -66,7 +66,10 @@ fn pw(b: i32, k: i32) -> i32 {
 
 unsafe fn me(b: i32) -> bool {
     // SAFETY: param_2[0] points at a game object; the global is the game's own.
-    unsafe { (l32(l32(b).wrapping_add(4)) as u32) == DAT_100adf38 }
+    unsafe {
+        (l32(l32(b).wrapping_add(4)) as u32)
+            == mech_trace::gr!("10005624", "100adf38", DAT_100adf38)
+    }
 }
 
 unsafe fn snd(b: i32, param_5: i32, id: i32) {
@@ -74,9 +77,13 @@ unsafe fn snd(b: i32, param_5: i32, id: i32) {
     unsafe {
         if param_5 == 0 && me(b) {
             if l32(pw(b, 0xf5)) == 2 {
-                FUN_10003742(0xe1, 100, 0x40, 5, 0x50);
+                mech_trace::cr!(
+                    "10005624",
+                    "10003742",
+                    FUN_10003742(0xe1, 100, 0x40, 5, 0x50)
+                );
             }
-            FUN_10008323(id);
+            mech_trace::cr!("10005624", "10008323", FUN_10008323(id));
         }
     }
 }
@@ -100,6 +107,7 @@ pub unsafe extern "C" fn FUN_10005624(
     param_4: i32,
     param_5: i32,
 ) {
+    mech_trace::enter!("10005624", param_1, param_2, param_3, param_4, param_5);
     let b = param_2 as i32;
     // SAFETY: param_2 points at the game's own structures; offsets follow the original.
     unsafe {
@@ -123,59 +131,63 @@ pub unsafe extern "C" fn FUN_10005624(
                     if param_5 == 0 && me(b) && l32(q) != 0 {
                         match u1 {
                             0..=3 => {
-                                FUN_10008323(0x16);
+                                mech_trace::cr!("10005624", "10008323", FUN_10008323(0x16));
                             }
                             4..=6 => {
-                                FUN_10008323(0x17);
+                                mech_trace::cr!("10005624", "10008323", FUN_10008323(0x17));
                             }
                             7..=9 => {
-                                FUN_10008323(0x18);
+                                mech_trace::cr!("10005624", "10008323", FUN_10008323(0x18));
                             }
                             10 => {
-                                FUN_10008323(0x19);
+                                mech_trace::cr!("10005624", "10008323", FUN_10008323(0x19));
                             }
                             0xb => {
-                                FUN_10008323(0x1a);
+                                mech_trace::cr!("10005624", "10008323", FUN_10008323(0x1a));
                             }
                             0xc..=0xf => {
-                                FUN_10008323(0x1b);
+                                mech_trace::cr!("10005624", "10008323", FUN_10008323(0x1b));
                             }
                             0x10..=0x13 => {
-                                FUN_10008323(0x1c);
+                                mech_trace::cr!("10005624", "10008323", FUN_10008323(0x1c));
                             }
                             0x14 => {
-                                FUN_10008323(0);
+                                mech_trace::cr!("10005624", "10008323", FUN_10008323(0));
                             }
                             0x15 => {
-                                FUN_10008323(0x1d);
+                                mech_trace::cr!("10005624", "10008323", FUN_10008323(0x1d));
                             }
                             0x16 => {
-                                FUN_10008323(0x1e);
+                                mech_trace::cr!("10005624", "10008323", FUN_10008323(0x1e));
                             }
                             0x17 => {
-                                FUN_10008323(0x1f);
+                                mech_trace::cr!("10005624", "10008323", FUN_10008323(0x1f));
                             }
                             0x18 => {
-                                FUN_10008323(0x20);
+                                mech_trace::cr!("10005624", "10008323", FUN_10008323(0x20));
                             }
                             0x19 => {
-                                FUN_10008323(0x21);
+                                mech_trace::cr!("10005624", "10008323", FUN_10008323(0x21));
                             }
                             0x1a => {
-                                FUN_10008323(0x22);
+                                mech_trace::cr!("10005624", "10008323", FUN_10008323(0x22));
                             }
                             0x1b => {
-                                FUN_10008323(0x23);
+                                mech_trace::cr!("10005624", "10008323", FUN_10008323(0x23));
                             }
                             0x1d => {
-                                FUN_10008323(3);
+                                mech_trace::cr!("10005624", "10008323", FUN_10008323(3));
                             }
                             _ => {}
                         }
                         if l32(pw(b, 0xf5)) == 2 {
-                            FUN_10003742(0xe1, 100, 0x40, 5, 0x50);
+                            mech_trace::cr!(
+                                "10005624",
+                                "10003742",
+                                FUN_10003742(0xe1, 100, 0x40, 5, 0x50)
+                            );
                         }
-                        FUN_10008323(0);
+                        mech_trace::cr!("10005624", "10008323", FUN_10008323(0));
                     }
                     s32(q, 0);
                     s32(q.wrapping_add(8), -1);
@@ -251,32 +263,63 @@ pub unsafe extern "C" fn FUN_10005624(
                         let mut x38: u32 = 0;
                         if me(b) {
                             if l32(pw(b, 0xf5)) == 2 {
-                                FUN_10003742(0xe1, 100, 0x40, 5, 0x50);
+                                mech_trace::cr!(
+                                    "10005624",
+                                    "10003742",
+                                    FUN_10003742(0xe1, 100, 0x40, 5, 0x50)
+                                );
                             }
-                            let g = DAT_100aaf68 as i32;
+                            let g = mech_trace::gr!("10005624", "100aaf68", DAT_100aaf68) as i32;
                             x20 = l32(l32(b).wrapping_add(0x50)).wrapping_sub(l32(g)) as u32;
                             x2c =
                                 l32(l32(b).wrapping_add(0x54)).wrapping_sub(l32(g.wrapping_add(4)));
                             x38 = l32(l32(b).wrapping_add(0x58))
                                 .wrapping_sub(l32(g.wrapping_add(8)))
                                 as u32;
-                            DAT_100b3218 = 1;
-                            FUN_100037f0(x20, x2c as u32, x38, 0xcd, DAT_100ab094 as i32);
-                            FUN_10008323(1);
+                            mech_trace::gw!("10005624", "100b3218", DAT_100b3218, 1);
+                            mech_trace::cr!(
+                                "10005624",
+                                "100037f0",
+                                FUN_100037f0(
+                                    x20,
+                                    x2c as u32,
+                                    x38,
+                                    0xcd,
+                                    mech_trace::gr!("10005624", "100ab094", DAT_100ab094) as i32
+                                )
+                            );
+                            mech_trace::cr!("10005624", "10008323", FUN_10008323(1));
                         }
-                        let mut l3c = FUN_10030052(l32(l32(b).wrapping_add(0x40)), param_3);
+                        let mut l3c = mech_trace::cr!(
+                            "10005624",
+                            "10030052",
+                            FUN_10030052(l32(l32(b).wrapping_add(0x40)), param_3)
+                        );
                         if l3c == 0 {
-                            l3c = FUN_10030052(l32(l32(b).wrapping_add(0x40)), 3);
+                            l3c = mech_trace::cr!(
+                                "10005624",
+                                "10030052",
+                                FUN_10030052(l32(l32(b).wrapping_add(0x40)), 3)
+                            );
                         }
                         if l3c != 0 {
                             let p6 = &raw mut x38;
                             let p5 = &raw mut x2c;
                             let p4 = &raw mut x20;
-                            let r = FUN_1002f28d(l3c) as i32;
-                            FUN_1001cac9(r, p4, p5.cast::<u32>(), p6);
-                            FUN_1004aa97(
-                                param_1, 7, x20 as i32, x2c, x38 as i32, x20 as i32, x2c as u32,
-                                x38 as i32,
+                            let r =
+                                mech_trace::cr!("10005624", "1002f28d", FUN_1002f28d(l3c)) as i32;
+                            mech_trace::cr!(
+                                "10005624",
+                                "1001cac9",
+                                FUN_1001cac9(r, p4, p5.cast::<u32>(), p6)
+                            );
+                            mech_trace::cr!(
+                                "10005624",
+                                "1004aa97",
+                                FUN_1004aa97(
+                                    param_1, 7, x20 as i32, x2c, x38 as i32, x20 as i32,
+                                    x2c as u32, x38 as i32,
+                                )
                             );
                         }
                         let a20 = i3.wrapping_add(-0x20);
@@ -296,7 +339,11 @@ pub unsafe extern "C" fn FUN_10005624(
                                 i3.wrapping_add(-0x1c).wrapping_add(param_4.wrapping_mul(2)),
                                 0,
                             );
-                            FUN_10005207(param_1, param_2, param_3);
+                            mech_trace::cr!(
+                                "10005624",
+                                "10005207",
+                                FUN_10005207(param_1, param_2, param_3)
+                            );
                             if (l16u(i3.wrapping_add(-2)) & 0x100) == 0 {
                                 let w = l32(a20) as u32;
                                 let sg = ((w as i32) >> 31) as u32;
@@ -317,14 +364,20 @@ pub unsafe extern "C" fn FUN_10005624(
                                     let a = i2b.wrapping_add(-0x20);
                                     s32(a, l32(a).wrapping_sub(l8));
                                     let i7 = 0;
-                                    let r = FUN_10051f43(l16s(i2b.wrapping_add(-4)));
+                                    let r = mech_trace::cr!(
+                                        "10005624",
+                                        "10051f43",
+                                        FUN_10051f43(l16s(i2b.wrapping_add(-4)))
+                                    );
                                     FUN_10005624(param_1, param_2, l14, r, i7);
                                 }
                             }
                         }
-                        if DAT_100a4104 != 0 && (me(b) || DAT_100aa1ac == 0) {
+                        if mech_trace::gr!("10005624", "100a4104", DAT_100a4104) != 0
+                            && (me(b) || mech_trace::gr!("10005624", "100aa1ac", DAT_100aa1ac) == 0)
+                        {
                             s32(pw(b, 0xf5), 5);
-                            FUN_10004b19(param_1, param_2);
+                            mech_trace::cr!("10005624", "10004b19", FUN_10004b19(param_1, param_2));
                         }
                     }
                     s16(n.wrapping_add(2), 0);
@@ -337,15 +390,15 @@ pub unsafe extern "C" fn FUN_10005624(
             if u1 < 0x1cb7 {
                 if u1 == 0x1cb6 {
                     snd(b, param_5, 0xc);
-                    FUN_1005d650(param_2, 0);
+                    mech_trace::cr!("10005624", "1005d650", FUN_1005d650(param_2, 0));
                 } else if u1 == 0x1c84 {
                     snd(b, param_5, 9);
-                    FUN_1005d650(param_2, 0);
+                    mech_trace::cr!("10005624", "1005d650", FUN_1005d650(param_2, 0));
                 }
             } else if u1 < 0x1d1b {
                 if u1 == 0x1d1a || u1 == 0x1ce8 {
                     snd(b, param_5, 0xc);
-                    FUN_1005d650(param_2, 0);
+                    mech_trace::cr!("10005624", "1005d650", FUN_1005d650(param_2, 0));
                 }
             } else if u1 < 0x1d7f {
                 if u1 == 0x1d7e {
@@ -362,12 +415,12 @@ pub unsafe extern "C" fn FUN_10005624(
                 }
             } else if u1 < 0x1e47 {
                 if u1 == 0x1e46 {
-                    if me(b) || DAT_100aa1ac == 0 {
-                        FUN_10004b19(param_1, param_2);
+                    if me(b) || mech_trace::gr!("10005624", "100aa1ac", DAT_100aa1ac) == 0 {
+                        mech_trace::cr!("10005624", "10004b19", FUN_10004b19(param_1, param_2));
                     }
                 } else if u1 == 0x1e14 {
                     snd(b, param_5, 9);
-                    FUN_1005d650(param_2, 1);
+                    mech_trace::cr!("10005624", "1005d650", FUN_1005d650(param_2, 1));
                 }
             } else if u1 < 0x1eab {
                 if u1 == 0x1eaa {
@@ -384,9 +437,13 @@ pub unsafe extern "C" fn FUN_10005624(
                 if u1 == 8000 {
                     if param_5 == 0 && me(b) && l32(pw(b, 0xf4)) != 0 {
                         if l32(pw(b, 0xf5)) == 2 {
-                            FUN_10003742(0xe1, 100, 0x40, 5, 0x50);
+                            mech_trace::cr!(
+                                "10005624",
+                                "10003742",
+                                FUN_10003742(0xe1, 100, 0x40, 5, 0x50)
+                            );
                         }
-                        FUN_10008323(5);
+                        mech_trace::cr!("10005624", "10008323", FUN_10008323(5));
                     }
                     if l32(pw(b, 0xf4)) < 1 {
                         s32(pw(b, 0xf4), 0);
@@ -395,16 +452,22 @@ pub unsafe extern "C" fn FUN_10005624(
                     }
                 } else if u1 == 0x1edc {
                     snd(b, param_5, 6);
-                    if DAT_100a40cc != 0 && (me(b) || DAT_100aa1ac == 0) {
-                        FUN_10004b19(param_1, param_2);
+                    if mech_trace::gr!("10005624", "100a40cc", DAT_100a40cc) != 0
+                        && (me(b) || mech_trace::gr!("10005624", "100aa1ac", DAT_100aa1ac) == 0)
+                    {
+                        mech_trace::cr!("10005624", "10004b19", FUN_10004b19(param_1, param_2));
                     }
                 }
             } else if u1 == 0x2134 {
                 if param_5 == 0 && me(b) && l32(pw(b, 0xfd)) != 2 {
                     if l32(pw(b, 0xf5)) == 2 {
-                        FUN_10003742(0xe1, 100, 0x40, 5, 0x50);
+                        mech_trace::cr!(
+                            "10005624",
+                            "10003742",
+                            FUN_10003742(0xe1, 100, 0x40, 5, 0x50)
+                        );
                     }
-                    FUN_10008323(4);
+                    mech_trace::cr!("10005624", "10008323", FUN_10008323(4));
                 }
                 if l32(pw(b, 0xfe)) < 1 {
                     s32(pw(b, 0x108), 0);
@@ -420,12 +483,20 @@ pub unsafe extern "C" fn FUN_10005624(
                 }
             } else if u1 == 9000 {
                 if param_5 == 0 {
-                    let r = FUN_10051f43(l16s(i3.wrapping_add(-4)));
+                    let r = mech_trace::cr!(
+                        "10005624",
+                        "10051f43",
+                        FUN_10051f43(l16s(i3.wrapping_add(-4)))
+                    );
                     FUN_10005624(param_1, param_2, param_3, r, 1);
                     return;
                 }
             } else if u1 == 0x251c && param_5 == 0 {
-                let r = FUN_10051f43(l16s(i3.wrapping_add(-4)));
+                let r = mech_trace::cr!(
+                    "10005624",
+                    "10051f43",
+                    FUN_10051f43(l16s(i3.wrapping_add(-4)))
+                );
                 FUN_10005624(param_1, param_2, param_3, r, 1);
                 return;
             }

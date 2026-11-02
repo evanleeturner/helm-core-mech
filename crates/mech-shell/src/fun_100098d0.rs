@@ -29,28 +29,88 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_100098d0(match_value: i32) {
+    mech_trace::enter!("100098d0", match_value);
     // SAFETY: globals, callees and heap records are the game's own; records
     // are freshly allocated with enough bytes for every write, and the row
     // table is walked exactly as the original does.
     unsafe {
-        FUN_100180f0(DAT_100a67b4, 1);
-        FUN_100180f0(DAT_100a67b8, 1);
-        FUN_100180f0(DAT_100a67c8, 1);
-        FUN_100180f0(DAT_100a67c4, 1);
-        FUN_100180f0(DAT_100a67bc, 1);
+        mech_trace::cr!(
+            "100098d0",
+            "100180f0",
+            FUN_100180f0(mech_trace::gr!("100098d0", "100a67b4", DAT_100a67b4), 1)
+        );
+        mech_trace::cr!(
+            "100098d0",
+            "100180f0",
+            FUN_100180f0(mech_trace::gr!("100098d0", "100a67b8", DAT_100a67b8), 1)
+        );
+        mech_trace::cr!(
+            "100098d0",
+            "100180f0",
+            FUN_100180f0(mech_trace::gr!("100098d0", "100a67c8", DAT_100a67c8), 1)
+        );
+        mech_trace::cr!(
+            "100098d0",
+            "100180f0",
+            FUN_100180f0(mech_trace::gr!("100098d0", "100a67c4", DAT_100a67c4), 1)
+        );
+        mech_trace::cr!(
+            "100098d0",
+            "100180f0",
+            FUN_100180f0(mech_trace::gr!("100098d0", "100a67bc", DAT_100a67bc), 1)
+        );
         let mut entry_index: i32 = 0;
         let mut row = (&raw mut DAT_10085194) as *mut i32;
-        FUN_100180f0(DAT_100a67c0, 1);
+        mech_trace::cr!(
+            "100098d0",
+            "100180f0",
+            FUN_100180f0(mech_trace::gr!("100098d0", "100a67c0", DAT_100a67c0), 1)
+        );
         loop {
-            if row.read_unaligned() == match_value {
-                let rec = HeapAlloc(DAT_10098224, 1, 0x1a) as *mut u8;
-                rec.cast::<i32>().write_unaligned(entry_index);
-                rec.byte_add(4).cast::<i32>().write_unaligned(0);
-                rec.byte_add(8).write(0);
-                rec.byte_add(10).cast::<u32>().write_unaligned(0xffff_ffff);
-                rec.byte_add(0xe).cast::<u32>().write_unaligned(0xbdf);
-                rec.byte_add(0x12).cast::<u32>().write_unaligned(100);
-                FUN_10017df0(DAT_100a67b4, rec as u32);
+            if mech_trace::rd!("100098d0", row, read_unaligned) == match_value {
+                let rec = mech_trace::cr!(
+                    "100098d0",
+                    "HeapAlloc",
+                    HeapAlloc(
+                        mech_trace::gr!("100098d0", "10098224", DAT_10098224),
+                        1,
+                        0x1a
+                    )
+                ) as *mut u8;
+                mech_trace::wr!("100098d0", rec.cast::<i32>(), write_unaligned, entry_index);
+                mech_trace::wr!(
+                    "100098d0",
+                    rec.byte_add(4).cast::<i32>(),
+                    write_unaligned,
+                    0
+                );
+                mech_trace::wr!("100098d0", rec.byte_add(8), write, 0);
+                mech_trace::wr!(
+                    "100098d0",
+                    rec.byte_add(10).cast::<u32>(),
+                    write_unaligned,
+                    0xffff_ffff
+                );
+                mech_trace::wr!(
+                    "100098d0",
+                    rec.byte_add(0xe).cast::<u32>(),
+                    write_unaligned,
+                    0xbdf
+                );
+                mech_trace::wr!(
+                    "100098d0",
+                    rec.byte_add(0x12).cast::<u32>(),
+                    write_unaligned,
+                    100
+                );
+                mech_trace::cr!(
+                    "100098d0",
+                    "10017df0",
+                    FUN_10017df0(
+                        mech_trace::gr!("100098d0", "100a67b4", DAT_100a67b4),
+                        rec as u32
+                    )
+                );
             }
             row = row.wrapping_add(0x10);
             entry_index = entry_index.wrapping_add(1);
@@ -61,16 +121,58 @@ pub unsafe extern "C" fn FUN_100098d0(match_value: i32) {
         entry_index = 0;
         row = (&raw mut DAT_10085194) as *mut i32;
         loop {
-            if row.read_unaligned() == match_value && 0 < row.wrapping_sub(1).read_unaligned() {
-                let rec = HeapAlloc(DAT_10098224, 1, 0x1a) as *mut u8;
-                rec.cast::<i32>().write_unaligned(entry_index);
-                rec.byte_add(4).cast::<i32>().write_unaligned(0);
-                rec.byte_add(8).write(1);
-                rec.byte_add(10).cast::<i32>().write_unaligned(entry_index);
-                rec.byte_add(0xe).cast::<u32>().write_unaligned(1);
-                rec.byte_add(0x12).cast::<u32>().write_unaligned(0xbdf);
-                rec.byte_add(0x16).cast::<u32>().write_unaligned(100);
-                FUN_10017df0(DAT_100a67b8, rec as u32);
+            if mech_trace::rd!("100098d0", row, read_unaligned) == match_value
+                && 0 < mech_trace::rd!("100098d0", row.wrapping_sub(1), read_unaligned)
+            {
+                let rec = mech_trace::cr!(
+                    "100098d0",
+                    "HeapAlloc",
+                    HeapAlloc(
+                        mech_trace::gr!("100098d0", "10098224", DAT_10098224),
+                        1,
+                        0x1a
+                    )
+                ) as *mut u8;
+                mech_trace::wr!("100098d0", rec.cast::<i32>(), write_unaligned, entry_index);
+                mech_trace::wr!(
+                    "100098d0",
+                    rec.byte_add(4).cast::<i32>(),
+                    write_unaligned,
+                    0
+                );
+                mech_trace::wr!("100098d0", rec.byte_add(8), write, 1);
+                mech_trace::wr!(
+                    "100098d0",
+                    rec.byte_add(10).cast::<i32>(),
+                    write_unaligned,
+                    entry_index
+                );
+                mech_trace::wr!(
+                    "100098d0",
+                    rec.byte_add(0xe).cast::<u32>(),
+                    write_unaligned,
+                    1
+                );
+                mech_trace::wr!(
+                    "100098d0",
+                    rec.byte_add(0x12).cast::<u32>(),
+                    write_unaligned,
+                    0xbdf
+                );
+                mech_trace::wr!(
+                    "100098d0",
+                    rec.byte_add(0x16).cast::<u32>(),
+                    write_unaligned,
+                    100
+                );
+                mech_trace::cr!(
+                    "100098d0",
+                    "10017df0",
+                    FUN_10017df0(
+                        mech_trace::gr!("100098d0", "100a67b8", DAT_100a67b8),
+                        rec as u32
+                    )
+                );
             }
             row = row.wrapping_add(0x10);
             entry_index = entry_index.wrapping_add(1);
@@ -80,15 +182,50 @@ pub unsafe extern "C" fn FUN_100098d0(match_value: i32) {
         }
         entry_index = 0;
         loop {
-            let rec = HeapAlloc(DAT_10098224, 1, 0x16) as *mut u8;
-            rec.cast::<i32>().write_unaligned(entry_index);
+            let rec = mech_trace::cr!(
+                "100098d0",
+                "HeapAlloc",
+                HeapAlloc(
+                    mech_trace::gr!("100098d0", "10098224", DAT_10098224),
+                    1,
+                    0x16
+                )
+            ) as *mut u8;
+            mech_trace::wr!("100098d0", rec.cast::<i32>(), write_unaligned, entry_index);
             entry_index = entry_index.wrapping_add(1);
-            rec.byte_add(4).cast::<i32>().write_unaligned(0);
-            rec.byte_add(8).write(2);
-            rec.byte_add(10).cast::<u32>().write_unaligned(0);
-            rec.byte_add(0xe).cast::<u32>().write_unaligned(0);
-            rec.byte_add(0x12).cast::<u32>().write_unaligned(0);
-            FUN_10017df0(DAT_100a67b4, rec as u32);
+            mech_trace::wr!(
+                "100098d0",
+                rec.byte_add(4).cast::<i32>(),
+                write_unaligned,
+                0
+            );
+            mech_trace::wr!("100098d0", rec.byte_add(8), write, 2);
+            mech_trace::wr!(
+                "100098d0",
+                rec.byte_add(10).cast::<u32>(),
+                write_unaligned,
+                0
+            );
+            mech_trace::wr!(
+                "100098d0",
+                rec.byte_add(0xe).cast::<u32>(),
+                write_unaligned,
+                0
+            );
+            mech_trace::wr!(
+                "100098d0",
+                rec.byte_add(0x12).cast::<u32>(),
+                write_unaligned,
+                0
+            );
+            mech_trace::cr!(
+                "100098d0",
+                "10017df0",
+                FUN_10017df0(
+                    mech_trace::gr!("100098d0", "100a67b4", DAT_100a67b4),
+                    rec as u32
+                )
+            );
             if !(entry_index < 0xb) {
                 break;
             }

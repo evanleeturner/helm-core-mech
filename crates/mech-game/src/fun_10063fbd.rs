@@ -24,6 +24,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10063fbd(param_1: i32, param_2: *mut i32) {
+    mech_trace::enter!("10063fbd", param_1, param_2);
     let mut local_1c: i32 = 0;
     let mut local_18: i32 = 0;
     let mut local_14: i32 = 0;
@@ -33,25 +34,37 @@ pub unsafe extern "C" fn FUN_10063fbd(param_1: i32, param_2: *mut i32) {
     // SAFETY: the callees and the global are the game's own; the locals
     // outlive the calls and param_1 points at the game's object.
     unsafe {
-        FUN_1006403e(
-            param_1,
-            &raw mut local_8,
-            &raw mut local_c,
-            &raw mut local_10,
+        mech_trace::cr!(
+            "10063fbd",
+            "1006403e",
+            FUN_1006403e(
+                param_1,
+                &raw mut local_8,
+                &raw mut local_c,
+                &raw mut local_10,
+            )
         );
         let p = ((param_1 as usize).wrapping_add(0x44)) as *const i32;
-        FUN_1002f322(
-            p.read_unaligned(),
-            (&raw mut local_14).cast::<u32>(),
-            (&raw mut local_18).cast::<u32>(),
-            (&raw mut local_1c).cast::<u32>(),
+        mech_trace::cr!(
+            "10063fbd",
+            "1002f322",
+            FUN_1002f322(
+                mech_trace::rd!("10063fbd", p, read_unaligned),
+                (&raw mut local_14).cast::<u32>(),
+                (&raw mut local_18).cast::<u32>(),
+                (&raw mut local_1c).cast::<u32>(),
+            )
         );
-        let g = DAT_100ab0a8;
+        let g = mech_trace::gr!("10063fbd", "100ab0a8", DAT_100ab0a8);
         if !g.is_null() {
-            local_18 = local_18.wrapping_add(g.read_unaligned());
+            local_18 = local_18.wrapping_add(mech_trace::rd!("10063fbd", g, read_unaligned));
         }
-        FUN_1002628c(
-            param_2, local_14, local_18, local_1c, local_8, local_c, local_10, 150000,
+        mech_trace::cr!(
+            "10063fbd",
+            "1002628c",
+            FUN_1002628c(
+                param_2, local_14, local_18, local_1c, local_8, local_c, local_10, 150000,
+            )
         );
     }
 }

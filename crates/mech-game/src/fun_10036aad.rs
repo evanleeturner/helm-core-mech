@@ -11,6 +11,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10036aad(param_1: u32, param_2: i32) {
+    mech_trace::enter!("10036aad", param_1, param_2);
     let mut param_1 = param_1;
     // SAFETY: the globals are the game's own memory; the table written is the
     // game's array, indexed where the original indexes it.
@@ -19,14 +20,17 @@ pub unsafe extern "C" fn FUN_10036aad(param_1: u32, param_2: i32) {
         let i_var1: u32;
         if (param_1 & 0x80) == 0 {
             p_var2 = (&raw mut DAT_100ade20).cast::<u32>();
-            i_var1 = DAT_100adf24;
+            i_var1 = mech_trace::gr!("10036aad", "100adf24", DAT_100adf24);
         } else {
             param_1 ^= 0x80;
             p_var2 = (&raw mut DAT_100add20).cast::<u32>();
-            i_var1 = DAT_100adf20;
+            i_var1 = mech_trace::gr!("10036aad", "100adf20", DAT_100adf20);
         }
-        p_var2
-            .add(param_1 as usize)
-            .write_unaligned(i_var1.wrapping_sub(param_2 as u32));
+        mech_trace::wr!(
+            "10036aad",
+            p_var2.add(param_1 as usize),
+            write_unaligned,
+            i_var1.wrapping_sub(param_2 as u32)
+        );
     }
 }

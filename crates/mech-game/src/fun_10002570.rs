@@ -8,6 +8,7 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10002570(param_1: u32, param_2: i32) -> i32 {
+    mech_trace::enter!("10002570", param_1, param_2);
     let hi: u32 = ((((param_1 as i32) >> 0x1f) as u32) << 0x10) | (param_1 >> 0x10);
     let lo: u32 = param_1 << 0x10;
     let dividend: i64 = ((((hi as u64) << 32) | (lo as u64)) as i64);
@@ -49,5 +50,5 @@ pub unsafe extern "C" fn FUN_10002570(param_1: u32, param_2: i32) -> i32 {
             RaiseException(0xC0000094, 0, 0, core::ptr::null());
         }
     }
-    q as i32
+    mech_trace::rt!("10002570", q as i32)
 }

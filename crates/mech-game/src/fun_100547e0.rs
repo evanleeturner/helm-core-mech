@@ -8,6 +8,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_100547e0(param_1: *mut i32, param_2: *mut i32) {
+    mech_trace::enter!("100547e0", param_1, param_2);
     if param_1 < param_2 {
         let mut local_c: *mut i32;
         let mut local_10: *mut i32 = param_2.wrapping_add(8);
@@ -20,7 +21,7 @@ pub unsafe extern "C" fn FUN_100547e0(param_1: *mut i32, param_2: *mut i32) {
                 loop {
                     local_c = pi_var3;
                     pi_var3 = local_c.wrapping_add(8);
-                    let b = FUN_100544ee(param_1, pi_var3);
+                    let b = mech_trace::cr!("100547e0", "100544ee", FUN_100544ee(param_1, pi_var3));
                     pi_var2 = local_10;
                     if b == 0 {
                         break;
@@ -29,7 +30,7 @@ pub unsafe extern "C" fn FUN_100547e0(param_1: *mut i32, param_2: *mut i32) {
                 loop {
                     local_10 = pi_var2;
                     pi_var2 = local_10.wrapping_sub(8);
-                    let b = FUN_100544ee(pi_var2, param_1);
+                    let b = mech_trace::cr!("100547e0", "100544ee", FUN_100544ee(pi_var2, param_1));
                     if b == 0 {
                         break;
                     }
@@ -37,24 +38,44 @@ pub unsafe extern "C" fn FUN_100547e0(param_1: *mut i32, param_2: *mut i32) {
                 if pi_var2 <= pi_var3 {
                     break;
                 }
-                let t = pi_var3.read_unaligned();
-                pi_var3.write_unaligned(pi_var2.read_unaligned());
-                pi_var2.write_unaligned(t);
+                let t = mech_trace::rd!("100547e0", pi_var3, read_unaligned);
+                mech_trace::wr!(
+                    "100547e0",
+                    pi_var3,
+                    write_unaligned,
+                    mech_trace::rd!("100547e0", pi_var2, read_unaligned)
+                );
+                mech_trace::wr!("100547e0", pi_var2, write_unaligned, t);
                 let a = local_c.wrapping_add(9);
                 let b = local_10.wrapping_sub(7);
-                let t = a.read_unaligned();
-                a.write_unaligned(b.read_unaligned());
-                b.write_unaligned(t);
+                let t = mech_trace::rd!("100547e0", a, read_unaligned);
+                mech_trace::wr!(
+                    "100547e0",
+                    a,
+                    write_unaligned,
+                    mech_trace::rd!("100547e0", b, read_unaligned)
+                );
+                mech_trace::wr!("100547e0", b, write_unaligned, t);
                 local_10 = pi_var2;
             }
-            let t = param_1.read_unaligned();
-            param_1.write_unaligned(pi_var2.read_unaligned());
-            pi_var2.write_unaligned(t);
+            let t = mech_trace::rd!("100547e0", param_1, read_unaligned);
+            mech_trace::wr!(
+                "100547e0",
+                param_1,
+                write_unaligned,
+                mech_trace::rd!("100547e0", pi_var2, read_unaligned)
+            );
+            mech_trace::wr!("100547e0", pi_var2, write_unaligned, t);
             let a = param_1.wrapping_add(1);
             let b = local_10.wrapping_sub(7);
-            let t = a.read_unaligned();
-            a.write_unaligned(b.read_unaligned());
-            b.write_unaligned(t);
+            let t = mech_trace::rd!("100547e0", a, read_unaligned);
+            mech_trace::wr!(
+                "100547e0",
+                a,
+                write_unaligned,
+                mech_trace::rd!("100547e0", b, read_unaligned)
+            );
+            mech_trace::wr!("100547e0", b, write_unaligned, t);
             if param_1 < local_10.wrapping_sub(0x10) {
                 FUN_100547e0(param_1, local_10.wrapping_sub(0x10));
             }

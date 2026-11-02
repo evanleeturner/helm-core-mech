@@ -13,12 +13,13 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10036471(param_1: i32) {
+    mech_trace::enter!("10036471", param_1);
     if param_1 < 8 {
         // SAFETY: the global table and the callee are the game's own; the
         // write lands at the same int-scaled offset the original computes.
         unsafe {
             let p = (&raw mut DAT_100adcf8).wrapping_offset(param_1.wrapping_mul(4) as isize);
-            p.write_unaligned(3);
+            mech_trace::wr!("10036471", p, write_unaligned, 3);
             FUN_1002ae60(param_1, 5);
         }
     }

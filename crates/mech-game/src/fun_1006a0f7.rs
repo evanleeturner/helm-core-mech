@@ -15,5 +15,6 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1006a0f7() {
+    mech_trace::enter!("1006a0f7");
     let _ = ();
 }

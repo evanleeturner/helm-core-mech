@@ -22,29 +22,30 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10040b50() {
+    mech_trace::enter!("10040b50");
     // SAFETY: all globals and the table are the game's own memory; the loop
     // writes 44-byte records within the table and copies the string at
     // DAT_1009831c into each, exactly as the original does.
     unsafe {
-        DAT_100982a8 = 0;
-        DAT_100982ac = 0;
-        DAT_100982b0 = 0;
-        DAT_100982b4 = 0;
-        DAT_100982b8 = 0;
-        DAT_100982bc = 0;
-        DAT_100982c0 = 0;
-        DAT_100982c4 = 0;
-        DAT_100982c8 = 0;
+        mech_trace::gw!("10040b50", "100982a8", DAT_100982a8, 0);
+        mech_trace::gw!("10040b50", "100982ac", DAT_100982ac, 0);
+        mech_trace::gw!("10040b50", "100982b0", DAT_100982b0, 0);
+        mech_trace::gw!("10040b50", "100982b4", DAT_100982b4, 0);
+        mech_trace::gw!("10040b50", "100982b8", DAT_100982b8, 0);
+        mech_trace::gw!("10040b50", "100982bc", DAT_100982bc, 0);
+        mech_trace::gw!("10040b50", "100982c0", DAT_100982c0, 0);
+        mech_trace::gw!("10040b50", "100982c4", DAT_100982c4, 0);
+        mech_trace::gw!("10040b50", "100982c8", DAT_100982c8, 0);
         let mut p4 = (&raw mut DAT_100ba010) as *mut u32;
-        DAT_100ba008 = 0;
-        DAT_100ba00c = 0;
-        DAT_100982cc = 0;
-        DAT_100982d0 = 0;
+        mech_trace::gw!("10040b50", "100ba008", DAT_100ba008, 0);
+        mech_trace::gw!("10040b50", "100ba00c", DAT_100ba00c, 0);
+        mech_trace::gw!("10040b50", "100982cc", DAT_100982cc, 0);
+        mech_trace::gw!("10040b50", "100982d0", DAT_100982d0, 0);
         loop {
             let mut n: u32 = 0xffffffff;
-            p4.write_unaligned(0);
-            p4.add(1).write_unaligned(0);
-            p4.add(2).write_unaligned(0xffffffff);
+            mech_trace::wr!("10040b50", p4, write_unaligned, 0);
+            mech_trace::wr!("10040b50", p4.add(1), write_unaligned, 0);
+            mech_trace::wr!("10040b50", p4.add(2), write_unaligned, 0xffffffff);
             let src = (&raw const DAT_1009831c) as *const u8;
             let mut q = src;
             loop {
@@ -52,7 +53,7 @@ pub unsafe extern "stdcall" fn FUN_10040b50() {
                     break;
                 }
                 n = n.wrapping_sub(1);
-                let c = q.read();
+                let c = mech_trace::rd!("10040b50", q, read);
                 q = q.add(1);
                 if c == 0 {
                     break;
@@ -64,14 +65,19 @@ pub unsafe extern "stdcall" fn FUN_10040b50() {
             let mut s = src;
             let mut k = len >> 2;
             while k != 0 {
-                (dst as *mut u32).write_unaligned((s as *const u32).read_unaligned());
+                mech_trace::wr!(
+                    "10040b50",
+                    (dst as *mut u32),
+                    write_unaligned,
+                    mech_trace::rd!("10040b50", (s as *const u32), read_unaligned)
+                );
                 s = s.add(4);
                 dst = dst.add(4);
                 k = k.wrapping_sub(1);
             }
             let mut k = len & 3;
             while k != 0 {
-                dst.write(s.read());
+                mech_trace::wr!("10040b50", dst, write, mech_trace::rd!("10040b50", s, read));
                 s = s.add(1);
                 dst = dst.add(1);
                 k = k.wrapping_sub(1);

@@ -9,10 +9,16 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_100141c0(param_1: *mut u16, param_2: i32) {
+    mech_trace::enter!("100141c0", param_1, param_2);
     // SAFETY: param_1 points at the caller's structure; the field at byte
     // offset 0x24 is written, and the callees are the game's own.
     unsafe {
-        param_1.add(0x12).cast::<i32>().write_unaligned(param_2);
+        mech_trace::wr!(
+            "100141c0",
+            param_1.add(0x12).cast::<i32>(),
+            write_unaligned,
+            param_2
+        );
         if param_2 == 4 {
             FUN_1003df3a(param_1);
         } else {

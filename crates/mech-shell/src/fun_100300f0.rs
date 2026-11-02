@@ -16,18 +16,39 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_100300f0(param_1: *mut u32) {
+    mech_trace::enter!("100300f0", param_1);
     // SAFETY: the callees and the global are the game's own; param_1 points at
     // the caller's record, and the duplicate returned is a heap record of at
     // least 0x818 bytes.
     unsafe {
-        let mut i_var1 = FUN_1000ad30(
-            DAT_100a678c as i32,
-            param_1.add(0x204).read_unaligned() as i32,
+        let mut i_var1 = mech_trace::cr!(
+            "100300f0",
+            "1000ad30",
+            FUN_1000ad30(
+                mech_trace::gr!("100300f0", "100a678c", DAT_100a678c) as i32,
+                mech_trace::rd!("100300f0", param_1.add(0x204), read_unaligned) as i32,
+            )
         );
-        FUN_10017ec0(DAT_100a678c as i32, i_var1, 1);
-        i_var1 = FUN_1000be30(param_1);
-        FUN_10017df0(DAT_100a678c, i_var1 as u32);
-        param_1.add(0x205).write_unaligned(1);
-        ((i_var1 as usize).wrapping_add(0x814) as *mut u32).write_unaligned(1);
+        FUN_10017ec0(
+            mech_trace::gr!("100300f0", "100a678c", DAT_100a678c) as i32,
+            i_var1,
+            1,
+        );
+        i_var1 = mech_trace::cr!("100300f0", "1000be30", FUN_1000be30(param_1));
+        mech_trace::cr!(
+            "100300f0",
+            "10017df0",
+            FUN_10017df0(
+                mech_trace::gr!("100300f0", "100a678c", DAT_100a678c),
+                i_var1 as u32
+            )
+        );
+        mech_trace::wr!("100300f0", param_1.add(0x205), write_unaligned, 1);
+        mech_trace::wr!(
+            "100300f0",
+            ((i_var1 as usize).wrapping_add(0x814) as *mut u32),
+            write_unaligned,
+            1
+        );
     }
 }

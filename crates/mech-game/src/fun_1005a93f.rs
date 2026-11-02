@@ -9,26 +9,33 @@ unsafe extern "C" {
 unsafe fn rd_a(i: u32) -> i32 {
     // SAFETY: the table is the game's own memory; the address is read as the original does.
     unsafe {
-        (&raw mut DAT_10059b2b)
-            .wrapping_byte_add(i.wrapping_mul(4) as usize)
-            .cast::<i32>()
-            .read_unaligned()
+        mech_trace::rd!(
+            "1005a93f",
+            (&raw mut DAT_10059b2b)
+                .wrapping_byte_add(i.wrapping_mul(4) as usize)
+                .cast::<i32>(),
+            read_unaligned
+        )
     }
 }
 
 unsafe fn rd_b(i: u32) -> i32 {
     // SAFETY: the table is the game's own memory; the address is read as the original does.
     unsafe {
-        (&raw mut DAT_1005a93b)
-            .wrapping_byte_add(i.wrapping_mul(4).wrapping_neg() as usize)
-            .cast::<i32>()
-            .read_unaligned()
+        mech_trace::rd!(
+            "1005a93f",
+            (&raw mut DAT_1005a93b)
+                .wrapping_byte_add(i.wrapping_mul(4).wrapping_neg() as usize)
+                .cast::<i32>(),
+            read_unaligned
+        )
     }
 }
 
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1005a93f(mut param_1: u32, param_2: *mut i32, param_3: *mut i32) {
+    mech_trace::enter!("1005a93f", param_1, param_2, param_3);
     while (param_1 as i32) < 0 {
         param_1 = param_1.wrapping_add(0xe10);
     }
@@ -58,7 +65,7 @@ pub unsafe extern "C" fn FUN_1005a93f(mut param_1: u32, param_2: *mut i32, param
                 i_var2 = rd_b(0x708u32.wrapping_sub(u_var3)).wrapping_neg();
             }
         }
-        param_2.write_unaligned(i_var1);
-        param_3.write_unaligned(i_var2);
+        mech_trace::wr!("1005a93f", param_2, write_unaligned, i_var1);
+        mech_trace::wr!("1005a93f", param_3, write_unaligned, i_var2);
     }
 }

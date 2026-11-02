@@ -8,6 +8,7 @@ pub unsafe extern "C" fn FUN_1002949b(
     param_3: i16,
     param_4: i16,
 ) -> i16 {
+    mech_trace::enter!("1002949b", ch_Likely, param_2, param_3, param_4);
     let mut result = ch_Likely;
     if ch_Likely == 0x40 {
         result = param_2;
@@ -16,5 +17,5 @@ pub unsafe extern "C" fn FUN_1002949b(
     } else if ch_Likely == 0x2a {
         result = param_4;
     }
-    result
+    mech_trace::rt!("1002949b", result)
 }

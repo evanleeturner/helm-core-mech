@@ -8,6 +8,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10050400(param_1: *mut i32) {
+    mech_trace::enter!("10050400", param_1);
     if param_1.is_null() {
         return;
     }
@@ -15,18 +16,21 @@ pub unsafe extern "C" fn FUN_10050400(param_1: *mut i32) {
     // table at DAT_10082bf0 is the game's own memory, read at the original's
     // offset.
     unsafe {
-        let i_var1 = param_1.read_unaligned();
-        param_1.byte_add(4).write_unaligned(10000);
+        let i_var1 = mech_trace::rd!("10050400", param_1, read_unaligned);
+        mech_trace::wr!("10050400", param_1.byte_add(4), write_unaligned, 10000);
         match i_var1 {
             1 | 2 | 5 | 6 => {
-                let v = (&raw mut DAT_10082bf0)
-                    .byte_offset(i_var1.wrapping_mul(0xc) as isize)
-                    .cast::<i32>()
-                    .read_unaligned();
-                param_1.byte_add(4).write_unaligned(v);
+                let v = mech_trace::rd!(
+                    "10050400",
+                    (&raw mut DAT_10082bf0)
+                        .byte_offset(i_var1.wrapping_mul(0xc) as isize)
+                        .cast::<i32>(),
+                    read_unaligned
+                );
+                mech_trace::wr!("10050400", param_1.byte_add(4), write_unaligned, v);
             }
             3 | 4 => {
-                param_1.byte_add(4).write_unaligned(50000);
+                mech_trace::wr!("10050400", param_1.byte_add(4), write_unaligned, 50000);
             }
             _ => {}
         }

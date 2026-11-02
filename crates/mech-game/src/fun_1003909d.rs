@@ -20,33 +20,54 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1003909d(param_1: i32, param_2: i32) {
+    mech_trace::enter!("1003909d", param_1, param_2);
     // SAFETY: param_1 and param_2 are the caller's structures; the string
     // globals are the game's own data, read and written where the original does.
     unsafe {
         let p1 = param_1 as *mut u8;
         let name = p1.byte_add(0xc) as *const i8;
-        let u_var1 = ((param_2 + 0x60) as *const u32).read_unaligned();
-        let dev3c = || ((param_2 + 0x3c) as *const i32).read_unaligned();
+        let u_var1 = mech_trace::rd!("1003909d", ((param_2 + 0x60) as *const u32), read_unaligned);
+        let dev3c =
+            || mech_trace::rd!("1003909d", ((param_2 + 0x3c) as *const i32), read_unaligned);
 
         let copy8 = |src: *const u8| {
-            p1.byte_add(0x4c)
-                .cast::<u32>()
-                .write_unaligned(src.cast::<u32>().read_unaligned());
-            p1.byte_add(0x50)
-                .cast::<u32>()
-                .write_unaligned(src.byte_add(4).cast::<u32>().read_unaligned());
+            mech_trace::wr!(
+                "1003909d",
+                p1.byte_add(0x4c).cast::<u32>(),
+                write_unaligned,
+                mech_trace::rd!("1003909d", src.cast::<u32>(), read_unaligned)
+            );
+            mech_trace::wr!(
+                "1003909d",
+                p1.byte_add(0x50).cast::<u32>(),
+                write_unaligned,
+                mech_trace::rd!("1003909d", src.byte_add(4).cast::<u32>(), read_unaligned)
+            );
         };
         let copy9 = |src: *const u8| {
             copy8(src);
-            p1.byte_add(0x54).write(src.byte_add(8).read());
+            mech_trace::wr!(
+                "1003909d",
+                p1.byte_add(0x54),
+                write,
+                mech_trace::rd!("1003909d", src.byte_add(8), read)
+            );
         };
 
-        let mut r = strstr(name, (&raw mut DAT_100ae6dc) as *const i8);
+        let mut r = mech_trace::cr!(
+            "1003909d",
+            "strstr",
+            strstr(name, (&raw mut DAT_100ae6dc) as *const i8)
+        );
         if !r.is_null() {
             copy8((&raw mut DAT_100ae6e4) as *const u8);
             return;
         }
-        r = strstr(name, (&raw mut DAT_100ae6ec) as *const i8);
+        r = mech_trace::cr!(
+            "1003909d",
+            "strstr",
+            strstr(name, (&raw mut DAT_100ae6ec) as *const i8)
+        );
         if r.is_null()
             && ((u_var1 & 1) == 0
                 || (u_var1 & 2) == 0
@@ -54,14 +75,22 @@ pub unsafe extern "C" fn FUN_1003909d(param_1: i32, param_2: i32) {
                 || (u_var1 & 0x20) == 0
                 || dev3c() != 8)
         {
-            r = strstr(name, (&raw mut DAT_100ae704) as *const i8);
+            r = mech_trace::cr!(
+                "1003909d",
+                "strstr",
+                strstr(name, (&raw mut DAT_100ae704) as *const i8)
+            );
             if r.is_null()
                 && ((u_var1 & 1) == 0
                     || (u_var1 & 0x10) == 0
                     || (u_var1 & 0x20) == 0
                     || dev3c() != 4)
             {
-                r = strstr(name, (&raw mut DAT_100ae720) as *const i8);
+                r = mech_trace::cr!(
+                    "1003909d",
+                    "strstr",
+                    strstr(name, (&raw mut DAT_100ae720) as *const i8)
+                );
                 if r.is_null()
                     && ((u_var1 & 2) == 0
                         || (u_var1 & 0x10) == 0

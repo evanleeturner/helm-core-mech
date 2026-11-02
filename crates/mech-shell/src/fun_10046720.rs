@@ -27,6 +27,7 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10046720(param_1: i32, param_2: *mut i8) {
+    mech_trace::enter!("10046720", param_1, param_2);
     // SAFETY: globals and callees are the game's own; param_2 is a
     // NUL-terminated string copied into the game's buffer as the original does.
     unsafe {
@@ -42,7 +43,7 @@ pub unsafe extern "C" fn FUN_10046720(param_1: i32, param_2: *mut i8) {
                 }
                 u_var4 = u_var4.wrapping_sub(1);
                 p7 = p.byte_add(1);
-                let c = *p;
+                let c = mech_trace::dr!("10046720", p);
                 p = p7;
                 if c == 0 {
                     break;
@@ -53,45 +54,81 @@ pub unsafe extern "C" fn FUN_10046720(param_1: i32, param_2: *mut i8) {
             let mut dst = &raw mut DAT_100ba428;
             let mut n = u_var4 >> 2;
             while n != 0 {
-                (dst as *mut u32).write_unaligned((src as *const u32).read_unaligned());
+                mech_trace::wr!(
+                    "10046720",
+                    (dst as *mut u32),
+                    write_unaligned,
+                    mech_trace::rd!("10046720", (src as *const u32), read_unaligned)
+                );
                 src = src.byte_add(4);
                 dst = dst.byte_add(4);
                 n = n.wrapping_sub(1);
             }
             let mut m = u_var4 & 3;
             while m != 0 {
-                *dst = *src;
+                mech_trace::dw!("10046720", dst, mech_trace::dr!("10046720", src));
                 src = src.byte_add(1);
                 dst = dst.byte_add(1);
                 m = m.wrapping_sub(1);
             }
         }
-        let mut pi3 = FUN_10063f40(DAT_10098f78 as *mut i32);
-        if !pi3.is_null() && 0 < pi3.add(10).read_unaligned() {
-            i_var6 = pi3.add(9).read_unaligned();
+        let mut pi3 = mech_trace::cr!(
+            "10046720",
+            "10063f40",
+            FUN_10063f40(mech_trace::gr!("10046720", "10098f78", DAT_10098f78) as *mut i32)
+        );
+        if !pi3.is_null() && 0 < mech_trace::rd!("10046720", pi3.add(10), read_unaligned) {
+            i_var6 = mech_trace::rd!("10046720", pi3.add(9), read_unaligned);
         }
-        FUN_10063ea0(DAT_10098f78 as *mut i32);
-        if !DAT_10098f78.is_null() {
-            FUN_1006e790(DAT_10098f78 as *mut c_void);
+        mech_trace::cr!(
+            "10046720",
+            "10063ea0",
+            FUN_10063ea0(mech_trace::gr!("10046720", "10098f78", DAT_10098f78) as *mut i32)
+        );
+        if !mech_trace::gr!("10046720", "10098f78", DAT_10098f78).is_null() {
+            mech_trace::cr!(
+                "10046720",
+                "1006e790",
+                FUN_1006e790(mech_trace::gr!("10046720", "10098f78", DAT_10098f78) as *mut c_void)
+            );
         }
-        DAT_10098f78 = FUN_10045b60(param_1, 0);
-        DAT_10098f80 = param_1 as u32;
-        FUN_10063d30(DAT_10098f78 as *mut i32);
-        if -1 < i_var6 && DAT_10098f78.read_unaligned() != 0xffff_ffff {
-            pi3 = DAT_10098f78 as *mut i32;
-            while pi3.add(9).read_unaligned() != i_var6 {
+        mech_trace::gw!(
+            "10046720",
+            "10098f78",
+            DAT_10098f78,
+            mech_trace::cr!("10046720", "10045b60", FUN_10045b60(param_1, 0))
+        );
+        mech_trace::gw!("10046720", "10098f80", DAT_10098f80, param_1 as u32);
+        mech_trace::cr!(
+            "10046720",
+            "10063d30",
+            FUN_10063d30(mech_trace::gr!("10046720", "10098f78", DAT_10098f78) as *mut i32)
+        );
+        if -1 < i_var6
+            && mech_trace::rd!(
+                "10046720",
+                mech_trace::gr!("10046720", "10098f78", DAT_10098f78),
+                read_unaligned
+            ) != 0xffff_ffff
+        {
+            pi3 = mech_trace::gr!("10046720", "10098f78", DAT_10098f78) as *mut i32;
+            while mech_trace::rd!("10046720", pi3.add(9), read_unaligned) != i_var6 {
                 let pi1 = pi3.add(0xe);
                 pi3 = pi3.add(0xe);
-                if pi1.read_unaligned() == -1 {
-                    FUN_10044940();
+                if mech_trace::rd!("10046720", pi1, read_unaligned) == -1 {
+                    mech_trace::cr!("10046720", "10044940", FUN_10044940());
                     return;
                 }
             }
-            pi3.add(0xb).write_unaligned(2);
-            pi3.add(0x19).write_unaligned(2);
-            pi3.add(0x27).write_unaligned(2);
-            FUN_10063de0(DAT_10098f78 as *mut i32);
+            mech_trace::wr!("10046720", pi3.add(0xb), write_unaligned, 2);
+            mech_trace::wr!("10046720", pi3.add(0x19), write_unaligned, 2);
+            mech_trace::wr!("10046720", pi3.add(0x27), write_unaligned, 2);
+            mech_trace::cr!(
+                "10046720",
+                "10063de0",
+                FUN_10063de0(mech_trace::gr!("10046720", "10098f78", DAT_10098f78) as *mut i32)
+            );
         }
-        FUN_10044940();
+        mech_trace::cr!("10046720", "10044940", FUN_10044940());
     }
 }

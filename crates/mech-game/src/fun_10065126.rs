@@ -17,6 +17,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10065126(param_1: i32, param_2: *mut c_void) -> i32 {
+    mech_trace::enter!("10065126", param_1, param_2);
     // SAFETY: the callees are the game's own; param_2 is a caller-supplied
     // __cdecl function pointer returning an unsigned int.
     unsafe {
@@ -27,7 +28,7 @@ pub unsafe extern "C" fn FUN_10065126(param_1: i32, param_2: *mut c_void) -> i32
         let mut local_18: u32 = 1u32
             .wrapping_shl(((local_8 as u8) & 0x1f) as u32)
             .wrapping_sub(1);
-        let mut i_var2 = FUN_10065555();
+        let mut i_var2 = mech_trace::cr!("10065126", "10065555", FUN_10065555());
         if i_var2 == 0 {
             FUN_10065786(param_1 as u8);
             FUN_10065350(u_var1, local_8);
@@ -35,14 +36,19 @@ pub unsafe extern "C" fn FUN_10065126(param_1: i32, param_2: *mut c_void) -> i32
             let mut u_var4 = local_24;
             loop {
                 local_24 = u_var4;
-                let u_var3 = callback();
+                let u_var3 = mech_trace::cr!("10065126", "ind", callback());
                 if u_var3 == 0xffff_ffff {
                     break;
                 }
-                u_var4 = FUN_100656d3(local_24, u_var3 as u8);
+                u_var4 =
+                    mech_trace::cr!("10065126", "100656d3", FUN_100656d3(local_24, u_var3 as u8));
                 if u_var4 == 0xffff {
                     FUN_10065350(local_24, local_8);
-                    let u_var5 = FUN_100655f6(local_24, u_var3 as u8);
+                    let u_var5 = mech_trace::cr!(
+                        "10065126",
+                        "100655f6",
+                        FUN_100655f6(local_24, u_var3 as u8)
+                    );
                     u_var4 = u_var3;
                     if local_18 < u_var5 {
                         i_var2 = local_8.wrapping_add(1);
@@ -66,6 +72,6 @@ pub unsafe extern "C" fn FUN_10065126(param_1: i32, param_2: *mut c_void) -> i32
             FUN_100654db();
             i_var2 = 0;
         }
-        i_var2
+        mech_trace::rt!("10065126", i_var2)
     }
 }

@@ -28,6 +28,9 @@ pub unsafe extern "C" fn FUN_1008984b(
     param_7: i32,
     param_8: u32,
 ) {
+    mech_trace::enter!(
+        "1008984b", param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8
+    );
     let p = param_1;
     // SAFETY: param_1 points at the caller's matrix of at least 12 ints; the
     // callees are the game's own functions.
@@ -37,44 +40,73 @@ pub unsafe extern "C" fn FUN_1008984b(
                 if param_3 == 0 {
                     FUN_1008975d(p);
                     if param_4 != 0 {
-                        let v = FUN_10006b9a(param_4);
-                        p.add(4).write(v);
-                        p.write(p.add(4).read());
-                        let v = FUN_10006b20(param_4);
-                        p.add(3).write(v);
-                        p.add(1)
-                            .write(0u32.wrapping_sub(p.add(3).read() as u32) as i32);
+                        let v = mech_trace::cr!("1008984b", "10006b9a", FUN_10006b9a(param_4));
+                        mech_trace::wr!("1008984b", p.add(4), write, v);
+                        mech_trace::wr!(
+                            "1008984b",
+                            p,
+                            write,
+                            mech_trace::rd!("1008984b", p.add(4), read)
+                        );
+                        let v = mech_trace::cr!("1008984b", "10006b20", FUN_10006b20(param_4));
+                        mech_trace::wr!("1008984b", p.add(3), write, v);
+                        mech_trace::wr!(
+                            "1008984b",
+                            p.add(1),
+                            write,
+                            0u32.wrapping_sub(mech_trace::rd!("1008984b", p.add(3), read) as u32)
+                                as i32
+                        );
                     }
                     break 'done;
                 }
                 if param_4 == 0 {
                     FUN_1008975d(p);
-                    let v = FUN_10006b9a(param_3);
-                    p.add(8).write(v);
-                    p.write(p.add(8).read());
-                    let v = FUN_10006b20(param_3);
-                    p.add(2).write(v);
-                    p.add(6)
-                        .write(0u32.wrapping_sub(p.add(2).read() as u32) as i32);
+                    let v = mech_trace::cr!("1008984b", "10006b9a", FUN_10006b9a(param_3));
+                    mech_trace::wr!("1008984b", p.add(8), write, v);
+                    mech_trace::wr!(
+                        "1008984b",
+                        p,
+                        write,
+                        mech_trace::rd!("1008984b", p.add(8), read)
+                    );
+                    let v = mech_trace::cr!("1008984b", "10006b20", FUN_10006b20(param_3));
+                    mech_trace::wr!("1008984b", p.add(2), write, v);
+                    mech_trace::wr!(
+                        "1008984b",
+                        p.add(6),
+                        write,
+                        0u32.wrapping_sub(mech_trace::rd!("1008984b", p.add(2), read) as u32)
+                            as i32
+                    );
                     break 'done;
                 }
             } else if param_3 == 0 && param_4 == 0 {
                 FUN_1008975d(p);
-                let v = FUN_10006b9a(param_2);
-                p.add(8).write(v);
-                p.add(4).write(p.add(8).read());
-                let v = FUN_10006b20(param_2);
-                p.add(7).write(v);
-                p.add(5)
-                    .write(0u32.wrapping_sub(p.add(7).read() as u32) as i32);
+                let v = mech_trace::cr!("1008984b", "10006b9a", FUN_10006b9a(param_2));
+                mech_trace::wr!("1008984b", p.add(8), write, v);
+                mech_trace::wr!(
+                    "1008984b",
+                    p.add(4),
+                    write,
+                    mech_trace::rd!("1008984b", p.add(8), read)
+                );
+                let v = mech_trace::cr!("1008984b", "10006b20", FUN_10006b20(param_2));
+                mech_trace::wr!("1008984b", p.add(7), write, v);
+                mech_trace::wr!(
+                    "1008984b",
+                    p.add(5),
+                    write,
+                    0u32.wrapping_sub(mech_trace::rd!("1008984b", p.add(7), read) as u32) as i32
+                );
                 break 'done;
             }
-            let i2 = FUN_10006b9a(param_2);
-            let i3 = FUN_10006b9a(param_3);
-            let i4 = FUN_10006b9a(param_4);
-            let mut lc = FUN_10006b20(param_2);
-            let mut l10 = FUN_10006b20(param_3);
-            let mut l14 = FUN_10006b20(param_4);
+            let i2 = mech_trace::cr!("1008984b", "10006b9a", FUN_10006b9a(param_2));
+            let i3 = mech_trace::cr!("1008984b", "10006b9a", FUN_10006b9a(param_3));
+            let i4 = mech_trace::cr!("1008984b", "10006b9a", FUN_10006b9a(param_4));
+            let mut lc = mech_trace::cr!("1008984b", "10006b20", FUN_10006b20(param_2));
+            let mut l10 = mech_trace::cr!("1008984b", "10006b20", FUN_10006b20(param_3));
+            let mut l14 = mech_trace::cr!("1008984b", "10006b20", FUN_10006b20(param_4));
             if (param_8 & 4) != 0 {
                 lc = 0u32.wrapping_sub(lc as u32) as i32;
                 l10 = 0u32.wrapping_sub(l10 as u32) as i32;
@@ -82,41 +114,81 @@ pub unsafe extern "C" fn FUN_1008984b(
             }
             let u5 = param_8 & 3;
             if u5 == 0 {
-                p.write(fx(i4, i3).wrapping_add(fx(fx(l14, lc) as i32, l10)) as i32);
-                p.add(3).write(fx(i2, l14) as i32);
-                p.add(6)
-                    .write(fx(fx(i3, l14) as i32, lc).wrapping_sub(fx(i4, l10)) as i32);
-                p.add(2).write(fx(i2, l10) as i32);
-                p.add(5).write(0u32.wrapping_sub(lc as u32) as i32);
-                p.add(8).write(fx(i2, i3) as i32);
+                mech_trace::wr!(
+                    "1008984b",
+                    p,
+                    write,
+                    fx(i4, i3).wrapping_add(fx(fx(l14, lc) as i32, l10)) as i32
+                );
+                mech_trace::wr!("1008984b", p.add(3), write, fx(i2, l14) as i32);
+                mech_trace::wr!(
+                    "1008984b",
+                    p.add(6),
+                    write,
+                    fx(fx(i3, l14) as i32, lc).wrapping_sub(fx(i4, l10)) as i32
+                );
+                mech_trace::wr!("1008984b", p.add(2), write, fx(i2, l10) as i32);
+                mech_trace::wr!(
+                    "1008984b",
+                    p.add(5),
+                    write,
+                    0u32.wrapping_sub(lc as u32) as i32
+                );
+                mech_trace::wr!("1008984b", p.add(8), write, fx(i2, i3) as i32);
                 FUN_100891d0(p, 1);
             } else if u5 == 1 {
-                p.write(fx(i4, i3) as i32);
-                p.add(3)
-                    .write(fx(i2, l14).wrapping_add(fx(fx(i4, lc) as i32, l10)) as i32);
-                p.add(6)
-                    .write(fx(l14, lc).wrapping_sub(fx(fx(i4, i2) as i32, l10)) as i32);
-                p.add(2).write(l10);
-                p.add(5).write(0u32.wrapping_sub(fx(i3, lc)) as i32);
-                p.add(8).write(fx(i2, i3) as i32);
+                mech_trace::wr!("1008984b", p, write, fx(i4, i3) as i32);
+                mech_trace::wr!(
+                    "1008984b",
+                    p.add(3),
+                    write,
+                    fx(i2, l14).wrapping_add(fx(fx(i4, lc) as i32, l10)) as i32
+                );
+                mech_trace::wr!(
+                    "1008984b",
+                    p.add(6),
+                    write,
+                    fx(l14, lc).wrapping_sub(fx(fx(i4, i2) as i32, l10)) as i32
+                );
+                mech_trace::wr!("1008984b", p.add(2), write, l10);
+                mech_trace::wr!(
+                    "1008984b",
+                    p.add(5),
+                    write,
+                    0u32.wrapping_sub(fx(i3, lc)) as i32
+                );
+                mech_trace::wr!("1008984b", p.add(8), write, fx(i2, i3) as i32);
                 FUN_100891d0(p, 1);
             } else if u5 == 2 {
-                p.write(fx(i4, i3) as i32);
-                p.add(3)
-                    .write(fx(lc, l10).wrapping_add(fx(fx(i2, i3) as i32, l14)) as i32);
-                p.add(6)
-                    .write(fx(fx(i3, l14) as i32, lc).wrapping_sub(fx(i2, l10)) as i32);
-                p.add(1).write(0u32.wrapping_sub(l14 as u32) as i32);
-                p.add(4).write(fx(i4, i2) as i32);
-                p.add(7).write(fx(i4, lc) as i32);
+                mech_trace::wr!("1008984b", p, write, fx(i4, i3) as i32);
+                mech_trace::wr!(
+                    "1008984b",
+                    p.add(3),
+                    write,
+                    fx(lc, l10).wrapping_add(fx(fx(i2, i3) as i32, l14)) as i32
+                );
+                mech_trace::wr!(
+                    "1008984b",
+                    p.add(6),
+                    write,
+                    fx(fx(i3, l14) as i32, lc).wrapping_sub(fx(i2, l10)) as i32
+                );
+                mech_trace::wr!(
+                    "1008984b",
+                    p.add(1),
+                    write,
+                    0u32.wrapping_sub(l14 as u32) as i32
+                );
+                mech_trace::wr!("1008984b", p.add(4), write, fx(i4, i2) as i32);
+                mech_trace::wr!("1008984b", p.add(7), write, fx(i4, lc) as i32);
                 FUN_100891d0(p, 2);
             }
             if (param_8 & 4) != 0 {
                 FUN_10089643(p, p);
             }
         }
-        p.add(9).write(param_5);
-        p.add(10).write(param_6);
-        p.add(11).write(param_7);
+        mech_trace::wr!("1008984b", p.add(9), write, param_5);
+        mech_trace::wr!("1008984b", p.add(10), write, param_6);
+        mech_trace::wr!("1008984b", p.add(11), write, param_7);
     }
 }

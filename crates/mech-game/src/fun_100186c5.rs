@@ -53,7 +53,7 @@ unsafe fn reset30(dst: &mut [i32; 5]) {
         let p = &raw mut DAT_101f52e0 as *const i32;
         let mut i = 0;
         while i < 5 {
-            dst[i] = p.add(i).read();
+            dst[i] = mech_trace::rd!("100186c5", p.add(i), read);
             i += 1;
         }
     }
@@ -63,6 +63,7 @@ unsafe fn reset30(dst: &mut [i32; 5]) {
 #[allow(non_snake_case)]
 #[allow(unused_assignments)]
 pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
+    mech_trace::enter!("100186c5", param_1);
     let mut local_dc = [0i32; 12];
     let mut local_90 = [0u32; 21];
     let mut local_30 = [0i32; 5];
@@ -83,19 +84,51 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
     // SAFETY: param_1 points at the caller's structure; globals and callees are
     // the game's own; all pointers passed are to live locals.
     unsafe {
-        local_ac = ((param_1.wrapping_add(0x2c)) as *const i32).read_unaligned();
-        local_c = ((param_1.wrapping_add(0x30)) as *const i32).read_unaligned();
-        local_18 = ((param_1.wrapping_add(0x34)) as *const i32).read_unaligned();
-        local_8 = ((param_1.wrapping_add(0x38)) as *const i32).read_unaligned();
+        local_ac = mech_trace::rd!(
+            "100186c5",
+            ((param_1.wrapping_add(0x2c)) as *const i32),
+            read_unaligned
+        );
+        local_c = mech_trace::rd!(
+            "100186c5",
+            ((param_1.wrapping_add(0x30)) as *const i32),
+            read_unaligned
+        );
+        local_18 = mech_trace::rd!(
+            "100186c5",
+            ((param_1.wrapping_add(0x34)) as *const i32),
+            read_unaligned
+        );
+        local_8 = mech_trace::rd!(
+            "100186c5",
+            ((param_1.wrapping_add(0x38)) as *const i32),
+            read_unaligned
+        );
         local_a8 = 0;
         reset30(&mut local_30);
         local_98 = 0;
         local_1c = 0;
-        local_94 = DAT_100aafd8;
+        local_94 = mech_trace::gr!("100186c5", "100aafd8", DAT_100aafd8);
         FUN_1008975d(local_dc.as_mut_ptr());
-        local_dc[0] = FUN_10006b9a(((param_1.wrapping_add(0x14)) as *const i32).read_unaligned());
+        local_dc[0] = mech_trace::cr!(
+            "100186c5",
+            "10006b9a",
+            FUN_10006b9a(mech_trace::rd!(
+                "100186c5",
+                ((param_1.wrapping_add(0x14)) as *const i32),
+                read_unaligned
+            ))
+        );
         local_dc[4] = local_dc[0];
-        local_dc[3] = FUN_10006b20(((param_1.wrapping_add(0x14)) as *const i32).read_unaligned());
+        local_dc[3] = mech_trace::cr!(
+            "100186c5",
+            "10006b20",
+            FUN_10006b20(mech_trace::rd!(
+                "100186c5",
+                ((param_1.wrapping_add(0x14)) as *const i32),
+                read_unaligned
+            ))
+        );
         local_dc[1] = 0i32.wrapping_sub(local_dc[3]);
         local_dc[11] = 0;
         local_dc[10] = 0;
@@ -106,25 +139,45 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
             &raw mut local_94,
             &raw mut local_98,
         );
-        let b1 = FUN_1000fc90(local_ac, local_8, param_1);
-        let b2 = FUN_1000fc90(local_c, local_18, param_1);
-        let b3 = FUN_1000fc90(local_c, local_8, param_1);
-        let b4 = FUN_1000fc90(local_ac, local_18, param_1);
+        let b1 = mech_trace::cr!(
+            "100186c5",
+            "1000fc90",
+            FUN_1000fc90(local_ac, local_8, param_1)
+        );
+        let b2 = mech_trace::cr!(
+            "100186c5",
+            "1000fc90",
+            FUN_1000fc90(local_c, local_18, param_1)
+        );
+        let b3 = mech_trace::cr!(
+            "100186c5",
+            "1000fc90",
+            FUN_1000fc90(local_c, local_8, param_1)
+        );
+        let b4 = mech_trace::cr!(
+            "100186c5",
+            "1000fc90",
+            FUN_1000fc90(local_ac, local_18, param_1)
+        );
         local_14 = (b1 as i32)
             .wrapping_mul(4)
             .wrapping_add((b2 as i32).wrapping_mul(2))
             .wrapping_add((b3 as i32).wrapping_mul(8))
             .wrapping_add(b4 as i32);
-        if DAT_100aae80 == 0 {
-            DAT_100ad6a4 = 0xd0;
+        if mech_trace::gr!("100186c5", "100aae80", DAT_100aae80) == 0 {
+            mech_trace::gw!("100186c5", "100ad6a4", DAT_100ad6a4, 0xd0);
         } else {
-            DAT_100ad6a4 = 0xdf;
+            mech_trace::gw!("100186c5", "100ad6a4", DAT_100ad6a4, 0xdf);
         }
-        local_90[2] = (DAT_100ad6a0 as u32).wrapping_shl(0x10);
+        local_90[2] =
+            (mech_trace::gr!("100186c5", "100ad6a0", DAT_100ad6a0) as u32).wrapping_shl(0x10);
         local_90[20] = 0x7e0000;
         local_90[14] = 0x7e0000;
-        if DAT_100aae68 < 1 || DAT_100aae6c < 1 || DAT_100aae70 < 1 {
-            DAT_100aaf90 = 0;
+        if mech_trace::gr!("100186c5", "100aae68", DAT_100aae68) < 1
+            || mech_trace::gr!("100186c5", "100aae6c", DAT_100aae6c) < 1
+            || mech_trace::gr!("100186c5", "100aae70", DAT_100aae70) < 1
+        {
+            mech_trace::gw!("100186c5", "100aaf90", DAT_100aaf90, 0);
         }
         local_90[8] = local_90[2];
         match local_14 {
@@ -133,16 +186,19 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                 local_30[2] = local_30[2].wrapping_add(local_18);
                 local_30[3] = local_30[1].wrapping_add(local_c).wrapping_sub(local_ac);
                 local_30[4] = local_30[2].wrapping_add(local_8).wrapping_sub(local_18);
-                if DAT_100aaf90 == 0 {
+                if mech_trace::gr!("100186c5", "100aaf90", DAT_100aaf90) == 0 {
                     FUN_10058e74(local_30.as_mut_ptr(), 0);
                 } else {
-                    FUN_10058e74(local_30.as_mut_ptr(), DAT_100ad6a4 as i8);
+                    FUN_10058e74(
+                        local_30.as_mut_ptr(),
+                        mech_trace::gr!("100186c5", "100ad6a4", DAT_100ad6a4) as i8,
+                    );
                 }
             }
             1 => {
-                local_a4 = FUN_1000fdac(local_18, param_1);
-                local_10 = FUN_1000fd2a(local_ac, param_1);
-                if DAT_100aaf8c != 0 {
+                local_a4 = mech_trace::cr!("100186c5", "1000fdac", FUN_1000fdac(local_18, param_1));
+                local_10 = mech_trace::cr!("100186c5", "1000fd2a", FUN_1000fd2a(local_ac, param_1));
+                if mech_trace::gr!("100186c5", "100aaf8c", DAT_100aaf8c) != 0 {
                     FUN_10019d88(
                         local_ac,
                         local_18,
@@ -150,10 +206,10 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                         local_10,
                         local_a4,
                         local_18,
-                        DAT_100ad6a0,
+                        mech_trace::gr!("100186c5", "100ad6a0", DAT_100ad6a0),
                     );
                 }
-                if DAT_100aaf90 == 0 {
+                if mech_trace::gr!("100186c5", "100aaf90", DAT_100aaf90) == 0 {
                     FUN_10019c6e(
                         local_ac, local_8, local_c, local_8, local_c, local_18, local_a4, local_18,
                         local_ac, local_10, 0,
@@ -170,14 +226,14 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                         local_18,
                         local_ac,
                         local_10,
-                        DAT_100ad6a4,
+                        mech_trace::gr!("100186c5", "100ad6a4", DAT_100ad6a4),
                     );
                 }
             }
             2 => {
-                local_a4 = FUN_1000fdac(local_18, param_1);
-                local_a0 = FUN_1000fd2a(local_c, param_1);
-                if DAT_100aaf8c != 0 {
+                local_a4 = mech_trace::cr!("100186c5", "1000fdac", FUN_1000fdac(local_18, param_1));
+                local_a0 = mech_trace::cr!("100186c5", "1000fd2a", FUN_1000fd2a(local_c, param_1));
+                if mech_trace::gr!("100186c5", "100aaf8c", DAT_100aaf8c) != 0 {
                     FUN_10019d88(
                         local_c,
                         local_18,
@@ -185,10 +241,10 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                         local_18,
                         local_c,
                         local_a0,
-                        DAT_100ad6a0,
+                        mech_trace::gr!("100186c5", "100ad6a0", DAT_100ad6a0),
                     );
                 }
-                if DAT_100aaf90 == 0 {
+                if mech_trace::gr!("100186c5", "100aaf90", DAT_100aaf90) == 0 {
                     FUN_10019c6e(
                         local_ac, local_18, local_ac, local_8, local_c, local_8, local_c, local_a0,
                         local_a4, local_18, 0,
@@ -205,14 +261,16 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                         local_a0,
                         local_a4,
                         local_18,
-                        DAT_100ad6a4,
+                        mech_trace::gr!("100186c5", "100ad6a4", DAT_100ad6a4),
                     );
                 }
             }
             3 => {
-                local_10 = FUN_1000fd2a(local_ac, param_1);
-                local_a0 = FUN_1000fd2a(local_c, param_1);
-                if DAT_100aaf94 != 0 && DAT_100aaf8c != 0 {
+                local_10 = mech_trace::cr!("100186c5", "1000fd2a", FUN_1000fd2a(local_ac, param_1));
+                local_a0 = mech_trace::cr!("100186c5", "1000fd2a", FUN_1000fd2a(local_c, param_1));
+                if mech_trace::gr!("100186c5", "100aaf94", DAT_100aaf94) != 0
+                    && mech_trace::gr!("100186c5", "100aaf8c", DAT_100aaf8c) != 0
+                {
                     local_90[18] = local_c as u32;
                     local_90[0] = local_c as u32;
                     local_90[12] = local_ac as u32;
@@ -224,25 +282,31 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                     local_90[19] = local_a0 as u32;
                 }
                 if local_a0 == local_10 {
-                    if DAT_100aaf8c != 0 {
+                    if mech_trace::gr!("100186c5", "100aaf8c", DAT_100aaf8c) != 0 {
                         local_30[1] = local_30[1].wrapping_add(local_ac);
                         local_30[2] = local_30[2].wrapping_add(local_18);
                         local_30[3] = local_30[1].wrapping_add(local_c).wrapping_sub(local_ac);
                         local_30[4] = local_30[2].wrapping_add(local_10).wrapping_sub(local_18);
-                        FUN_10058e74(local_30.as_mut_ptr(), DAT_100ad6a0 as i8);
+                        FUN_10058e74(
+                            local_30.as_mut_ptr(),
+                            mech_trace::gr!("100186c5", "100ad6a0", DAT_100ad6a0) as i8,
+                        );
                     }
                     reset30(&mut local_30);
                     local_30[1] = local_30[1].wrapping_add(local_ac);
                     local_30[2] = local_30[2].wrapping_add(local_10);
                     local_30[3] = local_30[1].wrapping_add(local_c).wrapping_sub(local_ac);
                     local_30[4] = local_30[2].wrapping_add(local_8).wrapping_sub(local_10);
-                    if DAT_100aaf90 == 0 {
+                    if mech_trace::gr!("100186c5", "100aaf90", DAT_100aaf90) == 0 {
                         FUN_10058e74(local_30.as_mut_ptr(), 0);
                     } else {
-                        FUN_10058e74(local_30.as_mut_ptr(), DAT_100ad6a4 as i8);
+                        FUN_10058e74(
+                            local_30.as_mut_ptr(),
+                            mech_trace::gr!("100186c5", "100ad6a4", DAT_100ad6a4) as i8,
+                        );
                     }
                 } else {
-                    if DAT_100aaf8c != 0 {
+                    if mech_trace::gr!("100186c5", "100aaf8c", DAT_100aaf8c) != 0 {
                         FUN_10019d07(
                             local_c,
                             local_18,
@@ -252,10 +316,10 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                             local_10,
                             local_c,
                             local_a0,
-                            DAT_100ad6a0,
+                            mech_trace::gr!("100186c5", "100ad6a0", DAT_100ad6a0),
                         );
                     }
-                    if DAT_100aaf90 == 0 {
+                    if mech_trace::gr!("100186c5", "100aaf90", DAT_100aaf90) == 0 {
                         FUN_10019d07(
                             local_ac, local_8, local_c, local_8, local_c, local_a0, local_ac,
                             local_10, 0,
@@ -270,15 +334,15 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                             local_a0,
                             local_ac,
                             local_10,
-                            DAT_100ad6a4,
+                            mech_trace::gr!("100186c5", "100ad6a4", DAT_100ad6a4),
                         );
                     }
                 }
             }
             4 => {
-                local_9c = FUN_1000fdac(local_8, param_1);
-                local_10 = FUN_1000fd2a(local_ac, param_1);
-                if DAT_100aaf8c != 0 {
+                local_9c = mech_trace::cr!("100186c5", "1000fdac", FUN_1000fdac(local_8, param_1));
+                local_10 = mech_trace::cr!("100186c5", "1000fd2a", FUN_1000fd2a(local_ac, param_1));
+                if mech_trace::gr!("100186c5", "100aaf8c", DAT_100aaf8c) != 0 {
                     FUN_10019d88(
                         local_ac,
                         local_10,
@@ -286,10 +350,10 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                         local_8,
                         local_9c,
                         local_8,
-                        DAT_100ad6a0,
+                        mech_trace::gr!("100186c5", "100ad6a0", DAT_100ad6a0),
                     );
                 }
-                if DAT_100aaf90 == 0 {
+                if mech_trace::gr!("100186c5", "100aaf90", DAT_100aaf90) == 0 {
                     FUN_10019c6e(
                         local_c, local_8, local_c, local_18, local_ac, local_18, local_ac,
                         local_10, local_9c, local_8, 0,
@@ -306,15 +370,15 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                         local_10,
                         local_9c,
                         local_8,
-                        DAT_100ad6a4,
+                        mech_trace::gr!("100186c5", "100ad6a4", DAT_100ad6a4),
                     );
                 }
             }
             5 => {
-                local_a4 = FUN_1000fdac(local_18, param_1);
-                local_9c = FUN_1000fdac(local_8, param_1);
+                local_a4 = mech_trace::cr!("100186c5", "1000fdac", FUN_1000fdac(local_18, param_1));
+                local_9c = mech_trace::cr!("100186c5", "1000fdac", FUN_1000fdac(local_8, param_1));
                 if local_a4 == local_9c {
-                    if DAT_100aaf8c != 0 {
+                    if mech_trace::gr!("100186c5", "100aaf8c", DAT_100aaf8c) != 0 {
                         local_30[1] = local_30[1].wrapping_add(local_ac);
                         local_30[2] = local_30[2].wrapping_add(local_18);
                         local_30[3] = local_30[1]
@@ -325,7 +389,10 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                             .wrapping_add(local_8)
                             .wrapping_sub(local_18)
                             .wrapping_add(-1);
-                        FUN_10058e74(local_30.as_mut_ptr(), DAT_100ad6a0 as i8);
+                        FUN_10058e74(
+                            local_30.as_mut_ptr(),
+                            mech_trace::gr!("100186c5", "100ad6a0", DAT_100ad6a0) as i8,
+                        );
                     }
                     reset30(&mut local_30);
                     local_30[1] =
@@ -339,13 +406,16 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                         .wrapping_add(local_8)
                         .wrapping_sub(local_18)
                         .wrapping_add(-1);
-                    if DAT_100aaf90 == 0 {
+                    if mech_trace::gr!("100186c5", "100aaf90", DAT_100aaf90) == 0 {
                         FUN_10058e74(local_30.as_mut_ptr(), 0);
                     } else {
-                        FUN_10058e74(local_30.as_mut_ptr(), DAT_100ad6a4 as i8);
+                        FUN_10058e74(
+                            local_30.as_mut_ptr(),
+                            mech_trace::gr!("100186c5", "100ad6a4", DAT_100ad6a4) as i8,
+                        );
                     }
                 } else {
-                    if DAT_100aaf8c != 0 {
+                    if mech_trace::gr!("100186c5", "100aaf8c", DAT_100aaf8c) != 0 {
                         FUN_10019d07(
                             local_ac,
                             local_18,
@@ -355,10 +425,10 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                             local_8,
                             local_a4,
                             local_18,
-                            DAT_100ad6a0,
+                            mech_trace::gr!("100186c5", "100ad6a0", DAT_100ad6a0),
                         );
                     }
-                    if DAT_100aaf90 == 0 {
+                    if mech_trace::gr!("100186c5", "100aaf90", DAT_100aaf90) == 0 {
                         FUN_10019d07(
                             local_c, local_8, local_c, local_18, local_a4, local_18, local_9c,
                             local_8, 0,
@@ -373,11 +443,13 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                             local_18,
                             local_9c,
                             local_8,
-                            DAT_100ad6a4,
+                            mech_trace::gr!("100186c5", "100ad6a4", DAT_100ad6a4),
                         );
                     }
                 }
-                if DAT_100aaf94 != 0 && DAT_100aaf8c != 0 {
+                if mech_trace::gr!("100186c5", "100aaf94", DAT_100aaf94) != 0
+                    && mech_trace::gr!("100186c5", "100aaf8c", DAT_100aaf8c) != 0
+                {
                     local_90[0] = local_a4.wrapping_sub(local_1c) as u32;
                     local_90[6] = local_9c.wrapping_sub(local_1c) as u32;
                     local_90[12] = local_9c as u32;
@@ -390,10 +462,10 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                 }
             }
             7 => {
-                local_9c = FUN_1000fdac(local_8, param_1);
-                local_a0 = FUN_1000fd2a(local_c, param_1);
-                local_10 = FUN_1000fd2a(local_ac, param_1);
-                if DAT_100aaf90 == 0 {
+                local_9c = mech_trace::cr!("100186c5", "1000fdac", FUN_1000fdac(local_8, param_1));
+                local_a0 = mech_trace::cr!("100186c5", "1000fd2a", FUN_1000fd2a(local_c, param_1));
+                local_10 = mech_trace::cr!("100186c5", "1000fd2a", FUN_1000fd2a(local_ac, param_1));
+                if mech_trace::gr!("100186c5", "100aaf90", DAT_100aaf90) == 0 {
                     FUN_10019d88(local_9c, local_8, local_c, local_8, local_c, local_a0, 0);
                 } else {
                     FUN_10019d88(
@@ -403,10 +475,10 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                         local_8,
                         local_c,
                         local_a0,
-                        DAT_100ad6a4,
+                        mech_trace::gr!("100186c5", "100ad6a4", DAT_100ad6a4),
                     );
                 }
-                if DAT_100aaf8c != 0 {
+                if mech_trace::gr!("100186c5", "100aaf8c", DAT_100aaf8c) != 0 {
                     FUN_10019c6e(
                         local_c,
                         local_18,
@@ -418,9 +490,9 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                         local_8,
                         local_c,
                         local_a0,
-                        DAT_100ad6a0,
+                        mech_trace::gr!("100186c5", "100ad6a0", DAT_100ad6a0),
                     );
-                    if DAT_100aaf94 != 0 {
+                    if mech_trace::gr!("100186c5", "100aaf94", DAT_100aaf94) != 0 {
                         local_90[12] = local_ac as u32;
                         local_90[6] = local_ac as u32;
                         local_90[0] = local_c as u32;
@@ -434,9 +506,9 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                 }
             }
             8 => {
-                local_9c = FUN_1000fdac(local_8, param_1);
-                local_a0 = FUN_1000fd2a(local_c, param_1);
-                if DAT_100aaf8c != 0 {
+                local_9c = mech_trace::cr!("100186c5", "1000fdac", FUN_1000fdac(local_8, param_1));
+                local_a0 = mech_trace::cr!("100186c5", "1000fd2a", FUN_1000fd2a(local_c, param_1));
+                if mech_trace::gr!("100186c5", "100aaf8c", DAT_100aaf8c) != 0 {
                     FUN_10019d88(
                         local_9c,
                         local_8,
@@ -444,10 +516,10 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                         local_8,
                         local_c,
                         local_a0,
-                        DAT_100ad6a0,
+                        mech_trace::gr!("100186c5", "100ad6a0", DAT_100ad6a0),
                     );
                 }
-                if DAT_100aaf90 == 0 {
+                if mech_trace::gr!("100186c5", "100aaf90", DAT_100aaf90) == 0 {
                     FUN_10019c6e(
                         local_c, local_18, local_ac, local_18, local_ac, local_8, local_9c,
                         local_8, local_c, local_a0, 0,
@@ -464,13 +536,13 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                         local_8,
                         local_c,
                         local_a0,
-                        DAT_100ad6a4,
+                        mech_trace::gr!("100186c5", "100ad6a4", DAT_100ad6a4),
                     );
                 }
             }
             10 => {
-                local_a4 = FUN_1000fdac(local_18, param_1);
-                local_9c = FUN_1000fdac(local_8, param_1);
+                local_a4 = mech_trace::cr!("100186c5", "1000fdac", FUN_1000fdac(local_18, param_1));
+                local_9c = mech_trace::cr!("100186c5", "1000fdac", FUN_1000fdac(local_8, param_1));
                 if local_a4 == local_9c {
                     local_30[1] = local_30[1].wrapping_add(local_ac);
                     local_30[2] = local_30[2].wrapping_add(local_18);
@@ -482,12 +554,15 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                         .wrapping_add(local_8)
                         .wrapping_sub(local_18)
                         .wrapping_add(-1);
-                    if DAT_100aaf90 == 0 {
+                    if mech_trace::gr!("100186c5", "100aaf90", DAT_100aaf90) == 0 {
                         FUN_10058e74(local_30.as_mut_ptr(), 0);
                     } else {
-                        FUN_10058e74(local_30.as_mut_ptr(), DAT_100ad6a4 as i8);
+                        FUN_10058e74(
+                            local_30.as_mut_ptr(),
+                            mech_trace::gr!("100186c5", "100ad6a4", DAT_100ad6a4) as i8,
+                        );
                     }
-                    if DAT_100aaf8c != 0 {
+                    if mech_trace::gr!("100186c5", "100aaf8c", DAT_100aaf8c) != 0 {
                         reset30(&mut local_30);
                         local_30[1] = local_30[1]
                             .wrapping_add(local_a4.wrapping_sub(local_ac).wrapping_add(1));
@@ -500,10 +575,13 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                             .wrapping_add(local_8)
                             .wrapping_sub(local_18)
                             .wrapping_add(-1);
-                        FUN_10058e74(local_30.as_mut_ptr(), DAT_100ad6a0 as i8);
+                        FUN_10058e74(
+                            local_30.as_mut_ptr(),
+                            mech_trace::gr!("100186c5", "100ad6a0", DAT_100ad6a0) as i8,
+                        );
                     }
                 } else {
-                    if DAT_100aaf90 == 0 {
+                    if mech_trace::gr!("100186c5", "100aaf90", DAT_100aaf90) == 0 {
                         FUN_10019d07(
                             local_ac, local_18, local_ac, local_8, local_9c, local_8, local_a4,
                             local_18, 0,
@@ -518,10 +596,10 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                             local_8,
                             local_a4,
                             local_18,
-                            DAT_100ad6a4,
+                            mech_trace::gr!("100186c5", "100ad6a4", DAT_100ad6a4),
                         );
                     }
-                    if DAT_100aaf8c != 0 {
+                    if mech_trace::gr!("100186c5", "100aaf8c", DAT_100aaf8c) != 0 {
                         FUN_10019d07(
                             local_c,
                             local_8,
@@ -531,11 +609,13 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                             local_18,
                             local_9c,
                             local_8,
-                            DAT_100ad6a0,
+                            mech_trace::gr!("100186c5", "100ad6a0", DAT_100ad6a0),
                         );
                     }
                 }
-                if DAT_100aaf94 != 0 && DAT_100aaf8c != 0 {
+                if mech_trace::gr!("100186c5", "100aaf94", DAT_100aaf94) != 0
+                    && mech_trace::gr!("100186c5", "100aaf8c", DAT_100aaf8c) != 0
+                {
                     local_90[0] = local_a4.wrapping_sub(local_1c) as u32;
                     local_90[6] = local_9c.wrapping_sub(local_1c) as u32;
                     local_90[12] = local_9c as u32;
@@ -548,10 +628,10 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                 }
             }
             0xb => {
-                local_9c = FUN_1000fdac(local_8, param_1);
-                local_10 = FUN_1000fd2a(local_ac, param_1);
-                local_a0 = FUN_1000fd2a(local_c, param_1);
-                if DAT_100aaf90 == 0 {
+                local_9c = mech_trace::cr!("100186c5", "1000fdac", FUN_1000fdac(local_8, param_1));
+                local_10 = mech_trace::cr!("100186c5", "1000fd2a", FUN_1000fd2a(local_ac, param_1));
+                local_a0 = mech_trace::cr!("100186c5", "1000fd2a", FUN_1000fd2a(local_c, param_1));
+                if mech_trace::gr!("100186c5", "100aaf90", DAT_100aaf90) == 0 {
                     FUN_10019d88(local_ac, local_10, local_ac, local_8, local_9c, local_8, 0);
                 } else {
                     FUN_10019d88(
@@ -561,10 +641,10 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                         local_8,
                         local_9c,
                         local_8,
-                        DAT_100ad6a4,
+                        mech_trace::gr!("100186c5", "100ad6a4", DAT_100ad6a4),
                     );
                 }
-                if DAT_100aaf8c != 0 {
+                if mech_trace::gr!("100186c5", "100aaf8c", DAT_100aaf8c) != 0 {
                     FUN_10019c6e(
                         local_c,
                         local_8,
@@ -576,9 +656,9 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                         local_10,
                         local_9c,
                         local_8,
-                        DAT_100ad6a0,
+                        mech_trace::gr!("100186c5", "100ad6a0", DAT_100ad6a0),
                     );
-                    if DAT_100aaf94 != 0 {
+                    if mech_trace::gr!("100186c5", "100aaf94", DAT_100aaf94) != 0 {
                         local_90[12] = local_ac as u32;
                         local_90[6] = local_ac as u32;
                         local_90[0] = local_c as u32;
@@ -592,9 +672,11 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                 }
             }
             0xc => {
-                local_10 = FUN_1000fd2a(local_ac, param_1);
-                local_a0 = FUN_1000fd2a(local_c, param_1);
-                if DAT_100aaf94 != 0 && DAT_100aaf8c != 0 {
+                local_10 = mech_trace::cr!("100186c5", "1000fd2a", FUN_1000fd2a(local_ac, param_1));
+                local_a0 = mech_trace::cr!("100186c5", "1000fd2a", FUN_1000fd2a(local_c, param_1));
+                if mech_trace::gr!("100186c5", "100aaf94", DAT_100aaf94) != 0
+                    && mech_trace::gr!("100186c5", "100aaf8c", DAT_100aaf8c) != 0
+                {
                     local_90[6] = local_c.wrapping_sub(local_1c) as u32;
                     local_90[0] = local_ac.wrapping_add(local_1c) as u32;
                     local_90[19] = local_10 as u32;
@@ -610,21 +692,27 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                     local_30[2] = local_30[2].wrapping_add(local_18);
                     local_30[3] = local_30[1].wrapping_add(local_c).wrapping_sub(local_ac);
                     local_30[4] = local_30[2].wrapping_add(local_10).wrapping_sub(local_18);
-                    if DAT_100aaf90 == 0 {
+                    if mech_trace::gr!("100186c5", "100aaf90", DAT_100aaf90) == 0 {
                         FUN_10058e74(local_30.as_mut_ptr(), 0);
                     } else {
-                        FUN_10058e74(local_30.as_mut_ptr(), DAT_100ad6a4 as i8);
+                        FUN_10058e74(
+                            local_30.as_mut_ptr(),
+                            mech_trace::gr!("100186c5", "100ad6a4", DAT_100ad6a4) as i8,
+                        );
                     }
-                    if DAT_100aaf8c != 0 {
+                    if mech_trace::gr!("100186c5", "100aaf8c", DAT_100aaf8c) != 0 {
                         reset30(&mut local_30);
                         local_30[1] = local_30[1].wrapping_add(local_ac);
                         local_30[2] = local_30[2].wrapping_add(local_10);
                         local_30[3] = local_30[1].wrapping_add(local_c).wrapping_sub(local_ac);
                         local_30[4] = local_30[2].wrapping_add(local_8).wrapping_sub(local_10);
-                        FUN_10058e74(local_30.as_mut_ptr(), DAT_100ad6a0 as i8);
+                        FUN_10058e74(
+                            local_30.as_mut_ptr(),
+                            mech_trace::gr!("100186c5", "100ad6a0", DAT_100ad6a0) as i8,
+                        );
                     }
                 } else {
-                    if DAT_100aaf90 == 0 {
+                    if mech_trace::gr!("100186c5", "100aaf90", DAT_100aaf90) == 0 {
                         FUN_10019d07(
                             local_c, local_18, local_ac, local_18, local_ac, local_10, local_c,
                             local_a0, 0,
@@ -639,10 +727,10 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                             local_10,
                             local_c,
                             local_a0,
-                            DAT_100ad6a4,
+                            mech_trace::gr!("100186c5", "100ad6a4", DAT_100ad6a4),
                         );
                     }
-                    if DAT_100aaf8c != 0 {
+                    if mech_trace::gr!("100186c5", "100aaf8c", DAT_100aaf8c) != 0 {
                         FUN_10019d07(
                             local_ac,
                             local_8,
@@ -652,15 +740,15 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                             local_a0,
                             local_ac,
                             local_10,
-                            DAT_100ad6a0,
+                            mech_trace::gr!("100186c5", "100ad6a0", DAT_100ad6a0),
                         );
                     }
                 }
             }
             0xd => {
-                local_a4 = FUN_1000fdac(local_18, param_1);
-                local_a0 = FUN_1000fd2a(local_c, param_1);
-                if DAT_100aaf90 == 0 {
+                local_a4 = mech_trace::cr!("100186c5", "1000fdac", FUN_1000fdac(local_18, param_1));
+                local_a0 = mech_trace::cr!("100186c5", "1000fd2a", FUN_1000fd2a(local_c, param_1));
+                if mech_trace::gr!("100186c5", "100aaf90", DAT_100aaf90) == 0 {
                     FUN_10019d88(local_c, local_18, local_a4, local_18, local_c, local_a0, 0);
                 } else {
                     FUN_10019d88(
@@ -670,10 +758,10 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                         local_18,
                         local_c,
                         local_a0,
-                        DAT_100ad6a4,
+                        mech_trace::gr!("100186c5", "100ad6a4", DAT_100ad6a4),
                     );
                 }
-                if DAT_100aaf8c != 0 {
+                if mech_trace::gr!("100186c5", "100aaf8c", DAT_100aaf8c) != 0 {
                     FUN_10019c6e(
                         local_ac,
                         local_18,
@@ -685,14 +773,14 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                         local_a0,
                         local_a4,
                         local_18,
-                        DAT_100ad6a0,
+                        mech_trace::gr!("100186c5", "100ad6a0", DAT_100ad6a0),
                     );
                 }
             }
             0xe => {
-                local_a4 = FUN_1000fdac(local_18, param_1);
-                local_10 = FUN_1000fd2a(local_ac, param_1);
-                if DAT_100aaf90 == 0 {
+                local_a4 = mech_trace::cr!("100186c5", "1000fdac", FUN_1000fdac(local_18, param_1));
+                local_10 = mech_trace::cr!("100186c5", "1000fd2a", FUN_1000fd2a(local_ac, param_1));
+                if mech_trace::gr!("100186c5", "100aaf90", DAT_100aaf90) == 0 {
                     FUN_10019d88(
                         local_ac, local_18, local_ac, local_10, local_a4, local_18, 0,
                     );
@@ -704,10 +792,10 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                         local_10,
                         local_a4,
                         local_18,
-                        DAT_100ad6a4,
+                        mech_trace::gr!("100186c5", "100ad6a4", DAT_100ad6a4),
                     );
                 }
-                if DAT_100aaf8c != 0 {
+                if mech_trace::gr!("100186c5", "100aaf8c", DAT_100aaf8c) != 0 {
                     FUN_10019c6e(
                         local_ac,
                         local_8,
@@ -719,17 +807,29 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                         local_18,
                         local_ac,
                         local_10,
-                        DAT_100ad6a0,
+                        mech_trace::gr!("100186c5", "100ad6a0", DAT_100ad6a0),
                     );
                 }
             }
             0xf => {
-                if DAT_100aaf8c != 0 {
-                    if DAT_100aaf94 != 0 {
-                        let b = FUN_1000fc90(local_ac, local_8.wrapping_add(local_94), param_1);
+                if mech_trace::gr!("100186c5", "100aaf8c", DAT_100aaf8c) != 0 {
+                    if mech_trace::gr!("100186c5", "100aaf94", DAT_100aaf94) != 0 {
+                        let b = mech_trace::cr!(
+                            "100186c5",
+                            "1000fc90",
+                            FUN_1000fc90(local_ac, local_8.wrapping_add(local_94), param_1)
+                        );
                         if b as i32 == 0 {
-                            local_10 = FUN_1000fd2a(local_ac, param_1);
-                            local_a0 = FUN_1000fd2a(local_c, param_1);
+                            local_10 = mech_trace::cr!(
+                                "100186c5",
+                                "1000fd2a",
+                                FUN_1000fd2a(local_ac, param_1)
+                            );
+                            local_a0 = mech_trace::cr!(
+                                "100186c5",
+                                "1000fd2a",
+                                FUN_1000fd2a(local_c, param_1)
+                            );
                             if local_a0.wrapping_sub(local_94) < local_8
                                 || local_10.wrapping_sub(local_94) < local_8
                             {
@@ -749,13 +849,16 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                     local_30[2] = local_30[2].wrapping_add(local_18);
                     local_30[3] = local_30[1].wrapping_add(local_c).wrapping_sub(local_ac);
                     local_30[4] = local_30[2].wrapping_add(local_8).wrapping_sub(local_18);
-                    FUN_10058e74(local_30.as_mut_ptr(), DAT_100ad6a0 as i8);
+                    FUN_10058e74(
+                        local_30.as_mut_ptr(),
+                        mech_trace::gr!("100186c5", "100ad6a0", DAT_100ad6a0) as i8,
+                    );
                 }
             }
             _ => {}
         }
         let _ = (local_a4, local_9c, local_98);
-        if local_a8 != 0 && DAT_100aaf74 != 0 {
+        if local_a8 != 0 && mech_trace::gr!("100186c5", "100aaf74", DAT_100aaf74) != 0 {
             FUN_1003f893(
                 &raw mut DAT_101f52e0 as *mut i32,
                 0x8000,
@@ -763,14 +866,26 @@ pub unsafe extern "C" fn FUN_100186c5(param_1: i32) {
                 local_90.as_mut_ptr(),
             );
         }
-        if DAT_100aae84 != 0 && DAT_100aaf90 != 0 {
+        if mech_trace::gr!("100186c5", "100aae84", DAT_100aae84) != 0
+            && mech_trace::gr!("100186c5", "100aaf90", DAT_100aaf90) != 0
+        {
             FUN_10018265(
-                DAT_100aaf68.byte_add(0x3c).cast::<i32>().read_unaligned(),
-                DAT_100aae68,
+                mech_trace::rd!(
+                    "100186c5",
+                    mech_trace::gr!("100186c5", "100aaf68", DAT_100aaf68)
+                        .byte_add(0x3c)
+                        .cast::<i32>(),
+                    read_unaligned
+                ),
+                mech_trace::gr!("100186c5", "100aae68", DAT_100aae68),
                 0x4a,
             );
-            if 0 < DAT_100aae68 {
-                FUN_10018265(DAT_100aae68, DAT_100aae6c, 0x4a);
+            if 0 < mech_trace::gr!("100186c5", "100aae68", DAT_100aae68) {
+                FUN_10018265(
+                    mech_trace::gr!("100186c5", "100aae68", DAT_100aae68),
+                    mech_trace::gr!("100186c5", "100aae6c", DAT_100aae6c),
+                    0x4a,
+                );
             }
         }
     }

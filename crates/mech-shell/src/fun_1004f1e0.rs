@@ -23,20 +23,42 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1004f1e0(str: *mut i8) {
+    mech_trace::enter!("1004f1e0", str);
     // SAFETY: the globals and the callees are the game's own; the file
     // handle is used and cleared where the original does.
     unsafe {
-        if DAT_1009be04.is_null() {
-            DAT_1009be04 = FID_conflict___wfopen(
-                (&raw mut s_debug_log_1009be08).cast::<i8>(),
-                (&raw mut DAT_1009bf5c).cast::<i8>(),
+        if mech_trace::gr!("1004f1e0", "1009be04", DAT_1009be04).is_null() {
+            mech_trace::gw!(
+                "1004f1e0",
+                "1009be04",
+                DAT_1009be04,
+                mech_trace::cr!(
+                    "1004f1e0",
+                    "FID_conflict___wfopen",
+                    FID_conflict___wfopen(
+                        (&raw mut s_debug_log_1009be08).cast::<i8>(),
+                        (&raw mut DAT_1009bf5c).cast::<i8>(),
+                    )
+                )
             );
         }
-        if !DAT_1009be04.is_null() {
-            _fputs(str, DAT_1009be04);
-            _fflush(DAT_1009be04);
-            _fclose(DAT_1009be04);
-            DAT_1009be04 = core::ptr::null_mut();
+        if !mech_trace::gr!("1004f1e0", "1009be04", DAT_1009be04).is_null() {
+            mech_trace::cr!(
+                "1004f1e0",
+                "_fputs",
+                _fputs(str, mech_trace::gr!("1004f1e0", "1009be04", DAT_1009be04))
+            );
+            mech_trace::cr!(
+                "1004f1e0",
+                "_fflush",
+                _fflush(mech_trace::gr!("1004f1e0", "1009be04", DAT_1009be04))
+            );
+            mech_trace::cr!(
+                "1004f1e0",
+                "_fclose",
+                _fclose(mech_trace::gr!("1004f1e0", "1009be04", DAT_1009be04))
+            );
+            mech_trace::gw!("1004f1e0", "1009be04", DAT_1009be04, core::ptr::null_mut());
         }
     }
 }

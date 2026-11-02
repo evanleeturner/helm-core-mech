@@ -31,18 +31,19 @@ unsafe fn idiv(a: i32, b: i32) -> i32 {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10066dc9(param_1: *mut i32, param_2: i32, param_3: i32) {
+    mech_trace::enter!("10066dc9", param_1, param_2, param_3);
     let mut local_10: i32 = 0;
     if !param_1.is_null() && param_2 != 0 {
         // SAFETY: the callees are the game's own; param_1 points at the caller's
         // structure of at least five ints, read where the original reads.
         unsafe {
-            let u_var5 = FUN_1005b547(param_2, param_3);
+            let u_var5 = mech_trace::cr!("10066dc9", "1005b547", FUN_1005b547(param_2, param_3));
             let i_var6 = (u_var5 as i32) >> 0x10;
             let u_var5 = u_var5 & 0xffff;
-            let i_var1 = param_1.add(3).read_unaligned();
-            let i_var2 = param_1.add(1).read_unaligned();
-            let i_var3 = param_1.add(4).read_unaligned();
-            let i_var4 = param_1.add(2).read_unaligned();
+            let i_var1 = mech_trace::rd!("10066dc9", param_1.add(3), read_unaligned);
+            let i_var2 = mech_trace::rd!("10066dc9", param_1.add(1), read_unaligned);
+            let i_var3 = mech_trace::rd!("10066dc9", param_1.add(4), read_unaligned);
+            let i_var4 = mech_trace::rd!("10066dc9", param_1.add(2), read_unaligned);
             let mut local_28: i32 = 0;
             loop {
                 let mut local_14: i32 = 0;
@@ -59,7 +60,11 @@ pub unsafe extern "C" fn FUN_10066dc9(param_1: *mut i32, param_2: i32, param_3: 
                     if !(local_24 < m) {
                         break;
                     }
-                    FUN_10056fc4(param_1, param_2, param_3, local_14, local_10);
+                    mech_trace::cr!(
+                        "10066dc9",
+                        "10056fc4",
+                        FUN_10056fc4(param_1, param_2, param_3, local_14, local_10)
+                    );
                     local_14 = local_14.wrapping_add(i_var6);
                     local_24 = local_24.wrapping_add(1);
                 }

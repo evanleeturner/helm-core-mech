@@ -12,9 +12,14 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10007321(source: *const i8) {
+    mech_trace::enter!("10007321", source);
     // SAFETY: the debug log buffer is the game's own memory, at least 0x100
     // bytes; source is the caller's string, copied as the original does.
     unsafe {
-        strncpy(&raw mut DAT_100a41f0, source, 0x100);
+        mech_trace::cr!(
+            "10007321",
+            "strncpy",
+            strncpy(&raw mut DAT_100a41f0, source, 0x100)
+        );
     }
 }

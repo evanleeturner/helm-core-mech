@@ -41,13 +41,17 @@ unsafe fn copy_str(src: *const i8, dst: *mut i8) {
     // SAFETY: src is a NUL-terminated string; dst is the caller's buffer.
     unsafe {
         let mut n: usize = 0;
-        while *src.add(n) != 0 {
+        while mech_trace::dr!("1005bc00", src.add(n)) != 0 {
             n += 1;
         }
         n += 1;
         let mut i = 0;
         while i < n {
-            *dst.add(i) = *src.add(i);
+            mech_trace::dw!(
+                "1005bc00",
+                dst.add(i),
+                mech_trace::dr!("1005bc00", src.add(i))
+            );
             i += 1;
         }
     }
@@ -56,17 +60,22 @@ unsafe fn copy_str(src: *const i8, dst: *mut i8) {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1005bc00(param_1: i32) {
+    mech_trace::enter!("1005bc00", param_1);
     let mut local_100: [i8; 256] = [0; 256];
     // SAFETY: globals and callees are the game's own; strings are NUL-terminated
     // and copied into the local buffer as the original does.
     unsafe {
-        let pi_var2 = DAT_100a5aa0;
-        if DAT_100a5aa4 != param_1 {
-            DAT_100a5aa4 = param_1;
-            if !DAT_100a5aa0.is_null() {
-                FUN_10040680(DAT_100a5aa0 as i32);
-                FUN_1006ec30(pi_var2 as *mut c_void);
-                DAT_100a5aa0 = core::ptr::null_mut();
+        let pi_var2 = mech_trace::gr!("1005bc00", "100a5aa0", DAT_100a5aa0);
+        if mech_trace::gr!("1005bc00", "100a5aa4", DAT_100a5aa4) != param_1 {
+            mech_trace::gw!("1005bc00", "100a5aa4", DAT_100a5aa4, param_1);
+            if !mech_trace::gr!("1005bc00", "100a5aa0", DAT_100a5aa0).is_null() {
+                mech_trace::cr!(
+                    "1005bc00",
+                    "10040680",
+                    FUN_10040680(mech_trace::gr!("1005bc00", "100a5aa0", DAT_100a5aa0) as i32)
+                );
+                mech_trace::cr!("1005bc00", "1006ec30", FUN_1006ec30(pi_var2 as *mut c_void));
+                mech_trace::gw!("1005bc00", "100a5aa0", DAT_100a5aa0, core::ptr::null_mut());
             }
             copy_str((&raw mut DAT_100a5af4).cast::<i8>(), local_100.as_mut_ptr());
             let src: *const i8 = match param_1 {
@@ -78,12 +87,21 @@ pub unsafe extern "C" fn FUN_1005bc00(param_1: i32) {
                 _ => (&raw mut DAT_100a5b9c).cast::<i8>(),
             };
             copy_str(src, local_100.as_mut_ptr());
-            DAT_100a5aa0 = FUN_10050b80(
-                DAT_100a6748,
-                0x1d,
-                0x1ba,
-                local_100.as_mut_ptr(),
-                0x100c48d0,
+            mech_trace::gw!(
+                "1005bc00",
+                "100a5aa0",
+                DAT_100a5aa0,
+                mech_trace::cr!(
+                    "1005bc00",
+                    "10050b80",
+                    FUN_10050b80(
+                        mech_trace::gr!("1005bc00", "100a6748", DAT_100a6748),
+                        0x1d,
+                        0x1ba,
+                        local_100.as_mut_ptr(),
+                        0x100c48d0,
+                    )
+                )
             );
         }
     }

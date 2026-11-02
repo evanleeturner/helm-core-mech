@@ -32,32 +32,44 @@ unsafe extern "thiscall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1003a560(param_1: *mut i8, param_2: i32) {
+    mech_trace::enter!("1003a560", param_1, param_2);
     // SAFETY: param_1 points at the caller's object; fields are read and
     // written at the original's offsets, and the callees and global are the
     // game's own.
     unsafe {
-        let a = param_1.byte_add(0x20d).cast::<i32>().read_unaligned();
+        let a = mech_trace::rd!(
+            "1003a560",
+            param_1.byte_add(0x20d).cast::<i32>(),
+            read_unaligned
+        );
         if a != 0 {
             FUN_10040640(a);
         }
-        let pv1 = param_1
-            .byte_add(0x209)
-            .cast::<*mut c_void>()
-            .read_unaligned();
+        let pv1 = mech_trace::rd!(
+            "1003a560",
+            param_1.byte_add(0x209).cast::<*mut c_void>(),
+            read_unaligned
+        );
         if !pv1.is_null() {
             FUN_10040680(pv1 as usize as i32);
             FUN_1006ec30(pv1);
         }
-        let pi2 = FUN_10050b80(
-            DAT_100a6748,
-            0x2a,
-            param_2.wrapping_mul(0x23).wrapping_add(0x5c),
-            param_1,
-            0x100c49d0,
+        let pi2 = mech_trace::cr!(
+            "1003a560",
+            "10050b80",
+            FUN_10050b80(
+                mech_trace::gr!("1003a560", "100a6748", DAT_100a6748),
+                0x2a,
+                param_2.wrapping_mul(0x23).wrapping_add(0x5c),
+                param_1,
+                0x100c49d0,
+            )
         );
-        param_1
-            .byte_add(0x209)
-            .cast::<*mut i32>()
-            .write_unaligned(pi2);
+        mech_trace::wr!(
+            "1003a560",
+            param_1.byte_add(0x209).cast::<*mut i32>(),
+            write_unaligned,
+            pi2
+        );
     }
 }

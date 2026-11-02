@@ -24,37 +24,43 @@ pub unsafe extern "C" fn FUN_100807b5(
     param_5: i32,
     param_6: i32,
 ) -> i32 {
+    mech_trace::enter!(
+        "100807b5", param_1, param_2, param_3, param_4, param_5, param_6
+    );
     let mut local_8: u32 = param_1 as u32;
     let mut local_c: u32 = param_2 as u32;
     let mut local_10: u32 = param_3 as u32;
     // SAFETY: the globals are the game's own memory.
     unsafe {
-        if DAT_100c96b0 != 0 {
+        if mech_trace::gr!("100807b5", "100c96b0", DAT_100c96b0) != 0 {
             local_10 = 0;
             local_c = 0;
             local_8 = 0;
         }
-        let u_var4 = (DAT_100c9ec4 as u32).wrapping_sub(local_8);
-        let b = DAT_100c9ec4 < (local_8 as i32);
+        let u_var4 =
+            (mech_trace::gr!("100807b5", "100c9ec4", DAT_100c9ec4) as u32).wrapping_sub(local_8);
+        let b = mech_trace::gr!("100807b5", "100c9ec4", DAT_100c9ec4) < (local_8 as i32);
         local_8 = u_var4;
         if b {
             local_8 = 0u32.wrapping_sub(u_var4);
         }
-        let u_var5 = (DAT_100c9ec8 as u32).wrapping_sub(local_c);
-        let b = DAT_100c9ec8 < (local_c as i32);
+        let u_var5 =
+            (mech_trace::gr!("100807b5", "100c9ec8", DAT_100c9ec8) as u32).wrapping_sub(local_c);
+        let b = mech_trace::gr!("100807b5", "100c9ec8", DAT_100c9ec8) < (local_c as i32);
         local_c = u_var5;
         if b {
             local_c = 0u32.wrapping_sub(u_var5);
         }
-        let u_var6 = (DAT_100c9ec0 as u32).wrapping_sub(local_10);
-        let b = DAT_100c9ec0 < (local_10 as i32);
+        let u_var6 =
+            (mech_trace::gr!("100807b5", "100c9ec0", DAT_100c9ec0) as u32).wrapping_sub(local_10);
+        let b = mech_trace::gr!("100807b5", "100c9ec0", DAT_100c9ec0) < (local_10 as i32);
         local_10 = u_var6;
         if b {
             local_10 = 0u32.wrapping_sub(u_var6);
         }
         let mut u_var11 = local_8 | local_c | local_10;
         if u_var11 == 0 {
-            return 0x7f;
+            return mech_trace::rt!("100807b5", 0x7f);
         }
         let sum = ((u_var4 as i32 as i64).wrapping_mul(param_4 as i64) as u64)
             .wrapping_add((u_var5 as i32 as i64).wrapping_mul(param_5 as i64) as u64)
@@ -110,8 +116,8 @@ pub unsafe extern "C" fn FUN_100807b5(
         let carry2: u16 = (((u_var10 as u32) + c2) > 0xffff) as u16;
         let t: u16 = ((u_var10.wrapping_add(c2 as u16)) >> 7) | carry1.wrapping_add(carry2);
         let idx = ((t as i32).wrapping_mul(0x200) & 0xfffe) as u32;
-        let addr = idx.wrapping_add(DAT_10165944 as u32);
-        let i_var12 = (addr as *const i16).read_unaligned() as i32;
+        let addr = idx.wrapping_add(mech_trace::gr!("100807b5", "10165944", DAT_10165944) as u32);
+        let i_var12 = mech_trace::rd!("100807b5", (addr as *const i16), read_unaligned) as i32;
         let mut local_14: i16 = 0;
         if i_var12 == 0 {
             RaiseException(0xC0000094, 0, 0, core::ptr::null());
@@ -127,6 +133,6 @@ pub unsafe extern "C" fn FUN_100807b5(
                 local_14 = l_var3 as i16;
             }
         }
-        local_14 as i32
+        mech_trace::rt!("100807b5", local_14 as i32)
     }
 }

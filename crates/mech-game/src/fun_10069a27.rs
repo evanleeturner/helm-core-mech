@@ -21,6 +21,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10069a27() {
+    mech_trace::enter!("10069a27");
     let mut local_8: i32 = 10;
     let mut local_c: i32 = 10;
     let mut local_10: i32 = 0;
@@ -30,14 +31,18 @@ pub unsafe extern "stdcall" fn FUN_10069a27() {
             // SAFETY: the callee and the global are the game's own; the
             // array's address is passed as the original does.
             unsafe {
-                FUN_10056489(
-                    (&raw mut DAT_101f52e0).cast::<i32>(),
-                    local_8,
-                    local_c.wrapping_add(local_14),
-                    local_8.wrapping_add(3),
-                    local_c.wrapping_add(local_14),
-                    0,
-                    local_10,
+                mech_trace::cr!(
+                    "10069a27",
+                    "10056489",
+                    FUN_10056489(
+                        (&raw mut DAT_101f52e0).cast::<i32>(),
+                        local_8,
+                        local_c.wrapping_add(local_14),
+                        local_8.wrapping_add(3),
+                        local_c.wrapping_add(local_14),
+                        0,
+                        local_10,
+                    )
                 );
             }
             local_14 = local_14.wrapping_add(1);

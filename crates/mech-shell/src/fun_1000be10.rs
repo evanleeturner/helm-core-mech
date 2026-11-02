@@ -8,11 +8,14 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1000be10() {
+    mech_trace::enter!("1000be10");
     // SAFETY: DAT_10083508 is the game's own pointer to a structure; the
     // counter at offset 0x15e is read and written where the original does.
     unsafe {
-        let p = DAT_10083508.byte_add(0x15e).cast::<i32>();
-        let counter = p.read_unaligned().wrapping_add(1);
-        p.write_unaligned(counter);
+        let p = mech_trace::gr!("1000be10", "10083508", DAT_10083508)
+            .byte_add(0x15e)
+            .cast::<i32>();
+        let counter = mech_trace::rd!("1000be10", p, read_unaligned).wrapping_add(1);
+        mech_trace::wr!("1000be10", p, write_unaligned, counter);
     }
 }

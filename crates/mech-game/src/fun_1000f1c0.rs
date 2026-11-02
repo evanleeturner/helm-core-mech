@@ -8,6 +8,7 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1000f1c0(param_1: i32, param_2: i32, param_3: i32) -> i32 {
+    mech_trace::enter!("1000f1c0", param_1, param_2, param_3);
     let prod: i64 = (param_1 as i64).wrapping_mul(param_2 as i64);
     let num: i64 = prod >> 8;
     let den: i64 = param_3 as i64;
@@ -18,7 +19,7 @@ pub unsafe extern "C" fn FUN_1000f1c0(param_1: i32, param_2: i32, param_3: i32) 
         unsafe {
             RaiseException(0xC0000094, 0, 0, core::ptr::null());
         }
-        return 0;
+        return mech_trace::rt!("1000f1c0", 0);
     }
 
     // SAFETY-free: den is nonzero, and num is within +/-2^55, so no overflow.
@@ -30,8 +31,8 @@ pub unsafe extern "C" fn FUN_1000f1c0(param_1: i32, param_2: i32, param_3: i32) 
         unsafe {
             RaiseException(0xC0000094, 0, 0, core::ptr::null());
         }
-        return 0;
+        return mech_trace::rt!("1000f1c0", 0);
     }
 
-    (quot as i32) >> 6
+    mech_trace::rt!("1000f1c0", (quot as i32) >> 6)
 }

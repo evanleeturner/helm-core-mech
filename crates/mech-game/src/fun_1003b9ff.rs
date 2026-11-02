@@ -8,15 +8,29 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1003b9ff(param_1: i32, param_2: *mut u32) {
+    mech_trace::enter!("1003b9ff", param_1, param_2);
     // SAFETY: the callee is the game's own; param_1 is the address of the
     // caller's object and param_2 points at the caller's dwords, read and
     // written at the same offsets as the original.
     unsafe {
         FUN_10089643(param_2, param_1.wrapping_add(0x54) as *mut u32);
-        ((param_1.wrapping_add(0x78)) as *mut u32).write_unaligned(param_2.add(9).read_unaligned());
-        ((param_1.wrapping_add(0x7c)) as *mut u32)
-            .write_unaligned(param_2.add(10).read_unaligned());
-        ((param_1.wrapping_add(0x80)) as *mut u32)
-            .write_unaligned(param_2.add(0xb).read_unaligned());
+        mech_trace::wr!(
+            "1003b9ff",
+            ((param_1.wrapping_add(0x78)) as *mut u32),
+            write_unaligned,
+            mech_trace::rd!("1003b9ff", param_2.add(9), read_unaligned)
+        );
+        mech_trace::wr!(
+            "1003b9ff",
+            ((param_1.wrapping_add(0x7c)) as *mut u32),
+            write_unaligned,
+            mech_trace::rd!("1003b9ff", param_2.add(10), read_unaligned)
+        );
+        mech_trace::wr!(
+            "1003b9ff",
+            ((param_1.wrapping_add(0x80)) as *mut u32),
+            write_unaligned,
+            mech_trace::rd!("1003b9ff", param_2.add(0xb), read_unaligned)
+        );
     }
 }

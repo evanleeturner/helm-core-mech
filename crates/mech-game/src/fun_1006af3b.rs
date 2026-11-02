@@ -8,17 +8,26 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1006af3b() -> u32 {
+    mech_trace::enter!("1006af3b");
     let mut local_8: u32 = 0;
     // SAFETY: the callee is the game's own; it receives the address of a
     // live local that it may write.
     unsafe {
-        let i_var1 = _AIL_midiOutOpen_12((&raw mut local_8) as usize as u32, 0, 0xffff_ffff);
+        let i_var1 = mech_trace::cr!(
+            "1006af3b",
+            "_AIL_midiOutOpen_12",
+            _AIL_midiOutOpen_12((&raw mut local_8) as usize as u32, 0, 0xffff_ffff)
+        );
         if i_var1 != 0 {
-            let i_var1 = _AIL_midiOutOpen_12((&raw mut local_8) as usize as u32, 0, 0);
+            let i_var1 = mech_trace::cr!(
+                "1006af3b",
+                "_AIL_midiOutOpen_12",
+                _AIL_midiOutOpen_12((&raw mut local_8) as usize as u32, 0, 0)
+            );
             if i_var1 != 0 {
                 local_8 = 0;
             }
         }
     }
-    local_8
+    mech_trace::rt!("1006af3b", local_8)
 }

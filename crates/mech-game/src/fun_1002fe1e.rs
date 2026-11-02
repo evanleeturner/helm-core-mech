@@ -18,26 +18,37 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1002fe1e(mem: *mut i32, param_2: *mut u8) {
+    mech_trace::enter!("1002fe1e", mem, param_2);
     // SAFETY: mem points at the game's node structure; its child list,
     // callback and flags are read as the original does, and the callee,
     // callback and HeapFree are the game's own.
     unsafe {
-        FUN_1002fcce(mem);
-        let mut local_8: *mut i32 = mem.add(1).read_unaligned() as usize as *mut i32;
+        mech_trace::cr!("1002fe1e", "1002fcce", FUN_1002fcce(mem));
+        let mut local_8: *mut i32 =
+            mech_trace::rd!("1002fe1e", mem.add(1), read_unaligned) as usize as *mut i32;
         while !local_8.is_null() {
-            let pi_var1 = local_8.add(2).read_unaligned() as usize as *mut i32;
+            let pi_var1 =
+                mech_trace::rd!("1002fe1e", local_8.add(2), read_unaligned) as usize as *mut i32;
             FUN_1002fe1e(local_8, param_2);
             local_8 = pi_var1;
         }
-        let cb_arg = mem.add(0x1b).read_unaligned();
+        let cb_arg = mech_trace::rd!("1002fe1e", mem.add(0x1b), read_unaligned);
         if cb_arg != 0 && !param_2.is_null() {
             let f: unsafe extern "C" fn(i32) =
                 core::mem::transmute::<*mut u8, unsafe extern "C" fn(i32)>(param_2);
-            f(cb_arg);
+            mech_trace::cr!("1002fe1e", "ind", f(cb_arg));
         }
-        let flags = mem.add(0x1d).cast::<u8>().read();
+        let flags = mech_trace::rd!("1002fe1e", mem.add(0x1d).cast::<u8>(), read);
         if (flags & 4) != 0 {
-            HeapFree(DAT_100adf74, 1, mem.cast());
+            mech_trace::cr!(
+                "1002fe1e",
+                "HeapFree",
+                HeapFree(
+                    mech_trace::gr!("1002fe1e", "100adf74", DAT_100adf74),
+                    1,
+                    mem.cast()
+                )
+            );
         }
     }
 }

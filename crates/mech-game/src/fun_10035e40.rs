@@ -34,28 +34,91 @@ unsafe extern "fastcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10035e40(param_1: i32, param_2: i32) -> u64 {
+    mech_trace::enter!("10035e40", param_1, param_2);
     // SAFETY: the globals and callees are the game's own; the allocated
     // block is used as the original does.
     unsafe {
-        DAT_10167658 = param_2;
-        DAT_100adcec = param_1.wrapping_shl(10);
+        mech_trace::gw!("10035e40", "10167658", DAT_10167658, param_2);
+        mech_trace::gw!(
+            "10035e40",
+            "100adcec",
+            DAT_100adcec,
+            param_1.wrapping_shl(10)
+        );
         let size = param_2
             .wrapping_mul(0x40)
             .wrapping_add(param_1.wrapping_mul(0x400)) as u32;
-        DAT_100adcf0 = FUN_10086951(size);
-        if DAT_100adcf0.is_null() {
+        mech_trace::gw!(
+            "10035e40",
+            "100adcf0",
+            DAT_100adcf0,
+            mech_trace::cr!("10035e40", "10086951", FUN_10086951(size))
+        );
+        if mech_trace::gr!("10035e40", "100adcf0", DAT_100adcf0).is_null() {
             FUN_100108a0(0x18, core::ptr::null_mut());
         }
-        FUN_1008699d(DAT_100adcf0, 0, size);
-        DAT_1016765c = DAT_100adcf0;
-        DAT_10167e70 = DAT_100adcec.wrapping_add(DAT_100adcf0 as i32);
-        DAT_1016828c = DAT_10167658.wrapping_mul(0x20).wrapping_add(DAT_10167e70);
-        DAT_10168288 = DAT_100adcf0;
-        DAT_10167660 = (DAT_100adcf0 as i32)
-            .wrapping_add(DAT_100adcec.wrapping_mul(0xc))
-            .wrapping_sub(0x240) as *mut c_void;
-        FUN_10035b4e(DAT_100adcf0);
-        let u_var2 = FUN_100359f0(DAT_100adcf0, 0);
-        FUN_10035aa3(DAT_100adcf0, (u_var2 >> 0x20) as i32)
+        FUN_1008699d(
+            mech_trace::gr!("10035e40", "100adcf0", DAT_100adcf0),
+            0,
+            size,
+        );
+        mech_trace::gw!(
+            "10035e40",
+            "1016765c",
+            DAT_1016765c,
+            mech_trace::gr!("10035e40", "100adcf0", DAT_100adcf0)
+        );
+        mech_trace::gw!(
+            "10035e40",
+            "10167e70",
+            DAT_10167e70,
+            mech_trace::gr!("10035e40", "100adcec", DAT_100adcec).wrapping_add(mech_trace::gr!(
+                "10035e40",
+                "100adcf0",
+                DAT_100adcf0
+            )
+                as i32)
+        );
+        mech_trace::gw!(
+            "10035e40",
+            "1016828c",
+            DAT_1016828c,
+            mech_trace::gr!("10035e40", "10167658", DAT_10167658)
+                .wrapping_mul(0x20)
+                .wrapping_add(mech_trace::gr!("10035e40", "10167e70", DAT_10167e70))
+        );
+        mech_trace::gw!(
+            "10035e40",
+            "10168288",
+            DAT_10168288,
+            mech_trace::gr!("10035e40", "100adcf0", DAT_100adcf0)
+        );
+        mech_trace::gw!(
+            "10035e40",
+            "10167660",
+            DAT_10167660,
+            (mech_trace::gr!("10035e40", "100adcf0", DAT_100adcf0) as i32)
+                .wrapping_add(
+                    mech_trace::gr!("10035e40", "100adcec", DAT_100adcec).wrapping_mul(0xc)
+                )
+                .wrapping_sub(0x240) as *mut c_void
+        );
+        FUN_10035b4e(mech_trace::gr!("10035e40", "100adcf0", DAT_100adcf0));
+        let u_var2 = mech_trace::cr!(
+            "10035e40",
+            "100359f0",
+            FUN_100359f0(mech_trace::gr!("10035e40", "100adcf0", DAT_100adcf0), 0)
+        );
+        mech_trace::rt!(
+            "10035e40",
+            mech_trace::cr!(
+                "10035e40",
+                "10035aa3",
+                FUN_10035aa3(
+                    mech_trace::gr!("10035e40", "100adcf0", DAT_100adcf0),
+                    (u_var2 >> 0x20) as i32
+                )
+            )
+        )
     }
 }

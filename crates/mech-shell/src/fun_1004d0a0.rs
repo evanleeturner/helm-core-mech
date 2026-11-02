@@ -21,18 +21,52 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1004d0a0() {
+    mech_trace::enter!("1004d0a0");
     // SAFETY: the callees and globals are the game's own; the pointers
     // derived from the returned integers are read and written at the
     // offsets the original uses.
     unsafe {
-        let i_var1 = FUN_1000ce60(DAT_100a6798 as i32);
-        let i_var2 = FUN_1000ad30(
-            DAT_100a678c as i32,
-            ((i_var1 as u32).wrapping_add(0x810) as *const i32).read_unaligned(),
+        let i_var1 = mech_trace::cr!(
+            "1004d0a0",
+            "1000ce60",
+            FUN_1000ce60(mech_trace::gr!("1004d0a0", "100a6798", DAT_100a6798) as i32)
         );
-        FUN_10017ec0(DAT_100a6798 as i32, i_var1, 1);
-        FUN_10017ec0(DAT_100a678c as i32, i_var2, 1);
-        let i_var1 = FUN_1000ce20();
-        ((i_var1 as u32).wrapping_add(0x20) as *mut u32).write_unaligned(0xffffffff);
+        let i_var2 = mech_trace::cr!(
+            "1004d0a0",
+            "1000ad30",
+            FUN_1000ad30(
+                mech_trace::gr!("1004d0a0", "100a678c", DAT_100a678c) as i32,
+                mech_trace::rd!(
+                    "1004d0a0",
+                    ((i_var1 as u32).wrapping_add(0x810) as *const i32),
+                    read_unaligned
+                ),
+            )
+        );
+        mech_trace::cr!(
+            "1004d0a0",
+            "10017ec0",
+            FUN_10017ec0(
+                mech_trace::gr!("1004d0a0", "100a6798", DAT_100a6798) as i32,
+                i_var1,
+                1
+            )
+        );
+        mech_trace::cr!(
+            "1004d0a0",
+            "10017ec0",
+            FUN_10017ec0(
+                mech_trace::gr!("1004d0a0", "100a678c", DAT_100a678c) as i32,
+                i_var2,
+                1
+            )
+        );
+        let i_var1 = mech_trace::cr!("1004d0a0", "1000ce20", FUN_1000ce20());
+        mech_trace::wr!(
+            "1004d0a0",
+            ((i_var1 as u32).wrapping_add(0x20) as *mut u32),
+            write_unaligned,
+            0xffffffff
+        );
     }
 }

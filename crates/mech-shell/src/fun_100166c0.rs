@@ -14,18 +14,55 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_100166c0(menu: *mut core::ffi::c_void) {
+    mech_trace::enter!("100166c0", menu);
     // SAFETY: the Win32 calls and the global window handle are the game's own;
     // the menu handle is passed through unchanged.
     unsafe {
-        EnableMenuItem(menu, 1, 0x401);
-        EnableMenuItem(menu, 0x9c41, 1);
-        EnableMenuItem(menu, 0x9c99, 1);
-        EnableMenuItem(menu, 0x9c97, 1);
-        EnableMenuItem(menu, 0x9c72, 1);
-        EnableMenuItem(menu, 0x9c94, 1);
-        EnableMenuItem(menu, 0x9c4b, 1);
-        EnableMenuItem(menu, 0x9c96, 1);
-        EnableMenuItem(menu, 0x9c9a, 1);
-        DrawMenuBar(DAT_100d08e8);
+        mech_trace::cr!("100166c0", "EnableMenuItem", EnableMenuItem(menu, 1, 0x401));
+        mech_trace::cr!(
+            "100166c0",
+            "EnableMenuItem",
+            EnableMenuItem(menu, 0x9c41, 1)
+        );
+        mech_trace::cr!(
+            "100166c0",
+            "EnableMenuItem",
+            EnableMenuItem(menu, 0x9c99, 1)
+        );
+        mech_trace::cr!(
+            "100166c0",
+            "EnableMenuItem",
+            EnableMenuItem(menu, 0x9c97, 1)
+        );
+        mech_trace::cr!(
+            "100166c0",
+            "EnableMenuItem",
+            EnableMenuItem(menu, 0x9c72, 1)
+        );
+        mech_trace::cr!(
+            "100166c0",
+            "EnableMenuItem",
+            EnableMenuItem(menu, 0x9c94, 1)
+        );
+        mech_trace::cr!(
+            "100166c0",
+            "EnableMenuItem",
+            EnableMenuItem(menu, 0x9c4b, 1)
+        );
+        mech_trace::cr!(
+            "100166c0",
+            "EnableMenuItem",
+            EnableMenuItem(menu, 0x9c96, 1)
+        );
+        mech_trace::cr!(
+            "100166c0",
+            "EnableMenuItem",
+            EnableMenuItem(menu, 0x9c9a, 1)
+        );
+        mech_trace::cr!(
+            "100166c0",
+            "DrawMenuBar",
+            DrawMenuBar(mech_trace::gr!("100166c0", "100d08e8", DAT_100d08e8))
+        );
     }
 }

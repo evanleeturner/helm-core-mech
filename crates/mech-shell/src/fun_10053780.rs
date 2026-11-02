@@ -36,8 +36,8 @@ unsafe fn streq(mut a: *const u8, mut b: *const u8) -> bool {
     // the first difference or terminator.
     unsafe {
         loop {
-            let x = *a;
-            if x != *b {
+            let x = mech_trace::dr!("10053780", a);
+            if x != mech_trace::dr!("10053780", b) {
                 return false;
             }
             if x == 0 {
@@ -52,19 +52,32 @@ unsafe fn streq(mut a: *const u8, mut b: *const u8) -> bool {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10053780(param_1: *mut c_void, param_2: *mut u8, param_3: *mut i32) {
+    mech_trace::enter!("10053780", param_1, param_2, param_3);
     // SAFETY: the globals and callees are the game's own; param_2 is a
     // NUL-terminated string and param_3 points at the caller's int record.
     unsafe {
-        if param_3.add(4).read_unaligned() < 0 {
+        if mech_trace::rd!("10053780", param_3.add(4), read_unaligned) < 0 {
             return;
         }
-        let kind = param_3.read_unaligned();
+        let kind = mech_trace::rd!("10053780", param_3, read_unaligned);
         if kind == 0 {
-            FUN_10053500(param_1, param_2 as usize as u32, param_3 as usize as i32);
+            mech_trace::cr!(
+                "10053780",
+                "10053500",
+                FUN_10053500(param_1, param_2 as usize as u32, param_3 as usize as i32)
+            );
         } else if kind == 1 {
-            FUN_10053590(param_1, param_2.cast::<i8>(), param_3 as usize as i32);
+            mech_trace::cr!(
+                "10053780",
+                "10053590",
+                FUN_10053590(param_1, param_2.cast::<i8>(), param_3 as usize as i32)
+            );
         } else if kind == 2 {
-            FUN_10053630(param_1, param_2.cast::<i8>(), param_3.cast::<u32>());
+            mech_trace::cr!(
+                "10053780",
+                "10053630",
+                FUN_10053630(param_1, param_2.cast::<i8>(), param_3.cast::<u32>())
+            );
         }
 
         if streq(param_2, &raw mut DAT_1009fc90) {
@@ -77,9 +90,19 @@ pub unsafe extern "C" fn FUN_10053780(param_1: *mut c_void, param_2: *mut u8, pa
         }
         if streq(param_2, &raw mut DAT_1009fcd0) {
             let p = param_3.add(2);
-            p.write_unaligned(p.read_unaligned() ^ 0x8000_0000u32 as i32);
+            mech_trace::wr!(
+                "10053780",
+                p,
+                write_unaligned,
+                mech_trace::rd!("10053780", p, read_unaligned) ^ 0x8000_0000u32 as i32
+            );
             FUN_10053780(param_1, &raw mut DAT_1009fcdc, param_3);
-            p.write_unaligned(p.read_unaligned() ^ 0x8000_0000u32 as i32);
+            mech_trace::wr!(
+                "10053780",
+                p,
+                write_unaligned,
+                mech_trace::rd!("10053780", p, read_unaligned) ^ 0x8000_0000u32 as i32
+            );
             return;
         }
         if streq(param_2, &raw mut DAT_1009fcf4) {

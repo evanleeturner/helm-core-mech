@@ -17,21 +17,30 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1004db80() -> u32 {
+    mech_trace::enter!("1004db80");
     // SAFETY: the globals and callees are the game's own; the state block
     // pointer in DAT_10083508 addresses memory the original reads at +0x23bb.
     unsafe {
-        if DAT_1009b3c4 != 0 {
-            DAT_1009b3c4 = 0;
-            let mut u_var1 = DAT_10083508;
-            let i_field = (u_var1.wrapping_add(0x23bb) as *const i32).read_unaligned();
+        if mech_trace::gr!("1004db80", "1009b3c4", DAT_1009b3c4) != 0 {
+            mech_trace::gw!("1004db80", "1009b3c4", DAT_1009b3c4, 0);
+            let mut u_var1 = mech_trace::gr!("1004db80", "10083508", DAT_10083508);
+            let i_field = mech_trace::rd!(
+                "1004db80",
+                (u_var1.wrapping_add(0x23bb) as *const i32),
+                read_unaligned
+            );
             if i_field == 1 {
-                u_var1 = FUN_1004d0a0();
+                u_var1 = mech_trace::cr!("1004db80", "1004d0a0", FUN_1004d0a0());
             }
-            return u_var1 & 0xFFFF_FF00;
+            return mech_trace::rt!("1004db80", u_var1 & 0xFFFF_FF00);
         }
         FUN_10016b60(0x1004ec50);
-        let u_var2 = FUN_1000e970(&raw mut DAT_1009bc30, 0xc00a, 0xc00a);
-        DAT_1009b3c4 = 1;
-        (u_var2 & 0xFFFF_FF00) | 1
+        let u_var2 = mech_trace::cr!(
+            "1004db80",
+            "1000e970",
+            FUN_1000e970(&raw mut DAT_1009bc30, 0xc00a, 0xc00a)
+        );
+        mech_trace::gw!("1004db80", "1009b3c4", DAT_1009b3c4, 1);
+        mech_trace::rt!("1004db80", (u_var2 & 0xFFFF_FF00) | 1)
     }
 }

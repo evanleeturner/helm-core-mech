@@ -9,6 +9,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1000a0a0(param_1: i32) -> i32 {
+    mech_trace::enter!("1000a0a0", param_1);
     // SAFETY: the globals are the game's own table; the pointer walk stays
     // between the table start and the end marker as in the original.
     unsafe {
@@ -18,13 +19,18 @@ pub unsafe extern "C" fn FUN_1000a0a0(param_1: i32) -> i32 {
         let mut pi_var1: *mut i32 = base;
         let mut i_var2: i32 = param_1.wrapping_sub(param_1 % 100).wrapping_add(1);
         loop {
-            let v = pi_var1.read_unaligned();
+            let v = mech_trace::rd!("1000a0a0", pi_var1, read_unaligned);
             if v == -1 {
                 if 0x14 < i_var2 % 100 {
-                    return 0;
+                    return mech_trace::rt!("1000a0a0", 0);
                 }
-                base.offset(i_var3 as isize).write_unaligned(i_var2);
-                return i_var2;
+                mech_trace::wr!(
+                    "1000a0a0",
+                    base.offset(i_var3 as isize),
+                    write_unaligned,
+                    i_var2
+                );
+                return mech_trace::rt!("1000a0a0", i_var2);
             }
             if i_var2 / -100 == v / -100 {
                 i_var2 = i_var2.wrapping_add(1);
@@ -35,6 +41,6 @@ pub unsafe extern "C" fn FUN_1000a0a0(param_1: i32) -> i32 {
                 break;
             }
         }
-        0
+        mech_trace::rt!("1000a0a0", 0)
     }
 }

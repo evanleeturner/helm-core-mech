@@ -12,19 +12,27 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10047fde(param_1: *mut i8, buf: *mut u8) -> u32 {
+    mech_trace::enter!("10047fde", param_1, buf);
     // SAFETY: the callees are the game's own; param_1 and buf are the
     // caller's pointers, passed through as the original does.
     unsafe {
         let u_var2: u32 = 0x80;
         let i_var1: i32 = 0x8101;
-        let filename = FUN_100480d9(param_1) as *mut i8;
-        let fd = FID_conflict___open(filename, i_var1, u_var2);
-        if fd == -1 {
-            0xffffffff
-        } else {
-            __write(fd, buf, 0x54);
-            __close(fd);
-            0
-        }
+        let filename = mech_trace::cr!("10047fde", "100480d9", FUN_100480d9(param_1)) as *mut i8;
+        let fd = mech_trace::cr!(
+            "10047fde",
+            "FID_conflict___open",
+            FID_conflict___open(filename, i_var1, u_var2)
+        );
+        mech_trace::rt!(
+            "10047fde",
+            if fd == -1 {
+                0xffffffff
+            } else {
+                mech_trace::cr!("10047fde", "__write", __write(fd, buf, 0x54));
+                mech_trace::cr!("10047fde", "__close", __close(fd));
+                0
+            }
+        )
     }
 }

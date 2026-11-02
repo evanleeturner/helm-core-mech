@@ -14,9 +14,14 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10065a34() {
+    mech_trace::enter!("10065a34");
     // SAFETY: the callee and the global are the game's own; the stored
     // stream pointer is passed to fclose as the original does.
     unsafe {
-        _fclose(DAT_100c7f9c);
+        mech_trace::cr!(
+            "10065a34",
+            "_fclose",
+            _fclose(mech_trace::gr!("10065a34", "100c7f9c", DAT_100c7f9c))
+        );
     }
 }

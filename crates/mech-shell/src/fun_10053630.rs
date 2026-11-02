@@ -19,7 +19,7 @@ unsafe fn str_len(mut p: *const u8) -> usize {
     let mut n = 0usize;
     // SAFETY: p points at a NUL-terminated string.
     unsafe {
-        while *p != 0 {
+        while mech_trace::dr!("10053630", p) != 0 {
             p = p.add(1);
             n += 1;
         }
@@ -32,7 +32,11 @@ unsafe fn copy_bytes(dst: *mut u8, src: *const u8, n: usize) {
     // SAFETY: caller guarantees both ranges are valid for n bytes.
     unsafe {
         while i < n {
-            *dst.add(i) = *src.add(i);
+            mech_trace::dw!(
+                "10053630",
+                dst.add(i),
+                mech_trace::dr!("10053630", src.add(i))
+            );
             i += 1;
         }
     }
@@ -45,6 +49,7 @@ pub unsafe extern "C" fn FUN_10053630(
     param_2: *mut i8,
     param_3: *mut u32,
 ) {
+    mech_trace::enter!("10053630", param_1, param_2, param_3);
     let mut local_b8: [u32; 6] = [0; 6];
     let mut local_a0: [u8; 80] = [0; 80];
     let mut local_50: [u8; 80] = [0; 80];
@@ -54,7 +59,7 @@ pub unsafe extern "C" fn FUN_10053630(
     unsafe {
         let mut i = 0usize;
         while i < 6 {
-            local_b8[i] = param_3.add(i).read_unaligned();
+            local_b8[i] = mech_trace::rd!("10053630", param_3.add(i), read_unaligned);
             i += 1;
         }
 
@@ -64,16 +69,20 @@ pub unsafe extern "C" fn FUN_10053630(
         let n = str_len(param_2 as *const u8) + 1;
         copy_bytes(a, param_2 as *const u8, n);
 
-        let p = strstr(a as *const i8, &raw const DAT_1009fc68 as *const i8);
+        let p = mech_trace::cr!(
+            "10053630",
+            "strstr",
+            strstr(a as *const i8, &raw const DAT_1009fc68 as *const i8)
+        );
         if !p.is_null() {
-            *p = 0;
+            mech_trace::dw!("10053630", p, 0);
         }
 
         let n = str_len(a as *const u8) + 1;
         copy_bytes(b, a as *const u8, n);
 
         let (second_src, second_dst);
-        if (param_3.add(2).read_unaligned() & 0x8000_0000) == 0 {
+        if (mech_trace::rd!("10053630", param_3.add(2), read_unaligned) & 0x8000_0000) == 0 {
             let l = str_len(a as *const u8);
             copy_bytes(a.add(l), &raw const DAT_1009fc80 as *const u8, 7);
             second_src = &raw const DAT_1009fc88 as *const u8;
@@ -88,17 +97,23 @@ pub unsafe extern "C" fn FUN_10053630(
         copy_bytes(second_dst.add(l), second_src, 6);
 
         FUN_10053590(param_1, a as *mut i8, param_3 as i32);
-        param_3
-            .add(4)
-            .write_unaligned(param_3.add(5).read_unaligned());
-        param_3
-            .add(2)
-            .write_unaligned(param_3.add(3).read_unaligned());
+        mech_trace::wr!(
+            "10053630",
+            param_3.add(4),
+            write_unaligned,
+            mech_trace::rd!("10053630", param_3.add(5), read_unaligned)
+        );
+        mech_trace::wr!(
+            "10053630",
+            param_3.add(2),
+            write_unaligned,
+            mech_trace::rd!("10053630", param_3.add(3), read_unaligned)
+        );
         FUN_10053590(param_1, b as *mut i8, param_3 as i32);
 
         let mut i = 0usize;
         while i < 6 {
-            param_3.add(i).write_unaligned(local_b8[i]);
+            mech_trace::wr!("10053630", param_3.add(i), write_unaligned, local_b8[i]);
             i += 1;
         }
     }

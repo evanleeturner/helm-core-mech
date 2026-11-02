@@ -23,29 +23,43 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10043456(param_1: *mut i32, param_2: i16) -> i32 {
+    mech_trace::enter!("10043456", param_1, param_2);
     // SAFETY: the callees and globals are the game's own; param_1 points at
     // the game object, with fields read and written at the original's offsets.
     unsafe {
         FUN_1002950f(param_1, param_2);
         let local_10: i32;
-        if FUN_10044054(param_1) == 0 {
-            local_10 = FUN_100297b4(param_1);
-            let u_var3 = FUN_100295f4(param_1, 0x157c);
-            let p = param_1.byte_add(0x4c).cast::<i32>().read_unaligned() as u32 as *mut i32;
-            p.byte_add(8).write_unaligned(u_var3 as i32);
+        if mech_trace::cr!("10043456", "10044054", FUN_10044054(param_1)) == 0 {
+            local_10 = mech_trace::cr!("10043456", "100297b4", FUN_100297b4(param_1));
+            let u_var3 = mech_trace::cr!("10043456", "100295f4", FUN_100295f4(param_1, 0x157c));
+            let p = mech_trace::rd!(
+                "10043456",
+                param_1.byte_add(0x4c).cast::<i32>(),
+                read_unaligned
+            ) as u32 as *mut i32;
+            mech_trace::wr!("10043456", p.byte_add(8), write_unaligned, u_var3 as i32);
         } else {
-            local_10 = FUN_1002a132(param_1);
+            local_10 = mech_trace::cr!("10043456", "1002a132", FUN_1002a132(param_1));
         }
         FUN_10022b70(param_1, local_10);
-        let i_var2 = FUN_10044a2b(param_1);
-        let i_var2 = FUN_10002570(((i_var2 as u32).wrapping_shl(0x10)) as i32, 500000);
-        let mut local_c: f64 = (i_var2 as f64) / DAT_100a11f0;
-        if local_c < DAT_100a11f8 {
+        let i_var2 = mech_trace::cr!("10043456", "10044a2b", FUN_10044a2b(param_1));
+        let i_var2 = mech_trace::cr!(
+            "10043456",
+            "10002570",
+            FUN_10002570(((i_var2 as u32).wrapping_shl(0x10)) as i32, 500000)
+        );
+        let mut local_c: f64 =
+            (i_var2 as f64) / mech_trace::gr!("10043456", "100a11f0", DAT_100a11f0);
+        if local_c < mech_trace::gr!("10043456", "100a11f8", DAT_100a11f8) {
             local_c = 1.0;
         }
-        local_c *= DAT_100a1200;
-        let i_var2 = param_1.byte_add(0xc0).cast::<i32>().read_unaligned();
+        local_c *= mech_trace::gr!("10043456", "100a1200", DAT_100a1200);
+        let i_var2 = mech_trace::rd!(
+            "10043456",
+            param_1.byte_add(0xc0).cast::<i32>(),
+            read_unaligned
+        );
         FUN_10044a83(param_1);
-        ((i_var2 as f64) <= local_c) as i32
+        mech_trace::rt!("10043456", ((i_var2 as f64) <= local_c) as i32)
     }
 }

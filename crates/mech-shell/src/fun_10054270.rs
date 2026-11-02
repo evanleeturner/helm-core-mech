@@ -33,6 +33,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10054270(param_1: i32) {
+    mech_trace::enter!("10054270", param_1);
     let mut file_name = [0i8; 32];
     let mut file_number: i32;
     let saved_config_number: i32;
@@ -42,31 +43,60 @@ pub unsafe extern "C" fn FUN_10054270(param_1: i32) {
     unsafe {
         if param_1 == 0 {
             file_number = 0;
-            saved_config_number = DAT_1009c698;
+            saved_config_number = mech_trace::gr!("10054270", "1009c698", DAT_1009c698);
         } else {
-            file_number = ((param_1 as u32).wrapping_add(0x28) as *const i32).read_unaligned();
+            file_number = mech_trace::rd!(
+                "10054270",
+                ((param_1 as u32).wrapping_add(0x28) as *const i32),
+                read_unaligned
+            );
             let mut s = file_number;
             if file_number < 0 {
-                file_number = DAT_1009c698;
-                s = DAT_1009c698;
+                file_number = mech_trace::gr!("10054270", "1009c698", DAT_1009c698);
+                s = mech_trace::gr!("10054270", "1009c698", DAT_1009c698);
             }
             saved_config_number = s;
         }
-        DAT_1009c698 = saved_config_number;
-        _sprintf(file_name.as_mut_ptr(), &raw const DAT_1009feb4, file_number);
-        let cpc_file = FID_conflict___wfopen(
-            file_name.as_ptr().cast(),
-            (&raw mut DAT_1009fecc).cast::<core::ffi::c_void>(),
+        mech_trace::gw!("10054270", "1009c698", DAT_1009c698, saved_config_number);
+        mech_trace::cr!(
+            "10054270",
+            "_sprintf",
+            _sprintf(file_name.as_mut_ptr(), &raw const DAT_1009feb4, file_number)
+        );
+        let cpc_file = mech_trace::cr!(
+            "10054270",
+            "FID_conflict___wfopen",
+            FID_conflict___wfopen(
+                file_name.as_ptr().cast(),
+                (&raw mut DAT_1009fecc).cast::<core::ffi::c_void>(),
+            )
         );
         if !cpc_file.is_null() {
-            _fread((&raw mut DAT_100bd950).cast(), 0x40, 1, cpc_file);
-            _fread((&raw mut DAT_100bfed8).cast(), 0x10, 0x10, cpc_file);
-            _fread((&raw mut DAT_100bdf90).cast(), 0xde0, 1, cpc_file);
-            _fclose(cpc_file);
+            mech_trace::cr!(
+                "10054270",
+                "_fread",
+                _fread((&raw mut DAT_100bd950).cast(), 0x40, 1, cpc_file)
+            );
+            mech_trace::cr!(
+                "10054270",
+                "_fread",
+                _fread((&raw mut DAT_100bfed8).cast(), 0x10, 0x10, cpc_file)
+            );
+            mech_trace::cr!(
+                "10054270",
+                "_fread",
+                _fread((&raw mut DAT_100bdf90).cast(), 0xde0, 1, cpc_file)
+            );
+            mech_trace::cr!("10054270", "_fclose", _fclose(cpc_file));
             FUN_10053df0((&raw mut DAT_100bdf90).cast());
             FUN_10053cf0();
-            DAT_1009c68c = 0;
-            DAT_1009c690 = (&raw mut DAT_100bdf90) as u32;
+            mech_trace::gw!("10054270", "1009c68c", DAT_1009c68c, 0);
+            mech_trace::gw!(
+                "10054270",
+                "1009c690",
+                DAT_1009c690,
+                (&raw mut DAT_100bdf90) as u32
+            );
         }
     }
 }

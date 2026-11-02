@@ -10,6 +10,9 @@ pub unsafe extern "C" fn FUN_10035980(
     param_5: i32,
     param_6: i32,
 ) -> i32 {
+    mech_trace::enter!(
+        "10035980", param_1, param_2, param_3, param_4, param_5, param_6
+    );
     let a = (param_1 as i64).wrapping_mul(param_2 as i64) as u64;
     let b = (param_3 as i64).wrapping_mul(param_4 as i64) as u64;
     let c = (param_6 as i64).wrapping_mul(param_5 as i64) as u64;
@@ -20,5 +23,5 @@ pub unsafe extern "C" fn FUN_10035980(
 
     let rounded = (low.wrapping_shr(0x1d) | high.wrapping_mul(8))
         .wrapping_add(((low.wrapping_shr(0x1c)) & 1 != 0) as u32);
-    rounded as i32
+    mech_trace::rt!("10035980", rounded as i32)
 }

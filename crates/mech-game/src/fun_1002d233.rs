@@ -48,50 +48,259 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1002d233() -> *mut c_void {
+    mech_trace::enter!("1002d233");
     // SAFETY: all globals and callees are the game's own memory and code;
     // accesses happen in the same order as the original.
     unsafe {
-        _DAT_1016a654 = i32::from(DAT_1016a638).wrapping_mul(0x250);
-        _DAT_1016a650 = DAT_100ad6b8;
-        _DAT_1016a65c = FUN_10022aaa();
-        _DAT_1016a65c = _DAT_1016a65c.wrapping_mul(i32::from(DAT_1016a638));
-        _DAT_1016a658 = DAT_100ad6bc;
-        _DAT_1016a664 = FUN_10030398();
-        _DAT_1016a664 = _DAT_1016a664.wrapping_mul(i32::from(DAT_1016a63c));
-        _DAT_1016a660 = DAT_100ad6c0;
-        let i_var1 = FUN_1005dbf1();
-        _DAT_1016a66c = i_var1.wrapping_mul(i32::from(DAT_1016a644));
-        DAT_1016a668[0] = DAT_100ad6c4[0];
-        DAT_1016a668[1] = DAT_100ad6c4[1];
-        DAT_1016a668[2] = DAT_100ad6c4[2];
-        DAT_1016a668[3] = DAT_100ad6c4[3];
-        _DAT_1016a674 = i32::from(DAT_1016a644).wrapping_mul(0x2c);
-        DAT_1016a670[0] = DAT_100ad6c4[4];
-        DAT_1016a670[1] = DAT_100ad6c4[5];
-        DAT_1016a670[2] = DAT_100ad6c4[6];
-        DAT_1016a670[3] = DAT_100ad6c4[7];
-        _DAT_1016a67c = i32::from(DAT_1016a646).wrapping_mul(0x14);
-        DAT_1016a678[0] = DAT_100ad6c4[8];
-        DAT_1016a678[1] = DAT_100ad6c4[9];
-        DAT_1016a678[2] = DAT_100ad6c4[10];
-        DAT_1016a678[3] = DAT_100ad6c4[11];
-        _DAT_1016a684 = DAT_1016a648;
-        DAT_1016a680[0] = DAT_100ad6c4[12];
-        DAT_1016a680[1] = DAT_100ad6c4[13];
-        DAT_1016a680[2] = DAT_100ad6c4[14];
-        DAT_1016a680[3] = DAT_100ad6c4[15];
-        _DAT_1016a68c = i32::from(DAT_1016a63e).wrapping_shl(3);
-        DAT_1016a688[0] = DAT_100ad6c4[16];
-        DAT_1016a688[1] = DAT_100ad6c4[17];
-        DAT_1016a688[2] = DAT_100ad6c4[18];
-        DAT_1016a688[3] = DAT_100ad6c4[19];
-        _DAT_1016a694 = i32::from(DAT_1016a63e).wrapping_shl(2);
-        DAT_1016a690[0] = DAT_100ad6c4[20];
-        DAT_1016a690[1] = DAT_100ad6c4[21];
-        DAT_1016a690[2] = DAT_100ad6c4[22];
-        DAT_1016a690[3] = DAT_100ad6c4[23];
-        _DAT_1016a69c = i32::from(DAT_1016a63e).wrapping_shl(2);
-        _DAT_1016a698 = DAT_100ad6dc;
-        &raw mut _DAT_1016a650 as *mut c_void
+        mech_trace::gw!(
+            "1002d233",
+            "_DAT_1016a654",
+            _DAT_1016a654,
+            i32::from(mech_trace::gr!("1002d233", "1016a638", DAT_1016a638)).wrapping_mul(0x250)
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "_DAT_1016a650",
+            _DAT_1016a650,
+            mech_trace::gr!("1002d233", "100ad6b8", DAT_100ad6b8)
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "_DAT_1016a65c",
+            _DAT_1016a65c,
+            mech_trace::cr!("1002d233", "10022aaa", FUN_10022aaa())
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "_DAT_1016a65c",
+            _DAT_1016a65c,
+            mech_trace::gr!("1002d233", "_DAT_1016a65c", _DAT_1016a65c).wrapping_mul(i32::from(
+                mech_trace::gr!("1002d233", "1016a638", DAT_1016a638)
+            ))
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "_DAT_1016a658",
+            _DAT_1016a658,
+            mech_trace::gr!("1002d233", "100ad6bc", DAT_100ad6bc)
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "_DAT_1016a664",
+            _DAT_1016a664,
+            mech_trace::cr!("1002d233", "10030398", FUN_10030398())
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "_DAT_1016a664",
+            _DAT_1016a664,
+            mech_trace::gr!("1002d233", "_DAT_1016a664", _DAT_1016a664).wrapping_mul(i32::from(
+                mech_trace::gr!("1002d233", "1016a63c", DAT_1016a63c)
+            ))
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "_DAT_1016a660",
+            _DAT_1016a660,
+            mech_trace::gr!("1002d233", "100ad6c0", DAT_100ad6c0)
+        );
+        let i_var1 = mech_trace::cr!("1002d233", "1005dbf1", FUN_1005dbf1());
+        mech_trace::gw!(
+            "1002d233",
+            "_DAT_1016a66c",
+            _DAT_1016a66c,
+            i_var1.wrapping_mul(i32::from(mech_trace::gr!(
+                "1002d233",
+                "1016a644",
+                DAT_1016a644
+            )))
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "1016a668",
+            DAT_1016a668[0],
+            mech_trace::gr!("1002d233", "100ad6c4", DAT_100ad6c4[0])
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "1016a668",
+            DAT_1016a668[1],
+            mech_trace::gr!("1002d233", "100ad6c4", DAT_100ad6c4[1])
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "1016a668",
+            DAT_1016a668[2],
+            mech_trace::gr!("1002d233", "100ad6c4", DAT_100ad6c4[2])
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "1016a668",
+            DAT_1016a668[3],
+            mech_trace::gr!("1002d233", "100ad6c4", DAT_100ad6c4[3])
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "_DAT_1016a674",
+            _DAT_1016a674,
+            i32::from(mech_trace::gr!("1002d233", "1016a644", DAT_1016a644)).wrapping_mul(0x2c)
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "1016a670",
+            DAT_1016a670[0],
+            mech_trace::gr!("1002d233", "100ad6c4", DAT_100ad6c4[4])
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "1016a670",
+            DAT_1016a670[1],
+            mech_trace::gr!("1002d233", "100ad6c4", DAT_100ad6c4[5])
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "1016a670",
+            DAT_1016a670[2],
+            mech_trace::gr!("1002d233", "100ad6c4", DAT_100ad6c4[6])
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "1016a670",
+            DAT_1016a670[3],
+            mech_trace::gr!("1002d233", "100ad6c4", DAT_100ad6c4[7])
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "_DAT_1016a67c",
+            _DAT_1016a67c,
+            i32::from(mech_trace::gr!("1002d233", "1016a646", DAT_1016a646)).wrapping_mul(0x14)
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "1016a678",
+            DAT_1016a678[0],
+            mech_trace::gr!("1002d233", "100ad6c4", DAT_100ad6c4[8])
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "1016a678",
+            DAT_1016a678[1],
+            mech_trace::gr!("1002d233", "100ad6c4", DAT_100ad6c4[9])
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "1016a678",
+            DAT_1016a678[2],
+            mech_trace::gr!("1002d233", "100ad6c4", DAT_100ad6c4[10])
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "1016a678",
+            DAT_1016a678[3],
+            mech_trace::gr!("1002d233", "100ad6c4", DAT_100ad6c4[11])
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "_DAT_1016a684",
+            _DAT_1016a684,
+            mech_trace::gr!("1002d233", "1016a648", DAT_1016a648)
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "1016a680",
+            DAT_1016a680[0],
+            mech_trace::gr!("1002d233", "100ad6c4", DAT_100ad6c4[12])
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "1016a680",
+            DAT_1016a680[1],
+            mech_trace::gr!("1002d233", "100ad6c4", DAT_100ad6c4[13])
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "1016a680",
+            DAT_1016a680[2],
+            mech_trace::gr!("1002d233", "100ad6c4", DAT_100ad6c4[14])
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "1016a680",
+            DAT_1016a680[3],
+            mech_trace::gr!("1002d233", "100ad6c4", DAT_100ad6c4[15])
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "_DAT_1016a68c",
+            _DAT_1016a68c,
+            i32::from(mech_trace::gr!("1002d233", "1016a63e", DAT_1016a63e)).wrapping_shl(3)
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "1016a688",
+            DAT_1016a688[0],
+            mech_trace::gr!("1002d233", "100ad6c4", DAT_100ad6c4[16])
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "1016a688",
+            DAT_1016a688[1],
+            mech_trace::gr!("1002d233", "100ad6c4", DAT_100ad6c4[17])
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "1016a688",
+            DAT_1016a688[2],
+            mech_trace::gr!("1002d233", "100ad6c4", DAT_100ad6c4[18])
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "1016a688",
+            DAT_1016a688[3],
+            mech_trace::gr!("1002d233", "100ad6c4", DAT_100ad6c4[19])
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "_DAT_1016a694",
+            _DAT_1016a694,
+            i32::from(mech_trace::gr!("1002d233", "1016a63e", DAT_1016a63e)).wrapping_shl(2)
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "1016a690",
+            DAT_1016a690[0],
+            mech_trace::gr!("1002d233", "100ad6c4", DAT_100ad6c4[20])
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "1016a690",
+            DAT_1016a690[1],
+            mech_trace::gr!("1002d233", "100ad6c4", DAT_100ad6c4[21])
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "1016a690",
+            DAT_1016a690[2],
+            mech_trace::gr!("1002d233", "100ad6c4", DAT_100ad6c4[22])
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "1016a690",
+            DAT_1016a690[3],
+            mech_trace::gr!("1002d233", "100ad6c4", DAT_100ad6c4[23])
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "_DAT_1016a69c",
+            _DAT_1016a69c,
+            i32::from(mech_trace::gr!("1002d233", "1016a63e", DAT_1016a63e)).wrapping_shl(2)
+        );
+        mech_trace::gw!(
+            "1002d233",
+            "_DAT_1016a698",
+            _DAT_1016a698,
+            mech_trace::gr!("1002d233", "100ad6dc", DAT_100ad6dc)
+        );
+        mech_trace::rt!("1002d233", &raw mut _DAT_1016a650 as *mut c_void)
     }
 }

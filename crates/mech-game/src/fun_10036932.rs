@@ -14,15 +14,27 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10036932() {
+    mech_trace::enter!("10036932");
     // SAFETY: the globals and callees are the game's own; DAT_100add18 holds
     // a pointer to a structure read at offsets 0x1c and 0x42.
     unsafe {
-        let i_var1 = FUN_10036726(
-            ((DAT_100add18 as usize).wrapping_add(0x1c) as *const i32).read_unaligned(),
+        let i_var1 = mech_trace::cr!(
+            "10036932",
+            "10036726",
+            FUN_10036726(mech_trace::rd!(
+                "10036932",
+                ((mech_trace::gr!("10036932", "100add18", DAT_100add18) as usize).wrapping_add(0x1c)
+                    as *const i32),
+                read_unaligned
+            ),)
         );
         if -1 < i_var1 {
-            let local_arg2 =
-                ((DAT_100add18 as usize).wrapping_add(0x42) as *const i32).read_unaligned();
+            let local_arg2 = mech_trace::rd!(
+                "10036932",
+                ((mech_trace::gr!("10036932", "100add18", DAT_100add18) as usize).wrapping_add(0x42)
+                    as *const i32),
+                read_unaligned
+            );
             FUN_10036440(i_var1, local_arg2);
         }
     }

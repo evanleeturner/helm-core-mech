@@ -34,26 +34,35 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1007e9de(param_1: *mut i32) {
+    mech_trace::enter!("1007e9de", param_1);
     // SAFETY: all globals, callees and the object pointed to by param_1 are
     // the game's own memory; accesses mirror the original's reads and writes.
     unsafe {
         let local_8 = param_1;
-        let base = local_8.read() as *mut u8;
+        let base = mech_trace::rd!("1007e9de", local_8, read) as *mut u8;
         FUN_10026f0b(base as *mut i32);
-        if local_8.add(0xf5).read() == 2 {
-            let base = local_8.read() as *mut u8;
-            let local_c = base.byte_add(8).cast::<i32>().read_unaligned();
+        if mech_trace::rd!("1007e9de", local_8.add(0xf5), read) == 2 {
+            let base = mech_trace::rd!("1007e9de", local_8, read) as *mut u8;
+            let local_c =
+                mech_trace::rd!("1007e9de", base.byte_add(8).cast::<i32>(), read_unaligned);
             let tbl = (&raw const DAT_10123130)
                 .cast::<u8>()
                 .byte_offset(local_c.wrapping_mul(4) as isize);
-            let iv = tbl
-                .cast::<i32>()
-                .read_unaligned()
+            let iv = mech_trace::rd!("1007e9de", tbl.cast::<i32>(), read_unaligned)
                 .wrapping_mul(0x13f)
                 .wrapping_add(local_c.wrapping_mul(0x3c0a));
-            base.byte_add(0xdc).cast::<u32>().write_unaligned(0);
-            let p4c = base.byte_add(0x4c).cast::<i32>().read_unaligned() as *mut u8;
-            p4c.byte_add(0x43).write(0);
+            mech_trace::wr!(
+                "1007e9de",
+                base.byte_add(0xdc).cast::<u32>(),
+                write_unaligned,
+                0
+            );
+            let p4c = mech_trace::rd!(
+                "1007e9de",
+                base.byte_add(0x4c).cast::<i32>(),
+                read_unaligned
+            ) as *mut u8;
+            mech_trace::wr!("1007e9de", p4c.byte_add(0x43), write, 0);
             let a = (&raw const DAT_1012327c)
                 .cast::<u8>()
                 .byte_offset(iv as isize);
@@ -63,84 +72,132 @@ pub unsafe extern "C" fn FUN_1007e9de(param_1: *mut i32) {
             let c = (&raw const DAT_1012336a)
                 .cast::<u8>()
                 .byte_offset(iv as isize);
-            if a.cast::<i32>().read_unaligned() == 0x100 && b.read() != 0 && c.read() == 1 {
+            if mech_trace::rd!("1007e9de", a.cast::<i32>(), read_unaligned) == 0x100
+                && mech_trace::rd!("1007e9de", b, read) != 0
+                && mech_trace::rd!("1007e9de", c, read) == 1
+            {
                 let d = (&raw const DAT_10123369)
                     .cast::<u8>()
                     .byte_offset(iv as isize);
-                let local_18 = u32::from(d.read());
+                let local_18 = u32::from(mech_trace::rd!("1007e9de", d, read));
                 let mut local_1c: u32 = 0;
                 let mut local_28: u32 = 0;
                 let mut local_30: u32 = 0;
-                let base = local_8.read() as *mut u8;
+                let base = mech_trace::rd!("1007e9de", local_8, read) as *mut u8;
                 FUN_1002f322(
-                    base.byte_add(0x40).cast::<i32>().read_unaligned(),
+                    mech_trace::rd!(
+                        "1007e9de",
+                        base.byte_add(0x40).cast::<i32>(),
+                        read_unaligned
+                    ),
                     &raw mut local_1c,
                     &raw mut local_28,
                     &raw mut local_30,
                 );
                 let off = local_18.wrapping_mul(0x54) as usize;
-                let local_20 = (&raw const DAT_10215688)
-                    .cast::<u8>()
-                    .byte_add(off)
-                    .cast::<u32>()
-                    .read_unaligned();
-                let local_2c = (&raw const DAT_1021568c)
-                    .cast::<u8>()
-                    .byte_add(off)
-                    .cast::<u32>()
-                    .read_unaligned();
-                let local_34 = (&raw const DAT_10215690)
-                    .cast::<u8>()
-                    .byte_add(off)
-                    .cast::<u32>()
-                    .read_unaligned();
+                let local_20 = mech_trace::rd!(
+                    "1007e9de",
+                    (&raw const DAT_10215688)
+                        .cast::<u8>()
+                        .byte_add(off)
+                        .cast::<u32>(),
+                    read_unaligned
+                );
+                let local_2c = mech_trace::rd!(
+                    "1007e9de",
+                    (&raw const DAT_1021568c)
+                        .cast::<u8>()
+                        .byte_add(off)
+                        .cast::<u32>(),
+                    read_unaligned
+                );
+                let local_34 = mech_trace::rd!(
+                    "1007e9de",
+                    (&raw const DAT_10215690)
+                        .cast::<u8>()
+                        .byte_add(off)
+                        .cast::<u32>(),
+                    read_unaligned
+                );
                 let mut local_38 = local_20.wrapping_sub(local_1c);
                 let mut local_3c = local_2c.wrapping_sub(local_28);
                 let mut local_14 = local_34.wrapping_sub(local_30);
-                let arg = (local_8.add(0xee).read() as u32).wrapping_mul(DAT_100b3904);
-                let local_24 = FUN_10002570(arg, 0x697e98) as i32;
-                let r = FUN_1003c190(local_38 as i32, local_3c as i32, local_14 as i32, local_24);
+                let arg = (mech_trace::rd!("1007e9de", local_8.add(0xee), read) as u32)
+                    .wrapping_mul(mech_trace::gr!("1007e9de", "100b3904", DAT_100b3904));
+                let local_24 =
+                    mech_trace::cr!("1007e9de", "10002570", FUN_10002570(arg, 0x697e98)) as i32;
+                let r = mech_trace::cr!(
+                    "1007e9de",
+                    "1003c190",
+                    FUN_1003c190(local_38 as i32, local_3c as i32, local_14 as i32, local_24)
+                );
                 if r == 0 {
                     local_38 = local_20;
                     local_3c = local_2c;
                     local_14 = local_34;
                 } else {
                     FUN_1000fef4(&raw mut local_38, &raw mut local_3c, &raw mut local_14);
-                    local_38 = FUN_10003d60(local_38 as i32, local_24) as u32;
-                    local_3c = FUN_10003d60(local_3c as i32, local_24) as u32;
-                    local_14 = FUN_10003d60(local_14 as i32, local_24) as u32;
+                    local_38 = mech_trace::cr!(
+                        "1007e9de",
+                        "10003d60",
+                        FUN_10003d60(local_38 as i32, local_24)
+                    ) as u32;
+                    local_3c = mech_trace::cr!(
+                        "1007e9de",
+                        "10003d60",
+                        FUN_10003d60(local_3c as i32, local_24)
+                    ) as u32;
+                    local_14 = mech_trace::cr!(
+                        "1007e9de",
+                        "10003d60",
+                        FUN_10003d60(local_14 as i32, local_24)
+                    ) as u32;
                 }
-                local_8.add(10).write(local_38 as i32);
-                local_8.add(0x12).write(local_3c as i32);
-                local_8.add(0xe).write(local_14 as i32);
+                mech_trace::wr!("1007e9de", local_8.add(10), write, local_38 as i32);
+                mech_trace::wr!("1007e9de", local_8.add(0x12), write, local_3c as i32);
+                mech_trace::wr!("1007e9de", local_8.add(0xe), write, local_14 as i32);
             }
         } else {
-            let base = local_8.read() as *mut u8;
-            base.byte_add(0x8c).cast::<u32>().write_unaligned(0);
-            base.byte_add(0x88)
-                .cast::<u32>()
-                .write_unaligned(0xffffffff);
+            let base = mech_trace::rd!("1007e9de", local_8, read) as *mut u8;
+            mech_trace::wr!(
+                "1007e9de",
+                base.byte_add(0x8c).cast::<u32>(),
+                write_unaligned,
+                0
+            );
+            mech_trace::wr!(
+                "1007e9de",
+                base.byte_add(0x88).cast::<u32>(),
+                write_unaligned,
+                0xffffffff
+            );
         }
-        match local_8.add(0xf5).read() {
+        match mech_trace::rd!("1007e9de", local_8.add(0xf5), read) {
             0 => {
-                local_8.add(0xf5).write(2);
-                local_8.add(0xef).write(0);
+                mech_trace::wr!("1007e9de", local_8.add(0xf5), write, 2);
+                mech_trace::wr!("1007e9de", local_8.add(0xef), write, 0);
             }
             1 => {
-                local_8.add(0xf5).write(2);
+                mech_trace::wr!("1007e9de", local_8.add(0xf5), write, 2);
             }
             2 => {}
             3 => {
-                local_8.add(0xf5).write(2);
+                mech_trace::wr!("1007e9de", local_8.add(0xf5), write, 2);
             }
             4 => {
-                if local_8.add(0xef).read() == 0 {
-                    local_8
-                        .add(0xef)
-                        .write(DAT_100b38fc.wrapping_add(0x712) as i32);
+                if mech_trace::rd!("1007e9de", local_8.add(0xef), read) == 0 {
+                    mech_trace::wr!(
+                        "1007e9de",
+                        local_8.add(0xef),
+                        write,
+                        mech_trace::gr!("1007e9de", "100b38fc", DAT_100b38fc).wrapping_add(0x712)
+                            as i32
+                    );
                     FUN_1004fed5();
                 }
-                if (DAT_100b38fc as i32) < local_8.add(0xef).read() {
+                if (mech_trace::gr!("1007e9de", "100b38fc", DAT_100b38fc) as i32)
+                    < mech_trace::rd!("1007e9de", local_8.add(0xef), read)
+                {
                     FUN_1006b2cc(local_8);
                 }
             }

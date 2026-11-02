@@ -21,6 +21,7 @@ pub unsafe extern "C" fn FUN_1005fb00(
     param_3: i32,
     param_4: i32,
 ) -> u32 {
+    mech_trace::enter!("1005fb00", param_1, param_2, param_3, param_4);
     let mut local_10: u32 = 0;
     let mut local_c: i32 = 0;
     let mut local_8: u32 = 0;
@@ -36,5 +37,5 @@ pub unsafe extern "C" fn FUN_1005fb00(
             &raw mut local_c,
         );
     }
-    local_8
+    mech_trace::rt!("1005fb00", local_8)
 }

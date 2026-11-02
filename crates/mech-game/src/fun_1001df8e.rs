@@ -8,9 +8,14 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1001df8e(param_1: u32) {
+    mech_trace::enter!("1001df8e", param_1);
     // SAFETY: the global holds the game's own function pointer; it is read
     // and called with the caller's argument, as the original does.
     unsafe {
-        (DAT_100ab2d8)(param_1);
+        mech_trace::cr!(
+            "1001df8e",
+            "ind",
+            (mech_trace::gr!("1001df8e", "100ab2d8", DAT_100ab2d8))(param_1)
+        );
     }
 }

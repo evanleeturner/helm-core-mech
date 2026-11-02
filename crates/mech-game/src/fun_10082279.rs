@@ -44,61 +44,100 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10082279(param_1: i32) {
+    mech_trace::enter!("10082279", param_1);
     if param_1 != 0 {
         let p = param_1 as *const u8;
         // SAFETY: param_1 points at the caller's structure; the globals and
         // callees are the game's own memory and functions.
         unsafe {
-            let mode = p.byte_add(4).cast::<i32>().read_unaligned();
-            let style = p.byte_add(8).cast::<u32>().read_unaligned();
+            let mode = mech_trace::rd!("10082279", p.byte_add(4).cast::<i32>(), read_unaligned);
+            let style = mech_trace::rd!("10082279", p.byte_add(8).cast::<u32>(), read_unaligned);
             if mode == 2 {
-                SetWindowLongA(DAT_100adf6c, -0x10, (style | 0x10000000) as i32);
+                mech_trace::cr!(
+                    "10082279",
+                    "SetWindowLongA",
+                    SetWindowLongA(
+                        mech_trace::gr!("10082279", "100adf6c", DAT_100adf6c),
+                        -0x10,
+                        (style | 0x10000000) as i32
+                    )
+                );
             } else {
-                SetWindowLongA(
-                    DAT_100adf6c,
-                    -0x10,
-                    ((style & 0xfff7ffff) | 0x10000000) as i32,
+                mech_trace::cr!(
+                    "10082279",
+                    "SetWindowLongA",
+                    SetWindowLongA(
+                        mech_trace::gr!("10082279", "100adf6c", DAT_100adf6c),
+                        -0x10,
+                        ((style & 0xfff7ffff) | 0x10000000) as i32,
+                    )
                 );
             }
-            if p.byte_add(4).cast::<i32>().read_unaligned() == 2 {
-                if !DAT_100b9a18.is_null() && *DAT_100b9a18 == 0 {
-                    DAT_1016584c = timeGetTime();
-                    DAT_1016593c = DAT_1016584c.wrapping_add(3000);
-                    DAT_100adf90 = 1;
+            if mech_trace::rd!("10082279", p.byte_add(4).cast::<i32>(), read_unaligned) == 2 {
+                if !mech_trace::gr!("10082279", "100b9a18", DAT_100b9a18).is_null()
+                    && mech_trace::dr!(
+                        "10082279",
+                        mech_trace::gr!("10082279", "100b9a18", DAT_100b9a18)
+                    ) == 0
+                {
+                    mech_trace::gw!(
+                        "10082279",
+                        "1016584c",
+                        DAT_1016584c,
+                        mech_trace::cr!("10082279", "timeGetTime", timeGetTime())
+                    );
+                    mech_trace::gw!(
+                        "10082279",
+                        "1016593c",
+                        DAT_1016593c,
+                        mech_trace::gr!("10082279", "1016584c", DAT_1016584c).wrapping_add(3000)
+                    );
+                    mech_trace::gw!("10082279", "100adf90", DAT_100adf90, 1);
                 }
-                SetWindowPos(
-                    DAT_100adf6c,
-                    0xfffffffeu32 as usize as *mut c_void,
-                    DAT_100c9240 as i32,
-                    DAT_100c9244 as i32,
-                    DAT_100c9248 as i32,
-                    DAT_100c924c as i32,
-                    0x10,
+                mech_trace::cr!(
+                    "10082279",
+                    "SetWindowPos",
+                    SetWindowPos(
+                        mech_trace::gr!("10082279", "100adf6c", DAT_100adf6c),
+                        0xfffffffeu32 as usize as *mut c_void,
+                        mech_trace::gr!("10082279", "100c9240", DAT_100c9240) as i32,
+                        mech_trace::gr!("10082279", "100c9244", DAT_100c9244) as i32,
+                        mech_trace::gr!("10082279", "100c9248", DAT_100c9248) as i32,
+                        mech_trace::gr!("10082279", "100c924c", DAT_100c924c) as i32,
+                        0x10,
+                    )
                 );
-                if DAT_100adf88 != 0 && FUN_100498c5(4) == 0 {
+                if mech_trace::gr!("10082279", "100adf88", DAT_100adf88) != 0
+                    && mech_trace::cr!("10082279", "100498c5", FUN_100498c5(4)) == 0
+                {
                     loop {
-                        let r = ShowCursor(1);
+                        let r = mech_trace::cr!("10082279", "ShowCursor", ShowCursor(1));
                         if !(r < 0) {
                             break;
                         }
                     }
                 }
-            } else if DAT_100adf88 != 0 {
+            } else if mech_trace::gr!("10082279", "100adf88", DAT_100adf88) != 0 {
                 loop {
-                    let r = ShowCursor(0);
+                    let r = mech_trace::cr!("10082279", "ShowCursor", ShowCursor(0));
                     if !(-1 < r) {
                         break;
                     }
                 }
             }
-            let mut i_var1 = GetSystemMetrics(0);
-            if DAT_100c967c < i_var1 || {
-                i_var1 = GetSystemMetrics(1);
-                DAT_100c9680 < i_var1
+            let mut i_var1 = mech_trace::cr!("10082279", "GetSystemMetrics", GetSystemMetrics(0));
+            if mech_trace::gr!("10082279", "100c967c", DAT_100c967c) < i_var1 || {
+                i_var1 = mech_trace::cr!("10082279", "GetSystemMetrics", GetSystemMetrics(1));
+                mech_trace::gr!("10082279", "100c9680", DAT_100c9680) < i_var1
             } {
-                DAT_100b9d4c = p.byte_add(4).cast::<u32>().read_unaligned();
+                mech_trace::gw!(
+                    "10082279",
+                    "100b9d4c",
+                    DAT_100b9d4c,
+                    mech_trace::rd!("10082279", p.byte_add(4).cast::<u32>(), read_unaligned)
+                );
             } else {
-                DAT_100b9d4c = 1;
+                mech_trace::gw!("10082279", "100b9d4c", DAT_100b9d4c, 1);
             }
         }
     }

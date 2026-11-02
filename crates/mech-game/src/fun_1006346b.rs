@@ -15,28 +15,49 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1006346b() {
+    mech_trace::enter!("1006346b");
     let mut local_8: i32 = 0;
     // SAFETY: the globals and the callee are the game's own; the table
     // addresses are read at the original's byte offsets.
     unsafe {
         while local_8 < 0x42 {
-            let v = (&raw mut DAT_100a7bd4)
-                .byte_add(local_8.wrapping_mul(0x68) as usize)
-                .cast::<i32>()
-                .read_unaligned();
+            let v = mech_trace::rd!(
+                "1006346b",
+                (&raw mut DAT_100a7bd4)
+                    .byte_add(local_8.wrapping_mul(0x68) as usize)
+                    .cast::<i32>(),
+                read_unaligned
+            );
             if 0 < v {
-                FUN_1003eb02(v as u32, DAT_100af0a8 as *mut i32);
+                mech_trace::cr!(
+                    "1006346b",
+                    "1003eb02",
+                    FUN_1003eb02(
+                        v as u32,
+                        mech_trace::gr!("1006346b", "100af0a8", DAT_100af0a8) as *mut i32
+                    )
+                );
             }
             local_8 = local_8.wrapping_add(1);
         }
         local_8 = 0;
         while local_8 < 0x24 {
-            let v = (&raw mut DAT_100a9678)
-                .byte_add(local_8.wrapping_mul(0x2c) as usize)
-                .cast::<i32>()
-                .read_unaligned();
+            let v = mech_trace::rd!(
+                "1006346b",
+                (&raw mut DAT_100a9678)
+                    .byte_add(local_8.wrapping_mul(0x2c) as usize)
+                    .cast::<i32>(),
+                read_unaligned
+            );
             if 0 < v {
-                FUN_1003eb02(v as u32, DAT_100af0a8 as *mut i32);
+                mech_trace::cr!(
+                    "1006346b",
+                    "1003eb02",
+                    FUN_1003eb02(
+                        v as u32,
+                        mech_trace::gr!("1006346b", "100af0a8", DAT_100af0a8) as *mut i32
+                    )
+                );
             }
             local_8 = local_8.wrapping_add(1);
         }

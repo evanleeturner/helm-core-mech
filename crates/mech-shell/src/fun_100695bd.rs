@@ -21,6 +21,9 @@ pub unsafe extern "C" fn FUN_100695bd(
     param_5: i32,
     param_6: i32,
 ) {
+    mech_trace::enter!(
+        "100695bd", param_1, param_2, param_3, param_4, param_5, param_6
+    );
     let mut local_8: i32 = 0;
     let mut local_c: i32 = 0;
 
@@ -29,7 +32,9 @@ pub unsafe extern "C" fn FUN_100695bd(
     unsafe {
         FUN_100694df(param_4, &raw mut local_8, &raw mut local_c);
 
-        let mut l = (((*param_1).wrapping_sub(*param_3)).wrapping_mul(0x10000) as i64)
+        let mut l = (((mech_trace::dr!("100695bd", param_1))
+            .wrapping_sub(mech_trace::dr!("100695bd", param_3)))
+        .wrapping_mul(0x10000) as i64)
             .wrapping_mul(param_5 as i64);
         let mut i13 = (((l as u64) >> 32) as i32).wrapping_add((0xffff7fffu32 < (l as u32)) as i32);
 
@@ -41,7 +46,9 @@ pub unsafe extern "C" fn FUN_100695bd(
         let u6 = l2 as u32;
         let u10 = (u6.wrapping_add(0x8000) >> 16) as u16;
 
-        l = (((*param_1.add(1)).wrapping_sub(*param_3.add(1))).wrapping_mul(0x10000) as i64)
+        l = (((mech_trace::dr!("100695bd", param_1.add(1)))
+            .wrapping_sub(mech_trace::dr!("100695bd", param_3.add(1))))
+        .wrapping_mul(0x10000) as i64)
             .wrapping_mul(param_6 as i64);
         i13 = (((l as u64) >> 32) as i32).wrapping_add((0xffff7fffu32 < (l as u32)) as i32);
 
@@ -58,7 +65,19 @@ pub unsafe extern "C" fn FUN_100695bd(
         let term3 = hi_term(l3, u7, u11);
         let term4 = hi_term(l2, u6, u10);
 
-        *param_2 = term1.wrapping_sub(term2).wrapping_add(*param_3);
-        *param_2.add(1) = term3.wrapping_add(term4).wrapping_add(*param_3.add(1));
+        mech_trace::dw!(
+            "100695bd",
+            param_2,
+            term1
+                .wrapping_sub(term2)
+                .wrapping_add(mech_trace::dr!("100695bd", param_3))
+        );
+        mech_trace::dw!(
+            "100695bd",
+            param_2.add(1),
+            term3
+                .wrapping_add(term4)
+                .wrapping_add(mech_trace::dr!("100695bd", param_3.add(1)))
+        );
     }
 }

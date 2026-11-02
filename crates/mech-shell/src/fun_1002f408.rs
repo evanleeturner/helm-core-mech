@@ -10,6 +10,7 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1002f408(param_1: u32) -> i32 {
+    mech_trace::enter!("1002f408", param_1);
     let mut param_1 = param_1;
     let mut neg = false;
     if (param_1 as i32) < 0 {
@@ -45,5 +46,5 @@ pub unsafe extern "C" fn FUN_1002f408(param_1: u32) -> i32 {
     if neg {
         i_var1 = 0u32.wrapping_sub(i_var1 as u32) as i32;
     }
-    i_var1
+    mech_trace::rt!("1002f408", i_var1)
 }

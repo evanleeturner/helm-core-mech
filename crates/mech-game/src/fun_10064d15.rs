@@ -3,6 +3,7 @@
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10064d15(param_1: u32) -> i32 {
+    mech_trace::enter!("10064d15", param_1);
     let mut param_1 = param_1;
     let mut bits: i32 = 1;
     let was_zero = param_1 == 0;
@@ -18,5 +19,5 @@ pub unsafe extern "C" fn FUN_10064d15(param_1: u32) -> i32 {
             bits = bits.wrapping_add(1);
         }
     }
-    bits
+    mech_trace::rt!("10064d15", bits)
 }

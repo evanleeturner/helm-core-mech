@@ -13,6 +13,7 @@ pub unsafe extern "C" fn FUN_1003c230(
     param_3: u32,
     param_4: i32,
 ) -> i32 {
+    mech_trace::enter!("1003c230", param_1, param_2, param_3, param_4);
     let prod: u64 = (param_1 as i64 as u64).wrapping_mul(param_2 as i64 as u64);
 
     let hi: u32 = ((((param_3 as i32) >> 0x1f) as u32).wrapping_shl(0x10)) | (param_3 >> 0x10);
@@ -27,7 +28,7 @@ pub unsafe extern "C" fn FUN_1003c230(
         unsafe {
             RaiseException(0xC0000094u32, 0, 0, core::ptr::null());
         }
-        return 0;
+        return mech_trace::rt!("1003c230", 0);
     }
 
     let quot: i64 = if den == -1 {
@@ -41,8 +42,8 @@ pub unsafe extern "C" fn FUN_1003c230(
         unsafe {
             RaiseException(0xC0000094u32, 0, 0, core::ptr::null());
         }
-        return 0;
+        return mech_trace::rt!("1003c230", 0);
     }
 
-    quot as i32
+    mech_trace::rt!("1003c230", quot as i32)
 }

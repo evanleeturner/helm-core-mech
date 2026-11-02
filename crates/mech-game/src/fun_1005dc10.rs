@@ -17,6 +17,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1005dc10() {
+    mech_trace::enter!("1005dc10");
     // SAFETY: the globals and _printf are the game's own; only their
     // addresses are passed, in the original's order.
     unsafe {

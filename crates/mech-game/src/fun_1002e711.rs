@@ -28,17 +28,32 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1002e711(param_1: i32) {
+    mech_trace::enter!("1002e711", param_1);
     // SAFETY: the globals and callees are the game's own; param_1 points at
     // the caller's object, read at the same offsets as the original.
     unsafe {
-        if ((param_1.wrapping_add(4)) as *const i16).read_unaligned() != 0 {
-            let idx = DAT_100adf38 as usize;
-            let e = (&raw mut DAT_100eef40)
-                .cast::<u32>()
-                .add(idx)
-                .read_unaligned();
-            let p20 = (e.wrapping_add(0x20) as *const u32).read_unaligned();
-            let i_var1 = (p20.wrapping_add(0x3f0) as *const i32).read_unaligned();
+        if mech_trace::rd!(
+            "1002e711",
+            ((param_1.wrapping_add(4)) as *const i16),
+            read_unaligned
+        ) != 0
+        {
+            let idx = mech_trace::gr!("1002e711", "100adf38", DAT_100adf38) as usize;
+            let e = mech_trace::rd!(
+                "1002e711",
+                (&raw mut DAT_100eef40).cast::<u32>().add(idx),
+                read_unaligned
+            );
+            let p20 = mech_trace::rd!(
+                "1002e711",
+                (e.wrapping_add(0x20) as *const u32),
+                read_unaligned
+            );
+            let i_var1 = mech_trace::rd!(
+                "1002e711",
+                (p20.wrapping_add(0x3f0) as *const i32),
+                read_unaligned
+            );
             let local_8: *mut u8;
             if i_var1 == 1 {
                 local_8 = &raw mut DAT_100ad9b4;
@@ -48,20 +63,47 @@ pub unsafe extern "C" fn FUN_1002e711(param_1: i32) {
                 }
                 local_8 = &raw mut DAT_100ad9c0;
             }
-            let pu_var2 = FUN_1008668b(
-                DAT_100af17c as i32,
-                DAT_101686f0.wrapping_add(1),
-                DAT_100af0b8 as *mut i32,
+            let pu_var2 = mech_trace::cr!(
+                "1002e711",
+                "1008668b",
+                FUN_1008668b(
+                    mech_trace::gr!("1002e711", "100af17c", DAT_100af17c) as i32,
+                    mech_trace::gr!("1002e711", "101686f0", DAT_101686f0).wrapping_add(1),
+                    mech_trace::gr!("1002e711", "100af0b8", DAT_100af0b8) as *mut i32,
+                )
             );
             if !pu_var2.is_null() {
-                if local_8.read() != 0 {
-                    let a4 = (param_1.wrapping_add(0xa4) as *const u32).read_unaligned();
-                    let a8 = (param_1.wrapping_add(0xa8) as *const u32).read_unaligned();
-                    let v0 = (a8 as *const i32).read_unaligned();
-                    let v1 = (a8.wrapping_add(4) as *const i32).read_unaligned();
-                    FUN_1005acaa(a4 as *mut i32, v0, v1, pu_var2 as i32, local_8, 0x100eebb0);
+                if mech_trace::rd!("1002e711", local_8, read) != 0 {
+                    let a4 = mech_trace::rd!(
+                        "1002e711",
+                        (param_1.wrapping_add(0xa4) as *const u32),
+                        read_unaligned
+                    );
+                    let a8 = mech_trace::rd!(
+                        "1002e711",
+                        (param_1.wrapping_add(0xa8) as *const u32),
+                        read_unaligned
+                    );
+                    let v0 = mech_trace::rd!("1002e711", (a8 as *const i32), read_unaligned);
+                    let v1 = mech_trace::rd!(
+                        "1002e711",
+                        (a8.wrapping_add(4) as *const i32),
+                        read_unaligned
+                    );
+                    mech_trace::cr!(
+                        "1002e711",
+                        "1005acaa",
+                        FUN_1005acaa(a4 as *mut i32, v0, v1, pu_var2 as i32, local_8, 0x100eebb0)
+                    );
                 }
-                FUN_1008664f(DAT_101686f0.wrapping_add(1), DAT_100af0b8 as *mut i32);
+                mech_trace::cr!(
+                    "1002e711",
+                    "1008664f",
+                    FUN_1008664f(
+                        mech_trace::gr!("1002e711", "101686f0", DAT_101686f0).wrapping_add(1),
+                        mech_trace::gr!("1002e711", "100af0b8", DAT_100af0b8) as *mut i32
+                    )
+                );
             }
         }
     }

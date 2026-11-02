@@ -23,20 +23,25 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10019df1(param_1: i32, param_2: i32, param_3: i32) {
+    mech_trace::enter!("10019df1", param_1, param_2, param_3);
     // SAFETY: the callee and the globals are the game's own memory; the
     // array's address is passed through and the globals are read then written
     // in the original's order.
     unsafe {
-        FUN_10056489(
-            (&raw mut DAT_101f52e0).cast::<i32>(),
-            param_1,
-            param_2,
-            DAT_101eb480 as i32,
-            DAT_101eb484 as i32,
-            0,
-            param_3,
+        mech_trace::cr!(
+            "10019df1",
+            "10056489",
+            FUN_10056489(
+                (&raw mut DAT_101f52e0).cast::<i32>(),
+                param_1,
+                param_2,
+                mech_trace::gr!("10019df1", "101eb480", DAT_101eb480) as i32,
+                mech_trace::gr!("10019df1", "101eb484", DAT_101eb484) as i32,
+                0,
+                param_3,
+            )
         );
-        DAT_101eb480 = param_1 as u32;
-        DAT_101eb484 = param_2 as u32;
+        mech_trace::gw!("10019df1", "101eb480", DAT_101eb480, param_1 as u32);
+        mech_trace::gw!("10019df1", "101eb484", DAT_101eb484, param_2 as u32);
     }
 }

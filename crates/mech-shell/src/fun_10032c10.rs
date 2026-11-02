@@ -27,6 +27,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10032c10() {
+    mech_trace::enter!("10032c10");
     // SAFETY: the globals and callees are the game's own; the pointers computed
     // from DAT_10092000 and the heap block address the game's own structures,
     // accessed where the original does.
@@ -37,10 +38,12 @@ pub unsafe extern "stdcall" fn FUN_10032c10() {
         loop {
             let mut i_var4: i32 = 0xc;
             loop {
-                let p = DAT_10092000.wrapping_add(0x368).wrapping_add(i_var2) as *mut i32;
-                if p.read_unaligned() / 100 == 0x50 {
+                let p = mech_trace::gr!("10032c10", "10092000", DAT_10092000)
+                    .wrapping_add(0x368)
+                    .wrapping_add(i_var2) as *mut i32;
+                if mech_trace::rd!("10032c10", p, read_unaligned) / 100 == 0x50 {
                     i_var3 = i_var3.wrapping_add(1);
-                    p.write_unaligned(0);
+                    mech_trace::wr!("10032c10", p, write_unaligned, 0);
                 }
                 i_var2 = i_var2.wrapping_add(4);
                 i_var4 = i_var4.wrapping_sub(1);
@@ -53,26 +56,55 @@ pub unsafe extern "stdcall" fn FUN_10032c10() {
                 break;
             }
         }
-        (DAT_10092000.wrapping_add(0x228) as *mut u32).write_unaligned(1);
+        mech_trace::wr!(
+            "10032c10",
+            (mech_trace::gr!("10032c10", "10092000", DAT_10092000).wrapping_add(0x228) as *mut u32),
+            write_unaligned,
+            1
+        );
         if 0 < i_var3 {
             loop {
-                let pi = HeapAlloc(DAT_10098224, 1, 0x16) as *mut i32;
-                pi.write_unaligned(2);
-                pi.byte_add(8).cast::<u8>().write(2u8);
-                let idx = pi.read_unaligned();
+                let pi = mech_trace::cr!(
+                    "10032c10",
+                    "HeapAlloc",
+                    HeapAlloc(
+                        mech_trace::gr!("10032c10", "10098224", DAT_10098224),
+                        1,
+                        0x16
+                    )
+                ) as *mut i32;
+                mech_trace::wr!("10032c10", pi, write_unaligned, 2);
+                mech_trace::wr!("10032c10", pi.byte_add(8).cast::<u8>(), write, 2u8);
+                let idx = mech_trace::rd!("10032c10", pi, read_unaligned);
                 let src =
                     (&raw mut DAT_10082bf0).byte_add(idx.wrapping_mul(0xc) as usize) as *const i32;
-                pi.add(1).write_unaligned(src.read_unaligned());
-                pi.byte_add(10).write_unaligned(-1i32);
-                pi.byte_add(0xe).write_unaligned(-1i32);
-                pi.byte_add(0x12).write_unaligned(-1i32);
-                FUN_10017df0(DAT_100a67c8, pi as u32);
+                mech_trace::wr!(
+                    "10032c10",
+                    pi.add(1),
+                    write_unaligned,
+                    mech_trace::rd!("10032c10", src, read_unaligned)
+                );
+                mech_trace::wr!("10032c10", pi.byte_add(10), write_unaligned, -1i32);
+                mech_trace::wr!("10032c10", pi.byte_add(0xe), write_unaligned, -1i32);
+                mech_trace::wr!("10032c10", pi.byte_add(0x12), write_unaligned, -1i32);
+                mech_trace::cr!(
+                    "10032c10",
+                    "10017df0",
+                    FUN_10017df0(
+                        mech_trace::gr!("10032c10", "100a67c8", DAT_100a67c8),
+                        pi as u32
+                    )
+                );
                 i_var3 = i_var3.wrapping_sub(1);
                 if i_var3 == 0 {
                     break;
                 }
             }
         }
-        FUN_1005b1b0(&raw mut DAT_10093634 as *const i8);
+        mech_trace::cr!(
+            "10032c10",
+            "1005b1b0",
+            FUN_1005b1b0(&raw mut DAT_10093634 as *const i8)
+        );
     }
 }

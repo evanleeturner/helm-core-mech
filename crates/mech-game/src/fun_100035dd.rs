@@ -24,6 +24,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_100035dd(param_1: u32, param_2: i32, param_3: u32, param_4: u32) {
+    mech_trace::enter!("100035dd", param_1, param_2, param_3, param_4);
     // SAFETY: the callee and the global are the game's own; the arguments
     // are passed through as the original does.
     unsafe {
@@ -33,7 +34,7 @@ pub unsafe extern "C" fn FUN_100035dd(param_1: u32, param_2: i32, param_3: u32, 
             param_1,
             core::ptr::null_mut(),
             param_2,
-            DAT_100b3c4c,
+            mech_trace::gr!("100035dd", "100b3c4c", DAT_100b3c4c),
             param_3,
             param_4,
             -1,

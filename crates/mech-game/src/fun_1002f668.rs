@@ -24,6 +24,7 @@ pub unsafe extern "C" fn FUN_1002f668(
     param_4: i32,
     param_5: u32,
 ) {
+    mech_trace::enter!("1002f668", param_1, param_2, param_3, param_4, param_5);
     let mut local_34: [i32; 12] = [0; 12];
     // SAFETY: the callees are the game's own; local_34 is a local buffer
     // passed by pointer as the original does.

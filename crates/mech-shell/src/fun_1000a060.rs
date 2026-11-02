@@ -16,17 +16,22 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1000a060(text: *mut i8) {
+    mech_trace::enter!("1000a060", text);
     // SAFETY: the globals and callees are the game's own; text points at the
     // caller's string. The thiscall callee takes `this` in ecx, pops its three
     // stack arguments itself, and is called with them pushed right to left.
     unsafe {
-        let compare_result = __strnicmp(
-            text.byte_add(5) as *const i8,
-            &raw mut DAT_1008d008 as *const i8,
-            3,
+        let compare_result = mech_trace::cr!(
+            "1000a060",
+            "__strnicmp",
+            __strnicmp(
+                text.byte_add(5) as *const i8,
+                &raw mut DAT_1008d008 as *const i8,
+                3,
+            )
         );
         if compare_result == 0 {
-            let this = DAT_100a6738;
+            let this = mech_trace::gr!("1000a060", "100a6738", DAT_100a6738);
             let p3 = &raw mut DAT_1008d00c as *mut i32;
             core::arch::asm!(
                 "push {c}",

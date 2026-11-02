@@ -20,28 +20,48 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10031b85(param_1: i32) {
+    mech_trace::enter!("10031b85", param_1);
     // SAFETY: the globals and callees are the game's own; the table entries
     // are read at the same offsets and order as the original.
     unsafe {
-        if -1 < param_1 && param_1 < DAT_100ada50 {
+        if -1 < param_1 && param_1 < mech_trace::gr!("10031b85", "100ada50", DAT_100ada50) {
             let i_var1 = param_1.wrapping_mul(0x34);
-            let kind = (((&raw mut DAT_10168904) as i32).wrapping_add(i_var1) as usize
-                as *const u32)
-                .read_unaligned();
+            let kind = mech_trace::rd!(
+                "10031b85",
+                (((&raw mut DAT_10168904) as i32).wrapping_add(i_var1) as usize as *const u32),
+                read_unaligned
+            );
             match kind {
                 1 => {
-                    if DAT_100ada68 != 0 && DAT_100aae80 == 0 {
-                        let p = (((&raw mut DAT_10168908) as i32).wrapping_add(i_var1) as usize
-                            as *const i32)
-                            .read_unaligned();
-                        let v = (p.wrapping_add(0x40) as usize as *const i32).read_unaligned();
-                        FUN_10031a97(((&raw mut DAT_10168900) as i32).wrapping_add(i_var1), v);
+                    if mech_trace::gr!("10031b85", "100ada68", DAT_100ada68) != 0
+                        && mech_trace::gr!("10031b85", "100aae80", DAT_100aae80) == 0
+                    {
+                        let p = mech_trace::rd!(
+                            "10031b85",
+                            (((&raw mut DAT_10168908) as i32).wrapping_add(i_var1) as usize
+                                as *const i32),
+                            read_unaligned
+                        );
+                        let v = mech_trace::rd!(
+                            "10031b85",
+                            (p.wrapping_add(0x40) as usize as *const i32),
+                            read_unaligned
+                        );
+                        mech_trace::cr!(
+                            "10031b85",
+                            "10031a97",
+                            FUN_10031a97(((&raw mut DAT_10168900) as i32).wrapping_add(i_var1), v)
+                        );
                     }
                 }
                 2 | 6 => {
-                    let i_var2 = FUN_1007d0a4(-1);
-                    if i_var2 != 0 && DAT_100aae80 == 0 {
-                        FUN_100312ba(((&raw mut DAT_10168900) as i32).wrapping_add(i_var1));
+                    let i_var2 = mech_trace::cr!("10031b85", "1007d0a4", FUN_1007d0a4(-1));
+                    if i_var2 != 0 && mech_trace::gr!("10031b85", "100aae80", DAT_100aae80) == 0 {
+                        mech_trace::cr!(
+                            "10031b85",
+                            "100312ba",
+                            FUN_100312ba(((&raw mut DAT_10168900) as i32).wrapping_add(i_var1))
+                        );
                     }
                 }
                 _ => {}

@@ -52,19 +52,25 @@ unsafe extern "C" {
 
 unsafe fn obj(n: usize) -> *mut i8 {
     // SAFETY: n is within the game's 0x22-entry object table.
-    unsafe { (&raw mut DAT_10114db0).cast::<*mut i8>().add(n).read() }
+    unsafe {
+        mech_trace::rd!(
+            "1005ca54",
+            (&raw mut DAT_10114db0).cast::<*mut i8>().add(n),
+            read
+        )
+    }
 }
 
 unsafe fn fnptr(o: *mut i8, off: usize) -> usize {
     // SAFETY: o is a live object whose slot at off holds a function pointer.
-    unsafe { o.byte_add(off).cast::<usize>().read_unaligned() }
+    unsafe { mech_trace::rd!("1005ca54", o.byte_add(off).cast::<usize>(), read_unaligned) }
 }
 
 unsafe fn call_i(o: *mut i8, off: usize, a: i32) {
     // SAFETY: the slot holds a cdecl function taking (object, int).
     unsafe {
         let f: unsafe extern "C" fn(*mut i8, i32) = core::mem::transmute(fnptr(o, off));
-        f(o, a);
+        mech_trace::cr!("1005ca54", "ind", f(o, a));
     }
 }
 
@@ -72,7 +78,7 @@ unsafe fn call_p(o: *mut i8, off: usize, a: *mut u8) {
     // SAFETY: the slot holds a cdecl function taking (object, pointer).
     unsafe {
         let f: unsafe extern "C" fn(*mut i8, *mut u8) = core::mem::transmute(fnptr(o, off));
-        f(o, a);
+        mech_trace::cr!("1005ca54", "ind", f(o, a));
     }
 }
 
@@ -80,18 +86,32 @@ unsafe fn call_0(o: *mut i8, off: usize) {
     // SAFETY: the slot holds a cdecl function taking (object).
     unsafe {
         let f: unsafe extern "C" fn(*mut i8) = core::mem::transmute(fnptr(o, off));
-        f(o);
+        mech_trace::cr!("1005ca54", "ind", f(o));
     }
 }
 
 unsafe fn set(o: *mut i8, off: usize, v: usize) {
     // SAFETY: o is a live 0x100-byte object; off is within it.
-    unsafe { o.byte_add(off).cast::<usize>().write_unaligned(v) }
+    unsafe {
+        mech_trace::wr!(
+            "1005ca54",
+            o.byte_add(off).cast::<usize>(),
+            write_unaligned,
+            v
+        )
+    }
 }
 
 unsafe fn set_i(o: *mut i8, off: usize, v: i32) {
     // SAFETY: o is a live 0x100-byte object; off is within it.
-    unsafe { o.byte_add(off).cast::<i32>().write_unaligned(v) }
+    unsafe {
+        mech_trace::wr!(
+            "1005ca54",
+            o.byte_add(off).cast::<i32>(),
+            write_unaligned,
+            v
+        )
+    }
 }
 
 unsafe fn std_handlers(n: usize, kind: i32, arg: i32) {
@@ -109,37 +129,70 @@ unsafe fn std_handlers(n: usize, kind: i32, arg: i32) {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1005ca54() {
+    mech_trace::enter!("1005ca54");
     // SAFETY: all globals, tables and callees are the game's own memory;
     // objects are allocated here with 0x100 bytes before use.
     unsafe {
         let en = (&raw mut DAT_10114e40).cast::<i32>();
         let mut i: i32 = 0;
         while i < 0x22 {
-            en.add(i as usize).write(1);
+            mech_trace::wr!("1005ca54", en.add(i as usize), write, 1);
             i = i.wrapping_add(1);
         }
-        en.add(1).write(0);
-        en.add(24).write(0);
-        en.add(25).write(0);
-        if DAT_100adf34.add(9).read() == 0 && DAT_100aa1ac != 0 {
-            en.add(17).write(0);
+        mech_trace::wr!("1005ca54", en.add(1), write, 0);
+        mech_trace::wr!("1005ca54", en.add(24), write, 0);
+        mech_trace::wr!("1005ca54", en.add(25), write, 0);
+        if mech_trace::rd!(
+            "1005ca54",
+            mech_trace::gr!("1005ca54", "100adf34", DAT_100adf34).add(9),
+            read
+        ) == 0
+            && mech_trace::gr!("1005ca54", "100aa1ac", DAT_100aa1ac) != 0
+        {
+            mech_trace::wr!("1005ca54", en.add(17), write, 0);
         }
-        let base = (&raw mut DAT_100eef40)
-            .cast::<i32>()
-            .add(DAT_100adf38 as usize)
-            .read();
-        let i_var1 = ((base as u32 as usize).wrapping_add(0x20) as *const i32).read_unaligned();
+        let base = mech_trace::rd!(
+            "1005ca54",
+            (&raw mut DAT_100eef40).cast::<i32>().add(mech_trace::gr!(
+                "1005ca54",
+                "100adf38",
+                DAT_100adf38
+            ) as usize),
+            read
+        );
+        let i_var1 = mech_trace::rd!(
+            "1005ca54",
+            ((base as u32 as usize).wrapping_add(0x20) as *const i32),
+            read_unaligned
+        );
         let tbl = (&raw mut DAT_10114db0).cast::<*mut i8>();
         let mut i: i32 = 0;
         while i < 0x22 {
             let u = i as usize;
-            tbl.add(u)
-                .write(HeapAlloc(DAT_100adf74, 1, 0x100).cast::<i8>());
+            mech_trace::wr!(
+                "1005ca54",
+                tbl.add(u),
+                write,
+                mech_trace::cr!(
+                    "1005ca54",
+                    "HeapAlloc",
+                    HeapAlloc(
+                        mech_trace::gr!("1005ca54", "100adf74", DAT_100adf74),
+                        1,
+                        0x100
+                    )
+                )
+                .cast::<i8>()
+            );
             FUN_10045d90(obj(u));
             call_i(
                 obj(u),
                 0xc4,
-                (&raw mut DAT_100b3220).cast::<i32>().add(u).read(),
+                mech_trace::rd!(
+                    "1005ca54",
+                    (&raw mut DAT_100b3220).cast::<i32>().add(u),
+                    read
+                ),
             );
             call_p(
                 obj(u),
@@ -157,10 +210,14 @@ pub unsafe extern "stdcall" fn FUN_1005ca54() {
             call_i(
                 obj(u),
                 0xdc,
-                (&raw mut DAT_100b3188).cast::<i32>().add(u).read(),
+                mech_trace::rd!(
+                    "1005ca54",
+                    (&raw mut DAT_100b3188).cast::<i32>().add(u),
+                    read
+                ),
             );
             call_i(obj(u), 0xd4, 0);
-            if en.add(u).read() == 0 {
+            if mech_trace::rd!("1005ca54", en.add(u), read) == 0 {
                 call_0(obj(u), 0xec);
             } else {
                 call_0(obj(u), 0xe8);
@@ -195,11 +252,27 @@ pub unsafe extern "stdcall" fn FUN_1005ca54() {
 
         FUN_10015e98();
         FUN_10011120();
-        DAT_100ab0a8 = i_var1.wrapping_add(0x404);
-        DAT_100ab0ac = i_var1.wrapping_add(0xc);
+        mech_trace::gw!(
+            "1005ca54",
+            "100ab0a8",
+            DAT_100ab0a8,
+            i_var1.wrapping_add(0x404)
+        );
+        mech_trace::gw!(
+            "1005ca54",
+            "100ab0ac",
+            DAT_100ab0ac,
+            i_var1.wrapping_add(0xc)
+        );
         FUN_10067e7c();
         FUN_10033ae3();
-        if DAT_100adf34.add(9).read() != 0 || DAT_100aa1ac == 0 {
+        if mech_trace::rd!(
+            "1005ca54",
+            mech_trace::gr!("1005ca54", "100adf34", DAT_100adf34).add(9),
+            read
+        ) != 0
+            || mech_trace::gr!("1005ca54", "100aa1ac", DAT_100aa1ac) == 0
+        {
             FUN_10008608();
         }
     }

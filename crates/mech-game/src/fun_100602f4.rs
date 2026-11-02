@@ -8,26 +8,45 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_100602f4(param_1: i32, param_2: *mut i32) -> u32 {
+    mech_trace::enter!("100602f4", param_1, param_2);
     // SAFETY: param_1 points at the game's object; its offsets are read where
     // the original reads them, and the callee is the game's own.
     unsafe {
-        let i_var1 = (param_1.wrapping_add(0x20) as *const i32).read_unaligned();
+        let i_var1 = mech_trace::rd!(
+            "100602f4",
+            (param_1.wrapping_add(0x20) as *const i32),
+            read_unaligned
+        );
         if i_var1 != 0 {
             let mut local_10: i32 = 0;
-            while local_10 < (i_var1.wrapping_add(6) as *const i16).read_unaligned() as i32 {
-                let base = (i_var1.wrapping_add(8) as *const i32).read_unaligned();
-                let i_var2 = FUN_10014db6(
-                    base.wrapping_add(i_var1)
-                        .wrapping_add(local_10.wrapping_mul(0x24)),
-                    i_var1.wrapping_add(0x18),
-                    param_2,
+            while local_10
+                < mech_trace::rd!(
+                    "100602f4",
+                    (i_var1.wrapping_add(6) as *const i16),
+                    read_unaligned
+                ) as i32
+            {
+                let base = mech_trace::rd!(
+                    "100602f4",
+                    (i_var1.wrapping_add(8) as *const i32),
+                    read_unaligned
+                );
+                let i_var2 = mech_trace::cr!(
+                    "100602f4",
+                    "10014db6",
+                    FUN_10014db6(
+                        base.wrapping_add(i_var1)
+                            .wrapping_add(local_10.wrapping_mul(0x24)),
+                        i_var1.wrapping_add(0x18),
+                        param_2,
+                    )
                 );
                 if i_var2 != 0 {
-                    return 1;
+                    return mech_trace::rt!("100602f4", 1);
                 }
                 local_10 = local_10.wrapping_add(1);
             }
         }
-        0
+        mech_trace::rt!("100602f4", 0)
     }
 }

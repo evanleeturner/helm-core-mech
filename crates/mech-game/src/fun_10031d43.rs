@@ -33,6 +33,7 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10031d43() {
+    mech_trace::enter!("10031d43");
     let mut local_10: [u32; 3] = [0; 3];
     // SAFETY: the globals, arrays and callees are the game's own memory and
     // code; every address passed is computed as the original does.
@@ -41,51 +42,79 @@ pub unsafe extern "stdcall" fn FUN_10031d43() {
         while i < 8 {
             let p = (&raw mut DAT_100f3040 as usize as i32)
                 .wrapping_add((i as u32).wrapping_mul(0x14) as i32);
-            FUN_10066209(p, p);
-            FUN_10065e40(&raw mut DAT_101f5300 as usize as u32, p, p);
+            mech_trace::cr!("10031d43", "10066209", FUN_10066209(p, p));
+            mech_trace::cr!(
+                "10031d43",
+                "10065e40",
+                FUN_10065e40(&raw mut DAT_101f5300 as usize as u32, p, p)
+            );
             i = i.wrapping_add(1);
         }
         i = 0;
         while i < 5 {
             let p = (&raw mut DAT_100a71b0 as usize as i32)
                 .wrapping_add((i as u32).wrapping_mul(5) as i32);
-            FUN_10066209(p, p);
-            FUN_10065e40(&raw mut DAT_101f5300 as usize as u32, p, p);
+            mech_trace::cr!("10031d43", "10066209", FUN_10066209(p, p));
+            mech_trace::cr!(
+                "10031d43",
+                "10065e40",
+                FUN_10065e40(&raw mut DAT_101f5300 as usize as u32, p, p)
+            );
             i = i.wrapping_add(1);
         }
-        let q = DAT_100a730c;
-        FUN_100662fd(q as usize as *mut u32, q as usize as *mut u32);
-        FUN_10066004(
-            &raw mut DAT_101f5300 as usize as u32,
-            q as usize as *mut i32,
-            q as usize as *mut i32,
+        let q = mech_trace::gr!("10031d43", "100a730c", DAT_100a730c);
+        mech_trace::cr!(
+            "10031d43",
+            "100662fd",
+            FUN_100662fd(q as usize as *mut u32, q as usize as *mut u32)
+        );
+        mech_trace::cr!(
+            "10031d43",
+            "10066004",
+            FUN_10066004(
+                &raw mut DAT_101f5300 as usize as u32,
+                q as usize as *mut i32,
+                q as usize as *mut i32,
+            )
         );
         i = 0;
         while i < 6 {
             let p =
                 (&raw mut DAT_100adca0 as usize as u32).wrapping_add((i as u32).wrapping_mul(2));
-            FUN_100662fd(p as usize as *mut u32, p as usize as *mut u32);
-            FUN_10066004(
-                &raw mut DAT_101f5300 as usize as u32,
-                p as usize as *mut i32,
-                p as usize as *mut i32,
+            mech_trace::cr!(
+                "10031d43",
+                "100662fd",
+                FUN_100662fd(p as usize as *mut u32, p as usize as *mut u32)
+            );
+            mech_trace::cr!(
+                "10031d43",
+                "10066004",
+                FUN_10066004(
+                    &raw mut DAT_101f5300 as usize as u32,
+                    p as usize as *mut i32,
+                    p as usize as *mut i32,
+                )
             );
             i = i.wrapping_add(1);
         }
         FUN_100603ff(0);
-        FUN_1003b59a(DAT_100aaf68 as i32);
-        FUN_1003b954(DAT_100aaf68 as usize as *mut i32);
-        DAT_100a7b60 = 0;
-        local_10[0] = DAT_100aafd8;
+        FUN_1003b59a(mech_trace::gr!("10031d43", "100aaf68", DAT_100aaf68) as i32);
+        FUN_1003b954(mech_trace::gr!("10031d43", "100aaf68", DAT_100aaf68) as usize as *mut i32);
+        mech_trace::gw!("10031d43", "100a7b60", DAT_100a7b60, 0);
+        local_10[0] = mech_trace::gr!("10031d43", "100aafd8", DAT_100aafd8);
         local_10[1] = 0;
         let lp = local_10.as_mut_ptr();
-        FUN_100662fd(lp, lp);
-        FUN_10066004(
-            &raw mut DAT_101f5300 as usize as u32,
-            lp.cast::<i32>(),
-            lp.cast::<i32>(),
+        mech_trace::cr!("10031d43", "100662fd", FUN_100662fd(lp, lp));
+        mech_trace::cr!(
+            "10031d43",
+            "10066004",
+            FUN_10066004(
+                &raw mut DAT_101f5300 as usize as u32,
+                lp.cast::<i32>(),
+                lp.cast::<i32>(),
+            )
         );
-        DAT_100aafd8 = local_10[0];
+        mech_trace::gw!("10031d43", "100aafd8", DAT_100aafd8, local_10[0]);
         FUN_1005c952();
         FUN_1005bcb0();
         FUN_1006a46b();

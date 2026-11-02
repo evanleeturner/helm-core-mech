@@ -8,13 +8,17 @@ unsafe extern "C" {
 #[inline(always)]
 unsafe fn slot(off: i32) -> *mut i32 {
     // SAFETY: DAT_10092000 is the game's own pointer to its state block.
-    unsafe { DAT_10092000.wrapping_add(0x368).wrapping_add(off as u32) as usize as *mut i32 }
+    unsafe {
+        mech_trace::gr!("10032640", "10092000", DAT_10092000)
+            .wrapping_add(0x368)
+            .wrapping_add(off as u32) as usize as *mut i32
+    }
 }
 
 #[inline(always)]
 unsafe fn fill(base: i32, param_3: &mut i32, param_2: i32) {
     let mut i_var1: i32 = 0;
-    if *param_3 != 0 {
+    if mech_trace::dr!("10032640", param_3) != 0 {
         let mut i_var3 = base;
         loop {
             if i_var1 > 0xb {
@@ -22,14 +26,14 @@ unsafe fn fill(base: i32, param_3: &mut i32, param_2: i32) {
             }
             // SAFETY: slot addresses lie within the game's state block.
             unsafe {
-                if slot(i_var3).read_unaligned() == 0 {
-                    *param_3 = param_3.wrapping_sub(1);
-                    slot(i_var3).write_unaligned(param_2);
+                if mech_trace::rd!("10032640", slot(i_var3), read_unaligned) == 0 {
+                    mech_trace::dw!("10032640", param_3, param_3.wrapping_sub(1));
+                    mech_trace::wr!("10032640", slot(i_var3), write_unaligned, param_2);
                 }
             }
             i_var3 = i_var3.wrapping_add(4);
             i_var1 += 1;
-            if *param_3 == 0 {
+            if mech_trace::dr!("10032640", param_3) == 0 {
                 break;
             }
         }
@@ -44,11 +48,11 @@ unsafe fn clear_two(a: i32, b: i32, param_2: i32) {
     loop {
         // SAFETY: slot addresses lie within the game's state block.
         unsafe {
-            if slot(i_var3).read_unaligned() == param_2 {
-                slot(i_var3).write_unaligned(0);
+            if mech_trace::rd!("10032640", slot(i_var3), read_unaligned) == param_2 {
+                mech_trace::wr!("10032640", slot(i_var3), write_unaligned, 0);
             }
-            if slot(i_var1).read_unaligned() == param_2 {
-                slot(i_var1).write_unaligned(0);
+            if mech_trace::rd!("10032640", slot(i_var1), read_unaligned) == param_2 {
+                mech_trace::wr!("10032640", slot(i_var1), write_unaligned, 0);
             }
         }
         i_var1 = i_var1.wrapping_add(4);
@@ -74,8 +78,9 @@ fn pick(param_1: i32) -> i32 {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10032640(param_1: i32, param_2: i32, mut param_3: i32) -> u32 {
+    mech_trace::enter!("10032640", param_1, param_2, param_3);
     if param_2 < 1 {
-        return 0;
+        return mech_trace::rt!("10032640", 0);
     }
     // SAFETY: all accesses are to the game's own state block via DAT_10092000.
     unsafe {
@@ -90,7 +95,7 @@ pub unsafe extern "C" fn FUN_10032640(param_1: i32, param_2: i32, mut param_3: i
                     i_stack_4.wrapping_mul(0x30),
                     param_2,
                 );
-                return 0;
+                return mech_trace::rt!("10032640", 0);
             }
         } else if i_var1 == 0x1964 {
             if param_3 != 0 {
@@ -102,15 +107,15 @@ pub unsafe extern "C" fn FUN_10032640(param_1: i32, param_2: i32, mut param_3: i
                         i_stack_4.wrapping_mul(0x30),
                         param_2,
                     );
-                    return 0;
+                    return mech_trace::rt!("10032640", 0);
                 }
             }
         } else if param_3 != 0 {
             let mut i_var1 = param_1.wrapping_mul(0x30);
             let mut i_var3: i32 = 0xc;
             loop {
-                if slot(i_var1).read_unaligned() == param_2 {
-                    slot(i_var1).write_unaligned(0);
+                if mech_trace::rd!("10032640", slot(i_var1), read_unaligned) == param_2 {
+                    mech_trace::wr!("10032640", slot(i_var1), write_unaligned, 0);
                 }
                 i_var1 = i_var1.wrapping_add(4);
                 i_var3 -= 1;
@@ -118,8 +123,8 @@ pub unsafe extern "C" fn FUN_10032640(param_1: i32, param_2: i32, mut param_3: i
                     break;
                 }
             }
-            return 0;
+            return mech_trace::rt!("10032640", 0);
         }
     }
-    1
+    mech_trace::rt!("10032640", 1)
 }

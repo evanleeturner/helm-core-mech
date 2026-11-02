@@ -42,47 +42,62 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1001ae8f() {
+    mech_trace::enter!("1001ae8f");
     // SAFETY: the globals and callees are the game's own memory and code;
     // the pointer in DAT_100aaf68 is the game's own structure.
     unsafe {
-        if DAT_100ab07c != 0 {
-            _DAT_101eb450 = DAT_100b38fc;
-            _DAT_101eb458 = 0;
-            _DAT_101eb3a0 = DAT_100b38fc;
-            _DAT_101eb3a8 = 0;
+        if mech_trace::gr!("1001ae8f", "100ab07c", DAT_100ab07c) != 0 {
+            mech_trace::gw!(
+                "1001ae8f",
+                "_DAT_101eb450",
+                _DAT_101eb450,
+                mech_trace::gr!("1001ae8f", "100b38fc", DAT_100b38fc)
+            );
+            mech_trace::gw!("1001ae8f", "_DAT_101eb458", _DAT_101eb458, 0);
+            mech_trace::gw!(
+                "1001ae8f",
+                "_DAT_101eb3a0",
+                _DAT_101eb3a0,
+                mech_trace::gr!("1001ae8f", "100b38fc", DAT_100b38fc)
+            );
+            mech_trace::gw!("1001ae8f", "_DAT_101eb3a8", _DAT_101eb3a8, 0);
             FUN_1003e938();
             FUN_1001a635(0);
         }
-        DAT_100ab094 = 1;
-        DAT_100ab090 = 0;
-        if DAT_100ba9ce == 0 {
-            if DAT_100ba9cf == 0 {
-                if DAT_100ba9d0 == 0 {
-                    if DAT_100ba9d1 == 0 {
-                        if DAT_100ab0bc == 0 {
-                            DAT_100ba9ac = 0;
-                            DAT_100ba9a8 = 0;
+        mech_trace::gw!("1001ae8f", "100ab094", DAT_100ab094, 1);
+        mech_trace::gw!("1001ae8f", "100ab090", DAT_100ab090, 0);
+        if mech_trace::gr!("1001ae8f", "100ba9ce", DAT_100ba9ce) == 0 {
+            if mech_trace::gr!("1001ae8f", "100ba9cf", DAT_100ba9cf) == 0 {
+                if mech_trace::gr!("1001ae8f", "100ba9d0", DAT_100ba9d0) == 0 {
+                    if mech_trace::gr!("1001ae8f", "100ba9d1", DAT_100ba9d1) == 0 {
+                        if mech_trace::gr!("1001ae8f", "100ab0bc", DAT_100ab0bc) == 0 {
+                            mech_trace::gw!("1001ae8f", "100ba9ac", DAT_100ba9ac, 0);
+                            mech_trace::gw!("1001ae8f", "100ba9a8", DAT_100ba9a8, 0);
                         }
                     } else {
-                        DAT_100ba9a8 = 0x280000;
+                        mech_trace::gw!("1001ae8f", "100ba9a8", DAT_100ba9a8, 0x280000);
                     }
                 } else {
-                    DAT_100ba9a8 = 0xffce0000u32 as i32;
+                    mech_trace::gw!("1001ae8f", "100ba9a8", DAT_100ba9a8, 0xffce0000u32 as i32);
                 }
             } else {
-                DAT_100ba9ac = 0x460000;
+                mech_trace::gw!("1001ae8f", "100ba9ac", DAT_100ba9ac, 0x460000);
             }
         } else {
-            DAT_100ba9ac = 0xffba0000u32 as i32;
+            mech_trace::gw!("1001ae8f", "100ba9ac", DAT_100ba9ac, 0xffba0000u32 as i32);
         }
-        if DAT_100ba9cf == 0 && DAT_100ba9ce == 0 && DAT_100ba9d0 == 0 && DAT_100ba9d1 == 0 {
-            DAT_100ab0bc = 1;
+        if mech_trace::gr!("1001ae8f", "100ba9cf", DAT_100ba9cf) == 0
+            && mech_trace::gr!("1001ae8f", "100ba9ce", DAT_100ba9ce) == 0
+            && mech_trace::gr!("1001ae8f", "100ba9d0", DAT_100ba9d0) == 0
+            && mech_trace::gr!("1001ae8f", "100ba9d1", DAT_100ba9d1) == 0
+        {
+            mech_trace::gw!("1001ae8f", "100ab0bc", DAT_100ab0bc, 1);
         } else {
-            DAT_100ab0bc = 0;
+            mech_trace::gw!("1001ae8f", "100ab0bc", DAT_100ab0bc, 0);
         }
-        let i_var1 = FUN_1003e5c0();
+        let i_var1 = mech_trace::cr!("1001ae8f", "1003e5c0", FUN_1003e5c0());
         if i_var1 == 0 {
-            let p = DAT_100aaf68;
+            let p = mech_trace::gr!("1001ae8f", "100aaf68", DAT_100aaf68);
             FUN_1001b024(
                 p.byte_add(0x10).cast::<i32>(),
                 p.byte_add(0xc).cast::<i32>(),

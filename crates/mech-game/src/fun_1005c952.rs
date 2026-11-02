@@ -19,6 +19,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1005c952() {
+    mech_trace::enter!("1005c952");
     let mut local_14: i32 = 0;
     while local_14 < 0x22 {
         // SAFETY: the globals, callees and the pointer tables they lead to are
@@ -26,41 +27,82 @@ pub unsafe extern "stdcall" fn FUN_1005c952() {
         unsafe {
             let pp = (&raw mut PTR_DAT_100b2cf0 as usize)
                 .wrapping_add((local_14 as usize).wrapping_mul(5)) as i32;
-            FUN_10066209(pp, pp);
-            FUN_10065e40(&raw mut DAT_101f5300 as usize as u32, pp, pp);
+            mech_trace::cr!("1005c952", "10066209", FUN_10066209(pp, pp));
+            mech_trace::cr!(
+                "1005c952",
+                "10065e40",
+                FUN_10065e40(&raw mut DAT_101f5300 as usize as u32, pp, pp)
+            );
             let pt = (&raw mut DAT_100b2f98 as usize)
                 .wrapping_add((local_14 as usize).wrapping_mul(8)) as *mut i32;
-            FUN_100660e1(pp, pt, pt);
-            let i_var1 = ((&raw mut DAT_100b3188 as usize)
-                .wrapping_add((local_14 as usize).wrapping_mul(4))
-                as *const i32)
-                .read_unaligned();
+            mech_trace::cr!("1005c952", "100660e1", FUN_100660e1(pp, pt, pt));
+            let i_var1 = mech_trace::rd!(
+                "1005c952",
+                ((&raw mut DAT_100b3188 as usize).wrapping_add((local_14 as usize).wrapping_mul(4))
+                    as *const i32),
+                read_unaligned
+            );
             if i_var1 != 0 {
-                let base = (i_var1 as usize as *const u8)
-                    .byte_add(4)
-                    .cast::<i32>()
-                    .read_unaligned();
-                let p2 = ((base as usize).wrapping_add(4) as *const u32).read_unaligned() as usize
-                    as *mut u32;
-                p2.write_unaligned(&raw mut DAT_101f5300 as usize as u32);
-                FUN_10065ebf(pp, p2 as usize as i32, p2 as usize as i32);
+                let base = mech_trace::rd!(
+                    "1005c952",
+                    (i_var1 as usize as *const u8).byte_add(4).cast::<i32>(),
+                    read_unaligned
+                );
+                let p2 = mech_trace::rd!(
+                    "1005c952",
+                    ((base as usize).wrapping_add(4) as *const u32),
+                    read_unaligned
+                ) as usize as *mut u32;
+                mech_trace::wr!(
+                    "1005c952",
+                    p2,
+                    write_unaligned,
+                    &raw mut DAT_101f5300 as usize as u32
+                );
+                mech_trace::cr!(
+                    "1005c952",
+                    "10065ebf",
+                    FUN_10065ebf(pp, p2 as usize as i32, p2 as usize as i32)
+                );
 
-                let base = (i_var1 as usize as *const u8)
-                    .byte_add(4)
-                    .cast::<i32>()
-                    .read_unaligned();
-                let p2 = ((base as usize).wrapping_add(8) as *const u32).read_unaligned() as usize
-                    as *mut u32;
-                p2.write_unaligned(&raw mut DAT_101f5300 as usize as u32);
-                FUN_10065ebf(pp, p2 as usize as i32, p2 as usize as i32);
+                let base = mech_trace::rd!(
+                    "1005c952",
+                    (i_var1 as usize as *const u8).byte_add(4).cast::<i32>(),
+                    read_unaligned
+                );
+                let p2 = mech_trace::rd!(
+                    "1005c952",
+                    ((base as usize).wrapping_add(8) as *const u32),
+                    read_unaligned
+                ) as usize as *mut u32;
+                mech_trace::wr!(
+                    "1005c952",
+                    p2,
+                    write_unaligned,
+                    &raw mut DAT_101f5300 as usize as u32
+                );
+                mech_trace::cr!(
+                    "1005c952",
+                    "10065ebf",
+                    FUN_10065ebf(pp, p2 as usize as i32, p2 as usize as i32)
+                );
 
-                let base = (i_var1 as usize as *const u8)
-                    .byte_add(4)
-                    .cast::<i32>()
-                    .read_unaligned();
-                let p3 = ((base as usize).wrapping_add(0xc) as *const u32).read_unaligned() as usize
-                    as *mut u32;
-                p3.write_unaligned(&raw mut DAT_101f5300 as usize as u32);
+                let base = mech_trace::rd!(
+                    "1005c952",
+                    (i_var1 as usize as *const u8).byte_add(4).cast::<i32>(),
+                    read_unaligned
+                );
+                let p3 = mech_trace::rd!(
+                    "1005c952",
+                    ((base as usize).wrapping_add(0xc) as *const u32),
+                    read_unaligned
+                ) as usize as *mut u32;
+                mech_trace::wr!(
+                    "1005c952",
+                    p3,
+                    write_unaligned,
+                    &raw mut DAT_101f5300 as usize as u32
+                );
             }
         }
         local_14 = local_14.wrapping_add(1);

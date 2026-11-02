@@ -12,6 +12,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1005a230(slot_index: i32, str2: *const i8) -> u16 {
+    mech_trace::enter!("1005a230", slot_index, str2);
     let mut found = false;
     let mut entry_index: u32 = 0;
     let mut result_index: u16 = 0;
@@ -21,15 +22,22 @@ pub unsafe extern "C" fn FUN_1005a230(slot_index: i32, str2: *const i8) -> u16 {
         let slot_ptr = (&raw mut DAT_100c6aa6)
             .cast::<u8>()
             .byte_add(slot_index.wrapping_mul(0x14a) as usize);
-        let entry_table: i32 = slot_ptr.cast::<i32>().read_unaligned();
-        let entry_count: u16 =
-            (entry_table.wrapping_add(0xc) as usize as *const u16).read_unaligned();
+        let entry_table: i32 = mech_trace::rd!("1005a230", slot_ptr.cast::<i32>(), read_unaligned);
+        let entry_count: u16 = mech_trace::rd!(
+            "1005a230",
+            (entry_table.wrapping_add(0xc) as usize as *const u16),
+            read_unaligned
+        );
         if entry_count != 0 {
             loop {
                 let addr = entry_table
                     .wrapping_add(0xe)
                     .wrapping_add(entry_index.wrapping_mul(0x18) as i32);
-                let cmp = strncmp(addr as usize as *const i8, str2, 4);
+                let cmp = mech_trace::cr!(
+                    "1005a230",
+                    "strncmp",
+                    strncmp(addr as usize as *const i8, str2, 4)
+                );
                 if cmp == 0 {
                     found = true;
                 } else {
@@ -43,7 +51,7 @@ pub unsafe extern "C" fn FUN_1005a230(slot_index: i32, str2: *const i8) -> u16 {
         }
     }
     if !found {
-        return 0xffff;
+        return mech_trace::rt!("1005a230", 0xffff);
     }
-    result_index
+    mech_trace::rt!("1005a230", result_index)
 }

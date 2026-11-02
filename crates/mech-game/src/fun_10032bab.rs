@@ -28,18 +28,26 @@ pub unsafe extern "C" fn FUN_10032bab(
     param_9: *mut u32,
     param_10: *mut u32,
 ) {
+    mech_trace::enter!(
+        "10032bab", param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
+        param_9, param_10
+    );
     // SAFETY: the callee is the game's own function; the pointers are passed
     // through unchanged.
     unsafe {
-        FUN_100329cf(
-            param_4,
-            -param_5,
-            param_6,
-            -(param_1 * param_4 + param_2 * -param_5 + param_3 * param_6),
-            param_7,
-            param_8,
-            param_9,
-            param_10,
+        mech_trace::cr!(
+            "10032bab",
+            "100329cf",
+            FUN_100329cf(
+                param_4,
+                -param_5,
+                param_6,
+                -(param_1 * param_4 + param_2 * -param_5 + param_3 * param_6),
+                param_7,
+                param_8,
+                param_9,
+                param_10,
+            )
         );
     }
 }

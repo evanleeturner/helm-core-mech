@@ -28,14 +28,27 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1000fce0() {
+    mech_trace::enter!("1000fce0");
     // SAFETY: all globals and callees are the game's own; the table copy
     // reads and writes the same 0x45-byte entries the original does.
     unsafe {
-        let high_cfg_file = __wfopen(DAT_1008e764 as *const c_void, DAT_1008e760 as *const c_void);
+        let high_cfg_file = mech_trace::cr!(
+            "1000fce0",
+            "__wfopen",
+            __wfopen(
+                mech_trace::gr!("1000fce0", "1008e764", DAT_1008e764) as *const c_void,
+                mech_trace::gr!("1000fce0", "1008e760", DAT_1008e760) as *const c_void
+            )
+        );
         let mut entries_copied: i32 = 0;
         if high_cfg_file.is_null() {
-            DAT_100c42c0 = DAT_1008e460;
-            if DAT_1008e460 > 0 {
+            mech_trace::gw!(
+                "1000fce0",
+                "100c42c0",
+                DAT_100c42c0,
+                mech_trace::gr!("1000fce0", "1008e460", DAT_1008e460)
+            );
+            if mech_trace::gr!("1000fce0", "1008e460", DAT_1008e460) > 0 {
                 let mut entry_offset: i32 = 0;
                 loop {
                     entries_copied = entries_copied.wrapping_add(1);
@@ -47,33 +60,41 @@ pub unsafe extern "stdcall" fn FUN_1000fce0() {
                         .byte_add(entry_offset as usize);
                     let mut dwords_left: i32 = 0x11;
                     while dwords_left != 0 {
-                        dst.cast::<u32>()
-                            .write_unaligned(src.cast::<u32>().read_unaligned());
+                        mech_trace::wr!(
+                            "1000fce0",
+                            dst.cast::<u32>(),
+                            write_unaligned,
+                            mech_trace::rd!("1000fce0", src.cast::<u32>(), read_unaligned)
+                        );
                         src = src.byte_add(4);
                         dst = dst.byte_add(4);
                         dwords_left -= 1;
                     }
-                    *dst = *src;
+                    mech_trace::dw!("1000fce0", dst, mech_trace::dr!("1000fce0", src));
                     entry_offset = entry_offset.wrapping_add(0x45);
-                    if !(entries_copied < DAT_100c42c0) {
+                    if !(entries_copied < mech_trace::gr!("1000fce0", "100c42c0", DAT_100c42c0)) {
                         break;
                     }
                 }
             }
             _qsort(
                 (&raw mut DAT_100c42c4).cast::<c_void>(),
-                DAT_100c42c0 as u32,
+                mech_trace::gr!("1000fce0", "100c42c0", DAT_100c42c0) as u32,
                 0x45,
                 FUN_1000fcb0,
             );
             return;
         }
-        _fread(
-            (&raw mut DAT_100c42c0).cast::<c_void>(),
-            0x2b6,
-            1,
-            high_cfg_file,
+        mech_trace::cr!(
+            "1000fce0",
+            "_fread",
+            _fread(
+                (&raw mut DAT_100c42c0).cast::<c_void>(),
+                0x2b6,
+                1,
+                high_cfg_file,
+            )
         );
-        _fclose(high_cfg_file);
+        mech_trace::cr!("1000fce0", "_fclose", _fclose(high_cfg_file));
     }
 }

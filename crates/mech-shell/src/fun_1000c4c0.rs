@@ -14,6 +14,7 @@ pub unsafe extern "C" fn FUN_1000c4c0(
     center_x_likely: i32,
     text: *mut i8,
 ) -> i32 {
+    mech_trace::enter!("1000c4c0", param_1, center_x_likely, text);
     let text_width_likely: i32;
     // SAFETY: FUN_10050b20 is the game's __thiscall function: `this` goes in
     // ECX, the single argument is pushed, and the callee pops it. The result
@@ -29,5 +30,8 @@ pub unsafe extern "C" fn FUN_1000c4c0(
             clobber_abi("C"),
         );
     }
-    center_x_likely.wrapping_sub(text_width_likely / 2)
+    mech_trace::rt!(
+        "1000c4c0",
+        center_x_likely.wrapping_sub(text_width_likely / 2)
+    )
 }

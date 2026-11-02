@@ -24,6 +24,9 @@ pub unsafe extern "C" fn FUN_1005558c(
     mut param_5: i32,
     param_6: i32,
 ) -> i32 {
+    mech_trace::enter!(
+        "1005558c", param_1, param_2, param_3, param_4, param_5, param_6
+    );
     let mut local_14: i32 = (param_2 as u32).wrapping_sub(param_1 as u32) as i32;
     let mut local_8: i32 = (param_6 as u32).wrapping_sub(param_5 as u32) as i32;
     if local_8 < 0 {
@@ -35,15 +38,40 @@ pub unsafe extern "C" fn FUN_1005558c(
     // SAFETY: the callees and globals are the game's own; arguments are plain values.
     unsafe {
         if param_4 == 0 {
-            param_3 = FUN_10055b60(DAT_10160ee8, param_3 as i32, local_8, DAT_10160eb8 as u8);
+            param_3 = mech_trace::cr!(
+                "1005558c",
+                "10055b60",
+                FUN_10055b60(
+                    mech_trace::gr!("1005558c", "10160ee8", DAT_10160ee8),
+                    param_3 as i32,
+                    local_8,
+                    mech_trace::gr!("1005558c", "10160eb8", DAT_10160eb8) as u8
+                )
+            );
         } else {
-            param_3 = FUN_10055b60(param_3 as i32, DAT_10160ec4, local_8, DAT_10160eb4 as u8);
+            param_3 = mech_trace::cr!(
+                "1005558c",
+                "10055b60",
+                FUN_10055b60(
+                    param_3 as i32,
+                    mech_trace::gr!("1005558c", "10160ec4", DAT_10160ec4),
+                    local_8,
+                    mech_trace::gr!("1005558c", "10160eb4", DAT_10160eb4) as u8
+                )
+            );
         }
         let diff = param_3.wrapping_sub(local_14 as u32);
-        if diff == 0 {
-            param_5
-        } else {
-            FUN_10055b90(param_1, param_5, local_14, local_8, diff as i32)
-        }
+        mech_trace::rt!(
+            "1005558c",
+            if diff == 0 {
+                param_5
+            } else {
+                mech_trace::cr!(
+                    "1005558c",
+                    "10055b90",
+                    FUN_10055b90(param_1, param_5, local_14, local_8, diff as i32)
+                )
+            }
+        )
     }
 }

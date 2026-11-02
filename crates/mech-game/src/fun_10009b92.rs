@@ -9,10 +9,20 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10009b92() {
+    mech_trace::enter!("10009b92");
     // SAFETY: the globals are the game's own memory, read and written where the original does.
     unsafe {
-        if DAT_10215658 < 3 && DAT_10215660 < 3 {
-            DAT_10215660 = ((DAT_10215658 as u32).wrapping_add(1) as i32) % 3;
+        if mech_trace::gr!("10009b92", "10215658", DAT_10215658) < 3
+            && mech_trace::gr!("10009b92", "10215660", DAT_10215660) < 3
+        {
+            mech_trace::gw!(
+                "10009b92",
+                "10215660",
+                DAT_10215660,
+                ((mech_trace::gr!("10009b92", "10215658", DAT_10215658) as u32).wrapping_add(1)
+                    as i32)
+                    % 3
+            );
         }
     }
 }

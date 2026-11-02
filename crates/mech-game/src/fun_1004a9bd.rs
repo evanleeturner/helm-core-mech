@@ -47,72 +47,97 @@ pub unsafe extern "C" fn FUN_1004a9bd(
     param_8: u32,
     param_9: i32,
 ) {
+    mech_trace::enter!(
+        "1004a9bd", param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9
+    );
     let i_var2 = param_2.wrapping_mul(0x60) as usize;
     // SAFETY: the globals are the game's own tables, indexed by byte offset
     // as the original does; the callees are the game's functions.
     unsafe {
-        if (&raw mut DAT_101ec7a0)
-            .byte_add(i_var2)
-            .cast::<i32>()
-            .read_unaligned()
-            != 0
+        if mech_trace::rd!(
+            "1004a9bd",
+            (&raw mut DAT_101ec7a0).byte_add(i_var2).cast::<i32>(),
+            read_unaligned
+        ) != 0
         {
-            DAT_100b06f0 = 0xffff_ffff;
+            mech_trace::gw!("1004a9bd", "100b06f0", DAT_100b06f0, 0xffff_ffff);
         }
-        FUN_1002f727(
-            (&raw mut DAT_101ec780)
-                .byte_add(i_var2)
-                .cast::<i32>()
-                .read_unaligned(),
+        mech_trace::cr!(
+            "1004a9bd",
+            "1002f727",
+            FUN_1002f727(mech_trace::rd!(
+                "1004a9bd",
+                (&raw mut DAT_101ec780).byte_add(i_var2).cast::<i32>(),
+                read_unaligned
+            ),)
         );
-        FUN_1002f7f7(
-            (&raw mut DAT_101ec780)
-                .byte_add(i_var2)
-                .cast::<i32>()
-                .read_unaligned(),
+        mech_trace::cr!(
+            "1004a9bd",
+            "1002f7f7",
+            FUN_1002f7f7(mech_trace::rd!(
+                "1004a9bd",
+                (&raw mut DAT_101ec780).byte_add(i_var2).cast::<i32>(),
+                read_unaligned
+            ),)
         );
-        let u_var1 = (&raw mut DAT_101ec758)
-            .byte_add(i_var2)
-            .cast::<u32>()
-            .read_unaligned();
-        FUN_1007d08d(
-            (&raw mut DAT_101ec7a8)
-                .byte_add(i_var2)
-                .cast::<i32>()
-                .read_unaligned(),
+        let u_var1 = mech_trace::rd!(
+            "1004a9bd",
+            (&raw mut DAT_101ec758).byte_add(i_var2).cast::<u32>(),
+            read_unaligned
         );
-        FUN_10030fd2(
-            (&raw mut DAT_101ec7ac)
-                .byte_add(i_var2)
-                .cast::<i32>()
-                .read_unaligned(),
+        mech_trace::cr!(
+            "1004a9bd",
+            "1007d08d",
+            FUN_1007d08d(mech_trace::rd!(
+                "1004a9bd",
+                (&raw mut DAT_101ec7a8).byte_add(i_var2).cast::<i32>(),
+                read_unaligned
+            ),)
         );
-        (&raw mut DAT_101ec7a8)
-            .byte_add(i_var2)
-            .cast::<u32>()
-            .write_unaligned(0xffff_ffff);
-        (&raw mut DAT_101ec7ac)
-            .byte_add(i_var2)
-            .cast::<u32>()
-            .write_unaligned(0xffff_ffff);
-        FUN_10049a9b(param_2);
+        mech_trace::cr!(
+            "1004a9bd",
+            "10030fd2",
+            FUN_10030fd2(mech_trace::rd!(
+                "1004a9bd",
+                (&raw mut DAT_101ec7ac).byte_add(i_var2).cast::<i32>(),
+                read_unaligned
+            ),)
+        );
+        mech_trace::wr!(
+            "1004a9bd",
+            (&raw mut DAT_101ec7a8).byte_add(i_var2).cast::<u32>(),
+            write_unaligned,
+            0xffff_ffff
+        );
+        mech_trace::wr!(
+            "1004a9bd",
+            (&raw mut DAT_101ec7ac).byte_add(i_var2).cast::<u32>(),
+            write_unaligned,
+            0xffff_ffff
+        );
+        mech_trace::cr!("1004a9bd", "10049a9b", FUN_10049a9b(param_2));
         if param_3 != 0 {
-            FUN_1004ab46(
-                (&raw mut DAT_101ec794)
-                    .byte_add(i_var2)
-                    .cast::<u32>()
-                    .read_unaligned(),
-                param_1,
-                u_var1,
-                param_4,
-                param_5,
-                param_6,
-                param_7,
-                param_8,
-                param_9,
-                0,
-                0,
-                0,
+            mech_trace::cr!(
+                "1004a9bd",
+                "1004ab46",
+                FUN_1004ab46(
+                    mech_trace::rd!(
+                        "1004a9bd",
+                        (&raw mut DAT_101ec794).byte_add(i_var2).cast::<u32>(),
+                        read_unaligned
+                    ),
+                    param_1,
+                    u_var1,
+                    param_4,
+                    param_5,
+                    param_6,
+                    param_7,
+                    param_8,
+                    param_9,
+                    0,
+                    0,
+                    0,
+                )
             );
         }
     }

@@ -26,16 +26,25 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1001be70(param_1: i32) -> *mut i32 {
+    mech_trace::enter!("1001be70", param_1);
     // SAFETY: the heap handle, allocator and callee are the game's own; the
     // allocation is 0x78 bytes, so the 0x1e zeroed ints and the pointers
     // into it stay in bounds.
     unsafe {
-        let pi_var1 = HeapAlloc(DAT_100adf74, 1, 0x78);
+        let pi_var1 = mech_trace::cr!(
+            "1001be70",
+            "HeapAlloc",
+            HeapAlloc(
+                mech_trace::gr!("1001be70", "100adf74", DAT_100adf74),
+                1,
+                0x78
+            )
+        );
         if !pi_var1.is_null() {
             let mut pi_var3 = pi_var1;
             let mut i_var2: i32 = 0x1e;
             while i_var2 != 0 {
-                pi_var3.write_unaligned(0);
+                mech_trace::wr!("1001be70", pi_var3, write_unaligned, 0);
                 pi_var3 = pi_var3.add(1);
                 i_var2 -= 1;
             }
@@ -49,6 +58,6 @@ pub unsafe extern "C" fn FUN_1001be70(param_1: i32) -> *mut i32 {
                 pi_var1.add(5),
             );
         }
-        pi_var1
+        mech_trace::rt!("1001be70", pi_var1)
     }
 }

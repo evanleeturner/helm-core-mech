@@ -16,27 +16,52 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1003289f() {
+    mech_trace::enter!("1003289f");
     // SAFETY: the globals and the heap handle are the game's own; the table
     // at DAT_10168410 holds 16 pointers, each freed and cleared in order.
     unsafe {
-        if !DAT_100ada90.is_null() {
-            HeapFree(DAT_100adf74, 1, DAT_100ada90);
+        if !mech_trace::gr!("1003289f", "100ada90", DAT_100ada90).is_null() {
+            mech_trace::cr!(
+                "1003289f",
+                "HeapFree",
+                HeapFree(
+                    mech_trace::gr!("1003289f", "100adf74", DAT_100adf74),
+                    1,
+                    mech_trace::gr!("1003289f", "100ada90", DAT_100ada90)
+                )
+            );
         }
-        DAT_100ada90 = core::ptr::null_mut();
+        mech_trace::gw!("1003289f", "100ada90", DAT_100ada90, core::ptr::null_mut());
         let mut local_8: i32 = 0;
         while local_8 < 0x10 {
             let slot = (&raw mut DAT_10168410)
                 .byte_add((local_8 as usize).wrapping_mul(4))
                 .cast::<*mut core::ffi::c_void>();
-            if !slot.read_unaligned().is_null() {
-                HeapFree(DAT_100adf74, 1, slot.read_unaligned());
+            if !mech_trace::rd!("1003289f", slot, read_unaligned).is_null() {
+                mech_trace::cr!(
+                    "1003289f",
+                    "HeapFree",
+                    HeapFree(
+                        mech_trace::gr!("1003289f", "100adf74", DAT_100adf74),
+                        1,
+                        mech_trace::rd!("1003289f", slot, read_unaligned)
+                    )
+                );
             }
-            slot.write_unaligned(core::ptr::null_mut());
+            mech_trace::wr!("1003289f", slot, write_unaligned, core::ptr::null_mut());
             local_8 = local_8.wrapping_add(1);
         }
-        if !DAT_100ada94.is_null() {
-            HeapFree(DAT_100adf74, 1, DAT_100ada94);
+        if !mech_trace::gr!("1003289f", "100ada94", DAT_100ada94).is_null() {
+            mech_trace::cr!(
+                "1003289f",
+                "HeapFree",
+                HeapFree(
+                    mech_trace::gr!("1003289f", "100adf74", DAT_100adf74),
+                    1,
+                    mech_trace::gr!("1003289f", "100ada94", DAT_100ada94)
+                )
+            );
         }
-        DAT_100ada94 = core::ptr::null_mut();
+        mech_trace::gw!("1003289f", "100ada94", DAT_100ada94, core::ptr::null_mut());
     }
 }

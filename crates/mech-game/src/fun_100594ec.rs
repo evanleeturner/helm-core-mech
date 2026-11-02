@@ -23,56 +23,63 @@ pub unsafe extern "C" fn FUN_100594ec(
     param_5: i32,
     param_6: i32,
 ) -> u32 {
+    mech_trace::enter!(
+        "100594ec", param_1, param_2, param_3, param_4, param_5, param_6
+    );
     let mut param_5 = param_5;
     if param_4 == 0 || param_5 == 0 {
         // SAFETY: the callee is the game's own function; arguments are passed through.
-        return unsafe {
-            FUN_10056489(
-                param_1,
-                param_2.wrapping_sub(param_4),
-                param_3.wrapping_sub(param_5),
-                param_2.wrapping_add(param_4),
-                param_3.wrapping_add(param_5),
-                0,
-                param_6,
+        return mech_trace::rt!("100594ec", unsafe {
+            mech_trace::cr!(
+                "100594ec",
+                "10056489",
+                FUN_10056489(
+                    param_1,
+                    param_2.wrapping_sub(param_4),
+                    param_3.wrapping_sub(param_5),
+                    param_2.wrapping_add(param_4),
+                    param_3.wrapping_add(param_5),
+                    0,
+                    param_6,
+                )
             )
-        };
+        });
     }
     // SAFETY: param_1 points at the game's clip/surface descriptor; the surface
     // pointer it holds is written only inside the clip rectangle.
     unsafe {
-        let pi_var1 = param_1.read_unaligned() as *mut i32;
-        let i_var13 = pi_var1.add(1).read_unaligned();
+        let pi_var1 = mech_trace::rd!("100594ec", param_1, read_unaligned) as *mut i32;
+        let i_var13 = mech_trace::rd!("100594ec", pi_var1.add(1), read_unaligned);
         let i_var9 = i_var13.wrapping_add(1);
         if i_var9 == 0 || i_var13 < -1 {
-            return 0xffff_ffff;
+            return mech_trace::rt!("100594ec", 0xffff_ffff);
         }
-        let i_var2 = pi_var1.add(2).read_unaligned();
+        let i_var2 = mech_trace::rd!("100594ec", pi_var1.add(2), read_unaligned);
         if i_var2 < 0 {
-            return 0xffff_ffff;
+            return mech_trace::rt!("100594ec", 0xffff_ffff);
         }
-        let i_var3 = param_1.add(1).read_unaligned();
+        let i_var3 = mech_trace::rd!("100594ec", param_1.add(1), read_unaligned);
         let mut i_var10 = i_var3;
         if i_var3 < 1 {
             i_var10 = 0;
         }
-        let i_var4 = param_1.add(2).read_unaligned();
+        let i_var4 = mech_trace::rd!("100594ec", param_1.add(2), read_unaligned);
         let mut i_var11 = i_var4;
         if i_var4 < 1 {
             i_var11 = 0;
         }
-        let mut i_var12 = param_1.add(3).read_unaligned();
-        if i_var13 <= param_1.add(3).read_unaligned() {
+        let mut i_var12 = mech_trace::rd!("100594ec", param_1.add(3), read_unaligned);
+        if i_var13 <= mech_trace::rd!("100594ec", param_1.add(3), read_unaligned) {
             i_var12 = i_var13;
         }
-        let mut i_var13 = param_1.add(4).read_unaligned();
-        if i_var2 <= param_1.add(4).read_unaligned() {
+        let mut i_var13 = mech_trace::rd!("100594ec", param_1.add(4), read_unaligned);
+        if i_var2 <= mech_trace::rd!("100594ec", param_1.add(4), read_unaligned) {
             i_var13 = i_var2;
         }
         if i_var12 < i_var10 || i_var13 < i_var11 {
-            return 0xffff_fffe;
+            return mech_trace::rt!("100594ec", 0xffff_fffe);
         }
-        let base = pi_var1.read_unaligned();
+        let base = mech_trace::rd!("100594ec", pi_var1, read_unaligned);
         let u_var7 = param_6 as u8;
         let i_var3 = param_2.wrapping_add(i_var3);
         let i_var4 = param_3.wrapping_add(i_var4);
@@ -91,7 +98,7 @@ pub unsafe extern "C" fn FUN_100594ec(
         let plot = |x: i32, y: i32| {
             if i_var10 <= x && x <= i_var12 && i_var11 <= y && y <= i_var13 {
                 let addr = y.wrapping_mul(i_var9).wrapping_add(base).wrapping_add(x);
-                (addr as *mut u8).write(u_var7);
+                mech_trace::wr!("100594ec", (addr as *mut u8), write, u_var7);
             }
         };
 
@@ -136,6 +143,6 @@ pub unsafe extern "C" fn FUN_100594ec(
                 break;
             }
         }
-        u_var8
+        mech_trace::rt!("100594ec", u_var8)
     }
 }

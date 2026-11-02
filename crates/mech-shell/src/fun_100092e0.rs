@@ -15,12 +15,13 @@ unsafe extern "fastcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_100092e0() {
+    mech_trace::enter!("100092e0");
     // SAFETY: the global and the callee belong to the game; the pointer is
     // released once and then cleared, as in the original.
     unsafe {
-        if !DAT_100ad4c8.is_null() {
-            FUN_1005f880(DAT_100ad4c8);
-            DAT_100ad4c8 = core::ptr::null_mut();
+        if !mech_trace::gr!("100092e0", "100ad4c8", DAT_100ad4c8).is_null() {
+            FUN_1005f880(mech_trace::gr!("100092e0", "100ad4c8", DAT_100ad4c8));
+            mech_trace::gw!("100092e0", "100ad4c8", DAT_100ad4c8, core::ptr::null_mut());
         }
     }
 }

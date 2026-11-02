@@ -9,6 +9,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10013b09(param_1: u32, param_2: *mut i8) -> u32 {
+    mech_trace::enter!("10013b09", param_1, param_2);
     let mut i_var1: i32 = 0x26;
     let mut in_zf = false;
     // SAFETY: the global string is the game's own; param_2 points at the
@@ -21,7 +22,7 @@ pub unsafe extern "stdcall" fn FUN_10013b09(param_1: u32, param_2: *mut i8) -> u
                 break;
             }
             i_var1 = i_var1.wrapping_sub(1);
-            in_zf = *p1 == *p2;
+            in_zf = mech_trace::dr!("10013b09", p1) == mech_trace::dr!("10013b09", p2);
             p1 = p1.add(1);
             p2 = p2.add(1);
             if !in_zf {
@@ -29,8 +30,8 @@ pub unsafe extern "stdcall" fn FUN_10013b09(param_1: u32, param_2: *mut i8) -> u
             }
         }
         if in_zf {
-            DAT_100aa214 = param_1;
+            mech_trace::gw!("10013b09", "100aa214", DAT_100aa214, param_1);
         }
     }
-    1
+    mech_trace::rt!("10013b09", 1)
 }

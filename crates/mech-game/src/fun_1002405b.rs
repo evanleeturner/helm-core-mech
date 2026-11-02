@@ -14,15 +14,20 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1002405b(param_1: i32) {
+    mech_trace::enter!("1002405b", param_1);
     // SAFETY: the globals and the callee are the game's own; the write goes to
     // the game's table entry at the offset the original computes.
     unsafe {
-        if 0 < param_1 && param_1 < DAT_100ab374 {
-            (&raw mut DAT_1016ce56)
-                .byte_add(param_1.wrapping_mul(0x1fa) as usize)
-                .cast::<u32>()
-                .write_unaligned(0);
-            FUN_10023a8c(param_1);
+        if 0 < param_1 && param_1 < mech_trace::gr!("1002405b", "100ab374", DAT_100ab374) {
+            mech_trace::wr!(
+                "1002405b",
+                (&raw mut DAT_1016ce56)
+                    .byte_add(param_1.wrapping_mul(0x1fa) as usize)
+                    .cast::<u32>(),
+                write_unaligned,
+                0
+            );
+            mech_trace::cr!("1002405b", "10023a8c", FUN_10023a8c(param_1));
         }
     }
 }

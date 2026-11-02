@@ -18,32 +18,37 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10027f9a(param_1: *mut i32, param_2: *mut i32) -> u32 {
+    mech_trace::enter!("10027f9a", param_1, param_2);
     let mut local_c: MaybeUninit<u32> = MaybeUninit::uninit();
     let mut local_8: MaybeUninit<i32> = MaybeUninit::uninit();
     // SAFETY: param_1 and param_2 point at the caller's three-int vectors;
     // the callee is the game's own and receives pointers to live locals.
     unsafe {
-        let a = param_1
-            .read_unaligned()
-            .wrapping_sub(param_2.read_unaligned());
-        let b = param_1
-            .byte_add(4)
-            .read_unaligned()
-            .wrapping_sub(param_2.byte_add(4).read_unaligned());
-        let c = param_1
-            .byte_add(8)
-            .read_unaligned()
-            .wrapping_sub(param_2.byte_add(8).read_unaligned());
-        let p8 = local_8.as_mut_ptr();
-        FUN_10083a59(
-            a as u32,
-            b as u32,
-            c as u32,
-            p8,
-            p8.cast::<u32>(),
-            local_c.as_mut_ptr(),
-            p8,
+        let a = mech_trace::rd!("10027f9a", param_1, read_unaligned).wrapping_sub(mech_trace::rd!(
+            "10027f9a",
+            param_2,
+            read_unaligned
+        ));
+        let b = mech_trace::rd!("10027f9a", param_1.byte_add(4), read_unaligned).wrapping_sub(
+            mech_trace::rd!("10027f9a", param_2.byte_add(4), read_unaligned),
         );
-        local_c.assume_init()
+        let c = mech_trace::rd!("10027f9a", param_1.byte_add(8), read_unaligned).wrapping_sub(
+            mech_trace::rd!("10027f9a", param_2.byte_add(8), read_unaligned),
+        );
+        let p8 = local_8.as_mut_ptr();
+        mech_trace::cr!(
+            "10027f9a",
+            "10083a59",
+            FUN_10083a59(
+                a as u32,
+                b as u32,
+                c as u32,
+                p8,
+                p8.cast::<u32>(),
+                local_c.as_mut_ptr(),
+                p8,
+            )
+        );
+        mech_trace::rt!("10027f9a", local_c.assume_init())
     }
 }

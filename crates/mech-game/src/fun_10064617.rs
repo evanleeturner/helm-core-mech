@@ -8,6 +8,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10064617() {
+    mech_trace::enter!("10064617");
     let mut local_8: u32 = 0;
     while local_8 < 0xfe {
         // SAFETY: the callee is the game's own function; it takes the index by value.

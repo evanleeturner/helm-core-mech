@@ -13,10 +13,20 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10046370() {
+    mech_trace::enter!("10046370");
     let mut local_8: u32 = 0;
     // SAFETY: the callee and the global are the game's own; local_8 is a
     // live stack slot whose address is passed to the callee.
     unsafe {
-        mciSendCommandA(DAT_100b04b0, 0x809, 0, (&raw mut local_8) as usize as u32);
+        mech_trace::cr!(
+            "10046370",
+            "mciSendCommandA",
+            mciSendCommandA(
+                mech_trace::gr!("10046370", "100b04b0", DAT_100b04b0),
+                0x809,
+                0,
+                (&raw mut local_8) as usize as u32
+            )
+        );
     }
 }

@@ -27,6 +27,7 @@ pub unsafe extern "C" fn FUN_1005c0df(
     param_4: i32,
     param_5: i32,
 ) {
+    mech_trace::enter!("1005c0df", param_1, param_2, param_3, param_4, param_5);
     let mut local_34: [i32; 5] = [0; 5];
     let mut local_1c: [i32; 5] = [0; 5];
     let mut local_20: *mut u16 = core::ptr::null_mut();
@@ -38,16 +39,24 @@ pub unsafe extern "C" fn FUN_1005c0df(
     // for the whole block and their addresses are passed as the original does.
     unsafe {
         if param_1 != -1 {
-            local_20 = FUN_1008668b(
-                DAT_100af17c,
-                DAT_101686f0.wrapping_add(param_1),
-                DAT_100af0b4,
+            local_20 = mech_trace::cr!(
+                "1005c0df",
+                "1008668b",
+                FUN_1008668b(
+                    mech_trace::gr!("1005c0df", "100af17c", DAT_100af17c),
+                    mech_trace::gr!("1005c0df", "101686f0", DAT_101686f0).wrapping_add(param_1),
+                    mech_trace::gr!("1005c0df", "100af0b4", DAT_100af0b4),
+                )
             );
         }
-        let local_8 = FUN_1008668b(
-            DAT_100af17c,
-            DAT_101686f0.wrapping_add(param_2),
-            DAT_100af0b8,
+        let local_8 = mech_trace::cr!(
+            "1005c0df",
+            "1008668b",
+            FUN_1008668b(
+                mech_trace::gr!("1005c0df", "100af17c", DAT_100af17c),
+                mech_trace::gr!("1005c0df", "101686f0", DAT_101686f0).wrapping_add(param_2),
+                mech_trace::gr!("1005c0df", "100af0b8", DAT_100af0b8),
+            )
         );
         if local_8.is_null() {
             return;

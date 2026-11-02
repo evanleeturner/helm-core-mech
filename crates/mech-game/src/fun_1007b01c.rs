@@ -8,6 +8,7 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1007b01c(param_1: u32) -> i32 {
+    mech_trace::enter!("1007b01c", param_1);
     let mut param_1 = param_1;
     let mut i_var2: i32 = 0;
     if (param_1 as i32) < 0 {
@@ -23,7 +24,7 @@ pub unsafe extern "C" fn FUN_1007b01c(param_1: u32) -> i32 {
         unsafe {
             RaiseException(0xC0000094u32, 0, 0, core::ptr::null());
         }
-        return 0;
+        return mech_trace::rt!("1007b01c", 0);
     }
 
     let mut quot = (dividend / (param_1 as u64)) as u32;
@@ -35,5 +36,5 @@ pub unsafe extern "C" fn FUN_1007b01c(param_1: u32) -> i32 {
     if i_var2 != 0 {
         quot = 0u32.wrapping_sub(quot);
     }
-    quot as i32
+    mech_trace::rt!("1007b01c", quot as i32)
 }

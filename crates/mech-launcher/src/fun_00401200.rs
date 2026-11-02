@@ -26,15 +26,20 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_00401200(format: *mut i8) {
+    mech_trace::enter!("00401200", format);
     let mut local_100: [i8; 256] = [0; 256];
     // SAFETY: the callees and globals are the game's own; the va_list is the
     // address of the stack slot following `format`, as in the original, and
     // local_100 is a 256-byte buffer matching the size passed.
     unsafe {
         let args = (&raw const format).add(1) as *mut i8;
-        __vsnprintf(local_100.as_mut_ptr(), 0x100, format, args);
+        mech_trace::cr!(
+            "00401200",
+            "__vsnprintf",
+            __vsnprintf(local_100.as_mut_ptr(), 0x100, format, args)
+        );
 
-        match DAT_00408048 {
+        match mech_trace::gr!("00401200", "00408048", DAT_00408048) {
             1 => {
                 FUN_00401160(local_100.as_mut_ptr());
             }
@@ -42,12 +47,16 @@ pub unsafe extern "C" fn FUN_00401200(format: *mut i8) {
                 OutputDebugStringA(local_100.as_ptr());
             }
             3 => {
-                if !DAT_0040804c.is_null() {
-                    MessageBoxA(
-                        DAT_0040804c,
-                        local_100.as_ptr(),
-                        &raw mut DAT_00408158 as *const i8,
-                        DAT_00408050,
+                if !mech_trace::gr!("00401200", "0040804c", DAT_0040804c).is_null() {
+                    mech_trace::cr!(
+                        "00401200",
+                        "MessageBoxA",
+                        MessageBoxA(
+                            mech_trace::gr!("00401200", "0040804c", DAT_0040804c),
+                            local_100.as_ptr(),
+                            &raw mut DAT_00408158 as *const i8,
+                            mech_trace::gr!("00401200", "00408050", DAT_00408050),
+                        )
                     );
                 }
             }

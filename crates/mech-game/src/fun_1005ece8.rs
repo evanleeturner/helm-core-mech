@@ -13,10 +13,11 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1005ece8() -> u32 {
+    mech_trace::enter!("1005ece8");
     // SAFETY: ClipCursor is the system API and the global is the game's own memory.
     unsafe {
-        ClipCursor(core::ptr::null());
-        DAT_100b34d4 = 0;
+        mech_trace::cr!("1005ece8", "ClipCursor", ClipCursor(core::ptr::null()));
+        mech_trace::gw!("1005ece8", "100b34d4", DAT_100b34d4, 0);
     }
-    0
+    mech_trace::rt!("1005ece8", 0)
 }

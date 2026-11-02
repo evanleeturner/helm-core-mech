@@ -27,28 +27,59 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1004541e() -> i32 {
+    mech_trace::enter!("1004541e");
     // SAFETY: the globals and the imported Win32 functions are the game's
     // own; they are read and written in the original's order.
     unsafe {
-        DAT_100affd8 = 0;
-        if DAT_100afbc0 != 0 {
-            if DAT_100afbc4 != 0 {
-                SelectObject(DAT_100afbc0, DAT_10160bf4);
-                DeleteObject(DAT_100afbc4);
+        mech_trace::gw!("1004541e", "100affd8", DAT_100affd8, 0);
+        if mech_trace::gr!("1004541e", "100afbc0", DAT_100afbc0) != 0 {
+            if mech_trace::gr!("1004541e", "100afbc4", DAT_100afbc4) != 0 {
+                mech_trace::cr!(
+                    "1004541e",
+                    "SelectObject",
+                    SelectObject(
+                        mech_trace::gr!("1004541e", "100afbc0", DAT_100afbc0),
+                        mech_trace::gr!("1004541e", "10160bf4", DAT_10160bf4)
+                    )
+                );
+                mech_trace::cr!(
+                    "1004541e",
+                    "DeleteObject",
+                    DeleteObject(mech_trace::gr!("1004541e", "100afbc4", DAT_100afbc4))
+                );
             }
-            if !DAT_100b9d30.is_null() {
-                HeapFree(DAT_100adf74, 1, DAT_100b9d30);
+            if !mech_trace::gr!("1004541e", "100b9d30", DAT_100b9d30).is_null() {
+                mech_trace::cr!(
+                    "1004541e",
+                    "HeapFree",
+                    HeapFree(
+                        mech_trace::gr!("1004541e", "100adf74", DAT_100adf74),
+                        1,
+                        mech_trace::gr!("1004541e", "100b9d30", DAT_100b9d30)
+                    )
+                );
             }
-            ReleaseDC(DAT_100adf6c, DAT_100afbc0);
+            mech_trace::cr!(
+                "1004541e",
+                "ReleaseDC",
+                ReleaseDC(
+                    mech_trace::gr!("1004541e", "100adf6c", DAT_100adf6c),
+                    mech_trace::gr!("1004541e", "100afbc0", DAT_100afbc0)
+                )
+            );
         }
-        DAT_100afbc0 = 0;
-        DAT_100afbc4 = 0;
-        DAT_100affc8 = 0;
-        DAT_100affcc = 0;
-        DAT_100affd0 = 0;
-        DAT_100b9d30 = core::ptr::null_mut();
-        *DAT_100b9a2c = 0;
-        DAT_100affd4 = 0;
-        0
+        mech_trace::gw!("1004541e", "100afbc0", DAT_100afbc0, 0);
+        mech_trace::gw!("1004541e", "100afbc4", DAT_100afbc4, 0);
+        mech_trace::gw!("1004541e", "100affc8", DAT_100affc8, 0);
+        mech_trace::gw!("1004541e", "100affcc", DAT_100affcc, 0);
+        mech_trace::gw!("1004541e", "100affd0", DAT_100affd0, 0);
+        mech_trace::gw!("1004541e", "100b9d30", DAT_100b9d30, core::ptr::null_mut());
+        mech_trace::dw!(
+            "1004541e",
+            mech_trace::gr!("1004541e", "100b9a2c", DAT_100b9a2c),
+            0
+        );
+        mech_trace::gw!("1004541e", "100affd4", DAT_100affd4, 0);
+        mech_trace::rt!("1004541e", 0)
     }
 }

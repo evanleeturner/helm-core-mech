@@ -15,6 +15,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10032ce0() {
+    mech_trace::enter!("10032ce0");
     let mut local_8: i32 = 0;
     let mut local_c: i32 = 0;
     let mut local_10: i32 = 0;
@@ -25,11 +26,15 @@ pub unsafe extern "stdcall" fn FUN_10032ce0() {
         loop {
             let mut local_14: i32 = 0;
             loop {
-                let base = DAT_10092000.wrapping_add(0x368);
-                let i2 = ((base as usize)
-                    .wrapping_add((local_10.wrapping_add(local_14) as usize).wrapping_mul(4))
-                    as *const i32)
-                    .read_unaligned();
+                let base =
+                    mech_trace::gr!("10032ce0", "10092000", DAT_10092000).wrapping_add(0x368);
+                let i2 = mech_trace::rd!(
+                    "10032ce0",
+                    ((base as usize)
+                        .wrapping_add((local_10.wrapping_add(local_14) as usize).wrapping_mul(4))
+                        as *const i32),
+                    read_unaligned
+                );
                 if i2 / 100 == 0x50 {
                     let mut i5: i32 = 0;
                     let mut i4: i32 = 0;
@@ -40,9 +45,9 @@ pub unsafe extern "stdcall" fn FUN_10032ce0() {
                                 let p = (base as usize)
                                     .wrapping_add((i3.wrapping_add(i4) as usize).wrapping_mul(4))
                                     as *mut i32;
-                                let v = p.read_unaligned();
+                                let v = mech_trace::rd!("10032ce0", p, read_unaligned);
                                 if v / 100 == 0x50 && v % 100 == i2 % 100 {
-                                    p.write_unaligned(0);
+                                    mech_trace::wr!("10032ce0", p, write_unaligned, 0);
                                     local_8 = local_8.wrapping_add(1);
                                 }
                             }
@@ -70,10 +75,16 @@ pub unsafe extern "stdcall" fn FUN_10032ce0() {
             }
         }
         if local_8 == 0 {
-            FUN_1005b1b0(&raw mut DAT_1009366c);
+            mech_trace::cr!("10032ce0", "1005b1b0", FUN_1005b1b0(&raw mut DAT_1009366c));
             return;
         }
-        FUN_1005b1b0(&raw mut DAT_1009368c);
-        ((DAT_10092000.wrapping_add(0x228)) as *mut u32).write_unaligned(0);
+        mech_trace::cr!("10032ce0", "1005b1b0", FUN_1005b1b0(&raw mut DAT_1009368c));
+        mech_trace::wr!(
+            "10032ce0",
+            ((mech_trace::gr!("10032ce0", "10092000", DAT_10092000).wrapping_add(0x228))
+                as *mut u32),
+            write_unaligned,
+            0
+        );
     }
 }

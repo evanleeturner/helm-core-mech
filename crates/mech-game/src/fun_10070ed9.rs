@@ -15,20 +15,25 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10070ed9(filename: *mut i8) -> *mut i32 {
+    mech_trace::enter!("10070ed9", filename);
     // SAFETY: the callees and the global are the game's own; the malloc'd block
     // is 0x4bc bytes, so indices 0 and 0x12d are in range.
     unsafe {
-        let p = _malloc(0x4bc) as *mut i32;
+        let p = mech_trace::cr!("10070ed9", "_malloc", _malloc(0x4bc)) as *mut i32;
         if p.is_null() {
-            return core::ptr::null_mut();
+            return mech_trace::rt!("10070ed9", core::ptr::null_mut());
         }
-        let f = _fopen(filename, (&raw mut DAT_100b4834).cast::<i8>());
-        p.write_unaligned(f as i32);
-        if p.read_unaligned() == 0 {
-            return core::ptr::null_mut();
+        let f = mech_trace::cr!(
+            "10070ed9",
+            "_fopen",
+            _fopen(filename, (&raw mut DAT_100b4834).cast::<i8>())
+        );
+        mech_trace::wr!("10070ed9", p, write_unaligned, f as i32);
+        if mech_trace::rd!("10070ed9", p, read_unaligned) == 0 {
+            return mech_trace::rt!("10070ed9", core::ptr::null_mut());
         }
-        p.add(0x12d).write_unaligned(0);
-        FUN_10070d99(p.cast::<u32>());
-        p
+        mech_trace::wr!("10070ed9", p.add(0x12d), write_unaligned, 0);
+        mech_trace::cr!("10070ed9", "10070d99", FUN_10070d99(p.cast::<u32>()));
+        mech_trace::rt!("10070ed9", p)
     }
 }

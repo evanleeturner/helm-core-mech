@@ -13,15 +13,23 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1000dd06(param_1: i32) {
+    mech_trace::enter!("1000dd06", param_1);
     let i_var1 = param_1.wrapping_mul(0x7c);
     // SAFETY: DAT_101f64bc is the game's own table; the entry at the byte
     // offset holds a pointer that is passed to the game's free routine and
     // then cleared, as the original does.
     unsafe {
         let entry = (&raw mut DAT_101f64bc).byte_offset(i_var1 as isize);
-        if entry.cast::<i32>().read_unaligned() != 0 {
-            FUN_1001d671(entry.cast::<u32>().read_unaligned() as usize as *mut u8);
-            entry.cast::<u32>().write_unaligned(0);
+        if mech_trace::rd!("1000dd06", entry.cast::<i32>(), read_unaligned) != 0 {
+            mech_trace::cr!(
+                "1000dd06",
+                "1001d671",
+                FUN_1001d671(
+                    mech_trace::rd!("1000dd06", entry.cast::<u32>(), read_unaligned) as usize
+                        as *mut u8
+                )
+            );
+            mech_trace::wr!("1000dd06", entry.cast::<u32>(), write_unaligned, 0);
         }
     }
 }

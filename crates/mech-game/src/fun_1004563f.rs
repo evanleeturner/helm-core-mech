@@ -44,34 +44,52 @@ pub unsafe extern "C" fn FUN_1004563f(
     param_3: i32,
     param_4: i32,
 ) -> u32 {
+    mech_trace::enter!("1004563f", param_1, y_dest, param_3, param_4);
     // SAFETY: the globals and callees are the game's own; the pointers passed
     // are the game's DC, bits buffer and bitmap header.
     unsafe {
-        DAT_10160bec = SetDIBitsToDevice(
-            DAT_100afbc0,
-            param_1,
-            y_dest,
-            (param_3 as u32)
-                .wrapping_sub(param_1 as u32)
-                .wrapping_add(1),
-            (param_4 as u32).wrapping_sub(y_dest as u32).wrapping_add(1),
-            param_1,
-            (DAT_100c9680 as u32)
-                .wrapping_sub(param_4 as u32)
-                .wrapping_add(0xffff_ffff) as i32,
-            0,
-            DAT_100c9680 as u32,
-            DAT_100b9d30 as *const c_void,
-            (&raw mut DAT_100c9250) as *const c_void,
-            1,
+        mech_trace::gw!(
+            "1004563f",
+            "10160bec",
+            DAT_10160bec,
+            mech_trace::cr!(
+                "1004563f",
+                "SetDIBitsToDevice",
+                SetDIBitsToDevice(
+                    mech_trace::gr!("1004563f", "100afbc0", DAT_100afbc0),
+                    param_1,
+                    y_dest,
+                    (param_3 as u32)
+                        .wrapping_sub(param_1 as u32)
+                        .wrapping_add(1),
+                    (param_4 as u32).wrapping_sub(y_dest as u32).wrapping_add(1),
+                    param_1,
+                    (mech_trace::gr!("1004563f", "100c9680", DAT_100c9680) as u32)
+                        .wrapping_sub(param_4 as u32)
+                        .wrapping_add(0xffff_ffff) as i32,
+                    0,
+                    mech_trace::gr!("1004563f", "100c9680", DAT_100c9680) as u32,
+                    mech_trace::gr!("1004563f", "100b9d30", DAT_100b9d30) as *const c_void,
+                    (&raw mut DAT_100c9250) as *const c_void,
+                    1,
+                )
+            )
         );
-        if DAT_10160bec == 0 {
-            FUN_10002168((&raw mut DAT_100b0474).cast::<i8>(), GetLastError());
+        if mech_trace::gr!("1004563f", "10160bec", DAT_10160bec) == 0 {
+            FUN_10002168(
+                (&raw mut DAT_100b0474).cast::<i8>(),
+                mech_trace::cr!("1004563f", "GetLastError", GetLastError()),
+            );
         }
-        if DAT_10160bec == DAT_100c9680 {
-            0
-        } else {
-            0xffff_ffff
-        }
+        mech_trace::rt!(
+            "1004563f",
+            if mech_trace::gr!("1004563f", "10160bec", DAT_10160bec)
+                == mech_trace::gr!("1004563f", "100c9680", DAT_100c9680)
+            {
+                0
+            } else {
+                0xffff_ffff
+            }
+        )
     }
 }

@@ -9,6 +9,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10050a10() {
+    mech_trace::enter!("10050a10");
     // SAFETY: the globals are the game's own memory; the loop zeroes 48-byte
     // blocks starting at DAT_100bd7c8 until the end at DAT_100bd948, as the
     // original does.
@@ -19,7 +20,7 @@ pub unsafe extern "stdcall" fn FUN_10050a10() {
             let p_var3 = p_var2.wrapping_add(0xc);
             let mut i_var1: i32 = 0xc;
             while i_var1 != 0 {
-                p_var2.write_unaligned(0);
+                mech_trace::wr!("10050a10", p_var2, write_unaligned, 0);
                 p_var2 = p_var2.wrapping_add(1);
                 i_var1 = i_var1.wrapping_sub(1);
             }

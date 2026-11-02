@@ -8,6 +8,7 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1001bbf4(param_1: i32, param_2: i32, param_3: u32) -> u32 {
+    mech_trace::enter!("1001bbf4", param_1, param_2, param_3);
     let den32: i32 = (param_1 as u32).wrapping_sub(param_2 as u32) as i32;
     if den32 != 0 {
         let hi: u32 = (((param_3 as i32) >> 0x1f) as u32).wrapping_shl(0x11) | (param_3 >> 0xf);
@@ -24,10 +25,10 @@ pub unsafe extern "C" fn FUN_1001bbf4(param_1: i32, param_2: i32, param_3: u32) 
             unsafe {
                 RaiseException(0xC000_0094, 0, 0, core::ptr::null());
             }
-            return 0;
+            return mech_trace::rt!("1001bbf4", 0);
         }
 
-        return quot as u32;
+        return mech_trace::rt!("1001bbf4", quot as u32);
     }
-    0
+    mech_trace::rt!("1001bbf4", 0)
 }

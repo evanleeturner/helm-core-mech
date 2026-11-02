@@ -13,22 +13,32 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1002587d(mem: *mut core::ffi::c_void) {
+    mech_trace::enter!("1002587d", mem);
     if !mem.is_null() {
         // SAFETY: mem points at the game's heap block; its fields are read at the
         // original offsets and the block is freed through the game's heap handle.
         unsafe {
-            if mem.byte_add(0x18).cast::<i32>().read_unaligned() == 0 {
+            if mech_trace::rd!("1002587d", mem.byte_add(0x18).cast::<i32>(), read_unaligned) == 0 {
                 let mut local_8: i32 = 0;
                 while local_8 < 4 {
-                    FUN_1002587d(
+                    FUN_1002587d(mech_trace::rd!(
+                        "1002587d",
                         mem.byte_add((local_8 as usize).wrapping_mul(4).wrapping_add(0x1c))
-                            .cast::<*mut core::ffi::c_void>()
-                            .read_unaligned(),
-                    );
+                            .cast::<*mut core::ffi::c_void>(),
+                        read_unaligned
+                    ));
                     local_8 = local_8.wrapping_add(1);
                 }
             }
-            HeapFree(DAT_100adf74, 1, mem);
+            mech_trace::cr!(
+                "1002587d",
+                "HeapFree",
+                HeapFree(
+                    mech_trace::gr!("1002587d", "100adf74", DAT_100adf74),
+                    1,
+                    mem
+                )
+            );
         }
     }
 }

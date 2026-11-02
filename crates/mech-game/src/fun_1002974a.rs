@@ -8,6 +8,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1002974a(_unused_arg1: u32, param_2: i32, param_3: i32) {
+    mech_trace::enter!("1002974a", _unused_arg1, param_2, param_3);
     // SAFETY: the callee is the game's own function; the divisor is a nonzero
     // constant other than -1, so the division cannot fault.
     unsafe {

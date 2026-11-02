@@ -21,18 +21,23 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1000cfa0(dst_buf: *mut core::ffi::c_void) -> u32 {
+    mech_trace::enter!("1000cfa0", dst_buf);
     // SAFETY: the callees and globals are the game's own; dst_buf is the
     // caller's buffer, filled by fread exactly as the original does.
     unsafe {
-        let file = FUN_1006eee0(
-            (&raw mut s_mw2rmg_cfg_1008d088).cast::<i8>(),
-            (&raw mut DAT_1008d084).cast::<i8>(),
+        let file = mech_trace::cr!(
+            "1000cfa0",
+            "1006eee0",
+            FUN_1006eee0(
+                (&raw mut s_mw2rmg_cfg_1008d088).cast::<i8>(),
+                (&raw mut DAT_1008d084).cast::<i8>(),
+            )
         );
         if !file.is_null() {
-            FUN_1006ece0(dst_buf, 0xf3, 1, file);
-            let i_var1 = FUN_1006ec40(file);
-            return ((i_var1 as u32) & 0xFFFFFF00) | 1;
+            mech_trace::cr!("1000cfa0", "1006ece0", FUN_1006ece0(dst_buf, 0xf3, 1, file));
+            let i_var1 = mech_trace::cr!("1000cfa0", "1006ec40", FUN_1006ec40(file));
+            return mech_trace::rt!("1000cfa0", ((i_var1 as u32) & 0xFFFFFF00) | 1);
         }
-        0
+        mech_trace::rt!("1000cfa0", 0)
     }
 }

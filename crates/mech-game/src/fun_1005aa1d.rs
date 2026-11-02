@@ -28,6 +28,9 @@ pub unsafe extern "C" fn FUN_1005aa1d(
     param_5: i32,
     param_6: i32,
 ) {
+    mech_trace::enter!(
+        "1005aa1d", param_1, param_2, param_3, param_4, param_5, param_6
+    );
     let mut local_c: i32 = 0;
     let mut local_8: i32 = 0;
     // SAFETY: the callee is the game's own; the pointers are the caller's
@@ -36,31 +39,41 @@ pub unsafe extern "C" fn FUN_1005aa1d(
         FUN_1005a93f(param_4, &raw mut local_8, &raw mut local_c);
 
         let x = scale(
-            param_1
-                .read_unaligned()
-                .wrapping_sub(param_3.read_unaligned()),
+            mech_trace::rd!("1005aa1d", param_1, read_unaligned).wrapping_sub(mech_trace::rd!(
+                "1005aa1d",
+                param_3,
+                read_unaligned
+            )),
             param_5,
         );
         let a = mul_round(x, local_8);
         let b = mul_round(x, local_c);
 
         let y = scale(
-            param_1
-                .add(1)
-                .read_unaligned()
-                .wrapping_sub(param_3.add(1).read_unaligned()),
+            mech_trace::rd!("1005aa1d", param_1.add(1), read_unaligned)
+                .wrapping_sub(mech_trace::rd!("1005aa1d", param_3.add(1), read_unaligned)),
             param_6,
         );
         let c = mul_round(y, local_8);
         let d = mul_round(y, local_c);
 
-        param_2.write_unaligned(
+        mech_trace::wr!(
+            "1005aa1d",
+            param_2,
+            write_unaligned,
             a.wrapping_sub(d)
-                .wrapping_add(param_3.read_unaligned() as u32) as i32,
+                .wrapping_add(mech_trace::rd!("1005aa1d", param_3, read_unaligned) as u32)
+                as i32
         );
-        param_2.add(1).write_unaligned(
-            c.wrapping_add(b)
-                .wrapping_add(param_3.add(1).read_unaligned() as u32) as i32,
+        mech_trace::wr!(
+            "1005aa1d",
+            param_2.add(1),
+            write_unaligned,
+            c.wrapping_add(b).wrapping_add(mech_trace::rd!(
+                "1005aa1d",
+                param_3.add(1),
+                read_unaligned
+            ) as u32) as i32
         );
     }
 }

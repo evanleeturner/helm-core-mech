@@ -14,6 +14,7 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1004f130(param_1: *mut i8) {
+    mech_trace::enter!("1004f130", param_1);
     // SAFETY: the globals and callees are the game's own; param_1 points at
     // a NUL-terminated string, read as the original does, and the destination
     // buffer is the game's own memory, written at every second byte.
@@ -26,7 +27,7 @@ pub unsafe extern "C" fn FUN_1004f130(param_1: *mut i8) {
                 break;
             }
             u_var2 = u_var2.wrapping_sub(1);
-            let c_var1 = pc_var5.read();
+            let c_var1 = mech_trace::rd!("1004f130", pc_var5, read);
             pc_var5 = pc_var5.add(1);
             if c_var1 == 0 {
                 break;
@@ -41,9 +42,9 @@ pub unsafe extern "C" fn FUN_1004f130(param_1: *mut i8) {
         if 0 < i_var4 {
             let mut src: *const i8 = param_1;
             loop {
-                let c_var1 = src.read();
+                let c_var1 = mech_trace::rd!("1004f130", src, read);
                 src = src.add(1);
-                pc_var3.write(c_var1);
+                mech_trace::wr!("1004f130", pc_var3, write, c_var1);
                 pc_var3 = pc_var3.add(2);
                 i_var4 = i_var4.wrapping_sub(1);
                 if i_var4 == 0 {

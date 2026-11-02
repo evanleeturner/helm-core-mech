@@ -27,77 +27,126 @@ unsafe extern "fastcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1006dc00(param_1: i8) -> i32 {
+    mech_trace::enter!("1006dc00", param_1);
     // SAFETY: all globals and pointers are the game's own memory; reads,
     // writes and calls occur in the original's order.
     unsafe {
         let mut puVar4: *mut u32 = &raw mut DAT_100aad70;
-        let mut i_var1: i32 = DAT_100aad70 as i32;
+        let mut i_var1: i32 = mech_trace::gr!("1006dc00", "100aad70", DAT_100aad70) as i32;
         loop {
             if i_var1 == -1 {
-                return 0;
+                return mech_trace::rt!("1006dc00", 0);
             }
-            if puVar4.add(0xb).read_unaligned() == 1 {
+            if mech_trace::rd!("1006dc00", puVar4.add(0xb), read_unaligned) == 1 {
                 break;
             }
-            i_var1 = puVar4.add(0xe).read_unaligned() as i32;
+            i_var1 = mech_trace::rd!("1006dc00", puVar4.add(0xe), read_unaligned) as i32;
             puVar4 = puVar4.add(0xe);
         }
-        let base_a = DAT_100aa6b8 as usize;
-        let base_b = DAT_100aa6bc as usize;
+        let base_a = mech_trace::gr!("1006dc00", "100aa6b8", DAT_100aa6b8) as usize;
+        let base_b = mech_trace::gr!("1006dc00", "100aa6bc", DAT_100aa6bc) as usize;
         let idx = |p: *mut u32| -> i32 {
-            let a = (DAT_100aa6b8 as usize).wrapping_add(0x364) as *const i32;
-            (p.add(9).read_unaligned() as i32)
-                .wrapping_add(a.read_unaligned().wrapping_mul(0xc))
+            let a = (mech_trace::gr!("1006dc00", "100aa6b8", DAT_100aa6b8) as usize)
+                .wrapping_add(0x364) as *const i32;
+            (mech_trace::rd!("1006dc00", p.add(9), read_unaligned) as i32)
+                .wrapping_add(mech_trace::rd!("1006dc00", a, read_unaligned).wrapping_mul(0xc))
                 .wrapping_mul(4)
         };
         i_var1 = idx(puVar4);
-        let i_var2 = ((base_b.wrapping_add(0x368).wrapping_add(i_var1 as usize)) as *const i32)
-            .read_unaligned();
+        let i_var2 = mech_trace::rd!(
+            "1006dc00",
+            ((base_b.wrapping_add(0x368).wrapping_add(i_var1 as usize)) as *const i32),
+            read_unaligned
+        );
         if i_var2 == -1 {
-            return -3;
+            return mech_trace::rt!("1006dc00", -3);
         }
-        if ((base_a.wrapping_add(0x368).wrapping_add(i_var1 as usize)) as *const i32)
-            .read_unaligned()
-            == i_var2
+        if mech_trace::rd!(
+            "1006dc00",
+            ((base_a.wrapping_add(0x368).wrapping_add(i_var1 as usize)) as *const i32),
+            read_unaligned
+        ) == i_var2
         {
-            return -2;
+            return mech_trace::rt!("1006dc00", -2);
         }
         let mut i_stack_4: i32 = 0;
-        let u_var3 = FUN_1006b9c0(i_var2, 0, (&raw mut i_stack_4).cast::<u32>());
+        let u_var3 = mech_trace::cr!(
+            "1006dc00",
+            "1006b9c0",
+            FUN_1006b9c0(i_var2, 0, (&raw mut i_stack_4).cast::<u32>())
+        );
         if (u_var3 as u8) == 1 {
             if 0 < i_stack_4 {
-                *((DAT_100aa6b8 as usize).wrapping_add(0x84c) as *mut u8) = 1;
-                *DAT_10083508 = 1;
+                mech_trace::dw!(
+                    "1006dc00",
+                    ((mech_trace::gr!("1006dc00", "100aa6b8", DAT_100aa6b8) as usize)
+                        .wrapping_add(0x84c) as *mut u8),
+                    1
+                );
+                mech_trace::dw!(
+                    "1006dc00",
+                    mech_trace::gr!("1006dc00", "10083508", DAT_10083508),
+                    1
+                );
             }
             if param_1 == 0 {
                 i_var1 = idx(puVar4);
-                let src = ((DAT_100aa6bc as usize)
+                let src = ((mech_trace::gr!("1006dc00", "100aa6bc", DAT_100aa6bc) as usize)
                     .wrapping_add(0x368)
                     .wrapping_add(i_var1 as usize)) as *const u32;
-                let v = src.read_unaligned();
-                let dst = ((DAT_100aa6b8 as usize)
+                let v = mech_trace::rd!("1006dc00", src, read_unaligned);
+                let dst = ((mech_trace::gr!("1006dc00", "100aa6b8", DAT_100aa6b8) as usize)
                     .wrapping_add(0x368)
                     .wrapping_add(i_var1 as usize)) as *mut u32;
-                dst.write_unaligned(v);
-                let cnt =
-                    ((DAT_100aa6b8 as usize).wrapping_add(0x364) as *const i32).read_unaligned();
-                FUN_1006b450(
-                    DAT_100aa6b8 as i32,
-                    DAT_100aa6bc as i32,
-                    cnt,
-                    puVar4.add(9).read_unaligned() as i32,
-                    i_var2,
+                mech_trace::wr!("1006dc00", dst, write_unaligned, v);
+                let cnt = mech_trace::rd!(
+                    "1006dc00",
+                    ((mech_trace::gr!("1006dc00", "100aa6b8", DAT_100aa6b8) as usize)
+                        .wrapping_add(0x364) as *const i32),
+                    read_unaligned
                 );
-                FUN_10010d80(DAT_100aa6c8);
-                FUN_1006b9c0(i_var2, 1, (&raw mut i_stack_4).cast::<u32>());
+                mech_trace::cr!(
+                    "1006dc00",
+                    "1006b450",
+                    FUN_1006b450(
+                        mech_trace::gr!("1006dc00", "100aa6b8", DAT_100aa6b8) as i32,
+                        mech_trace::gr!("1006dc00", "100aa6bc", DAT_100aa6bc) as i32,
+                        cnt,
+                        mech_trace::rd!("1006dc00", puVar4.add(9), read_unaligned) as i32,
+                        i_var2,
+                    )
+                );
+                mech_trace::cr!(
+                    "1006dc00",
+                    "10010d80",
+                    FUN_10010d80(mech_trace::gr!("1006dc00", "100aa6c8", DAT_100aa6c8))
+                );
+                mech_trace::cr!(
+                    "1006dc00",
+                    "1006b9c0",
+                    FUN_1006b9c0(i_var2, 1, (&raw mut i_stack_4).cast::<u32>())
+                );
                 if 0 < i_stack_4 {
-                    *((DAT_100aa6b8 as usize).wrapping_add(0x84c) as *mut u8) = 1;
-                    *DAT_10083508 = 1;
+                    mech_trace::dw!(
+                        "1006dc00",
+                        ((mech_trace::gr!("1006dc00", "100aa6b8", DAT_100aa6b8) as usize)
+                            .wrapping_add(0x84c) as *mut u8),
+                        1
+                    );
+                    mech_trace::dw!(
+                        "1006dc00",
+                        mech_trace::gr!("1006dc00", "10083508", DAT_10083508),
+                        1
+                    );
                 }
-                FUN_10063de0((&raw mut DAT_100aaa98).cast::<i32>());
+                mech_trace::cr!(
+                    "1006dc00",
+                    "10063de0",
+                    FUN_10063de0((&raw mut DAT_100aaa98).cast::<i32>())
+                );
             }
-            return i_stack_4;
+            return mech_trace::rt!("1006dc00", i_stack_4);
         }
-        -1
+        mech_trace::rt!("1006dc00", -1)
     }
 }

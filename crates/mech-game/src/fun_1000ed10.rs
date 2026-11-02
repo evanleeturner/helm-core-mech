@@ -28,23 +28,43 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1000ed10() {
+    mech_trace::enter!("1000ed10");
     // SAFETY: the callees and globals are the game's own memory; the
     // function pointer table at DAT_100b9a1c + 0x18 is read and called as the original does.
     unsafe {
         FUN_1003e1b7();
         FUN_10035e10();
-        if !DAT_100a7b5c.is_null() && DAT_101f52e0 != 0 {
-            FUN_10058e74(&raw mut DAT_101f52e0 as *mut i32, 0);
-            if DAT_100adf80 != 0 {
-                let f = ((DAT_100b9a1c.wrapping_add(0x18)) as *const u32).read_unaligned();
+        if !mech_trace::gr!("1000ed10", "100a7b5c", DAT_100a7b5c).is_null()
+            && mech_trace::gr!("1000ed10", "101f52e0", DAT_101f52e0) != 0
+        {
+            mech_trace::cr!(
+                "1000ed10",
+                "10058e74",
+                FUN_10058e74(&raw mut DAT_101f52e0 as *mut i32, 0)
+            );
+            if mech_trace::gr!("1000ed10", "100adf80", DAT_100adf80) != 0 {
+                let f = mech_trace::rd!(
+                    "1000ed10",
+                    ((mech_trace::gr!("1000ed10", "100b9a1c", DAT_100b9a1c).wrapping_add(0x18))
+                        as *const u32),
+                    read_unaligned
+                );
                 let f: unsafe extern "C" fn() = core::mem::transmute(f as usize);
-                f();
+                mech_trace::cr!("1000ed10", "ind", f());
             }
         }
-        if !DAT_100a7b5c.is_null() {
-            HeapFree(DAT_100adf74, 1, DAT_100a7b5c);
+        if !mech_trace::gr!("1000ed10", "100a7b5c", DAT_100a7b5c).is_null() {
+            mech_trace::cr!(
+                "1000ed10",
+                "HeapFree",
+                HeapFree(
+                    mech_trace::gr!("1000ed10", "100adf74", DAT_100adf74),
+                    1,
+                    mech_trace::gr!("1000ed10", "100a7b5c", DAT_100a7b5c)
+                )
+            );
         }
-        DAT_100a7b64 = 0;
+        mech_trace::gw!("1000ed10", "100a7b64", DAT_100a7b64, 0);
         FUN_10081cb8();
     }
 }

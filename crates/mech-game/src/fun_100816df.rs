@@ -2,4 +2,6 @@
 
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
-pub unsafe extern "stdcall" fn FUN_100816df() {}
+pub unsafe extern "stdcall" fn FUN_100816df() {
+    mech_trace::enter!("100816df");
+}

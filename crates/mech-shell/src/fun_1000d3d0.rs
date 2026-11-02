@@ -14,6 +14,7 @@ pub unsafe extern "C" fn FUN_1000d3d0(
     width_measurer: *mut u8,
     max_width: i32,
 ) -> *mut i8 {
+    mech_trace::enter!("1000d3d0", text, width_measurer, max_width);
     let width: i32;
     // SAFETY: calls the game's thiscall function: this in ECX, text pushed on
     // the stack, and the callee pops it.
@@ -32,22 +33,22 @@ pub unsafe extern "C" fn FUN_1000d3d0(
         let mut i: usize = 0;
         // SAFETY: text points at a NUL-terminated string; reads stay within it.
         unsafe {
-            let mut c = *text;
-            while c != 0 && *text.add(i) != b' ' as i8 {
+            let mut c = mech_trace::dr!("1000d3d0", text);
+            while c != 0 && mech_trace::dr!("1000d3d0", text.add(i)) != b' ' as i8 {
                 i = i.wrapping_add(1);
-                c = *text.add(i);
+                c = mech_trace::dr!("1000d3d0", text.add(i));
             }
-            c = *text.add(i);
-            while c != 0 && *text.add(i) == b' ' as i8 {
+            c = mech_trace::dr!("1000d3d0", text.add(i));
+            while c != 0 && mech_trace::dr!("1000d3d0", text.add(i)) == b' ' as i8 {
                 i = i.wrapping_add(1);
-                c = *text.add(i);
+                c = mech_trace::dr!("1000d3d0", text.add(i));
             }
             let mut result = text.add(i);
-            if *text.add(i) == 0 {
+            if mech_trace::dr!("1000d3d0", text.add(i)) == 0 {
                 result = text;
             }
-            return result;
+            return mech_trace::rt!("1000d3d0", result);
         }
     }
-    text
+    mech_trace::rt!("1000d3d0", text)
 }

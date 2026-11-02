@@ -15,38 +15,47 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1001e798(param_1: i32, param_2: *mut i8, param_3: u16) -> i32 {
+    mech_trace::enter!("1001e798", param_1, param_2, param_3);
     if param_3 == 0 {
-        return -1;
+        return mech_trace::rt!("1001e798", -1);
     }
     // SAFETY: the callees and the globals are the game's own tables; the
     // addresses computed are read exactly where the original reads them.
     unsafe {
-        let u_var1 = FUN_1001e55a(param_1, param_2);
+        let u_var1 = mech_trace::cr!("1001e798", "1001e55a", FUN_1001e55a(param_1, param_2));
         let s = (u_var1 as i16) as i32;
         if s < 0 {
-            return -1;
+            return mech_trace::rt!("1001e798", -1);
         }
         let slot = (&raw mut DAT_101e856a)
             .cast::<u8>()
             .wrapping_add(s.wrapping_mul(8) as usize)
             .wrapping_add(param_1.wrapping_mul(0x14a) as usize)
             .cast::<i32>();
-        if slot.read_unaligned() == 0 && FUN_1001e632(param_1) == 0xFFFF_FFFF {
-            return -1;
+        if mech_trace::rd!("1001e798", slot, read_unaligned) == 0
+            && mech_trace::cr!("1001e798", "1001e632", FUN_1001e632(param_1)) == 0xFFFF_FFFF
+        {
+            return mech_trace::rt!("1001e798", -1);
         }
-        let ptr = slot.read_unaligned();
+        let ptr = mech_trace::rd!("1001e798", slot, read_unaligned);
         let a = (ptr
             .wrapping_add(0x1a)
             .wrapping_add((param_3 as i32).wrapping_mul(8)) as usize) as *const i32;
-        let tbl = (&raw mut DAT_101e8546)
-            .cast::<u8>()
-            .wrapping_add(param_1.wrapping_mul(0x14a) as usize)
-            .cast::<i32>()
-            .read_unaligned();
+        let tbl = mech_trace::rd!(
+            "1001e798",
+            (&raw mut DAT_101e8546)
+                .cast::<u8>()
+                .wrapping_add(param_1.wrapping_mul(0x14a) as usize)
+                .cast::<i32>(),
+            read_unaligned
+        );
         let b = (tbl.wrapping_add(0x22).wrapping_add(s.wrapping_mul(0x18)) as usize) as *const u16;
-        let r = a
-            .read_unaligned()
-            .wrapping_sub(b.read_unaligned() as u32 as i32);
-        if r < 1 { 0 } else { r }
+        let r = mech_trace::rd!("1001e798", a, read_unaligned).wrapping_sub(mech_trace::rd!(
+            "1001e798",
+            b,
+            read_unaligned
+        ) as u32
+            as i32);
+        mech_trace::rt!("1001e798", if r < 1 { 0 } else { r })
     }
 }

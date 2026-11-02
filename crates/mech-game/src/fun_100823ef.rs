@@ -9,13 +9,14 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_100823ef(param_1: i32, param_2: i32, param_3: i32) -> u32 {
+    mech_trace::enter!("100823ef", param_1, param_2, param_3);
     if param_3 == 0
         || param_1 < 0
         || 0xff < param_1
         || param_2 < 1
         || 0x100i32.wrapping_sub(param_1) < param_2
     {
-        return 0xffff_ffff;
+        return mech_trace::rt!("100823ef", 0xffff_ffff);
     }
     let mut local_8: i32 = 0;
     while local_8 < param_2 {
@@ -25,12 +26,21 @@ pub unsafe extern "C" fn FUN_100823ef(param_1: i32, param_2: i32, param_3: i32) 
         // the caller's buffer; reads and writes happen as in the original.
         unsafe {
             let src0 = (&raw mut DAT_100b9a30).byte_offset(i_var1 as isize);
-            dst.cast::<u16>()
-                .write_unaligned(src0.cast::<u16>().read_unaligned());
+            mech_trace::wr!(
+                "100823ef",
+                dst.cast::<u16>(),
+                write_unaligned,
+                mech_trace::rd!("100823ef", src0.cast::<u16>(), read_unaligned)
+            );
             let src2 = (&raw mut DAT_100b9a32).byte_offset(i_var1 as isize);
-            dst.byte_add(2).write(src2.read());
+            mech_trace::wr!(
+                "100823ef",
+                dst.byte_add(2),
+                write,
+                mech_trace::rd!("100823ef", src2, read)
+            );
         }
         local_8 = local_8.wrapping_add(1);
     }
-    0
+    mech_trace::rt!("100823ef", 0)
 }

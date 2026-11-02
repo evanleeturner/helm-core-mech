@@ -25,25 +25,26 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1003bc40() {
+    mech_trace::enter!("1003bc40");
     // SAFETY: the globals are the game's own memory; written in the original order.
     unsafe {
-        DAT_10094e50 = 0;
-        DAT_10094e54 = 0;
-        DAT_10094e58 = 0;
-        DAT_10094e5c = 0;
-        DAT_100b9d6c = 0;
-        DAT_10094e60 = 0;
-        DAT_100b9d68 = 0;
-        DAT_100b9d58 = 0;
-        DAT_100b9d50 = 0;
-        DAT_100b9d80 = 0;
-        DAT_100b9d5c = 0;
-        DAT_100b9d64 = 0;
-        DAT_100b9d88 = 0;
-        DAT_100b9d78 = 0;
-        DAT_100b9d70 = 0;
-        DAT_100b9d74 = 0;
-        DAT_100b9d84 = 0;
-        DAT_100b9d54 = 0;
+        mech_trace::gw!("1003bc40", "10094e50", DAT_10094e50, 0);
+        mech_trace::gw!("1003bc40", "10094e54", DAT_10094e54, 0);
+        mech_trace::gw!("1003bc40", "10094e58", DAT_10094e58, 0);
+        mech_trace::gw!("1003bc40", "10094e5c", DAT_10094e5c, 0);
+        mech_trace::gw!("1003bc40", "100b9d6c", DAT_100b9d6c, 0);
+        mech_trace::gw!("1003bc40", "10094e60", DAT_10094e60, 0);
+        mech_trace::gw!("1003bc40", "100b9d68", DAT_100b9d68, 0);
+        mech_trace::gw!("1003bc40", "100b9d58", DAT_100b9d58, 0);
+        mech_trace::gw!("1003bc40", "100b9d50", DAT_100b9d50, 0);
+        mech_trace::gw!("1003bc40", "100b9d80", DAT_100b9d80, 0);
+        mech_trace::gw!("1003bc40", "100b9d5c", DAT_100b9d5c, 0);
+        mech_trace::gw!("1003bc40", "100b9d64", DAT_100b9d64, 0);
+        mech_trace::gw!("1003bc40", "100b9d88", DAT_100b9d88, 0);
+        mech_trace::gw!("1003bc40", "100b9d78", DAT_100b9d78, 0);
+        mech_trace::gw!("1003bc40", "100b9d70", DAT_100b9d70, 0);
+        mech_trace::gw!("1003bc40", "100b9d74", DAT_100b9d74, 0);
+        mech_trace::gw!("1003bc40", "100b9d84", DAT_100b9d84, 0);
+        mech_trace::gw!("1003bc40", "100b9d54", DAT_100b9d54, 0);
     }
 }

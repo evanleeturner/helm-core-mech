@@ -8,6 +8,7 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_004010d0() {
+    mech_trace::enter!("004010d0");
     // SAFETY: the callee is the game's own; the addresses are the fixed
     // video memory region the original copies within.
     unsafe {

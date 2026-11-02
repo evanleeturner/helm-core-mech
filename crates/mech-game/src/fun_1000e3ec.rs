@@ -16,36 +16,46 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1000e3ec(param_1: u32) -> u32 {
+    mech_trace::enter!("1000e3ec", param_1);
     let mut local_8: u32 = 0;
     let mut local_10: u32 = 0;
     // SAFETY: the globals and callees are the game's own; the table entries
     // are read at the same strides and offsets as the original.
     unsafe {
-        while (local_10 as i32) < (DAT_100a7584 as i32) {
-            let p = (&raw mut DAT_101f64a8)
-                .byte_add(local_10.wrapping_mul(0x7c) as usize)
-                .cast::<u32>()
-                .read_unaligned();
+        while (local_10 as i32) < (mech_trace::gr!("1000e3ec", "100a7584", DAT_100a7584) as i32) {
+            let p = mech_trace::rd!(
+                "1000e3ec",
+                (&raw mut DAT_101f64a8)
+                    .byte_add(local_10.wrapping_mul(0x7c) as usize)
+                    .cast::<u32>(),
+                read_unaligned
+            );
             if p == param_1 {
                 FUN_1000e3ec(local_10);
             }
             local_10 = local_10.wrapping_add(1);
         }
         if param_1 < 0x402 {
-            let v = (&raw mut DAT_101f64b8)
-                .byte_add(param_1.wrapping_mul(0x7c) as usize)
-                .cast::<u32>()
-                .read_unaligned();
-            if v < 0xfe {
-                let w = (&raw mut DAT_101f64b8)
+            let v = mech_trace::rd!(
+                "1000e3ec",
+                (&raw mut DAT_101f64b8)
                     .byte_add(param_1.wrapping_mul(0x7c) as usize)
-                    .cast::<u32>()
-                    .read_unaligned();
-                FUN_100645c5(w as i32);
+                    .cast::<u32>(),
+                read_unaligned
+            );
+            if v < 0xfe {
+                let w = mech_trace::rd!(
+                    "1000e3ec",
+                    (&raw mut DAT_101f64b8)
+                        .byte_add(param_1.wrapping_mul(0x7c) as usize)
+                        .cast::<u32>(),
+                    read_unaligned
+                );
+                mech_trace::cr!("1000e3ec", "100645c5", FUN_100645c5(w as i32));
             }
-            FUN_1000d05f(param_1 as i32);
+            mech_trace::cr!("1000e3ec", "1000d05f", FUN_1000d05f(param_1 as i32));
             local_8 = 1;
         }
     }
-    local_8
+    mech_trace::rt!("1000e3ec", local_8)
 }

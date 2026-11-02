@@ -33,23 +33,44 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10010ac1(param_1: u32) {
+    mech_trace::enter!("10010ac1", param_1);
     // SAFETY: all callees and globals are the game's own; the text pointer
     // returned by FUN_10010b46 is passed through unchanged to the OS and
     // back to the game's release routine.
     unsafe {
         FUN_1000ed10();
-        let lp_text = FUN_10010b46(DAT_100a9e14, param_1);
+        let lp_text = mech_trace::cr!(
+            "10010ac1",
+            "10010b46",
+            FUN_10010b46(
+                mech_trace::gr!("10010ac1", "100a9e14", DAT_100a9e14),
+                param_1
+            )
+        );
         FUN_10065cdb();
         FUN_10088e1a();
         loop {
-            let i_var1 = ShowCursor(1);
+            let i_var1 = mech_trace::cr!("10010ac1", "ShowCursor", ShowCursor(1));
             if i_var1 >= 0 {
                 break;
             }
         }
-        ShowWindow(DAT_100adf6c, 7);
-        MessageBoxA(core::ptr::null_mut(), lp_text, DAT_100a9e70, 0x12010);
+        mech_trace::cr!(
+            "10010ac1",
+            "ShowWindow",
+            ShowWindow(mech_trace::gr!("10010ac1", "100adf6c", DAT_100adf6c), 7)
+        );
+        mech_trace::cr!(
+            "10010ac1",
+            "MessageBoxA",
+            MessageBoxA(
+                core::ptr::null_mut(),
+                lp_text,
+                mech_trace::gr!("10010ac1", "100a9e70", DAT_100a9e70),
+                0x12010
+            )
+        );
         FUN_10002168(lp_text);
-        _exit(DAT_100a9e1c);
+        _exit(mech_trace::gr!("10010ac1", "100a9e1c", DAT_100a9e1c));
     }
 }

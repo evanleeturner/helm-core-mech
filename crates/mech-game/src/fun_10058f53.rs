@@ -3,7 +3,7 @@
 #[inline(always)]
 unsafe fn rd(p: u32, i: usize) -> i32 {
     // SAFETY: caller supplies a valid pointer to at least i+1 ints.
-    unsafe { (p as *const i32).add(i).read_unaligned() }
+    unsafe { mech_trace::rd!("10058f53", (p as *const i32).add(i), read_unaligned) }
 }
 
 #[unsafe(no_mangle)]
@@ -17,6 +17,9 @@ pub unsafe extern "C" fn FUN_10058f53(
     param_6: i32,
     param_7: u32,
 ) -> u32 {
+    mech_trace::enter!(
+        "10058f53", param_1, param_2, param_3, param_4, param_5, param_6, param_7
+    );
     // SAFETY: all pointers are the caller's descriptors and surface memory,
     // accessed exactly where the original does.
     unsafe {
@@ -26,11 +29,11 @@ pub unsafe extern "C" fn FUN_10058f53(
         let mut ivar25 = rd(pivar1, 1);
         let ivar9 = ivar25.wrapping_add(1);
         if ivar9 == 0 || ivar25 < -1 {
-            return 0xffff_ffff;
+            return mech_trace::rt!("10058f53", 0xffff_ffff);
         }
         let mut ivar23 = rd(pivar1, 2);
         if ivar23 < 0 {
-            return 0xffff_ffff;
+            return mech_trace::rt!("10058f53", 0xffff_ffff);
         }
         let ivar2 = rd(p1, 1);
         let mut ivar10 = ivar2;
@@ -51,7 +54,7 @@ pub unsafe extern "C" fn FUN_10058f53(
             ivar25 = ivar23;
         }
         if ivar12 < ivar10 || ivar25 < ivar11 {
-            return 0xffff_fffe;
+            return mech_trace::rt!("10058f53", 0xffff_fffe);
         }
         ivar10 = ivar10.wrapping_sub(ivar2);
         ivar12 = ivar12.wrapping_sub(ivar2);
@@ -61,11 +64,11 @@ pub unsafe extern "C" fn FUN_10058f53(
         ivar23 = rd(pivar4, 1);
         let ivar13 = ivar23.wrapping_add(1);
         if ivar13 == 0 || ivar23 < -1 {
-            return 0xffff_ffff;
+            return mech_trace::rt!("10058f53", 0xffff_ffff);
         }
         let mut ivar18 = rd(pivar4, 2);
         if ivar18 < 0 {
-            return 0xffff_ffff;
+            return mech_trace::rt!("10058f53", 0xffff_ffff);
         }
         let ivar5 = rd(p4, 1);
         let mut ivar14 = ivar5;
@@ -165,15 +168,19 @@ pub unsafe extern "C" fn FUN_10058f53(
                     loop {
                         uvar26 = uvar24 & 3;
                         while uvar26 != 0 {
-                            (puvar29 as *mut u8).write(uvar8);
+                            mech_trace::wr!("10058f53", (puvar29 as *mut u8), write, uvar8);
                             puvar29 = puvar29.wrapping_add(step);
                             uvar26 = uvar26.wrapping_sub(1);
                         }
                         let mut puvar28 = puvar29.wrapping_sub(l60);
                         uvar26 = uvar24 >> 2;
                         while uvar26 != 0 {
-                            (puvar28 as *mut u32)
-                                .write_unaligned((uvar8 as u32).wrapping_mul(0x0101_0101));
+                            mech_trace::wr!(
+                                "10058f53",
+                                (puvar28 as *mut u32),
+                                write_unaligned,
+                                (uvar8 as u32).wrapping_mul(0x0101_0101)
+                            );
                             puvar28 = puvar28.wrapping_add(step4);
                             uvar26 = uvar26.wrapping_sub(1);
                         }
@@ -187,7 +194,12 @@ pub unsafe extern "C" fn FUN_10058f53(
                     loop {
                         uvar26 = uvar24 & 3;
                         while uvar26 != 0 {
-                            (puvar29 as *mut u8).write((puvar27 as *const u8).read());
+                            mech_trace::wr!(
+                                "10058f53",
+                                (puvar29 as *mut u8),
+                                write,
+                                mech_trace::rd!("10058f53", (puvar27 as *const u8), read)
+                            );
                             puvar27 = puvar27.wrapping_add(step);
                             puvar29 = puvar29.wrapping_add(step);
                             uvar26 = uvar26.wrapping_sub(1);
@@ -196,8 +208,16 @@ pub unsafe extern "C" fn FUN_10058f53(
                         let mut puvar30 = puvar29.wrapping_sub(l60);
                         uvar26 = uvar24 >> 2;
                         while uvar26 != 0 {
-                            (puvar30 as *mut u32)
-                                .write_unaligned((puvar28 as *const u32).read_unaligned());
+                            mech_trace::wr!(
+                                "10058f53",
+                                (puvar30 as *mut u32),
+                                write_unaligned,
+                                mech_trace::rd!(
+                                    "10058f53",
+                                    (puvar28 as *const u32),
+                                    read_unaligned
+                                )
+                            );
                             puvar28 = puvar28.wrapping_add(step4);
                             puvar30 = puvar30.wrapping_add(step4);
                             uvar26 = uvar26.wrapping_sub(1);
@@ -210,10 +230,10 @@ pub unsafe extern "C" fn FUN_10058f53(
                         }
                     }
                 }
-                return 0;
+                return mech_trace::rt!("10058f53", 0);
             }
-            return 0xffff_fffd;
+            return mech_trace::rt!("10058f53", 0xffff_fffd);
         }
-        0xffff_fffe
+        mech_trace::rt!("10058f53", 0xffff_fffe)
     }
 }

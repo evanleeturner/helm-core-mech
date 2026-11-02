@@ -14,11 +14,12 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10036649(param_1: i32) {
+    mech_trace::enter!("10036649", param_1);
     let mut param_1 = param_1;
     // SAFETY: the callees and the global are the game's own memory and code.
     unsafe {
-        let i_var1 = FUN_10036142(1);
-        let i_var2 = FUN_10036142(2);
+        let i_var1 = mech_trace::cr!("10036649", "10036142", FUN_10036142(1));
+        let i_var2 = mech_trace::cr!("10036649", "10036142", FUN_10036142(2));
         let mut store = false;
         if param_1 == 0 {
             if i_var1 != 0 && i_var2 == 0 {
@@ -41,7 +42,7 @@ pub unsafe extern "C" fn FUN_10036649(param_1: i32) {
         if !store && i_var2 == 0 {
             return;
         }
-        DAT_100add18 = param_1 as u32;
-        FUN_10007f49(param_1, 0);
+        mech_trace::gw!("10036649", "100add18", DAT_100add18, param_1 as u32);
+        mech_trace::cr!("10036649", "10007f49", FUN_10007f49(param_1, 0));
     }
 }

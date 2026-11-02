@@ -14,20 +14,21 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1004819b(param_1: *mut i8) -> *mut u32 {
+    mech_trace::enter!("1004819b", param_1);
     // SAFETY: the globals are the game's own memory; param_1 points at a
     // NUL-terminated string, copied into the game's buffer as the original does.
     unsafe {
         let buf = (&raw mut DAT_100c7d08).cast::<u8>();
         let mut local_8: i32 = 0;
         while local_8 < 0x50 {
-            buf.byte_add(local_8 as usize).write(0);
+            mech_trace::wr!("1004819b", buf.byte_add(local_8 as usize), write, 0);
             local_8 = local_8.wrapping_add(1);
         }
-        if DAT_100b0578 == 0 {
+        if mech_trace::gr!("1004819b", "100b0578", DAT_100b0578) == 0 {
             // length including the terminating NUL
             let mut len: u32 = 0;
             loop {
-                let c = param_1.byte_add(len as usize).read();
+                let c = mech_trace::rd!("1004819b", param_1.byte_add(len as usize), read);
                 len = len.wrapping_add(1);
                 if c == 0 {
                     break;
@@ -37,27 +38,36 @@ pub unsafe extern "C" fn FUN_1004819b(param_1: *mut i8) -> *mut u32 {
             let mut dst = buf;
             let mut n = len >> 2;
             while n != 0 {
-                let v = src.cast::<u32>().read_unaligned();
-                dst.cast::<u32>().write_unaligned(v);
+                let v = mech_trace::rd!("1004819b", src.cast::<u32>(), read_unaligned);
+                mech_trace::wr!("1004819b", dst.cast::<u32>(), write_unaligned, v);
                 src = src.byte_add(4);
                 dst = dst.byte_add(4);
                 n = n.wrapping_sub(1);
             }
             let mut r = len & 3;
             while r != 0 {
-                dst.write(src.read());
+                mech_trace::wr!(
+                    "1004819b",
+                    dst,
+                    write,
+                    mech_trace::rd!("1004819b", src, read)
+                );
                 src = src.byte_add(1);
                 dst = dst.byte_add(1);
                 r = r.wrapping_sub(1);
             }
         } else {
-            sprintf(
-                buf.cast::<i8>(),
-                (&raw mut DAT_100b06a8).cast::<i8>().cast_const(),
-                &raw mut DAT_100b0578,
-                param_1,
+            mech_trace::cr!(
+                "1004819b",
+                "sprintf",
+                sprintf(
+                    buf.cast::<i8>(),
+                    (&raw mut DAT_100b06a8).cast::<i8>().cast_const(),
+                    &raw mut DAT_100b0578,
+                    param_1,
+                )
             );
         }
-        buf.cast::<u32>()
+        mech_trace::rt!("1004819b", buf.cast::<u32>())
     }
 }

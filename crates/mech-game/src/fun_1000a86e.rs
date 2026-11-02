@@ -23,34 +23,57 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1000a86e() {
+    mech_trace::enter!("1000a86e");
     // SAFETY: the globals and callees are the game's own memory and code; the
     // table entry and the object it points at are read where the original does.
     unsafe {
-        if DAT_10215658 < 3 {
-            FUN_100086f7();
-            if DAT_10215658 < 3 {
-                if DAT_10215658 != 0 {
-                    DAT_10215654 = DAT_1021565c;
-                    DAT_1021565c = 3;
+        if mech_trace::gr!("1000a86e", "10215658", DAT_10215658) < 3 {
+            mech_trace::cr!("1000a86e", "100086f7", FUN_100086f7());
+            if mech_trace::gr!("1000a86e", "10215658", DAT_10215658) < 3 {
+                if mech_trace::gr!("1000a86e", "10215658", DAT_10215658) != 0 {
+                    mech_trace::gw!(
+                        "1000a86e",
+                        "10215654",
+                        DAT_10215654,
+                        mech_trace::gr!("1000a86e", "1021565c", DAT_1021565c)
+                    );
+                    mech_trace::gw!("1000a86e", "1021565c", DAT_1021565c, 3);
                 }
-                let puv_ar1: *mut u32 = (&raw mut DAT_100a7b30)
-                    .cast::<u8>()
-                    .byte_add(DAT_10215658.wrapping_mul(4) as usize)
-                    .cast::<*mut u32>()
-                    .read_unaligned();
+                let puv_ar1: *mut u32 = mech_trace::rd!(
+                    "1000a86e",
+                    (&raw mut DAT_100a7b30)
+                        .cast::<u8>()
+                        .byte_add(
+                            mech_trace::gr!("1000a86e", "10215658", DAT_10215658).wrapping_mul(4)
+                                as usize
+                        )
+                        .cast::<*mut u32>(),
+                    read_unaligned
+                );
                 if !puv_ar1.is_null() {
-                    let pi_var2: *mut i32 =
-                        puv_ar1.byte_add(20).cast::<*mut i32>().read_unaligned();
+                    let pi_var2: *mut i32 = mech_trace::rd!(
+                        "1000a86e",
+                        puv_ar1.byte_add(20).cast::<*mut i32>(),
+                        read_unaligned
+                    );
                     if !pi_var2.is_null() {
-                        if DAT_10215654 != DAT_1021565c {
-                            FUN_10003d80(pi_var2);
+                        if mech_trace::gr!("1000a86e", "10215654", DAT_10215654)
+                            != mech_trace::gr!("1000a86e", "1021565c", DAT_1021565c)
+                        {
+                            mech_trace::cr!("1000a86e", "10003d80", FUN_10003d80(pi_var2));
                         }
-                        FUN_1000a3fd(1, puv_ar1, pi_var2, 0);
+                        mech_trace::cr!(
+                            "1000a86e",
+                            "1000a3fd",
+                            FUN_1000a3fd(1, puv_ar1, pi_var2, 0)
+                        );
                     }
                 }
             }
-        } else if DAT_10215658 == 4 && DAT_10215660 < 3 {
-            FUN_100086f7();
+        } else if mech_trace::gr!("1000a86e", "10215658", DAT_10215658) == 4
+            && mech_trace::gr!("1000a86e", "10215660", DAT_10215660) < 3
+        {
+            mech_trace::cr!("1000a86e", "100086f7", FUN_100086f7());
         }
     }
 }

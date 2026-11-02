@@ -10,13 +10,14 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1002a1e0(param_1: u32, param_2: i32) -> u32 {
+    mech_trace::enter!("1002a1e0", param_1, param_2);
     let mut local_18: *const u16 = core::ptr::null();
     let mut local_10: u32 = 1;
     let mut local_c: u16 = 0;
     let u_var1 = param_1 & 0xff00;
     let u_var2 = param_1 & 0xff;
     if (param_1 & 0xf000) != 0 {
-        return 1;
+        return mech_trace::rt!("1002a1e0", 1);
     }
     // SAFETY: the globals are the game's own tables; indices come from the
     // masked parameter exactly as in the original.
@@ -26,9 +27,11 @@ pub unsafe extern "C" fn FUN_1002a1e0(param_1: u32, param_2: i32) -> u32 {
                 .byte_add((u_var2 as usize).wrapping_mul(0x54))
                 .cast::<u16>();
         } else if u_var1 == 0x200 {
-            let v = (&raw mut DAT_100eef40)
-                .add(u_var2 as usize)
-                .read_unaligned();
+            let v = mech_trace::rd!(
+                "1002a1e0",
+                (&raw mut DAT_100eef40).add(u_var2 as usize),
+                read_unaligned
+            );
             local_18 = v.wrapping_add(0x14) as *const u16;
         } else if u_var1 == 0x400 {
             local_18 = (&raw mut DAT_100ef030)
@@ -37,7 +40,7 @@ pub unsafe extern "C" fn FUN_1002a1e0(param_1: u32, param_2: i32) -> u32 {
         }
     }
     if local_18.is_null() {
-        return 1;
+        return mech_trace::rt!("1002a1e0", 1);
     }
     let mut apply = false;
     if param_2 < 5 {
@@ -67,10 +70,10 @@ pub unsafe extern "C" fn FUN_1002a1e0(param_1: u32, param_2: i32) -> u32 {
     }
     if !local_18.is_null() {
         // SAFETY: local_18 points into the game's table entry.
-        let w = unsafe { local_18.read_unaligned() };
+        let w = unsafe { mech_trace::rd!("1002a1e0", local_18, read_unaligned) };
         if (local_c & w) == 0 {
             local_10 = 0;
         }
     }
-    local_10
+    mech_trace::rt!("1002a1e0", local_10)
 }

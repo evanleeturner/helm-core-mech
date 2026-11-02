@@ -21,15 +21,27 @@ pub unsafe extern "C" fn FUN_1005c238(
     param_4: i32,
     param_5: i32,
 ) {
+    mech_trace::enter!("1005c238", param_1, param_2, param_3, param_4, param_5);
     // SAFETY: the globals and callees are the game's own; the returned string
     // is a NUL-terminated buffer which is negated in place, as the original does.
     unsafe {
-        let p_var1 =
-            FUN_1008668b(DAT_100af17c, param_3, DAT_100af0d4 as usize as *mut i32) as *mut i8;
+        let p_var1 = mech_trace::cr!(
+            "1005c238",
+            "1008668b",
+            FUN_1008668b(
+                mech_trace::gr!("1005c238", "100af17c", DAT_100af17c),
+                param_3,
+                mech_trace::gr!("1005c238", "100af0d4", DAT_100af0d4) as usize as *mut i32
+            )
+        ) as *mut i8;
         let mut local_8 = p_var1;
         if !p_var1.is_null() {
-            while *local_8 != 0 {
-                *local_8 = (*local_8).wrapping_neg();
+            while mech_trace::dr!("1005c238", local_8) != 0 {
+                mech_trace::dw!(
+                    "1005c238",
+                    local_8,
+                    (mech_trace::dr!("1005c238", local_8)).wrapping_neg()
+                );
                 local_8 = local_8.byte_add(1);
             }
             FUN_1005c0df(param_1, param_2, p_var1, param_4, param_5);

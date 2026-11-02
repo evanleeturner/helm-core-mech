@@ -18,13 +18,28 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10064ea3(param_1: u32) -> u32 {
+    mech_trace::enter!("10064ea3", param_1);
     // SAFETY: _putc and the global file pointer are the game's own.
     unsafe {
-        let i_var1 = _putc((param_1 & 0xff) as i32, DAT_100c7f9c);
+        let i_var1 = mech_trace::cr!(
+            "10064ea3",
+            "_putc",
+            _putc(
+                (param_1 & 0xff) as i32,
+                mech_trace::gr!("10064ea3", "100c7f9c", DAT_100c7f9c)
+            )
+        );
         if i_var1 == -1 {
-            return 2;
+            return mech_trace::rt!("10064ea3", 2);
         }
-        let i_var1 = _putc((param_1 >> 8) as i32, DAT_100c7f9c);
-        if i_var1 == -1 { 2 } else { 0 }
+        let i_var1 = mech_trace::cr!(
+            "10064ea3",
+            "_putc",
+            _putc(
+                (param_1 >> 8) as i32,
+                mech_trace::gr!("10064ea3", "100c7f9c", DAT_100c7f9c)
+            )
+        );
+        mech_trace::rt!("10064ea3", if i_var1 == -1 { 2 } else { 0 })
     }
 }

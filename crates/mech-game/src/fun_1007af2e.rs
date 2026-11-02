@@ -9,9 +9,10 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1007af2e(param_1: u32, param_2: u32) {
+    mech_trace::enter!("1007af2e", param_1, param_2);
     // SAFETY: the globals are the game's own memory; written in the original's order.
     unsafe {
-        DAT_100b4ed0 = param_1;
-        DAT_100b4ed4 = param_2;
+        mech_trace::gw!("1007af2e", "100b4ed0", DAT_100b4ed0, param_1);
+        mech_trace::gw!("1007af2e", "100b4ed4", DAT_100b4ed4, param_2);
     }
 }

@@ -20,12 +20,12 @@ unsafe fn fill(addr: u32, count: u32, val: i32, b: u8) {
     // as the original does.
     unsafe {
         while n != 0 {
-            p.cast::<i32>().write_unaligned(val);
+            mech_trace::wr!("100683cd", p.cast::<i32>(), write_unaligned, val);
             p = p.byte_add(4);
             n = n.wrapping_sub(1);
         }
         while r != 0 {
-            p.write(b);
+            mech_trace::wr!("100683cd", p, write, b);
             p = p.byte_add(1);
             r = r.wrapping_sub(1);
         }
@@ -93,51 +93,58 @@ pub unsafe extern "C" fn FUN_100683cd(
     param_5: i32,
     param_6: i32,
 ) -> u32 {
+    mech_trace::enter!(
+        "100683cd", param_1, param_2, param_3, param_4, param_5, param_6
+    );
     let mut param_5 = param_5;
     if param_4 == 0 || param_5 == 0 {
         // SAFETY: the callee is the game's own function.
-        return unsafe {
-            FUN_10065029(
-                param_1,
-                param_2.wrapping_sub(param_4),
-                param_3.wrapping_sub(param_5),
-                param_2.wrapping_add(param_4),
-                param_3.wrapping_add(param_5),
-                0,
-                param_6,
+        return mech_trace::rt!("100683cd", unsafe {
+            mech_trace::cr!(
+                "100683cd",
+                "10065029",
+                FUN_10065029(
+                    param_1,
+                    param_2.wrapping_sub(param_4),
+                    param_3.wrapping_sub(param_5),
+                    param_2.wrapping_add(param_4),
+                    param_3.wrapping_add(param_5),
+                    0,
+                    param_6,
+                )
             )
-        };
+        });
     }
     // SAFETY: param_1 points at the game's surface descriptor; its fields and
     // the pixel memory are read and written where the original does.
     unsafe {
-        let piv = param_1.read() as *const i32;
-        let i12 = piv.add(1).read_unaligned();
+        let piv = mech_trace::rd!("100683cd", param_1, read) as *const i32;
+        let i12 = mech_trace::rd!("100683cd", piv.add(1), read_unaligned);
         let i8 = i12.wrapping_add(1);
         if i8 == 0 || i12 < -1 {
-            return 0xffff_ffff;
+            return mech_trace::rt!("100683cd", 0xffff_ffff);
         }
-        let i1h = piv.add(2).read_unaligned();
+        let i1h = mech_trace::rd!("100683cd", piv.add(2), read_unaligned);
         if i1h < 0 {
-            return 0xffff_ffff;
+            return mech_trace::rt!("100683cd", 0xffff_ffff);
         }
-        let i2 = param_1.add(1).read_unaligned();
+        let i2 = mech_trace::rd!("100683cd", param_1.add(1), read_unaligned);
         let i9 = if i2 < 1 { 0 } else { i2 };
-        let i3 = param_1.add(2).read_unaligned();
+        let i3 = mech_trace::rd!("100683cd", param_1.add(2), read_unaligned);
         let i10 = if i3 < 1 { 0 } else { i3 };
-        let mut i11 = param_1.add(3).read_unaligned();
+        let mut i11 = mech_trace::rd!("100683cd", param_1.add(3), read_unaligned);
         if i12 <= i11 {
             i11 = i12;
         }
-        let mut i12b = param_1.add(4).read_unaligned();
+        let mut i12b = mech_trace::rd!("100683cd", param_1.add(4), read_unaligned);
         if i1h <= i12b {
             i12b = i1h;
         }
         if i11 < i9 || i12b < i10 {
-            return 0xffff_fffe;
+            return mech_trace::rt!("100683cd", 0xffff_fffe);
         }
         let i12 = i12b;
-        let i1 = piv.read_unaligned();
+        let i1 = mech_trace::rd!("100683cd", piv, read_unaligned);
         let u6 = param_6 as u8;
         let p6 =
             (((u6 as u32) << 24) | ((u6 as u32) << 16) | ((u6 as u32) << 8) | (u6 as u32)) as i32;
@@ -191,6 +198,6 @@ pub unsafe extern "C" fn FUN_100683cd(
                 break;
             }
         }
-        u7
+        mech_trace::rt!("100683cd", u7)
     }
 }

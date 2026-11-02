@@ -39,33 +39,48 @@ pub unsafe extern "C" fn FUN_1000e070(
     param_3: i32,
     param_4: i32,
 ) -> i32 {
+    mech_trace::enter!("1000e070", param_1, param_2, param_3, param_4);
     // SAFETY: the globals and callees are the game's own; the format string
     // address is passed as-is to the game's printf-like function.
     unsafe {
         let rop: u32 = 0xcc0020;
         let cy = param_4.wrapping_sub(param_2).wrapping_add(1);
         let cx = param_3.wrapping_sub(param_1).wrapping_add(1);
-        let hdc_src = DAT_1008d55c;
+        let hdc_src = mech_trace::gr!("1000e070", "1008d55c", DAT_1008d55c);
         let x1 = param_1;
         let y1 = param_2;
-        let i_var1 = GetSystemMetrics(0xf);
-        DAT_100d1540 = BitBlt(
-            DAT_1008d150,
-            param_1,
-            param_2.wrapping_sub(i_var1),
-            cx,
-            cy,
-            hdc_src,
-            x1,
-            y1,
-            rop,
+        let i_var1 = mech_trace::cr!("1000e070", "GetSystemMetrics", GetSystemMetrics(0xf));
+        mech_trace::gw!(
+            "1000e070",
+            "100d1540",
+            DAT_100d1540,
+            mech_trace::cr!(
+                "1000e070",
+                "BitBlt",
+                BitBlt(
+                    mech_trace::gr!("1000e070", "1008d150", DAT_1008d150),
+                    param_1,
+                    param_2.wrapping_sub(i_var1),
+                    cx,
+                    cy,
+                    hdc_src,
+                    x1,
+                    y1,
+                    rop,
+                )
+            )
         );
-        if DAT_100d1540 == 0 {
+        if mech_trace::gr!("1000e070", "100d1540", DAT_100d1540) == 0 {
             FUN_100640a0(
                 (&raw mut DAT_1008da40).cast::<i8>() as *const i8,
-                GetLastError(),
+                mech_trace::cr!("1000e070", "GetLastError", GetLastError()),
             );
         }
-        (DAT_100c6060 == DAT_100d1540) as i32 - 1
+        mech_trace::rt!(
+            "1000e070",
+            (mech_trace::gr!("1000e070", "100c6060", DAT_100c6060)
+                == mech_trace::gr!("1000e070", "100d1540", DAT_100d1540)) as i32
+                - 1
+        )
     }
 }

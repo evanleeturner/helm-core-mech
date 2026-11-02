@@ -27,12 +27,20 @@ pub unsafe extern "C" fn FUN_1002f5b7(
     param_7: i32,
     param_8: i32,
 ) {
+    mech_trace::enter!(
+        "1002f5b7", param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8
+    );
     let mut local_34: [i32; 12] = [0; 12];
     // SAFETY: param_1 points at the caller's object; the callees are the
     // game's own and local_34 is a valid scratch buffer for them.
     unsafe {
         let p = param_1.byte_add(0x74).cast::<u32>();
-        p.write_unaligned(p.read_unaligned() | 1);
+        mech_trace::wr!(
+            "1002f5b7",
+            p,
+            write_unaligned,
+            mech_trace::rd!("1002f5b7", p, read_unaligned) | 1
+        );
         FUN_1008984b(
             local_34.as_mut_ptr(),
             0,

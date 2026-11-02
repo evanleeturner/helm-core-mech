@@ -8,6 +8,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1004f180(param_1: *mut i8) {
+    mech_trace::enter!("1004f180", param_1);
     let mut u_var2: u32 = 0xffff_ffff;
     let mut pc_var3: *mut i8 = param_1;
     // SAFETY: param_1 points at a NUL-terminated string owned by the caller;
@@ -18,7 +19,7 @@ pub unsafe extern "C" fn FUN_1004f180(param_1: *mut i8) {
                 break;
             }
             u_var2 = u_var2.wrapping_sub(1);
-            let c_var1 = *pc_var3;
+            let c_var1 = mech_trace::dr!("1004f180", pc_var3);
             pc_var3 = pc_var3.add(1);
             if c_var1 == 0 {
                 break;
@@ -30,7 +31,7 @@ pub unsafe extern "C" fn FUN_1004f180(param_1: *mut i8) {
             loop {
                 let p = param_1.byte_add(i_var4 as usize);
                 i_var4 = i_var4.wrapping_add(0x50);
-                FUN_1004f130(p);
+                mech_trace::cr!("1004f180", "1004f130", FUN_1004f130(p));
                 if i_var4 >= len {
                     break;
                 }

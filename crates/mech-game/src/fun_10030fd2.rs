@@ -15,15 +15,20 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10030fd2(param_1: i32) {
+    mech_trace::enter!("10030fd2", param_1);
     // SAFETY: the globals and callees are the game's own; the table entry at
     // param_1 * 0x34 is in range because param_1 was checked against the count.
     unsafe {
-        if -1 < param_1 && param_1 < DAT_100ada50 {
+        if -1 < param_1 && param_1 < mech_trace::gr!("10030fd2", "100ada50", DAT_100ada50) {
             let p = (&raw mut DAT_10168930)
                 .cast::<u8>()
                 .byte_add(param_1.wrapping_mul(0x34) as usize);
-            FUN_1002f727(p.cast::<i32>().read_unaligned());
-            FUN_1003052d(param_1);
+            mech_trace::cr!(
+                "10030fd2",
+                "1002f727",
+                FUN_1002f727(mech_trace::rd!("10030fd2", p.cast::<i32>(), read_unaligned))
+            );
+            mech_trace::cr!("10030fd2", "1003052d", FUN_1003052d(param_1));
         }
     }
 }

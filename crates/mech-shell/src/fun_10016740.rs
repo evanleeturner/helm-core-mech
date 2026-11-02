@@ -32,78 +32,99 @@ pub unsafe extern "C" fn FUN_10016740(
     param_2: *mut i32,
     param_3: *mut i32,
 ) -> u8 {
+    mech_trace::enter!("10016740", param_1, param_2, param_3);
     let mut local_10: [i32; 3] = [0; 3];
     let mut local_4: *mut core::ffi::c_void = core::ptr::null_mut();
     // SAFETY: the Registry functions and the logger are the game's own and the
     // OS's; param_1..3 point at the caller's ints, written where the original
     // writes; local buffers outlive each call.
     unsafe {
-        let mut l_var1 = RegOpenKeyExA(
-            0x80000002usize as *mut core::ffi::c_void,
-            c"Software\\Activision\\Mercenaries\\1.0".as_ptr(),
-            0,
-            1,
-            &raw mut local_4,
+        let mut l_var1 = mech_trace::cr!(
+            "10016740",
+            "RegOpenKeyExA",
+            RegOpenKeyExA(
+                0x80000002usize as *mut core::ffi::c_void,
+                c"Software\\Activision\\Mercenaries\\1.0".as_ptr(),
+                0,
+                1,
+                &raw mut local_4,
+            )
         );
         if l_var1 != 0 {
-            FUN_100640a0(
-                c"Could not open registry MechWarrior2 key: %d\n".as_ptr(),
-                l_var1,
+            mech_trace::cr!(
+                "10016740",
+                "100640a0",
+                FUN_100640a0(
+                    c"Could not open registry MechWarrior2 key: %d\n".as_ptr(),
+                    l_var1,
+                )
             );
-            return 0;
+            return mech_trace::rt!("10016740", 0);
         }
 
         let base = local_10.as_mut_ptr();
 
         local_10[1] = 4;
         local_10[2] = 4;
-        l_var1 = RegQueryValueExA(
-            local_4,
-            c"QuickTips".as_ptr(),
-            core::ptr::null_mut(),
-            base.add(2).cast::<u32>(),
-            base.cast::<u8>(),
-            base.add(1).cast::<u32>(),
+        l_var1 = mech_trace::cr!(
+            "10016740",
+            "RegQueryValueExA",
+            RegQueryValueExA(
+                local_4,
+                c"QuickTips".as_ptr(),
+                core::ptr::null_mut(),
+                base.add(2).cast::<u32>(),
+                base.cast::<u8>(),
+                base.add(1).cast::<u32>(),
+            )
         );
         if l_var1 == 0 {
-            *param_1 = local_10[0];
+            mech_trace::dw!("10016740", param_1, local_10[0]);
         } else {
-            *param_1 = 1;
+            mech_trace::dw!("10016740", param_1, 1);
         }
 
         local_10[1] = 4;
         local_10[2] = 4;
-        l_var1 = RegQueryValueExA(
-            local_4,
-            c"ShowDialog".as_ptr(),
-            core::ptr::null_mut(),
-            base.add(2).cast::<u32>(),
-            base.cast::<u8>(),
-            base.add(1).cast::<u32>(),
+        l_var1 = mech_trace::cr!(
+            "10016740",
+            "RegQueryValueExA",
+            RegQueryValueExA(
+                local_4,
+                c"ShowDialog".as_ptr(),
+                core::ptr::null_mut(),
+                base.add(2).cast::<u32>(),
+                base.cast::<u8>(),
+                base.add(1).cast::<u32>(),
+            )
         );
         if l_var1 == 0 {
-            *param_2 = local_10[0];
+            mech_trace::dw!("10016740", param_2, local_10[0]);
         } else {
-            *param_2 = 1;
+            mech_trace::dw!("10016740", param_2, 1);
         }
 
         local_10[1] = 4;
         local_10[2] = 4;
-        l_var1 = RegQueryValueExA(
-            local_4,
-            c"LittleMovies".as_ptr(),
-            core::ptr::null_mut(),
-            base.add(2).cast::<u32>(),
-            base.cast::<u8>(),
-            base.add(1).cast::<u32>(),
+        l_var1 = mech_trace::cr!(
+            "10016740",
+            "RegQueryValueExA",
+            RegQueryValueExA(
+                local_4,
+                c"LittleMovies".as_ptr(),
+                core::ptr::null_mut(),
+                base.add(2).cast::<u32>(),
+                base.cast::<u8>(),
+                base.add(1).cast::<u32>(),
+            )
         );
         if l_var1 == 0 && local_10[0] != -1 {
-            *param_3 = local_10[0];
+            mech_trace::dw!("10016740", param_3, local_10[0]);
         } else {
-            *param_3 = 1;
+            mech_trace::dw!("10016740", param_3, 1);
         }
 
-        RegCloseKey(local_4);
-        (l_var1 == 0) as u8
+        mech_trace::cr!("10016740", "RegCloseKey", RegCloseKey(local_4));
+        mech_trace::rt!("10016740", (l_var1 == 0) as u8)
     }
 }

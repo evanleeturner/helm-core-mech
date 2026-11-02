@@ -20,40 +20,100 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10032e50(param_1: i32) {
+    mech_trace::enter!("10032e50", param_1);
     // SAFETY: the globals and callees are the game's own; param_1 points at
     // the caller's object, and DAT_10083508 holds an address of a game struct.
     unsafe {
         let field = (param_1 as u32).wrapping_add(0x24) as *const i32;
-        if field.read_unaligned() == 0 {
-            DAT_10092024 = 1;
-            DAT_10092020 = 0;
-            FUN_10063ea0(&raw mut DAT_10092618 as *mut i32);
-            FUN_10063d30(&raw mut DAT_10092298 as *mut i32);
-            FUN_10063ea0(&raw mut DAT_10092dc0 as *mut i32);
-            FUN_10063d30(&raw mut DAT_10092dc0 as *mut i32);
+        if mech_trace::rd!("10032e50", field, read_unaligned) == 0 {
+            mech_trace::gw!("10032e50", "10092024", DAT_10092024, 1);
+            mech_trace::gw!("10032e50", "10092020", DAT_10092020, 0);
+            mech_trace::cr!(
+                "10032e50",
+                "10063ea0",
+                FUN_10063ea0(&raw mut DAT_10092618 as *mut i32)
+            );
+            mech_trace::cr!(
+                "10032e50",
+                "10063d30",
+                FUN_10063d30(&raw mut DAT_10092298 as *mut i32)
+            );
+            mech_trace::cr!(
+                "10032e50",
+                "10063ea0",
+                FUN_10063ea0(&raw mut DAT_10092dc0 as *mut i32)
+            );
+            mech_trace::cr!(
+                "10032e50",
+                "10063d30",
+                FUN_10063d30(&raw mut DAT_10092dc0 as *mut i32)
+            );
             return;
         }
-        if (param_1 as u32).wrapping_add(0x24) as *const i32 == field && field.read_unaligned() == 9
+        if (param_1 as u32).wrapping_add(0x24) as *const i32 == field
+            && mech_trace::rd!("10032e50", field, read_unaligned) == 9
         {
-            DAT_10092020 = 1;
-            DAT_10092024 = 0;
-            FUN_10063ea0(&raw mut DAT_10092298 as *mut i32);
-            FUN_10063ea0(&raw mut DAT_10092dc0 as *mut i32);
-            FUN_10063ea0(&raw mut DAT_10092618 as *mut i32);
-            FUN_10063d30(&raw mut DAT_10092618 as *mut i32);
+            mech_trace::gw!("10032e50", "10092020", DAT_10092020, 1);
+            mech_trace::gw!("10032e50", "10092024", DAT_10092024, 0);
+            mech_trace::cr!(
+                "10032e50",
+                "10063ea0",
+                FUN_10063ea0(&raw mut DAT_10092298 as *mut i32)
+            );
+            mech_trace::cr!(
+                "10032e50",
+                "10063ea0",
+                FUN_10063ea0(&raw mut DAT_10092dc0 as *mut i32)
+            );
+            mech_trace::cr!(
+                "10032e50",
+                "10063ea0",
+                FUN_10063ea0(&raw mut DAT_10092618 as *mut i32)
+            );
+            mech_trace::cr!(
+                "10032e50",
+                "10063d30",
+                FUN_10063d30(&raw mut DAT_10092618 as *mut i32)
+            );
         } else {
-            DAT_10092020 = 0;
-            DAT_10092024 = 0;
-            FUN_10063ea0(&raw mut DAT_10092618 as *mut i32);
-            FUN_10063ea0(&raw mut DAT_10092298 as *mut i32);
-            FUN_10063ea0(&raw mut DAT_10092dc0 as *mut i32);
-            FUN_10063d30(&raw mut DAT_10092dc0 as *mut i32);
-            let u_var1 = FUN_10031e40(param_1);
+            mech_trace::gw!("10032e50", "10092020", DAT_10092020, 0);
+            mech_trace::gw!("10032e50", "10092024", DAT_10092024, 0);
+            mech_trace::cr!(
+                "10032e50",
+                "10063ea0",
+                FUN_10063ea0(&raw mut DAT_10092618 as *mut i32)
+            );
+            mech_trace::cr!(
+                "10032e50",
+                "10063ea0",
+                FUN_10063ea0(&raw mut DAT_10092298 as *mut i32)
+            );
+            mech_trace::cr!(
+                "10032e50",
+                "10063ea0",
+                FUN_10063ea0(&raw mut DAT_10092dc0 as *mut i32)
+            );
+            mech_trace::cr!(
+                "10032e50",
+                "10063d30",
+                FUN_10063d30(&raw mut DAT_10092dc0 as *mut i32)
+            );
+            let u_var1 = mech_trace::cr!("10032e50", "10031e40", FUN_10031e40(param_1));
             if (u_var1 as u8) == 1
-                && ((DAT_10083508.wrapping_add(0x23bb)) as *const i32).read_unaligned() == 1
+                && mech_trace::rd!(
+                    "10032e50",
+                    ((mech_trace::gr!("10032e50", "10083508", DAT_10083508).wrapping_add(0x23bb))
+                        as *const i32),
+                    read_unaligned
+                ) == 1
             {
                 let p = (param_1 as u32).wrapping_add(0x28) as *mut i32;
-                p.write_unaligned(p.read_unaligned().wrapping_sub(1));
+                mech_trace::wr!(
+                    "10032e50",
+                    p,
+                    write_unaligned,
+                    mech_trace::rd!("10032e50", p, read_unaligned).wrapping_sub(1)
+                );
             }
         }
     }

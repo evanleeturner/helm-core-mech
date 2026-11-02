@@ -20,6 +20,9 @@ pub unsafe extern "C" fn FUN_1001b82d(
     param_5: i32,
     param_6: i32,
 ) -> i32 {
+    mech_trace::enter!(
+        "1001b82d", param_1, param_2, param_3, param_4, param_5, param_6
+    );
     let mut usum: u64 = (param_1 as i64 as u64).wrapping_mul(param_5 as i64 as u64);
     usum = usum.wrapping_add((param_3 as i64 as u64).wrapping_mul(param_6 as i64 as u64));
     usum = usum.wrapping_add(param_4 as u64);
@@ -32,7 +35,7 @@ pub unsafe extern "C" fn FUN_1001b82d(
         unsafe {
             RaiseException(0xC0000094, 0, 0, core::ptr::null());
         }
-        return 0;
+        return mech_trace::rt!("1001b82d", 0);
     }
 
     if den == -1 && num == i64::MIN {
@@ -40,7 +43,7 @@ pub unsafe extern "C" fn FUN_1001b82d(
         unsafe {
             RaiseException(0xC0000094, 0, 0, core::ptr::null());
         }
-        return 0;
+        return mech_trace::rt!("1001b82d", 0);
     }
 
     let quot: i64 = num.wrapping_div(den);
@@ -50,8 +53,8 @@ pub unsafe extern "C" fn FUN_1001b82d(
         unsafe {
             RaiseException(0xC0000094, 0, 0, core::ptr::null());
         }
-        return 0;
+        return mech_trace::rt!("1001b82d", 0);
     }
 
-    quot as i32
+    mech_trace::rt!("1001b82d", quot as i32)
 }

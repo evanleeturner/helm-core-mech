@@ -23,20 +23,25 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1006aec6() -> u32 {
+    mech_trace::enter!("1006aec6");
     let mut local_8: u32 = 0;
     // SAFETY: the globals and the callee are the game's own; local_8 is a
     // valid stack slot for the callee to fill in.
     unsafe {
-        _DAT_100c7fc8 = 1;
-        _DAT_100c7fca = 2;
-        _DAT_100c7fcc = 0x2b11;
-        _DAT_100c7fd0 = 0x5622;
-        _DAT_100c7fd4 = 2;
-        _DAT_100c7fd6 = 8;
-        let i_var1 = _AIL_waveOutOpen(&mut local_8, 0, 0, &raw mut _DAT_100c7fc8);
+        mech_trace::gw!("1006aec6", "_DAT_100c7fc8", _DAT_100c7fc8, 1);
+        mech_trace::gw!("1006aec6", "_DAT_100c7fca", _DAT_100c7fca, 2);
+        mech_trace::gw!("1006aec6", "_DAT_100c7fcc", _DAT_100c7fcc, 0x2b11);
+        mech_trace::gw!("1006aec6", "_DAT_100c7fd0", _DAT_100c7fd0, 0x5622);
+        mech_trace::gw!("1006aec6", "_DAT_100c7fd4", _DAT_100c7fd4, 2);
+        mech_trace::gw!("1006aec6", "_DAT_100c7fd6", _DAT_100c7fd6, 8);
+        let i_var1 = mech_trace::cr!(
+            "1006aec6",
+            "_AIL_waveOutOpen",
+            _AIL_waveOutOpen(&mut local_8, 0, 0, &raw mut _DAT_100c7fc8)
+        );
         if i_var1 != 0 {
             local_8 = 0;
         }
     }
-    local_8
+    mech_trace::rt!("1006aec6", local_8)
 }

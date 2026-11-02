@@ -14,13 +14,23 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10046659() {
+    mech_trace::enter!("10046659");
     let mut local_10 = [0u8; 12];
     // SAFETY: the global and the callees are the game's own; local_10 is a
     // live buffer whose address is passed as the MCI parameter block.
     unsafe {
-        let m_var1 = mciSendCommandA(DAT_100b04b0, 0x80d, 0x100, local_10.as_mut_ptr() as u32);
+        let m_var1 = mech_trace::cr!(
+            "10046659",
+            "mciSendCommandA",
+            mciSendCommandA(
+                mech_trace::gr!("10046659", "100b04b0", DAT_100b04b0),
+                0x80d,
+                0x100,
+                local_10.as_mut_ptr() as u32
+            )
+        );
         if m_var1 != 0 {
-            FUN_1004652f();
+            mech_trace::cr!("10046659", "1004652f", FUN_1004652f());
         }
     }
 }

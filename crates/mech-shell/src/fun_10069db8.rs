@@ -16,6 +16,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10069db8() {
+    mech_trace::enter!("10069db8");
     let mut eax_tmp: u32 = 0;
     let mut edi: u32 = 0;
     // SAFETY: captures the register inputs (AL, EDI) the caller set up.
@@ -31,49 +32,83 @@ pub unsafe extern "stdcall" fn FUN_10069db8() {
         let step = (&raw mut DAT_100aa2ba).cast::<u8>();
         let start = (&raw mut DAT_100aa2bf).cast::<u8>();
 
-        let idx = p.byte_add(8).cast::<i32>().read_unaligned();
-        *buf.offset(idx as isize) = in_al;
-        let v = p.byte_add(8).cast::<i32>().read_unaligned();
-        p.byte_add(8)
-            .cast::<i32>()
-            .write_unaligned(v.wrapping_add(1));
-        let v = p.byte_add(0x20).cast::<i32>().read_unaligned();
-        p.byte_add(0x20)
-            .cast::<i32>()
-            .write_unaligned(v.wrapping_sub(1));
-        if p.byte_add(0x20).cast::<i32>().read_unaligned() == 0 {
+        let idx = mech_trace::rd!("10069db8", p.byte_add(8).cast::<i32>(), read_unaligned);
+        mech_trace::dw!("10069db8", buf.offset(idx as isize), in_al);
+        let v = mech_trace::rd!("10069db8", p.byte_add(8).cast::<i32>(), read_unaligned);
+        mech_trace::wr!(
+            "10069db8",
+            p.byte_add(8).cast::<i32>(),
+            write_unaligned,
+            v.wrapping_add(1)
+        );
+        let v = mech_trace::rd!("10069db8", p.byte_add(0x20).cast::<i32>(), read_unaligned);
+        mech_trace::wr!(
+            "10069db8",
+            p.byte_add(0x20).cast::<i32>(),
+            write_unaligned,
+            v.wrapping_sub(1)
+        );
+        if mech_trace::rd!("10069db8", p.byte_add(0x20).cast::<i32>(), read_unaligned) == 0 {
             FUN_10069881(
-                DAT_100aa2c4,
-                p.byte_add(0xc).cast::<i32>().read_unaligned(),
+                mech_trace::gr!("10069db8", "100aa2c4", DAT_100aa2c4),
+                mech_trace::rd!("10069db8", p.byte_add(0xc).cast::<i32>(), read_unaligned),
                 buf.cast::<u32>(),
-                p.byte_add(0x24).cast::<u32>().read_unaligned() as usize as *mut u8,
+                mech_trace::rd!("10069db8", p.byte_add(0x24).cast::<u32>(), read_unaligned) as usize
+                    as *mut u8,
             );
-            p.byte_add(8).cast::<u32>().write_unaligned(0);
-            let v = p.byte_add(0x24).cast::<u32>().read_unaligned();
-            p.byte_add(0x20).cast::<u32>().write_unaligned(v);
-            if p.byte_add(0x2c).read() == 0 {
-                let v = p.byte_add(0xc).cast::<i32>().read_unaligned();
-                p.byte_add(0xc)
-                    .cast::<i32>()
-                    .write_unaligned(v.wrapping_add(1));
-                if p.byte_add(0x28).cast::<i32>().read_unaligned()
-                    <= p.byte_add(0xc).cast::<i32>().read_unaligned()
+            mech_trace::wr!("10069db8", p.byte_add(8).cast::<u32>(), write_unaligned, 0);
+            let v = mech_trace::rd!("10069db8", p.byte_add(0x24).cast::<u32>(), read_unaligned);
+            mech_trace::wr!(
+                "10069db8",
+                p.byte_add(0x20).cast::<u32>(),
+                write_unaligned,
+                v
+            );
+            if mech_trace::rd!("10069db8", p.byte_add(0x2c), read) == 0 {
+                let v = mech_trace::rd!("10069db8", p.byte_add(0xc).cast::<i32>(), read_unaligned);
+                mech_trace::wr!(
+                    "10069db8",
+                    p.byte_add(0xc).cast::<i32>(),
+                    write_unaligned,
+                    v.wrapping_add(1)
+                );
+                if mech_trace::rd!("10069db8", p.byte_add(0x28).cast::<i32>(), read_unaligned)
+                    <= mech_trace::rd!("10069db8", p.byte_add(0xc).cast::<i32>(), read_unaligned)
                 {
-                    p.byte_add(0xc).cast::<u32>().write_unaligned(0);
+                    mech_trace::wr!(
+                        "10069db8",
+                        p.byte_add(0xc).cast::<u32>(),
+                        write_unaligned,
+                        0
+                    );
                 }
             } else {
-                let v = p.byte_add(0xc).cast::<i32>().read_unaligned();
-                let s = *step.add(p.byte_add(0x2d).read() as usize);
-                p.byte_add(0xc)
-                    .cast::<i32>()
-                    .write_unaligned(v.wrapping_add(s as i32));
-                if p.byte_add(0x28).cast::<i32>().read_unaligned()
-                    <= p.byte_add(0xc).cast::<i32>().read_unaligned()
+                let v = mech_trace::rd!("10069db8", p.byte_add(0xc).cast::<i32>(), read_unaligned);
+                let s = mech_trace::dr!(
+                    "10069db8",
+                    step.add(mech_trace::rd!("10069db8", p.byte_add(0x2d), read) as usize)
+                );
+                mech_trace::wr!(
+                    "10069db8",
+                    p.byte_add(0xc).cast::<i32>(),
+                    write_unaligned,
+                    v.wrapping_add(s as i32)
+                );
+                if mech_trace::rd!("10069db8", p.byte_add(0x28).cast::<i32>(), read_unaligned)
+                    <= mech_trace::rd!("10069db8", p.byte_add(0xc).cast::<i32>(), read_unaligned)
                 {
-                    let b = p.byte_add(0x2d).read();
-                    p.byte_add(0x2d).write(b.wrapping_add(1));
-                    let st = *start.add(p.byte_add(0x2d).read() as usize);
-                    p.byte_add(0xc).cast::<u32>().write_unaligned(st as u32);
+                    let b = mech_trace::rd!("10069db8", p.byte_add(0x2d), read);
+                    mech_trace::wr!("10069db8", p.byte_add(0x2d), write, b.wrapping_add(1));
+                    let st = mech_trace::dr!(
+                        "10069db8",
+                        start.add(mech_trace::rd!("10069db8", p.byte_add(0x2d), read) as usize)
+                    );
+                    mech_trace::wr!(
+                        "10069db8",
+                        p.byte_add(0xc).cast::<u32>(),
+                        write_unaligned,
+                        st as u32
+                    );
                 }
             }
         }

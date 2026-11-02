@@ -44,33 +44,81 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_100454f8() -> u32 {
+    mech_trace::enter!("100454f8");
     // SAFETY: all globals and imported functions are the game's own; the
     // bits pointer is only dereferenced after CreateDIBSection returned and
     // the original's null checks have been applied.
     unsafe {
-        if DAT_100affd0.is_null() {
-            DAT_100affd0 = CreateDIBSection(
-                DAT_100afbc0,
-                (&raw mut DAT_100c9250) as *const c_void,
-                1,
-                DAT_100b9a2c,
-                core::ptr::null_mut(),
-                0,
+        if mech_trace::gr!("100454f8", "100affd0", DAT_100affd0).is_null() {
+            mech_trace::gw!(
+                "100454f8",
+                "100affd0",
+                DAT_100affd0,
+                mech_trace::cr!(
+                    "100454f8",
+                    "CreateDIBSection",
+                    CreateDIBSection(
+                        mech_trace::gr!("100454f8", "100afbc0", DAT_100afbc0),
+                        (&raw mut DAT_100c9250) as *const c_void,
+                        1,
+                        mech_trace::gr!("100454f8", "100b9a2c", DAT_100b9a2c),
+                        core::ptr::null_mut(),
+                        0,
+                    )
+                )
             );
-            if DAT_100affd0.is_null() || (*DAT_100b9a2c).is_null() {
-                FUN_10002168(&raw mut DAT_100b0438, GetLastError());
-                return 0;
+            if mech_trace::gr!("100454f8", "100affd0", DAT_100affd0).is_null()
+                || (mech_trace::dr!(
+                    "100454f8",
+                    mech_trace::gr!("100454f8", "100b9a2c", DAT_100b9a2c)
+                ))
+                .is_null()
+            {
+                FUN_10002168(
+                    &raw mut DAT_100b0438,
+                    mech_trace::cr!("100454f8", "GetLastError", GetLastError()),
+                );
+                return mech_trace::rt!("100454f8", 0);
             }
-            DAT_100b9d30 = *DAT_100b9a2c;
-            DAT_10160bf0 = SelectObject(DAT_100affcc, DAT_100affd0);
+            mech_trace::gw!(
+                "100454f8",
+                "100b9d30",
+                DAT_100b9d30,
+                mech_trace::dr!(
+                    "100454f8",
+                    mech_trace::gr!("100454f8", "100b9a2c", DAT_100b9a2c)
+                )
+            );
+            mech_trace::gw!(
+                "100454f8",
+                "10160bf0",
+                DAT_10160bf0,
+                mech_trace::cr!(
+                    "100454f8",
+                    "SelectObject",
+                    SelectObject(
+                        mech_trace::gr!("100454f8", "100affcc", DAT_100affcc),
+                        mech_trace::gr!("100454f8", "100affd0", DAT_100affd0)
+                    )
+                )
+            );
         } else {
-            DAT_10160bec = SetDIBColorTable(
-                DAT_100affcc,
-                0,
-                0x100,
-                (&raw mut DAT_100afbc8) as *const c_void,
+            mech_trace::gw!(
+                "100454f8",
+                "10160bec",
+                DAT_10160bec,
+                mech_trace::cr!(
+                    "100454f8",
+                    "SetDIBColorTable",
+                    SetDIBColorTable(
+                        mech_trace::gr!("100454f8", "100affcc", DAT_100affcc),
+                        0,
+                        0x100,
+                        (&raw mut DAT_100afbc8) as *const c_void,
+                    )
+                )
             );
         }
-        1
+        mech_trace::rt!("100454f8", 1)
     }
 }

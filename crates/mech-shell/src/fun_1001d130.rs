@@ -23,29 +23,64 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1001d130(param_1: i32) {
+    mech_trace::enter!("1001d130", param_1);
     if param_1 != 0 {
         // SAFETY: param_1 points at the caller's structure; the callees and
         // globals are the game's own, used in the original's order.
         unsafe {
             let p = param_1 as u32 as *mut u8;
-            if -1 < p.byte_add(0x24).cast::<i32>().read_unaligned() {
-                FUN_10010d80(DAT_10090078);
-                let item = FUN_10018060(
-                    DAT_100a67a4 as i32,
-                    p.byte_add(0x24).cast::<i32>().read_unaligned(),
+            if -1 < mech_trace::rd!("1001d130", p.byte_add(0x24).cast::<i32>(), read_unaligned) {
+                mech_trace::cr!(
+                    "1001d130",
+                    "10010d80",
+                    FUN_10010d80(mech_trace::gr!("1001d130", "10090078", DAT_10090078))
                 );
-                let field = (item as usize as *const u8)
-                    .byte_add(0x24)
-                    .cast::<i32>()
-                    .read_unaligned();
-                let i_var1 = FUN_1000ad70(DAT_100a6798 as i32, field);
+                let item = mech_trace::cr!(
+                    "1001d130",
+                    "10018060",
+                    FUN_10018060(
+                        mech_trace::gr!("1001d130", "100a67a4", DAT_100a67a4) as i32,
+                        mech_trace::rd!("1001d130", p.byte_add(0x24).cast::<i32>(), read_unaligned),
+                    )
+                );
+                let field = mech_trace::rd!(
+                    "1001d130",
+                    (item as usize as *const u8).byte_add(0x24).cast::<i32>(),
+                    read_unaligned
+                );
+                let i_var1 = mech_trace::cr!(
+                    "1001d130",
+                    "1000ad70",
+                    FUN_1000ad70(
+                        mech_trace::gr!("1001d130", "100a6798", DAT_100a6798) as i32,
+                        field
+                    )
+                );
                 if i_var1 == 0 {
-                    FUN_1001d1b0((&raw mut DAT_100901f4).cast::<i8>());
-                    p.byte_add(0x2c).cast::<u32>().write_unaligned(2);
+                    mech_trace::cr!(
+                        "1001d130",
+                        "1001d1b0",
+                        FUN_1001d1b0((&raw mut DAT_100901f4).cast::<i8>())
+                    );
+                    mech_trace::wr!(
+                        "1001d130",
+                        p.byte_add(0x2c).cast::<u32>(),
+                        write_unaligned,
+                        2
+                    );
                     return;
                 }
-                FUN_1001d1b0(i_var1.wrapping_add(0x81c) as u32 as *mut i8);
-                p.byte_add(0x2c).cast::<u32>().write_unaligned(2);
+                mech_trace::cr!(
+                    "1001d130",
+                    "1001d1b0",
+                    FUN_1001d1b0(i_var1.wrapping_add(0x81c) as u32 as *mut i8)
+                );
+                mech_trace::wr!(
+                    "1001d130",
+                    p.byte_add(0x2c).cast::<u32>(),
+                    write_unaligned,
+                    2
+                );
             }
         }
     }

@@ -24,6 +24,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1006ae47() {
+    mech_trace::enter!("1006ae47");
     // SAFETY: all callees and globals are the game's own; the string global
     // is the config name buffer and the heap handle/pointer are read by value.
     unsafe {
@@ -31,10 +32,22 @@ pub unsafe extern "stdcall" fn FUN_1006ae47() {
         FUN_1004652f();
         FUN_1003c67c();
         FUN_1000278e();
-        FUN_10047fde(
-            (&raw mut DAT_100b3cb8).cast::<i8>(),
-            DAT_100b3c9c as *mut core::ffi::c_void,
+        mech_trace::cr!(
+            "1006ae47",
+            "10047fde",
+            FUN_10047fde(
+                (&raw mut DAT_100b3cb8).cast::<i8>(),
+                mech_trace::gr!("1006ae47", "100b3c9c", DAT_100b3c9c) as *mut core::ffi::c_void,
+            )
         );
-        HeapFree(DAT_100adf74, 1, DAT_100b3c9c as *mut core::ffi::c_void);
+        mech_trace::cr!(
+            "1006ae47",
+            "HeapFree",
+            HeapFree(
+                mech_trace::gr!("1006ae47", "100adf74", DAT_100adf74),
+                1,
+                mech_trace::gr!("1006ae47", "100b3c9c", DAT_100b3c9c) as *mut core::ffi::c_void
+            )
+        );
     }
 }

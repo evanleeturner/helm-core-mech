@@ -46,6 +46,7 @@ macro_rules! copy_loop {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1000cb60() {
+    mech_trace::enter!("1000cb60");
     // SAFETY: the globals and callees are the game's own; the collection
     // pointers held in the globals point at live collection objects whose
     // count lives at offset 4, read where the original reads it.
@@ -57,9 +58,23 @@ pub unsafe extern "stdcall" fn FUN_1000cb60() {
         let mut i_var4: i32 = 0;
         if 0 < count!(DAT_100a67c8) {
             loop {
-                let pi_var2 = FUN_10018060(DAT_100a67c8 as i32, i_var4) as *const i32;
-                if pi_var2.read_unaligned() != 9 {
-                    FUN_10017df0(DAT_100a67b4, pi_var2 as u32);
+                let pi_var2 = mech_trace::cr!(
+                    "1000cb60",
+                    "10018060",
+                    FUN_10018060(
+                        mech_trace::gr!("1000cb60", "100a67c8", DAT_100a67c8) as i32,
+                        i_var4
+                    )
+                ) as *const i32;
+                if mech_trace::rd!("1000cb60", pi_var2, read_unaligned) != 9 {
+                    mech_trace::cr!(
+                        "1000cb60",
+                        "10017df0",
+                        FUN_10017df0(
+                            mech_trace::gr!("1000cb60", "100a67b4", DAT_100a67b4),
+                            pi_var2 as u32
+                        )
+                    );
                 }
                 i_var4 = i_var4.wrapping_add(1);
                 if !(i_var4 < count!(DAT_100a67c8)) {

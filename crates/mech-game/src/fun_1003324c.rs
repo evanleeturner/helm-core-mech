@@ -15,18 +15,36 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1003324c() -> u32 {
+    mech_trace::enter!("1003324c");
     // SAFETY: the globals and the callee are the game's own; the table at
     // DAT_10168490 is read at the index the original uses.
     unsafe {
-        if DAT_100adaac < DAT_100adaa8 {
-            let p = (&raw mut DAT_10168490)
-                .byte_add(DAT_100adaac.wrapping_mul(4) as usize)
-                .cast::<i32>();
-            let local_c = FUN_10050a68(p.read_unaligned());
-            DAT_100adaac = DAT_100adaac.wrapping_add(1);
-            local_c
-        } else {
-            0
-        }
+        mech_trace::rt!(
+            "1003324c",
+            if mech_trace::gr!("1003324c", "100adaac", DAT_100adaac)
+                < mech_trace::gr!("1003324c", "100adaa8", DAT_100adaa8)
+            {
+                let p = (&raw mut DAT_10168490)
+                    .byte_add(
+                        mech_trace::gr!("1003324c", "100adaac", DAT_100adaac).wrapping_mul(4)
+                            as usize,
+                    )
+                    .cast::<i32>();
+                let local_c = mech_trace::cr!(
+                    "1003324c",
+                    "10050a68",
+                    FUN_10050a68(mech_trace::rd!("1003324c", p, read_unaligned))
+                );
+                mech_trace::gw!(
+                    "1003324c",
+                    "100adaac",
+                    DAT_100adaac,
+                    mech_trace::gr!("1003324c", "100adaac", DAT_100adaac).wrapping_add(1)
+                );
+                local_c
+            } else {
+                0
+            }
+        )
     }
 }

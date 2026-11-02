@@ -23,18 +23,27 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10002110(format: *const i8) {
+    mech_trace::enter!("10002110", format);
     // SAFETY: the globals and callees are the game's own; the variadic
     // arguments sit on the stack directly above `format`, so the address of
     // the next 4-byte slot is the va_list the original passes.
     unsafe {
         let args = (&raw const format).add(1) as *mut i8;
-        __vsnprintf(&raw mut DAT_10218080 as *mut i8, 0x100, format, args);
+        mech_trace::cr!(
+            "10002110",
+            "__vsnprintf",
+            __vsnprintf(&raw mut DAT_10218080 as *mut i8, 0x100, format, args)
+        );
         OutputDebugStringA(&raw const DAT_10218080 as *const i8);
-        MessageBoxA(
-            DAT_100adf6c,
-            &raw const DAT_10218080 as *const i8,
-            &raw const s_Mecenaries__Legacy_Message_100a4060 as *const i8,
-            0x40,
+        mech_trace::cr!(
+            "10002110",
+            "MessageBoxA",
+            MessageBoxA(
+                mech_trace::gr!("10002110", "100adf6c", DAT_100adf6c),
+                &raw const DAT_10218080 as *const i8,
+                &raw const s_Mecenaries__Legacy_Message_100a4060 as *const i8,
+                0x40,
+            )
         );
     }
 }

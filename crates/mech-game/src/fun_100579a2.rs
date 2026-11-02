@@ -8,23 +8,24 @@ unsafe extern "C" {
 #[inline(always)]
 unsafe fn rd(a: u32) -> u8 {
     // SAFETY: the address is one the original reads; the caller guarantees it is valid.
-    unsafe { (a as *const u8).read() }
+    unsafe { mech_trace::rd!("100579a2", (a as *const u8), read) }
 }
 
 #[inline(always)]
 unsafe fn wr(a: u32, v: u8) {
     // SAFETY: the address is one the original writes; the caller guarantees it is valid.
-    unsafe { (a as *mut u8).write(v) }
+    unsafe { mech_trace::wr!("100579a2", (a as *mut u8), write, v) }
 }
 
 #[inline(always)]
 unsafe fn tb(i: u8) -> u8 {
     // SAFETY: the table is the game's own 256-byte array and i is at most 255.
     unsafe {
-        (&raw const DAT_100b2b10)
-            .cast::<u8>()
-            .add(i as usize)
-            .read()
+        mech_trace::rd!(
+            "100579a2",
+            (&raw const DAT_100b2b10).cast::<u8>().add(i as usize),
+            read
+        )
     }
 }
 
@@ -43,18 +44,31 @@ pub unsafe extern "C" fn FUN_100579a2(
     param_3: i32,
     param_4: i32,
 ) -> u32 {
+    mech_trace::enter!("100579a2", param_1, param_2, param_3, param_4);
     // SAFETY: all pointers and addresses are the game's own buffers, accessed
     // exactly where the original accesses them.
     unsafe {
-        let base = param_1.read() as u32;
-        let mut i_var2 = ((base.wrapping_add(4)) as *const i32).read_unaligned();
+        let base = mech_trace::rd!("100579a2", param_1, read) as u32;
+        let mut i_var2 = mech_trace::rd!(
+            "100579a2",
+            ((base.wrapping_add(4)) as *const i32),
+            read_unaligned
+        );
         let i_var5 = i_var2.wrapping_add(1);
         if i_var5 != 0 && -2 < i_var2 {
-            i_var2 = ((param_2 as u32).wrapping_add(0xc) as *const i32).read_unaligned();
-            let a0 = (base as *const i32).read_unaligned() as u32;
-            let a1 = ((param_2 as u32).wrapping_add(8) as *const i32).read_unaligned() as u32;
-            let p1_1 = param_1.byte_add(4).read_unaligned() as u32;
-            let p1_2 = param_1.byte_add(8).read_unaligned() as u32;
+            i_var2 = mech_trace::rd!(
+                "100579a2",
+                ((param_2 as u32).wrapping_add(0xc) as *const i32),
+                read_unaligned
+            );
+            let a0 = mech_trace::rd!("100579a2", (base as *const i32), read_unaligned) as u32;
+            let a1 = mech_trace::rd!(
+                "100579a2",
+                ((param_2 as u32).wrapping_add(8) as *const i32),
+                read_unaligned
+            ) as u32;
+            let p1_1 = mech_trace::rd!("100579a2", param_1.byte_add(4), read_unaligned) as u32;
+            let p1_2 = mech_trace::rd!("100579a2", param_1.byte_add(8), read_unaligned) as u32;
             let mut p12: u32 = a0
                 .wrapping_add(a1)
                 .wrapping_add(param_3 as u32)
@@ -65,9 +79,12 @@ pub unsafe extern "C" fn FUN_100579a2(
                         .wrapping_add(p1_2)
                         .wrapping_mul(i_var5 as u32),
                 );
-            let i_var6 = ((param_2 as u32).wrapping_add(0x14) as *const i32)
-                .read_unaligned()
-                .wrapping_add(1);
+            let i_var6 = mech_trace::rd!(
+                "100579a2",
+                ((param_2 as u32).wrapping_add(0x14) as *const i32),
+                read_unaligned
+            )
+            .wrapping_add(1);
             let mut i_var7 = i_var6.wrapping_sub(i_var2);
             if i_var7 != 0 && i_var2 <= i_var6 {
                 let mut pb: u32 = (param_2 as u32).wrapping_add(0x18);
@@ -170,7 +187,12 @@ pub unsafe extern "C" fn FUN_100579a2(
                                     v9 = (v9 & 0xff) >> 2;
                                     while v9 != 0 {
                                         let t: u32 = (v3 << 8) | u1w;
-                                        (p13 as *mut u32).write_unaligned(t);
+                                        mech_trace::wr!(
+                                            "100579a2",
+                                            (p13 as *mut u32),
+                                            write_unaligned,
+                                            t
+                                        );
                                         p13 = p13.wrapping_add(4);
                                         v9 = v9.wrapping_sub(1);
                                     }
@@ -201,6 +223,6 @@ pub unsafe extern "C" fn FUN_100579a2(
                 }
             }
         }
-        0
+        mech_trace::rt!("100579a2", 0)
     }
 }

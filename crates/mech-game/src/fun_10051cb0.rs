@@ -20,18 +20,19 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10051cb0(param_1: *mut i8) -> u32 {
+    mech_trace::enter!("10051cb0", param_1);
     let mut local_8: u32 = 1;
     // SAFETY: the globals and the callee are the game's own; DAT_101f52c8
     // points at an array of at least four u32 values.
     unsafe {
-        if !param_1.is_null() && DAT_100b09dc == 3 {
-            let p = DAT_101f52c8;
-            let a = p.read_unaligned();
-            let b = p.byte_add(4).read_unaligned();
-            let c = p.byte_add(12).read_unaligned();
-            local_8 = FUN_10064ad0(param_1, a, b, c, 6);
-            DAT_100b09dc = 0;
+        if !param_1.is_null() && mech_trace::gr!("10051cb0", "100b09dc", DAT_100b09dc) == 3 {
+            let p = mech_trace::gr!("10051cb0", "101f52c8", DAT_101f52c8);
+            let a = mech_trace::rd!("10051cb0", p, read_unaligned);
+            let b = mech_trace::rd!("10051cb0", p.byte_add(4), read_unaligned);
+            let c = mech_trace::rd!("10051cb0", p.byte_add(12), read_unaligned);
+            local_8 = mech_trace::cr!("10051cb0", "10064ad0", FUN_10064ad0(param_1, a, b, c, 6));
+            mech_trace::gw!("10051cb0", "100b09dc", DAT_100b09dc, 0);
         }
     }
-    local_8
+    mech_trace::rt!("10051cb0", local_8)
 }

@@ -8,10 +8,12 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10037fd0() {
+    mech_trace::enter!("10037fd0");
     // SAFETY: the global holds the game's own function pointer (an import
     // slot for joyGetNumDevs); it is called with no arguments as the original does.
     unsafe {
-        let f: unsafe extern "stdcall" fn() = core::mem::transmute(DAT_1021a5cc);
-        f();
+        let f: unsafe extern "stdcall" fn() =
+            core::mem::transmute(mech_trace::gr!("10037fd0", "1021a5cc", DAT_1021a5cc));
+        mech_trace::cr!("10037fd0", "ind", f());
     }
 }

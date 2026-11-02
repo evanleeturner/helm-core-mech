@@ -31,35 +31,60 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1000e18d(param_1: *mut i32) {
+    mech_trace::enter!("1000e18d", param_1);
     let mut buf: [u8; 16] = [0; 16];
     let mut local_8: u32 = 0;
     let local_c: *mut i16 = buf.as_mut_ptr().cast::<i16>();
     // SAFETY: buf is a 16-byte local mirroring the original stack frame
     // (short at 0, 14 chars after it); the globals and callees are the game's own.
     unsafe {
-        local_c.write_unaligned(-1);
-        _strncpy(
-            buf.as_mut_ptr().add(2).cast::<i8>(),
-            (&raw mut DAT_100a75f0).cast::<i8>(),
-            0xc,
+        mech_trace::wr!("1000e18d", local_c, write_unaligned, -1);
+        mech_trace::cr!(
+            "1000e18d",
+            "_strncpy",
+            _strncpy(
+                buf.as_mut_ptr().add(2).cast::<i8>(),
+                (&raw mut DAT_100a75f0).cast::<i8>(),
+                0xc,
+            )
         );
-        buf.as_mut_ptr().add(14).write(0);
-        let lp_mem = FUN_1007bbed(
-            local_c,
-            DAT_100af0d0 as *mut i32,
-            DAT_100af13c,
-            2,
-            &raw mut local_8,
-            core::ptr::null_mut(),
+        mech_trace::wr!("1000e18d", buf.as_mut_ptr().add(14), write, 0);
+        let lp_mem = mech_trace::cr!(
+            "1000e18d",
+            "1007bbed",
+            FUN_1007bbed(
+                local_c,
+                mech_trace::gr!("1000e18d", "100af0d0", DAT_100af0d0) as *mut i32,
+                mech_trace::gr!("1000e18d", "100af13c", DAT_100af13c),
+                2,
+                &raw mut local_8,
+                core::ptr::null_mut(),
+            )
         );
         if !lp_mem.is_null() {
-            FUN_1000e242(param_1, lp_mem as i32, local_8 as i32);
-            if local_c.read_unaligned() == -1 {
-                HeapFree(DAT_100adf74, 1, lp_mem.cast::<u8>());
+            mech_trace::cr!(
+                "1000e18d",
+                "1000e242",
+                FUN_1000e242(param_1, lp_mem as i32, local_8 as i32)
+            );
+            if mech_trace::rd!("1000e18d", local_c, read_unaligned) == -1 {
+                mech_trace::cr!(
+                    "1000e18d",
+                    "HeapFree",
+                    HeapFree(
+                        mech_trace::gr!("1000e18d", "100adf74", DAT_100adf74),
+                        1,
+                        lp_mem.cast::<u8>()
+                    )
+                );
             } else {
-                FUN_1008664f(
-                    local_c.read_unaligned() as i32 as u32,
-                    DAT_100af0d0 as *mut i32,
+                mech_trace::cr!(
+                    "1000e18d",
+                    "1008664f",
+                    FUN_1008664f(
+                        mech_trace::rd!("1000e18d", local_c, read_unaligned) as i32 as u32,
+                        mech_trace::gr!("1000e18d", "100af0d0", DAT_100af0d0) as *mut i32,
+                    )
                 );
             }
         }

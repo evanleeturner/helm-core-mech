@@ -19,11 +19,12 @@ fn fin(v: u64) -> i32 {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1008941c(param_1: *mut i32, param_2: *mut i32, param_3: *mut i32) {
+    mech_trace::enter!("1008941c", param_1, param_2, param_3);
     // SAFETY: the caller supplies three 3x3 i32 matrices; all inputs are read
     // before any output is written, as in the original.
     unsafe {
-        let a = |i: usize| param_1.add(i).read_unaligned();
-        let b = |i: usize| param_2.add(i).read_unaligned();
+        let a = |i: usize| mech_trace::rd!("1008941c", param_1.add(i), read_unaligned);
+        let b = |i: usize| mech_trace::rd!("1008941c", param_2.add(i), read_unaligned);
 
         let l1 = acc(a(0), a(1), a(2), b(0), b(3), b(6));
         let l2 = acc(a(0), a(1), a(2), b(1), b(4), b(7));
@@ -35,14 +36,14 @@ pub unsafe extern "C" fn FUN_1008941c(param_1: *mut i32, param_2: *mut i32, para
         let l8 = acc(a(6), a(7), a(8), b(1), b(4), b(7));
         let l9 = acc(a(6), a(7), a(8), b(2), b(5), b(8));
 
-        param_3.write_unaligned(fin(l1));
-        param_3.add(1).write_unaligned(fin(l2));
-        param_3.add(3).write_unaligned(fin(l4));
-        param_3.add(4).write_unaligned(fin(l5));
-        param_3.add(6).write_unaligned(fin(l7));
-        param_3.add(7).write_unaligned(fin(l8));
-        param_3.add(2).write_unaligned(fin(l3));
-        param_3.add(5).write_unaligned(fin(l6));
-        param_3.add(8).write_unaligned(fin(l9));
+        mech_trace::wr!("1008941c", param_3, write_unaligned, fin(l1));
+        mech_trace::wr!("1008941c", param_3.add(1), write_unaligned, fin(l2));
+        mech_trace::wr!("1008941c", param_3.add(3), write_unaligned, fin(l4));
+        mech_trace::wr!("1008941c", param_3.add(4), write_unaligned, fin(l5));
+        mech_trace::wr!("1008941c", param_3.add(6), write_unaligned, fin(l7));
+        mech_trace::wr!("1008941c", param_3.add(7), write_unaligned, fin(l8));
+        mech_trace::wr!("1008941c", param_3.add(2), write_unaligned, fin(l3));
+        mech_trace::wr!("1008941c", param_3.add(5), write_unaligned, fin(l6));
+        mech_trace::wr!("1008941c", param_3.add(8), write_unaligned, fin(l9));
     }
 }

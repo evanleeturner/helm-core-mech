@@ -13,6 +13,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1000d1f0(param_1: i32, param_2: *mut u8, param_3: u32, param_4: u32) {
+    mech_trace::enter!("1000d1f0", param_1, param_2, param_3, param_4);
     // SAFETY: the global and the callee are the game's own; the computed
     // address is only passed on, never dereferenced here.
     unsafe {

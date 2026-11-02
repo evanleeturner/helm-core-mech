@@ -15,15 +15,20 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_100463c4() {
+    mech_trace::enter!("100463c4");
     let mut stop_params: MaybeUninit<u32> = MaybeUninit::uninit();
     // SAFETY: the global and the MCI import are the game's own; the
     // parameter block lives on this stack frame for the whole call.
     unsafe {
-        mciSendCommandA(
-            DAT_100b04b0,
-            0x808,
-            0,
-            stop_params.as_mut_ptr() as usize as u32,
+        mech_trace::cr!(
+            "100463c4",
+            "mciSendCommandA",
+            mciSendCommandA(
+                mech_trace::gr!("100463c4", "100b04b0", DAT_100b04b0),
+                0x808,
+                0,
+                stop_params.as_mut_ptr() as usize as u32,
+            )
         );
     }
 }

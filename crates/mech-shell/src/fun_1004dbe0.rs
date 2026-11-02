@@ -17,27 +17,40 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1004dbe0() -> u32 {
+    mech_trace::enter!("1004dbe0");
     // SAFETY: the globals and callees are the game's own; DAT_10083508 is a
     // base pointer whose +0x23bb field is read unaligned as the original does.
     unsafe {
-        let i_var2 = DAT_1009b3c4;
-        let i_var1 = ((DAT_10083508 as usize).wrapping_add(0x23bb) as *const i32).read_unaligned();
+        let i_var2 = mech_trace::gr!("1004dbe0", "1009b3c4", DAT_1009b3c4);
+        let i_var1 = mech_trace::rd!(
+            "1004dbe0",
+            ((mech_trace::gr!("1004dbe0", "10083508", DAT_10083508) as usize).wrapping_add(0x23bb)
+                as *const i32),
+            read_unaligned
+        );
         if i_var1 == 0 {
-            if DAT_1009b3c4 == 0 {
+            if mech_trace::gr!("1004dbe0", "1009b3c4", DAT_1009b3c4) == 0 {
                 FUN_10016b60(0x1004ec50);
-                let u_var3 =
-                    FUN_1000e970((&raw mut s_mdeath_1009bc40).cast::<u8>(), 0xc00a, 0xc00a);
-                DAT_1009b3c4 = 1;
-                return u_var3 & 0xffffff00;
+                let u_var3 = mech_trace::cr!(
+                    "1004dbe0",
+                    "1000e970",
+                    FUN_1000e970((&raw mut s_mdeath_1009bc40).cast::<u8>(), 0xc00a, 0xc00a)
+                );
+                mech_trace::gw!("1004dbe0", "1009b3c4", DAT_1009b3c4, 1);
+                return mech_trace::rt!("1004dbe0", u_var3 & 0xffffff00);
             }
-            DAT_1009b3c4 = 0;
-            return ((i_var2 as u32) & 0xffffff00) | 1;
+            mech_trace::gw!("1004dbe0", "1009b3c4", DAT_1009b3c4, 0);
+            return mech_trace::rt!("1004dbe0", ((i_var2 as u32) & 0xffffff00) | 1);
         }
         if i_var1 != 1 {
-            return ((i_var1 as u32) & 0xffffff00) | 1;
+            return mech_trace::rt!("1004dbe0", ((i_var1 as u32) & 0xffffff00) | 1);
         }
         FUN_10016b60(0x1004ec50);
-        let u_var3 = FUN_1000e970((&raw mut s_mdeath_1009bc38).cast::<u8>(), 0xc02b, 0xc02b);
-        u_var3 & 0xffffff00
+        let u_var3 = mech_trace::cr!(
+            "1004dbe0",
+            "1000e970",
+            FUN_1000e970((&raw mut s_mdeath_1009bc38).cast::<u8>(), 0xc02b, 0xc02b)
+        );
+        mech_trace::rt!("1004dbe0", u_var3 & 0xffffff00)
     }
 }

@@ -21,78 +21,126 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1003431f(param_1: *mut i32) {
+    mech_trace::enter!("1003431f", param_1);
     let mut local_c: i32 = 0;
     let mut local_8: i32 = 0;
     // SAFETY: param_1 points at the caller's struct of at least 8 ints; the
     // callees and globals are the game's own, called and written in the
     // original order.
     unsafe {
-        let p2 = param_1.add(2).read_unaligned();
-        let p3 = param_1.add(3).read_unaligned();
-        let p5 = param_1.add(5).read_unaligned();
-        let p7 = param_1.add(7).read_unaligned();
+        let p2 = mech_trace::rd!("1003431f", param_1.add(2), read_unaligned);
+        let p3 = mech_trace::rd!("1003431f", param_1.add(3), read_unaligned);
+        let p5 = mech_trace::rd!("1003431f", param_1.add(5), read_unaligned);
+        let p7 = mech_trace::rd!("1003431f", param_1.add(7), read_unaligned);
         let _ = (p2, p3, p5, p7);
 
-        FUN_10034268(
-            &raw mut local_8,
-            &raw mut local_c,
-            param_1.add(2).read_unaligned().wrapping_neg(),
-            param_1.add(3).read_unaligned().wrapping_neg(),
-            param_1.add(5).read_unaligned(),
+        mech_trace::cr!(
+            "1003431f",
+            "10034268",
+            FUN_10034268(
+                &raw mut local_8,
+                &raw mut local_c,
+                mech_trace::rd!("1003431f", param_1.add(2), read_unaligned).wrapping_neg(),
+                mech_trace::rd!("1003431f", param_1.add(3), read_unaligned).wrapping_neg(),
+                mech_trace::rd!("1003431f", param_1.add(5), read_unaligned),
+            )
         );
-        DAT_101eb480 = param_1.read_unaligned().wrapping_add(local_8) as u32;
-        DAT_101eb484 = param_1.add(1).read_unaligned().wrapping_add(local_c) as u32;
-
-        FUN_10034268(
-            &raw mut local_8,
-            &raw mut local_c,
-            param_1.add(2).read_unaligned(),
-            param_1.add(3).read_unaligned().wrapping_neg(),
-            param_1.add(5).read_unaligned(),
+        mech_trace::gw!(
+            "1003431f",
+            "101eb480",
+            DAT_101eb480,
+            mech_trace::rd!("1003431f", param_1, read_unaligned).wrapping_add(local_8) as u32
         );
-        FUN_10019df1(
-            param_1.read_unaligned().wrapping_add(local_8),
-            param_1.add(1).read_unaligned().wrapping_add(local_c),
-            param_1.add(7).read_unaligned(),
-        );
-
-        FUN_10034268(
-            &raw mut local_8,
-            &raw mut local_c,
-            param_1.add(2).read_unaligned(),
-            param_1.add(3).read_unaligned(),
-            param_1.add(5).read_unaligned(),
-        );
-        FUN_10019df1(
-            param_1.read_unaligned().wrapping_add(local_8),
-            param_1.add(1).read_unaligned().wrapping_add(local_c),
-            param_1.add(7).read_unaligned(),
+        mech_trace::gw!(
+            "1003431f",
+            "101eb484",
+            DAT_101eb484,
+            mech_trace::rd!("1003431f", param_1.add(1), read_unaligned).wrapping_add(local_c)
+                as u32
         );
 
-        FUN_10034268(
-            &raw mut local_8,
-            &raw mut local_c,
-            param_1.add(2).read_unaligned().wrapping_neg(),
-            param_1.add(3).read_unaligned(),
-            param_1.add(5).read_unaligned(),
+        mech_trace::cr!(
+            "1003431f",
+            "10034268",
+            FUN_10034268(
+                &raw mut local_8,
+                &raw mut local_c,
+                mech_trace::rd!("1003431f", param_1.add(2), read_unaligned),
+                mech_trace::rd!("1003431f", param_1.add(3), read_unaligned).wrapping_neg(),
+                mech_trace::rd!("1003431f", param_1.add(5), read_unaligned),
+            )
         );
-        FUN_10019df1(
-            param_1.read_unaligned().wrapping_add(local_8),
-            param_1.add(1).read_unaligned().wrapping_add(local_c),
-            param_1.add(7).read_unaligned(),
+        mech_trace::cr!(
+            "1003431f",
+            "10019df1",
+            FUN_10019df1(
+                mech_trace::rd!("1003431f", param_1, read_unaligned).wrapping_add(local_8),
+                mech_trace::rd!("1003431f", param_1.add(1), read_unaligned).wrapping_add(local_c),
+                mech_trace::rd!("1003431f", param_1.add(7), read_unaligned),
+            )
         );
 
-        FUN_10034268(
-            &raw mut local_8,
-            &raw mut local_c,
-            param_1.add(2).read_unaligned().wrapping_neg(),
-            param_1.add(3).read_unaligned().wrapping_neg(),
-            param_1.add(5).read_unaligned(),
+        mech_trace::cr!(
+            "1003431f",
+            "10034268",
+            FUN_10034268(
+                &raw mut local_8,
+                &raw mut local_c,
+                mech_trace::rd!("1003431f", param_1.add(2), read_unaligned),
+                mech_trace::rd!("1003431f", param_1.add(3), read_unaligned),
+                mech_trace::rd!("1003431f", param_1.add(5), read_unaligned),
+            )
         );
-        FUN_10019df1(
-            param_1.read_unaligned().wrapping_add(local_8),
-            param_1.add(1).read_unaligned().wrapping_add(local_c),
-            param_1.add(7).read_unaligned(),
+        mech_trace::cr!(
+            "1003431f",
+            "10019df1",
+            FUN_10019df1(
+                mech_trace::rd!("1003431f", param_1, read_unaligned).wrapping_add(local_8),
+                mech_trace::rd!("1003431f", param_1.add(1), read_unaligned).wrapping_add(local_c),
+                mech_trace::rd!("1003431f", param_1.add(7), read_unaligned),
+            )
+        );
+
+        mech_trace::cr!(
+            "1003431f",
+            "10034268",
+            FUN_10034268(
+                &raw mut local_8,
+                &raw mut local_c,
+                mech_trace::rd!("1003431f", param_1.add(2), read_unaligned).wrapping_neg(),
+                mech_trace::rd!("1003431f", param_1.add(3), read_unaligned),
+                mech_trace::rd!("1003431f", param_1.add(5), read_unaligned),
+            )
+        );
+        mech_trace::cr!(
+            "1003431f",
+            "10019df1",
+            FUN_10019df1(
+                mech_trace::rd!("1003431f", param_1, read_unaligned).wrapping_add(local_8),
+                mech_trace::rd!("1003431f", param_1.add(1), read_unaligned).wrapping_add(local_c),
+                mech_trace::rd!("1003431f", param_1.add(7), read_unaligned),
+            )
+        );
+
+        mech_trace::cr!(
+            "1003431f",
+            "10034268",
+            FUN_10034268(
+                &raw mut local_8,
+                &raw mut local_c,
+                mech_trace::rd!("1003431f", param_1.add(2), read_unaligned).wrapping_neg(),
+                mech_trace::rd!("1003431f", param_1.add(3), read_unaligned).wrapping_neg(),
+                mech_trace::rd!("1003431f", param_1.add(5), read_unaligned),
+            )
+        );
+        mech_trace::cr!(
+            "1003431f",
+            "10019df1",
+            FUN_10019df1(
+                mech_trace::rd!("1003431f", param_1, read_unaligned).wrapping_add(local_8),
+                mech_trace::rd!("1003431f", param_1.add(1), read_unaligned).wrapping_add(local_c),
+                mech_trace::rd!("1003431f", param_1.add(7), read_unaligned),
+            )
         );
     }
 }

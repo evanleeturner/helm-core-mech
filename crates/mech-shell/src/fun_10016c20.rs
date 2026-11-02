@@ -30,34 +30,48 @@ unsafe extern "fastcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10016c20() {
+    mech_trace::enter!("10016c20");
     // SAFETY: the globals, callbacks and callees are the game's own memory
     // and code; the callbacks are called with the arguments the original passes.
     unsafe {
-        if !DAT_1008edfc.is_null() {
-            let f: unsafe extern "C" fn(i32) = core::mem::transmute(DAT_1008edfc);
-            f(1);
+        if !mech_trace::gr!("10016c20", "1008edfc", DAT_1008edfc).is_null() {
+            let f: unsafe extern "C" fn(i32) =
+                core::mem::transmute(mech_trace::gr!("10016c20", "1008edfc", DAT_1008edfc));
+            mech_trace::cr!("10016c20", "ind", f(1));
             return;
         }
-        if !DAT_1008edf4.is_null() {
+        if !mech_trace::gr!("10016c20", "1008edf4", DAT_1008edf4).is_null() {
             let f: unsafe extern "C" fn(u32, *mut u8, *mut u8, u32) =
-                core::mem::transmute(DAT_1008edf4);
-            f(
-                DAT_100a6734,
-                (&raw mut DAT_100b0f50).cast::<u8>(),
-                (&raw mut DAT_100b0f44).cast::<u8>(),
-                DAT_100b0f4c,
+                core::mem::transmute(mech_trace::gr!("10016c20", "1008edf4", DAT_1008edf4));
+            mech_trace::cr!(
+                "10016c20",
+                "ind",
+                f(
+                    mech_trace::gr!("10016c20", "100a6734", DAT_100a6734),
+                    (&raw mut DAT_100b0f50).cast::<u8>(),
+                    (&raw mut DAT_100b0f44).cast::<u8>(),
+                    mech_trace::gr!("10016c20", "100b0f4c", DAT_100b0f4c),
+                )
             );
-            FUN_1000ee30();
+            mech_trace::cr!("10016c20", "1000ee30", FUN_1000ee30());
             return;
         }
-        if DAT_1008edf8 == 0 {
+        if mech_trace::gr!("10016c20", "1008edf8", DAT_1008edf8) == 0 {
             return;
         }
-        let check_result = FUN_1005f850(DAT_1008ee00);
+        let check_result = mech_trace::cr!(
+            "10016c20",
+            "1005f850",
+            FUN_1005f850(mech_trace::gr!("10016c20", "1008ee00", DAT_1008ee00))
+        );
         if !check_result {
-            FUN_10016bd0();
+            mech_trace::cr!("10016c20", "10016bd0", FUN_10016bd0());
             return;
         }
-        FUN_1005edd0(DAT_100a6730);
+        mech_trace::cr!(
+            "10016c20",
+            "1005edd0",
+            FUN_1005edd0(mech_trace::gr!("10016c20", "100a6730", DAT_100a6730))
+        );
     }
 }

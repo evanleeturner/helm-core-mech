@@ -8,32 +8,54 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1002a132(param_1: i32) -> i32 {
+    mech_trace::enter!("1002a132", param_1);
     // SAFETY: param_1 points at the caller's game object; the offsets read
     // are the original's, and the global is the game's own.
     unsafe {
         let base = param_1 as usize as *const u8;
         let mut local_8: i32;
-        if (base.byte_add(4).cast::<i32>().read_unaligned() as u32) == DAT_100adf38 {
-            let p = base.byte_add(0x20).cast::<i32>().read_unaligned() as usize as *const u8;
-            if p.byte_add(0x3f0).cast::<i32>().read_unaligned() != 0 {
-                local_8 = base
-                    .byte_add(0xfc)
-                    .cast::<i32>()
-                    .read_unaligned()
-                    .wrapping_sub(base.byte_add(0x60).cast::<i32>().read_unaligned());
+        if (mech_trace::rd!("1002a132", base.byte_add(4).cast::<i32>(), read_unaligned) as u32)
+            == mech_trace::gr!("1002a132", "100adf38", DAT_100adf38)
+        {
+            let p = mech_trace::rd!(
+                "1002a132",
+                base.byte_add(0x20).cast::<i32>(),
+                read_unaligned
+            ) as usize as *const u8;
+            if mech_trace::rd!("1002a132", p.byte_add(0x3f0).cast::<i32>(), read_unaligned) != 0 {
+                local_8 = mech_trace::rd!(
+                    "1002a132",
+                    base.byte_add(0xfc).cast::<i32>(),
+                    read_unaligned
+                )
+                .wrapping_sub(mech_trace::rd!(
+                    "1002a132",
+                    base.byte_add(0x60).cast::<i32>(),
+                    read_unaligned
+                ));
             } else {
-                local_8 = base
-                    .byte_add(0xd4)
-                    .cast::<i32>()
-                    .read_unaligned()
-                    .wrapping_sub(base.byte_add(0x60).cast::<i32>().read_unaligned());
+                local_8 = mech_trace::rd!(
+                    "1002a132",
+                    base.byte_add(0xd4).cast::<i32>(),
+                    read_unaligned
+                )
+                .wrapping_sub(mech_trace::rd!(
+                    "1002a132",
+                    base.byte_add(0x60).cast::<i32>(),
+                    read_unaligned
+                ));
             }
         } else {
-            local_8 = base
-                .byte_add(0xd4)
-                .cast::<i32>()
-                .read_unaligned()
-                .wrapping_sub(base.byte_add(0x60).cast::<i32>().read_unaligned());
+            local_8 = mech_trace::rd!(
+                "1002a132",
+                base.byte_add(0xd4).cast::<i32>(),
+                read_unaligned
+            )
+            .wrapping_sub(mech_trace::rd!(
+                "1002a132",
+                base.byte_add(0x60).cast::<i32>(),
+                read_unaligned
+            ));
         }
         if local_8 < 0xb40001 {
             if local_8 < -0xb40000 {
@@ -42,6 +64,6 @@ pub unsafe extern "C" fn FUN_1002a132(param_1: i32) -> i32 {
         } else {
             local_8 = local_8.wrapping_add(-0x1680000);
         }
-        local_8
+        mech_trace::rt!("1002a132", local_8)
     }
 }

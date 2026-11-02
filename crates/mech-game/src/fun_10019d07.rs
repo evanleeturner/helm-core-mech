@@ -18,6 +18,9 @@ pub unsafe extern "C" fn FUN_10019d07(
     param_8: u32,
     param_9: u32,
 ) {
+    mech_trace::enter!(
+        "10019d07", param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9
+    );
     let mut local_64: [u32; 23] = [0; 23];
     local_64[3] = param_1;
     local_64[0] = param_1;
@@ -38,7 +41,7 @@ pub unsafe extern "C" fn FUN_10019d07(
     // SAFETY: the function pointer global is the game's own; the buffer is a
     // live local passed to the callee as in the original.
     unsafe {
-        let f = DAT_100aafd4;
-        f(4, local_64.as_mut_ptr(), param_9);
+        let f = mech_trace::gr!("10019d07", "100aafd4", DAT_100aafd4);
+        mech_trace::cr!("10019d07", "ind", f(4, local_64.as_mut_ptr(), param_9));
     }
 }

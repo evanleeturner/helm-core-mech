@@ -35,51 +35,68 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1004764c(param_1: *mut i16) -> u32 {
+    mech_trace::enter!("1004764c", param_1);
     let mut local_8: u32 = 0;
     // SAFETY: the callees and globals are the game's own; param_1 and the
     // returned buffer are read and the global tables written where the
     // original does.
     unsafe {
-        let lp_mem = FUN_1007bbed(
-            param_1,
-            DAT_100af0e0 as *mut i32,
-            DAT_100af14c,
-            6,
-            &raw mut local_8,
-            core::ptr::null_mut(),
+        let lp_mem = mech_trace::cr!(
+            "1004764c",
+            "1007bbed",
+            FUN_1007bbed(
+                param_1,
+                mech_trace::gr!("1004764c", "100af0e0", DAT_100af0e0) as *mut i32,
+                mech_trace::gr!("1004764c", "100af14c", DAT_100af14c),
+                6,
+                &raw mut local_8,
+                core::ptr::null_mut(),
+            )
         );
         if lp_mem.is_null() {
-            return 0;
+            return mech_trace::rt!("1004764c", 0);
         }
         let mut local_1c: *mut u16 = lp_mem;
         let mut local_10: i32 = 0;
         while local_10 < 5 {
-            let a = local_1c.cast::<i32>().read_unaligned();
-            (&raw mut DAT_100adca0)
-                .offset((local_10 as isize) * 2)
-                .write(a as u32);
-            let b = local_1c.add(2).cast::<i32>().read_unaligned();
-            (&raw mut DAT_100adca4)
-                .offset((local_10 as isize) * 2)
-                .write(b as u32);
+            let a = mech_trace::rd!("1004764c", local_1c.cast::<i32>(), read_unaligned);
+            mech_trace::wr!(
+                "1004764c",
+                (&raw mut DAT_100adca0).offset((local_10 as isize) * 2),
+                write,
+                a as u32
+            );
+            let b = mech_trace::rd!("1004764c", local_1c.add(2).cast::<i32>(), read_unaligned);
+            mech_trace::wr!(
+                "1004764c",
+                (&raw mut DAT_100adca4).offset((local_10 as isize) * 2),
+                write,
+                b as u32
+            );
             local_1c = local_1c.add(4);
             local_10 += 1;
         }
         local_10 = 0;
         while local_10 < 3 {
-            let v = local_1c.cast::<i32>().read_unaligned();
+            let v = mech_trace::rd!("1004764c", local_1c.cast::<i32>(), read_unaligned);
             local_1c = local_1c.add(2);
-            (&raw mut DAT_101ec400)
-                .offset(local_10 as isize)
-                .write(v as u32);
+            mech_trace::wr!(
+                "1004764c",
+                (&raw mut DAT_101ec400).offset(local_10 as isize),
+                write,
+                v as u32
+            );
             local_10 += 1;
         }
         local_10 = 0;
         while local_10 < 0xf {
-            let mut local_28 = local_1c.cast::<i32>().read_unaligned();
-            let mut local_2c = local_1c.add(2).cast::<i32>().read_unaligned();
-            let mut local_20 = local_1c.add(4).cast::<i32>().read_unaligned();
-            let mut local_24 = local_1c.add(6).cast::<i32>().read_unaligned();
+            let mut local_28 = mech_trace::rd!("1004764c", local_1c.cast::<i32>(), read_unaligned);
+            let mut local_2c =
+                mech_trace::rd!("1004764c", local_1c.add(2).cast::<i32>(), read_unaligned);
+            let mut local_20 =
+                mech_trace::rd!("1004764c", local_1c.add(4).cast::<i32>(), read_unaligned);
+            let mut local_24 =
+                mech_trace::rd!("1004764c", local_1c.add(6).cast::<i32>(), read_unaligned);
             local_1c = local_1c.add(8);
             if local_28 < 0
                 || 100 < local_28
@@ -98,31 +115,54 @@ pub unsafe extern "C" fn FUN_1004764c(param_1: *mut i16) -> u32 {
             let mut local_14: i32 = 0;
             while local_14 < 8 {
                 let off = (local_14 as isize) * 0x140 + (local_10 as isize) * 0x14;
-                (&raw mut DAT_101eb5f4)
-                    .byte_offset(off)
-                    .cast::<i32>()
-                    .write_unaligned(local_28);
-                (&raw mut DAT_101eb5f8)
-                    .byte_offset(off)
-                    .cast::<i32>()
-                    .write_unaligned(local_2c);
-                (&raw mut DAT_101eb5fc)
-                    .byte_offset(off)
-                    .cast::<i32>()
-                    .write_unaligned(local_20);
-                (&raw mut DAT_101eb600)
-                    .byte_offset(off)
-                    .cast::<i32>()
-                    .write_unaligned(local_24);
+                mech_trace::wr!(
+                    "1004764c",
+                    (&raw mut DAT_101eb5f4).byte_offset(off).cast::<i32>(),
+                    write_unaligned,
+                    local_28
+                );
+                mech_trace::wr!(
+                    "1004764c",
+                    (&raw mut DAT_101eb5f8).byte_offset(off).cast::<i32>(),
+                    write_unaligned,
+                    local_2c
+                );
+                mech_trace::wr!(
+                    "1004764c",
+                    (&raw mut DAT_101eb5fc).byte_offset(off).cast::<i32>(),
+                    write_unaligned,
+                    local_20
+                );
+                mech_trace::wr!(
+                    "1004764c",
+                    (&raw mut DAT_101eb600).byte_offset(off).cast::<i32>(),
+                    write_unaligned,
+                    local_24
+                );
                 local_14 += 1;
             }
             local_10 += 1;
         }
-        if param_1.read() == -1 {
-            HeapFree(DAT_100adf74, 1, lp_mem.cast());
+        if mech_trace::rd!("1004764c", param_1, read) == -1 {
+            mech_trace::cr!(
+                "1004764c",
+                "HeapFree",
+                HeapFree(
+                    mech_trace::gr!("1004764c", "100adf74", DAT_100adf74),
+                    1,
+                    lp_mem.cast()
+                )
+            );
         } else {
-            FUN_1008664f(param_1.read() as i32 as u32, DAT_100af0e0 as *mut i32);
+            mech_trace::cr!(
+                "1004764c",
+                "1008664f",
+                FUN_1008664f(
+                    mech_trace::rd!("1004764c", param_1, read) as i32 as u32,
+                    mech_trace::gr!("1004764c", "100af0e0", DAT_100af0e0) as *mut i32
+                )
+            );
         }
-        1
+        mech_trace::rt!("1004764c", 1)
     }
 }

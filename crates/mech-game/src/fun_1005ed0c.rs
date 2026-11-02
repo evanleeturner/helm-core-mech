@@ -27,22 +27,35 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1005ed0c(_param_1: u32, param_2: i32) -> u32 {
+    mech_trace::enter!("1005ed0c", _param_1, param_2);
     let mut local_c = tagPOINT { x: 0, y: 0 };
     // SAFETY: the globals and the Win32 calls are the game's own; local_c is a
     // valid POINT on this stack frame for each call.
     unsafe {
-        if DAT_100adf80 != 0 {
+        if mech_trace::gr!("1005ed0c", "100adf80", DAT_100adf80) != 0 {
             let p = (&raw mut local_c).cast::<c_void>();
-            GetCursorPos(p);
-            ScreenToClient(DAT_100adf6c, p);
+            mech_trace::cr!("1005ed0c", "GetCursorPos", GetCursorPos(p));
+            mech_trace::cr!(
+                "1005ed0c",
+                "ScreenToClient",
+                ScreenToClient(mech_trace::gr!("1005ed0c", "100adf6c", DAT_100adf6c), p)
+            );
             if param_2 == 0 {
-                local_c.y = (DAT_100adf7c / 2) as i32;
+                local_c.y = (mech_trace::gr!("1005ed0c", "100adf7c", DAT_100adf7c) / 2) as i32;
             } else if param_2 == 1 {
-                local_c.x = (DAT_100adf78 / 2) as i32;
+                local_c.x = (mech_trace::gr!("1005ed0c", "100adf78", DAT_100adf78) / 2) as i32;
             }
-            ClientToScreen(DAT_100adf6c, p);
-            SetCursorPos(local_c.x, local_c.y);
+            mech_trace::cr!(
+                "1005ed0c",
+                "ClientToScreen",
+                ClientToScreen(mech_trace::gr!("1005ed0c", "100adf6c", DAT_100adf6c), p)
+            );
+            mech_trace::cr!(
+                "1005ed0c",
+                "SetCursorPos",
+                SetCursorPos(local_c.x, local_c.y)
+            );
         }
     }
-    0
+    mech_trace::rt!("1005ed0c", 0)
 }

@@ -3,12 +3,15 @@
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1001d5e1(param_1: i32, param_2: u32) {
+    mech_trace::enter!("1001d5e1", param_1, param_2);
     // SAFETY: param_1 is an address of a caller-owned structure; the field at
     // offset 0x18 is written where the original does.
     unsafe {
-        (param_1 as usize as *mut u8)
-            .byte_add(0x18)
-            .cast::<u32>()
-            .write_unaligned(param_2);
+        mech_trace::wr!(
+            "1001d5e1",
+            (param_1 as usize as *mut u8).byte_add(0x18).cast::<u32>(),
+            write_unaligned,
+            param_2
+        );
     }
 }

@@ -18,15 +18,20 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1004639a() {
+    mech_trace::enter!("1004639a");
     let mut resume_params: [u8; 4] = [0; 4];
     // SAFETY: the global and mciSendCommandA are the game's own; the params
     // buffer is a local that outlives the call.
     unsafe {
-        mciSendCommandA(
-            DAT_100b04b0,
-            0x855,
-            0,
-            resume_params.as_mut_ptr().cast::<core::ffi::c_void>(),
+        mech_trace::cr!(
+            "1004639a",
+            "mciSendCommandA",
+            mciSendCommandA(
+                mech_trace::gr!("1004639a", "100b04b0", DAT_100b04b0),
+                0x855,
+                0,
+                resume_params.as_mut_ptr().cast::<core::ffi::c_void>(),
+            )
         );
     }
 }

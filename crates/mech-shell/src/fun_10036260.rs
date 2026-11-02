@@ -13,9 +13,15 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10036260() {
+    mech_trace::enter!("10036260");
     // SAFETY: the callee and the global are the game's own; the second
     // argument is the fixed address 0x10093914 passed by value.
     unsafe {
-        FUN_1001a730(DAT_1009390c, 0x10093914, 0, core::ptr::null_mut());
+        FUN_1001a730(
+            mech_trace::gr!("10036260", "1009390c", DAT_1009390c),
+            0x10093914,
+            0,
+            core::ptr::null_mut(),
+        );
     }
 }

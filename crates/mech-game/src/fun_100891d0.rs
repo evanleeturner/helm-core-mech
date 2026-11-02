@@ -3,6 +3,7 @@
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_100891d0(param_1: *mut i32, param_2: i32) {
+    mech_trace::enter!("100891d0", param_1, param_2);
     let mut local_28: i32 = 0;
     let mut local_24: i32 = 0;
     let mut local_18: i32 = 0;
@@ -13,26 +14,26 @@ pub unsafe extern "C" fn FUN_100891d0(param_1: *mut i32, param_2: i32) {
     // SAFETY: param_1 points at the caller's array of nine i32 values.
     unsafe {
         if param_2 == 0 {
-            local_10 = param_1.add(1).read_unaligned();
-            local_24 = param_1.add(4).read_unaligned();
-            local_8 = param_1.add(7).read_unaligned();
-            local_18 = param_1.add(2).read_unaligned();
-            local_28 = param_1.add(5).read_unaligned();
-            local_c = param_1.add(8).read_unaligned();
+            local_10 = mech_trace::rd!("100891d0", param_1.add(1), read_unaligned);
+            local_24 = mech_trace::rd!("100891d0", param_1.add(4), read_unaligned);
+            local_8 = mech_trace::rd!("100891d0", param_1.add(7), read_unaligned);
+            local_18 = mech_trace::rd!("100891d0", param_1.add(2), read_unaligned);
+            local_28 = mech_trace::rd!("100891d0", param_1.add(5), read_unaligned);
+            local_c = mech_trace::rd!("100891d0", param_1.add(8), read_unaligned);
         } else if param_2 == 1 {
-            local_10 = param_1.add(2).read_unaligned();
-            local_24 = param_1.add(5).read_unaligned();
-            local_8 = param_1.add(8).read_unaligned();
-            local_18 = param_1.read_unaligned();
-            local_28 = param_1.add(3).read_unaligned();
-            local_c = param_1.add(6).read_unaligned();
+            local_10 = mech_trace::rd!("100891d0", param_1.add(2), read_unaligned);
+            local_24 = mech_trace::rd!("100891d0", param_1.add(5), read_unaligned);
+            local_8 = mech_trace::rd!("100891d0", param_1.add(8), read_unaligned);
+            local_18 = mech_trace::rd!("100891d0", param_1, read_unaligned);
+            local_28 = mech_trace::rd!("100891d0", param_1.add(3), read_unaligned);
+            local_c = mech_trace::rd!("100891d0", param_1.add(6), read_unaligned);
         } else if param_2 == 2 {
-            local_10 = param_1.read_unaligned();
-            local_24 = param_1.add(3).read_unaligned();
-            local_8 = param_1.add(6).read_unaligned();
-            local_18 = param_1.add(1).read_unaligned();
-            local_28 = param_1.add(4).read_unaligned();
-            local_c = param_1.add(7).read_unaligned();
+            local_10 = mech_trace::rd!("100891d0", param_1, read_unaligned);
+            local_24 = mech_trace::rd!("100891d0", param_1.add(3), read_unaligned);
+            local_8 = mech_trace::rd!("100891d0", param_1.add(6), read_unaligned);
+            local_18 = mech_trace::rd!("100891d0", param_1.add(1), read_unaligned);
+            local_28 = mech_trace::rd!("100891d0", param_1.add(4), read_unaligned);
+            local_c = mech_trace::rd!("100891d0", param_1.add(7), read_unaligned);
         }
 
         let f = |a: i32, b: i32, c: i32, d: i32| -> i32 {
@@ -50,17 +51,17 @@ pub unsafe extern "C" fn FUN_100891d0(param_1: *mut i32, param_2: i32) {
         let i_var5 = f(local_10, local_28, local_18, local_24);
 
         if param_2 == 0 {
-            param_1.write_unaligned(i_var3);
-            param_1.add(3).write_unaligned(i_var4);
-            param_1.add(6).write_unaligned(i_var5);
+            mech_trace::wr!("100891d0", param_1, write_unaligned, i_var3);
+            mech_trace::wr!("100891d0", param_1.add(3), write_unaligned, i_var4);
+            mech_trace::wr!("100891d0", param_1.add(6), write_unaligned, i_var5);
         } else if param_2 == 1 {
-            param_1.add(1).write_unaligned(i_var3);
-            param_1.add(4).write_unaligned(i_var4);
-            param_1.add(7).write_unaligned(i_var5);
+            mech_trace::wr!("100891d0", param_1.add(1), write_unaligned, i_var3);
+            mech_trace::wr!("100891d0", param_1.add(4), write_unaligned, i_var4);
+            mech_trace::wr!("100891d0", param_1.add(7), write_unaligned, i_var5);
         } else if param_2 == 2 {
-            param_1.add(2).write_unaligned(i_var3);
-            param_1.add(5).write_unaligned(i_var4);
-            param_1.add(8).write_unaligned(i_var5);
+            mech_trace::wr!("100891d0", param_1.add(2), write_unaligned, i_var3);
+            mech_trace::wr!("100891d0", param_1.add(5), write_unaligned, i_var4);
+            mech_trace::wr!("100891d0", param_1.add(8), write_unaligned, i_var5);
         }
     }
 }

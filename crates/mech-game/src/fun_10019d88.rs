@@ -17,23 +17,30 @@ pub unsafe extern "C" fn FUN_10019d88(
     param_6: u32,
     param_7: u32,
 ) {
+    mech_trace::enter!(
+        "10019d88", param_1, param_2, param_3, param_4, param_5, param_6, param_7
+    );
     let mut local_4c: [MaybeUninit<u32>; 17] = [MaybeUninit::uninit(); 17];
     let p = local_4c.as_mut_ptr().cast::<u32>();
     // SAFETY: p points at a 17-slot local buffer; indices are in range, and
     // the callback is the game's own function pointer.
     unsafe {
-        p.add(3).write(param_1);
-        p.add(0).write(param_1);
-        p.add(4).write(param_2);
-        p.add(1).write(param_2);
-        p.add(9).write(param_3);
-        p.add(6).write(param_3);
-        p.add(10).write(param_4);
-        p.add(7).write(param_4);
-        p.add(15).write(param_5);
-        p.add(12).write(param_5);
-        p.add(16).write(param_6);
-        p.add(13).write(param_6);
-        (DAT_100aafd4)(3, p, param_7);
+        mech_trace::wr!("10019d88", p.add(3), write, param_1);
+        mech_trace::wr!("10019d88", p.add(0), write, param_1);
+        mech_trace::wr!("10019d88", p.add(4), write, param_2);
+        mech_trace::wr!("10019d88", p.add(1), write, param_2);
+        mech_trace::wr!("10019d88", p.add(9), write, param_3);
+        mech_trace::wr!("10019d88", p.add(6), write, param_3);
+        mech_trace::wr!("10019d88", p.add(10), write, param_4);
+        mech_trace::wr!("10019d88", p.add(7), write, param_4);
+        mech_trace::wr!("10019d88", p.add(15), write, param_5);
+        mech_trace::wr!("10019d88", p.add(12), write, param_5);
+        mech_trace::wr!("10019d88", p.add(16), write, param_6);
+        mech_trace::wr!("10019d88", p.add(13), write, param_6);
+        mech_trace::cr!(
+            "10019d88",
+            "ind",
+            (mech_trace::gr!("10019d88", "100aafd4", DAT_100aafd4))(3, p, param_7)
+        );
     }
 }

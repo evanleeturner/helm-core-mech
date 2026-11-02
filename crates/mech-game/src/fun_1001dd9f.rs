@@ -21,19 +21,32 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1001dd9f(param_1: *mut i32) {
+    mech_trace::enter!("1001dd9f", param_1);
     if !param_1.is_null() {
         // SAFETY: param_1 points at the caller's structure; the globals and
         // callees are the game's own, used as the original does.
         unsafe {
-            if param_1.read_unaligned() == 0 {
-                let p = param_1
-                    .byte_add(0x17)
-                    .cast::<*mut c_void>()
-                    .read_unaligned();
-                HeapFree(DAT_100adf74, 1, p);
+            if mech_trace::rd!("1001dd9f", param_1, read_unaligned) == 0 {
+                let p = mech_trace::rd!(
+                    "1001dd9f",
+                    param_1.byte_add(0x17).cast::<*mut c_void>(),
+                    read_unaligned
+                );
+                mech_trace::cr!(
+                    "1001dd9f",
+                    "HeapFree",
+                    HeapFree(mech_trace::gr!("1001dd9f", "100adf74", DAT_100adf74), 1, p)
+                );
             } else {
-                let v = param_1.add(1).read_unaligned();
-                FUN_1008689c((v as i16 as i32) as u32, DAT_100af0f0 as usize as *mut i32);
+                let v = mech_trace::rd!("1001dd9f", param_1.add(1), read_unaligned);
+                mech_trace::cr!(
+                    "1001dd9f",
+                    "1008689c",
+                    FUN_1008689c(
+                        (v as i16 as i32) as u32,
+                        mech_trace::gr!("1001dd9f", "100af0f0", DAT_100af0f0) as usize as *mut i32
+                    )
+                );
             }
         }
     }

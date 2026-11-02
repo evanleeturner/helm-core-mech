@@ -22,15 +22,20 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1004671f() {
+    mech_trace::enter!("1004671f");
     // SAFETY: the globals and callees are the game's own; DAT_100b04c0 is a
     // valid pointer whenever the original dereferences it.
     unsafe {
-        if DAT_100b04c4 != 0 {
-            let u_var1 = FUN_10046563();
+        if mech_trace::gr!("1004671f", "100b04c4", DAT_100b04c4) != 0 {
+            let u_var1 = mech_trace::cr!("1004671f", "10046563", FUN_10046563());
             match u_var1 {
                 1 => {}
                 2 => {
-                    let v = DAT_100b04c0.read_unaligned();
+                    let v = mech_trace::rd!(
+                        "1004671f",
+                        mech_trace::gr!("1004671f", "100b04c0", DAT_100b04c0),
+                        read_unaligned
+                    );
                     FUN_100463ee(v, 0);
                 }
                 3 => {

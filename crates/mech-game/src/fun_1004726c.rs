@@ -15,16 +15,25 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1004726c() {
+    mech_trace::enter!("1004726c");
     // SAFETY: the globals and HeapFree are the game's own; each node is a
     // heap block whose first word links to the next, read before it is freed.
     unsafe {
-        let mut p_node = DAT_100b0574;
+        let mut p_node = mech_trace::gr!("1004726c", "100b0574", DAT_100b0574);
         while !p_node.is_null() {
-            let p_next = p_node.cast::<*mut core::ffi::c_void>().read_unaligned();
-            HeapFree(DAT_100adf74, 1, p_node);
+            let p_next = mech_trace::rd!(
+                "1004726c",
+                p_node.cast::<*mut core::ffi::c_void>(),
+                read_unaligned
+            );
+            HeapFree(
+                mech_trace::gr!("1004726c", "100adf74", DAT_100adf74),
+                1,
+                p_node,
+            );
             p_node = p_next;
         }
-        DAT_100b0574 = core::ptr::null_mut();
-        DAT_10160be8 = 0;
+        mech_trace::gw!("1004726c", "100b0574", DAT_100b0574, core::ptr::null_mut());
+        mech_trace::gw!("1004726c", "10160be8", DAT_10160be8, 0);
     }
 }

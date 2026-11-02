@@ -16,6 +16,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10054000() {
+    mech_trace::enter!("10054000");
     let mut record_offset: i32 = 0;
     let mut groups_left: i32 = 4;
     // SAFETY: the globals and the callee are the game's own; the record table
@@ -41,8 +42,13 @@ pub unsafe extern "stdcall" fn FUN_10054000() {
                 break;
             }
         }
-        _DAT_1009c68c = 0;
-        DAT_1009c698 = 0;
-        DAT_1009c690 = (&raw mut DAT_100bdf90).cast::<u8>();
+        mech_trace::gw!("10054000", "_DAT_1009c68c", _DAT_1009c68c, 0);
+        mech_trace::gw!("10054000", "1009c698", DAT_1009c698, 0);
+        mech_trace::gw!(
+            "10054000",
+            "1009c690",
+            DAT_1009c690,
+            (&raw mut DAT_100bdf90).cast::<u8>()
+        );
     }
 }

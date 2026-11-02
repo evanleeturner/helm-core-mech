@@ -19,35 +19,54 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10010010(param_1: *mut u8, param_2: i32) -> *mut u8 {
+    mech_trace::enter!("10010010", param_1, param_2);
     // SAFETY: the callees and globals are the game's own memory; param_1 points
     // at a NUL-terminated string, and the tables are accessed as the original does.
     unsafe {
-        let u_var2 = (FUN_100103b0(param_1) as u32) % 0x65;
+        let u_var2 = (mech_trace::cr!("10010010", "100103b0", FUN_100103b0(param_1)) as u32) % 0x65;
         let bucket = (&raw mut DAT_100c5ef0)
             .byte_add((u_var2 as usize).wrapping_mul(4))
             .cast::<*mut u8>();
-        let mut local_8: *mut u8 = bucket.read_unaligned();
+        let mut local_8: *mut u8 = mech_trace::rd!("10010010", bucket, read_unaligned);
         while !local_8.is_null() {
-            let i_var3 = _strcmpi(local_8.cast::<i8>(), param_1.cast::<i8>());
+            let i_var3 = mech_trace::cr!(
+                "10010010",
+                "_strcmpi",
+                _strcmpi(local_8.cast::<i8>(), param_1.cast::<i8>())
+            );
             if i_var3 == 0 {
-                return local_8;
+                return mech_trace::rt!("10010010", local_8);
             }
-            local_8 = local_8.byte_add(0x10).cast::<*mut u8>().read_unaligned();
+            local_8 = mech_trace::rd!(
+                "10010010",
+                local_8.byte_add(0x10).cast::<*mut u8>(),
+                read_unaligned
+            );
         }
         if param_2 == 0 {
-            return core::ptr::null_mut();
+            return mech_trace::rt!("10010010", core::ptr::null_mut());
         }
-        if 199 < DAT_100a9d78 {
-            FUN_100108a0(0x23, &raw mut s_Too_many_project_file_entries_100a9d7c);
+        if 199 < mech_trace::gr!("10010010", "100a9d78", DAT_100a9d78) {
+            mech_trace::cr!(
+                "10010010",
+                "100108a0",
+                FUN_100108a0(0x23, &raw mut s_Too_many_project_file_entries_100a9d7c)
+            );
         }
-        let i_var3 = (DAT_100a9d78 as i32).wrapping_mul(0x14);
+        let i_var3 =
+            (mech_trace::gr!("10010010", "100a9d78", DAT_100a9d78) as i32).wrapping_mul(0x14);
         let pbvar4 = (&raw mut DAT_100c4f50).byte_add(i_var3 as usize);
-        DAT_100a9d78 = DAT_100a9d78.wrapping_add(1);
+        mech_trace::gw!(
+            "10010010",
+            "100a9d78",
+            DAT_100a9d78,
+            mech_trace::gr!("10010010", "100a9d78", DAT_100a9d78).wrapping_add(1)
+        );
         let mut len: u32 = 0;
         let mut p = param_1;
         loop {
             len = len.wrapping_add(1);
-            let b = p.read();
+            let b = mech_trace::rd!("10010010", p, read);
             p = p.add(1);
             if b == 0 {
                 break;
@@ -57,25 +76,38 @@ pub unsafe extern "C" fn FUN_10010010(param_1: *mut u8, param_2: i32) -> *mut u8
         let mut dst = pbvar4;
         let mut n = len >> 2;
         while n != 0 {
-            dst.cast::<u32>()
-                .write_unaligned(src.cast::<u32>().read_unaligned());
+            mech_trace::wr!(
+                "10010010",
+                dst.cast::<u32>(),
+                write_unaligned,
+                mech_trace::rd!("10010010", src.cast::<u32>(), read_unaligned)
+            );
             src = src.add(4);
             dst = dst.add(4);
             n -= 1;
         }
         let mut r = len & 3;
         while r != 0 {
-            dst.write(src.read());
+            mech_trace::wr!(
+                "10010010",
+                dst,
+                write,
+                mech_trace::rd!("10010010", src, read)
+            );
             src = src.add(1);
             dst = dst.add(1);
             r -= 1;
         }
-        let head = bucket.read_unaligned();
-        (&raw mut DAT_100c4f60)
-            .byte_add(i_var3 as usize)
-            .cast::<*mut u8>()
-            .write_unaligned(head);
-        bucket.write_unaligned(pbvar4);
-        pbvar4
+        let head = mech_trace::rd!("10010010", bucket, read_unaligned);
+        mech_trace::wr!(
+            "10010010",
+            (&raw mut DAT_100c4f60)
+                .byte_add(i_var3 as usize)
+                .cast::<*mut u8>(),
+            write_unaligned,
+            head
+        );
+        mech_trace::wr!("10010010", bucket, write_unaligned, pbvar4);
+        mech_trace::rt!("10010010", pbvar4)
     }
 }

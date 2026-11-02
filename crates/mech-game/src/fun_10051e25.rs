@@ -13,9 +13,10 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10051e25() {
+    mech_trace::enter!("10051e25");
     // SAFETY: the global and the callee are the game's own memory and code.
     unsafe {
-        DAT_100b09dc = 3;
+        mech_trace::gw!("10051e25", "100b09dc", DAT_100b09dc, 3);
         FUN_100659d3();
     }
 }

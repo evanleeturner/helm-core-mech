@@ -16,18 +16,30 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1002aa71() -> i32 {
+    mech_trace::enter!("1002aa71");
     // SAFETY: the globals and the callee are the game's own; the table at
     // DAT_1016a6a4 holds at least nine pointer slots, written in order.
     unsafe {
-        _DAT_1016a6a0 = 0;
+        mech_trace::gw!("1002aa71", "_DAT_1016a6a0", _DAT_1016a6a0, 0);
         let mut local_8: i32 = 0;
         while local_8 < 9 {
-            let p_var1 = FUN_1008668b(DAT_100af17c, local_8.wrapping_add(1), PTR_DAT_100af0f8);
-            DAT_1016a6a4
-                .offset(local_8 as isize)
-                .write_unaligned(p_var1);
+            let p_var1 = mech_trace::cr!(
+                "1002aa71",
+                "1008668b",
+                FUN_1008668b(
+                    mech_trace::gr!("1002aa71", "100af17c", DAT_100af17c),
+                    local_8.wrapping_add(1),
+                    mech_trace::gr!("1002aa71", "PTR_DAT_100af0f8", PTR_DAT_100af0f8)
+                )
+            );
+            mech_trace::wr!(
+                "1002aa71",
+                mech_trace::gr!("1002aa71", "1016a6a4", DAT_1016a6a4).offset(local_8 as isize),
+                write_unaligned,
+                p_var1
+            );
             local_8 = local_8.wrapping_add(1);
         }
     }
-    1
+    mech_trace::rt!("1002aa71", 1)
 }

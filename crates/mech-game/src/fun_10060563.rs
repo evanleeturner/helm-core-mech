@@ -17,6 +17,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10060563(param_1: i32) {
+    mech_trace::enter!("10060563", param_1);
     // SAFETY: the globals and callees are the game's own memory; the table
     // entry and the vtable slot are read where the original reads them.
     unsafe {
@@ -24,19 +25,34 @@ pub unsafe extern "C" fn FUN_10060563(param_1: i32) {
             .cast::<u8>()
             .byte_offset(param_1.wrapping_mul(4) as isize)
             .cast::<u32>();
-        if 0 < (pu_var1.read_unaligned() as i32) {
-            let pu_var2 = FUN_1008668b(
-                DAT_100af17c as i32,
-                pu_var1.read_unaligned(),
-                DAT_100af0c8 as *mut i32,
+        if 0 < (mech_trace::rd!("10060563", pu_var1, read_unaligned) as i32) {
+            let pu_var2 = mech_trace::cr!(
+                "10060563",
+                "1008668b",
+                FUN_1008668b(
+                    mech_trace::gr!("10060563", "100af17c", DAT_100af17c) as i32,
+                    mech_trace::rd!("10060563", pu_var1, read_unaligned),
+                    mech_trace::gr!("10060563", "100af0c8", DAT_100af0c8) as *mut i32,
+                )
             );
             if !pu_var2.is_null() {
-                let vtable = DAT_100b9a18 as *const u8;
-                let target = vtable.byte_add(0x18).cast::<u32>().read_unaligned();
+                let vtable = mech_trace::gr!("10060563", "100b9a18", DAT_100b9a18) as *const u8;
+                let target = mech_trace::rd!(
+                    "10060563",
+                    vtable.byte_add(0x18).cast::<u32>(),
+                    read_unaligned
+                );
                 let f: unsafe extern "C" fn(*mut u16) =
                     core::mem::transmute::<usize, unsafe extern "C" fn(*mut u16)>(target as usize);
-                f(pu_var2);
-                FUN_1008664f(pu_var1.read_unaligned(), DAT_100af0c8 as *mut i32);
+                mech_trace::cr!("10060563", "ind", f(pu_var2));
+                mech_trace::cr!(
+                    "10060563",
+                    "1008664f",
+                    FUN_1008664f(
+                        mech_trace::rd!("10060563", pu_var1, read_unaligned),
+                        mech_trace::gr!("10060563", "100af0c8", DAT_100af0c8) as *mut i32
+                    )
+                );
             }
         }
     }

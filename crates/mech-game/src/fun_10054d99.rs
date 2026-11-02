@@ -15,6 +15,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10054d99(param_1: u32, param_2: *mut i32) {
+    mech_trace::enter!("10054d99", param_1, param_2);
     let _ = param_1;
     // SAFETY: the callees and the global table are the game's own; the table
     // is read by byte offset from DAT_10160c00 until a zero entry, as the
@@ -23,13 +24,15 @@ pub unsafe extern "C" fn FUN_10054d99(param_1: u32, param_2: *mut i32) {
         FUN_1003b2f0(param_2.cast());
         FUN_1003cd85(param_2);
         let mut local_c: i32 = 0;
-        let mut local_8: i32 = DAT_10160c00;
+        let mut local_8: i32 = mech_trace::gr!("10054d99", "10160c00", DAT_10160c00);
         while local_8 != 0 {
             FUN_10054925(local_8);
             local_c = local_c.wrapping_add(1);
-            local_8 = (&raw mut DAT_10160c00)
-                .byte_add((local_c.wrapping_mul(4)) as usize)
-                .read_unaligned();
+            local_8 = mech_trace::rd!(
+                "10054d99",
+                (&raw mut DAT_10160c00).byte_add((local_c.wrapping_mul(4)) as usize),
+                read_unaligned
+            );
         }
     }
 }

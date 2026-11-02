@@ -14,17 +14,21 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1000d199() {
+    mech_trace::enter!("1000d199");
     let mut local_8: i32 = 0;
     // SAFETY: the globals and the callee are the game's own; the array is
     // read at the same offsets the original uses.
     unsafe {
-        while local_8 < DAT_100a7584 {
-            let v = (&raw mut DAT_101f64a4)
-                .cast::<u8>()
-                .byte_add(local_8.wrapping_mul(0x7c) as usize)
-                .cast::<i32>()
-                .read_unaligned();
-            FUN_1000d875(local_8, v);
+        while local_8 < mech_trace::gr!("1000d199", "100a7584", DAT_100a7584) {
+            let v = mech_trace::rd!(
+                "1000d199",
+                (&raw mut DAT_101f64a4)
+                    .cast::<u8>()
+                    .byte_add(local_8.wrapping_mul(0x7c) as usize)
+                    .cast::<i32>(),
+                read_unaligned
+            );
+            mech_trace::cr!("1000d199", "1000d875", FUN_1000d875(local_8, v));
             local_8 = local_8.wrapping_add(1);
         }
     }

@@ -8,7 +8,13 @@ unsafe extern "C" {
 #[inline(always)]
 unsafe fn rd(addr: i32, off: i32) -> i32 {
     // SAFETY: addr is a game-provided record address; the offset is within the record.
-    unsafe { (addr.wrapping_add(off) as u32 as usize as *const i32).read_unaligned() }
+    unsafe {
+        mech_trace::rd!(
+            "1001544e",
+            (addr.wrapping_add(off) as u32 as usize as *const i32),
+            read_unaligned
+        )
+    }
 }
 
 #[unsafe(no_mangle)]
@@ -19,13 +25,17 @@ pub unsafe extern "C" fn FUN_1001544e(
     param_3: i32,
     param_4: i32,
 ) -> u32 {
+    mech_trace::enter!("1001544e", param_1, param_2, param_3, param_4);
     let mut b_var1: u8 = 0;
     let mut b_var2: u8 = 0;
     // SAFETY: param_1 points at the game's polygon header, param_2 at its
     // vertex table; all reads stay where the original reads.
     unsafe {
-        let mut u_var6: u32 =
-            u32::from(((param_1.wrapping_add(2)) as u32 as usize as *const u16).read_unaligned());
+        let mut u_var6: u32 = u32::from(mech_trace::rd!(
+            "1001544e",
+            ((param_1.wrapping_add(2)) as u32 as usize as *const u16),
+            read_unaligned
+        ));
         if 2 < u_var6 {
             let pbv = (rd(param_1, 4) as u32).wrapping_add(param_1 as u32) as usize as *const u8;
             let mut local_10: u32 = 0;
@@ -34,7 +44,8 @@ pub unsafe extern "C" fn FUN_1001544e(
                 if local_18 == 0 {
                     break;
                 }
-                let idx = pbv.add(local_18.wrapping_sub(1) as usize).read();
+                let idx =
+                    mech_trace::rd!("1001544e", pbv.add(local_18.wrapping_sub(1) as usize), read);
                 let i_var4 = u32::from(idx)
                     .wrapping_mul(0x44)
                     .wrapping_add(param_2 as u32) as i32;
@@ -55,7 +66,7 @@ pub unsafe extern "C" fn FUN_1001544e(
             }
             if local_10 == 0xf {
                 local_18 = u_var6;
-                let mut i_var4 = u32::from(pbv.read())
+                let mut i_var4 = u32::from(mech_trace::rd!("1001544e", pbv, read))
                     .wrapping_mul(0x44)
                     .wrapping_add(param_2 as u32) as i32;
                 loop {
@@ -64,7 +75,7 @@ pub unsafe extern "C" fn FUN_1001544e(
                     if local_18 == 0 {
                         break;
                     }
-                    let idx = pbv.add(u_var6 as usize).read();
+                    let idx = mech_trace::rd!("1001544e", pbv.add(u_var6 as usize), read);
                     i_var4 = u32::from(idx)
                         .wrapping_mul(0x44)
                         .wrapping_add(param_2 as u32) as i32;
@@ -74,54 +85,55 @@ pub unsafe extern "C" fn FUN_1001544e(
                     {
                         if rd(i_var4, 0x10) == param_4 && rd(local_c, 0x10) == param_4 {
                             if rd(i_var4, 0xc) < param_3 && rd(local_c, 0xc) < param_3 {
-                                return 0;
+                                return mech_trace::rt!("1001544e", 0);
                             }
                             if param_3 < rd(i_var4, 0xc) && param_3 < rd(local_c, 0xc) {
-                                return 0;
+                                return mech_trace::rt!("1001544e", 0);
                             }
-                            return 1;
+                            return mech_trace::rt!("1001544e", 1);
                         }
                         if rd(i_var4, 0x10) != param_4 {
                             if rd(i_var4, 0xc) < param_3 && rd(local_c, 0xc) < param_3 {
                                 if b_var1 != 0 {
-                                    return 0;
+                                    return mech_trace::rt!("1001544e", 0);
                                 }
                                 if b_var2 != 0 {
-                                    return 1;
+                                    return mech_trace::rt!("1001544e", 1);
                                 }
                                 b_var1 = 1;
                             } else if param_3 < rd(i_var4, 0xc) && param_3 < rd(local_c, 0xc) {
                                 if b_var2 != 0 {
-                                    return 0;
+                                    return mech_trace::rt!("1001544e", 0);
                                 }
                                 if b_var1 != 0 {
-                                    return 1;
+                                    return mech_trace::rt!("1001544e", 1);
                                 }
                                 b_var2 = 1;
                             } else {
                                 let a = rd(local_c, 0xc).wrapping_sub(rd(i_var4, 0xc));
                                 let b = param_4.wrapping_sub(rd(i_var4, 0x10));
                                 let c = rd(local_c, 0x10).wrapping_sub(rd(i_var4, 0x10));
-                                let i_var5 = FUN_10011e60(a, b, c);
+                                let i_var5 =
+                                    mech_trace::cr!("1001544e", "10011e60", FUN_10011e60(a, b, c));
                                 let i_var5 =
                                     rd(i_var4, 0xc).wrapping_add(i_var5).wrapping_sub(param_3);
                                 if i_var5 < 0 {
                                     if b_var1 != 0 {
-                                        return 0;
+                                        return mech_trace::rt!("1001544e", 0);
                                     }
                                     if b_var2 != 0 {
-                                        return 1;
+                                        return mech_trace::rt!("1001544e", 1);
                                     }
                                     b_var1 = 1;
                                 } else {
                                     if i_var5 < 1 {
-                                        return 1;
+                                        return mech_trace::rt!("1001544e", 1);
                                     }
                                     if b_var2 != 0 {
-                                        return 0;
+                                        return mech_trace::rt!("1001544e", 0);
                                     }
                                     if b_var1 != 0 {
-                                        return 1;
+                                        return mech_trace::rt!("1001544e", 1);
                                     }
                                     b_var2 = 1;
                                 }
@@ -132,5 +144,5 @@ pub unsafe extern "C" fn FUN_1001544e(
             }
         }
     }
-    0
+    mech_trace::rt!("1001544e", 0)
 }

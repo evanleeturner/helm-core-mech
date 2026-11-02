@@ -8,6 +8,7 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10022b50(param_1: u32, param_2: i32) -> i32 {
+    mech_trace::enter!("10022b50", param_1, param_2);
     let hi: u32 =
         (((param_1 as i32).wrapping_shr(0x1f) as u32).wrapping_shl(0x1d)) | param_1.wrapping_shr(3);
     let lo: u32 = param_1.wrapping_shl(0x1d);
@@ -20,7 +21,7 @@ pub unsafe extern "C" fn FUN_10022b50(param_1: u32, param_2: i32) -> i32 {
         unsafe {
             RaiseException(0xC0000094, 0, 0, core::ptr::null());
         }
-        return 0;
+        return mech_trace::rt!("10022b50", 0);
     }
 
     let quot: i64 = num.wrapping_div(den);
@@ -30,8 +31,8 @@ pub unsafe extern "C" fn FUN_10022b50(param_1: u32, param_2: i32) -> i32 {
         unsafe {
             RaiseException(0xC0000094, 0, 0, core::ptr::null());
         }
-        return 0;
+        return mech_trace::rt!("10022b50", 0);
     }
 
-    quot as i32
+    mech_trace::rt!("10022b50", quot as i32)
 }

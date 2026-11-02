@@ -18,40 +18,71 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10080048(param_1: *mut i32) {
+    mech_trace::enter!("10080048", param_1);
     // SAFETY: param_1 and the pointers stored in it and in the game's globals
     // are the game's own live objects; reads, writes and calls happen in the
     // original's order.
     unsafe {
-        let base = param_1.read_unaligned() as u32 as usize;
-        let cond = DAT_100aa1f4 == 0
-            || ((base + 4) as *const i32).read_unaligned() as u32 == DAT_100adf38
-            || param_1.add(0xf5).read_unaligned() == 4;
+        let base = mech_trace::rd!("10080048", param_1, read_unaligned) as u32 as usize;
+        let cond = mech_trace::gr!("10080048", "100aa1f4", DAT_100aa1f4) == 0
+            || mech_trace::rd!("10080048", ((base + 4) as *const i32), read_unaligned) as u32
+                == mech_trace::gr!("10080048", "100adf38", DAT_100adf38)
+            || mech_trace::rd!("10080048", param_1.add(0xf5), read_unaligned) == 4;
         if cond {
-            let base = param_1.read_unaligned() as u32 as usize;
+            let base = mech_trace::rd!("10080048", param_1, read_unaligned) as u32 as usize;
             let f = FUN_10050ecc as unsafe extern "C" fn(i32) -> u8;
-            FUN_1007c203(
-                ((base + 0x40) as *const i32).read_unaligned() as u32 as usize as *mut i32,
-                f as usize as *mut u8,
-                999,
+            mech_trace::cr!(
+                "10080048",
+                "1007c203",
+                FUN_1007c203(
+                    mech_trace::rd!("10080048", ((base + 0x40) as *const i32), read_unaligned)
+                        as u32 as usize as *mut i32,
+                    f as usize as *mut u8,
+                    999,
+                )
             );
             let p = param_1.add(0x110).cast::<u16>();
-            p.write_unaligned(p.read_unaligned() | 0x100);
-            let base = param_1.read_unaligned() as u32 as usize;
-            let g = DAT_100aaf68 as usize;
-            let a = ((base + 0x50) as *const i32)
-                .read_unaligned()
-                .wrapping_sub((g as *const i32).read_unaligned());
-            let g = DAT_100aaf68 as usize;
-            let base = param_1.read_unaligned() as u32 as usize;
-            let b = ((base + 0x54) as *const i32)
-                .read_unaligned()
-                .wrapping_sub(((g + 4) as *const i32).read_unaligned());
-            let g = DAT_100aaf68 as usize;
-            let base = param_1.read_unaligned() as u32 as usize;
-            let c = ((base + 0x58) as *const i32)
-                .read_unaligned()
-                .wrapping_sub(((g + 8) as *const i32).read_unaligned());
-            FUN_100037f0(a as u32, b as u32, c as u32, 0xa9, DAT_100ab094 as i32);
+            mech_trace::wr!(
+                "10080048",
+                p,
+                write_unaligned,
+                mech_trace::rd!("10080048", p, read_unaligned) | 0x100
+            );
+            let base = mech_trace::rd!("10080048", param_1, read_unaligned) as u32 as usize;
+            let g = mech_trace::gr!("10080048", "100aaf68", DAT_100aaf68) as usize;
+            let a = mech_trace::rd!("10080048", ((base + 0x50) as *const i32), read_unaligned)
+                .wrapping_sub(mech_trace::rd!(
+                    "10080048",
+                    (g as *const i32),
+                    read_unaligned
+                ));
+            let g = mech_trace::gr!("10080048", "100aaf68", DAT_100aaf68) as usize;
+            let base = mech_trace::rd!("10080048", param_1, read_unaligned) as u32 as usize;
+            let b = mech_trace::rd!("10080048", ((base + 0x54) as *const i32), read_unaligned)
+                .wrapping_sub(mech_trace::rd!(
+                    "10080048",
+                    ((g + 4) as *const i32),
+                    read_unaligned
+                ));
+            let g = mech_trace::gr!("10080048", "100aaf68", DAT_100aaf68) as usize;
+            let base = mech_trace::rd!("10080048", param_1, read_unaligned) as u32 as usize;
+            let c = mech_trace::rd!("10080048", ((base + 0x58) as *const i32), read_unaligned)
+                .wrapping_sub(mech_trace::rd!(
+                    "10080048",
+                    ((g + 8) as *const i32),
+                    read_unaligned
+                ));
+            mech_trace::cr!(
+                "10080048",
+                "100037f0",
+                FUN_100037f0(
+                    a as u32,
+                    b as u32,
+                    c as u32,
+                    0xa9,
+                    mech_trace::gr!("10080048", "100ab094", DAT_100ab094) as i32
+                )
+            );
         }
     }
 }

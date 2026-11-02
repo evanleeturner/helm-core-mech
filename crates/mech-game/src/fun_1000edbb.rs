@@ -41,7 +41,7 @@ unsafe fn past_nul(mut p: *const i8) -> *const i8 {
     // SAFETY: caller passes a nul-terminated string.
     unsafe {
         loop {
-            let c = *p;
+            let c = mech_trace::dr!("1000edbb", p);
             p = p.add(1);
             if c == 0 {
                 return p;
@@ -58,7 +58,11 @@ unsafe fn copy_str(dst: *mut i8, src: *const i8) {
         let n = end as usize - src as usize;
         let mut i = 0;
         while i < n {
-            *dst.add(i) = *src.add(i);
+            mech_trace::dw!(
+                "1000edbb",
+                dst.add(i),
+                mech_trace::dr!("1000edbb", src.add(i))
+            );
             i += 1;
         }
     }
@@ -73,7 +77,11 @@ unsafe fn append_str(dst: *mut i8, src: *const i8) {
         let d = (past_nul(dst) as *mut i8).sub(1);
         let mut i = 0;
         while i < n {
-            *d.add(i) = *src.add(i);
+            mech_trace::dw!(
+                "1000edbb",
+                d.add(i),
+                mech_trace::dr!("1000edbb", src.add(i))
+            );
             i += 1;
         }
     }
@@ -83,8 +91,8 @@ unsafe fn put16(buf: *mut i8, v: u16) {
     // SAFETY: buf is a string with room after its nul.
     unsafe {
         let p = past_nul(buf) as *mut i8;
-        *p.sub(1) = v as i8;
-        *p = (v >> 8) as i8;
+        mech_trace::dw!("1000edbb", p.sub(1), v as i8);
+        mech_trace::dw!("1000edbb", p, (v >> 8) as i8);
     }
 }
 
@@ -92,16 +100,17 @@ unsafe fn put32(buf: *mut i8, v: u32) {
     // SAFETY: buf is a string with room after its nul.
     unsafe {
         let p = past_nul(buf) as *mut i8;
-        *p.sub(1) = v as i8;
-        *p = (v >> 8) as i8;
-        *p.add(1) = (v >> 16) as i8;
-        *p.add(2) = (v >> 24) as i8;
+        mech_trace::dw!("1000edbb", p.sub(1), v as i8);
+        mech_trace::dw!("1000edbb", p, (v >> 8) as i8);
+        mech_trace::dw!("1000edbb", p.add(1), (v >> 16) as i8);
+        mech_trace::dw!("1000edbb", p.add(2), (v >> 24) as i8);
     }
 }
 
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1000edbb() {
+    mech_trace::enter!("1000edbb");
     let mut local_120_buf: [u32; 0x40] = [0; 0x40];
     let local_120: *mut i8 = local_120_buf.as_mut_ptr().cast::<i8>();
     let mut local_1c: [u32; 5] = [0; 5];
@@ -112,35 +121,84 @@ pub unsafe extern "stdcall" fn FUN_1000edbb() {
         let name_ptr: *const i8 = (&raw mut DAT_100ada70)
             .cast::<i8>()
             .cast_const()
-            .wrapping_add((DAT_101686f0 as u32).wrapping_mul(2) as usize);
+            .wrapping_add(
+                (mech_trace::gr!("1000edbb", "101686f0", DAT_101686f0) as u32).wrapping_mul(2)
+                    as usize,
+            );
 
-        if DAT_100a7b50.is_null() || *DAT_100a7b50 == 0 {
-            local_120_buf[0] = DAT_100a7b84;
-            local_120
-                .byte_add(4)
-                .cast::<u16>()
-                .write_unaligned(DAT_100a7b88);
-            *local_120.byte_add(6).cast::<u8>() = DAT_100a7b8a;
+        if mech_trace::gr!("1000edbb", "100a7b50", DAT_100a7b50).is_null()
+            || mech_trace::dr!(
+                "1000edbb",
+                mech_trace::gr!("1000edbb", "100a7b50", DAT_100a7b50)
+            ) == 0
+        {
+            local_120_buf[0] = mech_trace::gr!("1000edbb", "100a7b84", DAT_100a7b84);
+            mech_trace::wr!(
+                "1000edbb",
+                local_120.byte_add(4).cast::<u16>(),
+                write_unaligned,
+                mech_trace::gr!("1000edbb", "100a7b88", DAT_100a7b88)
+            );
+            mech_trace::dw!(
+                "1000edbb",
+                local_120.byte_add(6).cast::<u8>(),
+                mech_trace::gr!("1000edbb", "100a7b8a", DAT_100a7b8a)
+            );
             append_str(local_120, name_ptr);
-            put16(local_120, DAT_100a7b8c);
-            put32(local_120, DAT_100a7b90);
+            put16(
+                local_120,
+                mech_trace::gr!("1000edbb", "100a7b8c", DAT_100a7b8c),
+            );
+            put32(
+                local_120,
+                mech_trace::gr!("1000edbb", "100a7b90", DAT_100a7b90),
+            );
         } else {
-            copy_str(local_120, DAT_100a7b50);
+            copy_str(
+                local_120,
+                mech_trace::gr!("1000edbb", "100a7b50", DAT_100a7b50),
+            );
             append_str(local_120, name_ptr);
-            put16(local_120, DAT_100a7b94);
-            put32(local_120, DAT_100a7b98);
+            put16(
+                local_120,
+                mech_trace::gr!("1000edbb", "100a7b94", DAT_100a7b94),
+            );
+            put32(
+                local_120,
+                mech_trace::gr!("1000edbb", "100a7b98", DAT_100a7b98),
+            );
         }
 
-        let local_8 = _FILE_read_8(local_120, 0);
+        let local_8 = mech_trace::cr!("1000edbb", "_FILE_read_8", _FILE_read_8(local_120, 0));
         if local_8 != 0 {
-            let local_20 = HeapAlloc(DAT_100adf74, 1, 0x502e) as *mut u32;
+            let local_20 = mech_trace::cr!(
+                "1000edbb",
+                "HeapAlloc",
+                HeapAlloc(
+                    mech_trace::gr!("1000edbb", "100adf74", DAT_100adf74),
+                    1,
+                    0x502e
+                )
+            ) as *mut u32;
             if !local_20.is_null() {
-                let lp_mem = HeapAlloc(DAT_100adf74, 9, 0x300) as *mut u8;
+                let lp_mem = mech_trace::cr!(
+                    "1000edbb",
+                    "HeapAlloc",
+                    HeapAlloc(
+                        mech_trace::gr!("1000edbb", "100adf74", DAT_100adf74),
+                        9,
+                        0x300
+                    )
+                ) as *mut u8;
                 if !lp_mem.is_null() {
-                    let f14: unsafe extern "C" fn(i32, i32, *mut u8, i32) = core::mem::transmute(
-                        (DAT_100b9a18.wrapping_add(0x14) as *const u32).read_unaligned(),
-                    );
-                    f14(0, 0x100, lp_mem, 1);
+                    let f14: unsafe extern "C" fn(i32, i32, *mut u8, i32) =
+                        core::mem::transmute(mech_trace::rd!(
+                            "1000edbb",
+                            (mech_trace::gr!("1000edbb", "100b9a18", DAT_100b9a18)
+                                .wrapping_add(0x14) as *const u32),
+                            read_unaligned
+                        ));
+                    mech_trace::cr!("1000edbb", "ind", f14(0, 0x100, lp_mem, 1));
 
                     let src = &raw mut DAT_101f52e0;
                     let mut i = 0;
@@ -154,31 +212,62 @@ pub unsafe extern "stdcall" fn FUN_1000edbb() {
                         local_8,
                     );
 
-                    let local_128: i32 = if DAT_100adf80 == 0 {
-                        -1
-                    } else {
-                        let f20: unsafe extern "C" fn() -> i32 = core::mem::transmute(
-                            (DAT_100b9a18.wrapping_add(0x20) as *const u32).read_unaligned(),
-                        );
-                        f20()
-                    };
+                    let local_128: i32 =
+                        if mech_trace::gr!("1000edbb", "100adf80", DAT_100adf80) == 0 {
+                            -1
+                        } else {
+                            let f20: unsafe extern "C" fn() -> i32 =
+                                core::mem::transmute(mech_trace::rd!(
+                                    "1000edbb",
+                                    (mech_trace::gr!("1000edbb", "100b9a18", DAT_100b9a18)
+                                        .wrapping_add(0x20)
+                                        as *const u32),
+                                    read_unaligned
+                                ));
+                            mech_trace::cr!("1000edbb", "ind", f20())
+                        };
                     if local_128 == 0 {
                         FUN_1005b295(local_1c.as_mut_ptr(), local_8, local_20);
-                        if DAT_100adf80 != 0 {
-                            let f18: unsafe extern "C" fn() = core::mem::transmute(
-                                (DAT_100b9a1c.wrapping_add(0x18) as *const u32).read_unaligned(),
-                            );
-                            f18();
+                        if mech_trace::gr!("1000edbb", "100adf80", DAT_100adf80) != 0 {
+                            let f18: unsafe extern "C" fn() =
+                                core::mem::transmute(mech_trace::rd!(
+                                    "1000edbb",
+                                    (mech_trace::gr!("1000edbb", "100b9a1c", DAT_100b9a1c)
+                                        .wrapping_add(0x18)
+                                        as *const u32),
+                                    read_unaligned
+                                ));
+                            mech_trace::cr!("1000edbb", "ind", f18());
                         }
                     }
                     FUN_1005b4ae(local_8, lp_mem);
-                    let f1c: unsafe extern "C" fn(*mut u8, i32) = core::mem::transmute(
-                        (DAT_100b9a18.wrapping_add(0x1c) as *const u32).read_unaligned(),
+                    let f1c: unsafe extern "C" fn(*mut u8, i32) =
+                        core::mem::transmute(mech_trace::rd!(
+                            "1000edbb",
+                            (mech_trace::gr!("1000edbb", "100b9a18", DAT_100b9a18)
+                                .wrapping_add(0x1c) as *const u32),
+                            read_unaligned
+                        ));
+                    mech_trace::cr!("1000edbb", "ind", f1c(lp_mem, 0x3c));
+                    mech_trace::cr!(
+                        "1000edbb",
+                        "HeapFree",
+                        HeapFree(
+                            mech_trace::gr!("1000edbb", "100adf74", DAT_100adf74),
+                            1,
+                            lp_mem as *mut c_void
+                        )
                     );
-                    f1c(lp_mem, 0x3c);
-                    HeapFree(DAT_100adf74, 1, lp_mem as *mut c_void);
                 }
-                HeapFree(DAT_100adf74, 1, local_20 as *mut c_void);
+                mech_trace::cr!(
+                    "1000edbb",
+                    "HeapFree",
+                    HeapFree(
+                        mech_trace::gr!("1000edbb", "100adf74", DAT_100adf74),
+                        1,
+                        local_20 as *mut c_void
+                    )
+                );
             }
             FUN_1006af90(local_8);
         }

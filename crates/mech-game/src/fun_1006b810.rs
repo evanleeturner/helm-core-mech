@@ -18,25 +18,25 @@ unsafe extern "C" {
 #[inline(always)]
 unsafe fn ld32(a: i32) -> i32 {
     // SAFETY: the address is the game's own memory, read as the original does.
-    unsafe { (a as usize as *const i32).read_unaligned() }
+    unsafe { mech_trace::rd!("1006b810", (a as usize as *const i32), read_unaligned) }
 }
 
 #[inline(always)]
 unsafe fn ld16(a: i32) -> u16 {
     // SAFETY: the address is the game's own memory, read as the original does.
-    unsafe { (a as usize as *const u16).read_unaligned() }
+    unsafe { mech_trace::rd!("1006b810", (a as usize as *const u16), read_unaligned) }
 }
 
 #[inline(always)]
 unsafe fn st16(a: i32, v: u16) {
     // SAFETY: the address is the game's own memory, written as the original does.
-    unsafe { (a as usize as *mut u16).write_unaligned(v) }
+    unsafe { mech_trace::wr!("1006b810", (a as usize as *mut u16), write_unaligned, v) }
 }
 
 #[inline(always)]
 unsafe fn st32(a: i32, v: i32) {
     // SAFETY: the address is the game's own memory, written as the original does.
-    unsafe { (a as usize as *mut i32).write_unaligned(v) }
+    unsafe { mech_trace::wr!("1006b810", (a as usize as *mut i32), write_unaligned, v) }
 }
 
 #[inline(always)]
@@ -58,11 +58,12 @@ unsafe fn idiv(a: i32, b: i32) -> i32 {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1006b810(param_1: *mut c_void, param_2: *mut i32) -> u32 {
+    mech_trace::enter!("1006b810", param_1, param_2);
     // SAFETY: param_2 and everything it points at belong to the game; the
     // globals and callees are the game's own; local buffers are in bounds.
     unsafe {
         if param_2.is_null() || (ld16((param_2 as i32).wrapping_add(0x442)) & 2) == 0 {
-            return 0;
+            return mech_trace::rt!("1006b810", 0);
         }
         let pb = param_2 as i32;
         let g = |i: i32| -> i32 { ld32(pb.wrapping_add(i.wrapping_mul(4))) };
@@ -70,7 +71,11 @@ pub unsafe extern "C" fn FUN_1006b810(param_1: *mut c_void, param_2: *mut i32) -
         let mut local_ec: i32 = 0;
         let mut local_c: i32 = 0;
         let mut local_dc: i32 = 0;
-        let cvar1 = *((DAT_100adf34.wrapping_add(5)) as usize as *const i8);
+        let cvar1 = mech_trace::dr!(
+            "1006b810",
+            ((mech_trace::gr!("1006b810", "100adf34", DAT_100adf34).wrapping_add(5)) as usize
+                as *const i8)
+        );
         if cvar1 == 0 {
             local_ec = 1;
             local_c = 3;
@@ -86,10 +91,10 @@ pub unsafe extern "C" fn FUN_1006b810(param_1: *mut c_void, param_2: *mut i32) -
         }
         let local_8: i32;
         let inner = ld32(ld32(pb).wrapping_add(4));
-        if (inner as u32) == DAT_100adf38 {
+        if (inner as u32) == mech_trace::gr!("1006b810", "100adf38", DAT_100adf38) {
             local_8 = local_dc;
         } else {
-            let iv = FUN_1004d5e3(inner);
+            let iv = mech_trace::cr!("1006b810", "1004d5e3", FUN_1004d5e3(inner));
             if iv == 0 {
                 local_8 = local_c;
             } else {
@@ -243,41 +248,65 @@ pub unsafe extern "C" fn FUN_1006b810(param_1: *mut c_void, param_2: *mut i32) -
         }
         st32(pb.wrapping_add(0x4cf), local_e0);
         st32(pb.wrapping_add(0x4c7), local_e4);
-        let uv = FUN_10002570(g(0xee) as u32, 0x697e98);
+        let uv = mech_trace::cr!(
+            "1006b810",
+            "10002570",
+            FUN_10002570(g(0xee) as u32, 0x697e98)
+        );
         st32(pb.wrapping_add(0x4bf), uv as i32);
         st32(pb.wrapping_add(0x4bb), g(0x106));
         st32(pb.wrapping_add(0x4c3), g(0xfe));
         let _ = (p15, p16, p17);
 
-        fwrite(
-            pb.wrapping_add(0x4bb) as usize as *const c_void,
-            0x18,
-            1,
-            param_1,
-        );
-        fwrite(out.as_ptr() as *const c_void, 0x140, 1, param_1);
-        if local_10 != 0 {
+        mech_trace::cr!(
+            "1006b810",
+            "fwrite",
             fwrite(
-                local_164.as_ptr() as *const c_void,
-                (local_10 as u32).wrapping_shl(3),
+                pb.wrapping_add(0x4bb) as usize as *const c_void,
+                0x18,
                 1,
                 param_1,
+            )
+        );
+        mech_trace::cr!(
+            "1006b810",
+            "fwrite",
+            fwrite(out.as_ptr() as *const c_void, 0x140, 1, param_1)
+        );
+        if local_10 != 0 {
+            mech_trace::cr!(
+                "1006b810",
+                "fwrite",
+                fwrite(
+                    local_164.as_ptr() as *const c_void,
+                    (local_10 as u32).wrapping_shl(3),
+                    1,
+                    param_1,
+                )
             );
         }
         if local_e0 != 0 {
-            fwrite(
-                local_d8.as_ptr() as *const c_void,
-                (local_e0 as u32).wrapping_shl(3),
-                1,
-                param_1,
+            mech_trace::cr!(
+                "1006b810",
+                "fwrite",
+                fwrite(
+                    local_d8.as_ptr() as *const c_void,
+                    (local_e0 as u32).wrapping_shl(3),
+                    1,
+                    param_1,
+                )
             );
         }
-        fwrite(
-            pb.wrapping_add(0x489) as usize as *const c_void,
-            0x32,
-            1,
-            param_1,
+        mech_trace::cr!(
+            "1006b810",
+            "fwrite",
+            fwrite(
+                pb.wrapping_add(0x489) as usize as *const c_void,
+                0x32,
+                1,
+                param_1,
+            )
         );
-        1
+        mech_trace::rt!("1006b810", 1)
     }
 }

@@ -8,6 +8,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1006a7b5(param_1: *mut i32, param_2: *mut u32) -> u64 {
+    mech_trace::enter!("1006a7b5", param_1, param_2);
     // SAFETY: the global table and the caller's structures are the game's own
     // memory; reads and writes follow the original's order and offsets.
     unsafe {
@@ -15,40 +16,46 @@ pub unsafe extern "C" fn FUN_1006a7b5(param_1: *mut i32, param_2: *mut u32) -> u
         let mut puvar9 = tbl as *mut u32;
         let mut i: i32 = 0x40;
         while i != 0 {
-            puvar9.write_unaligned(0);
+            mech_trace::wr!("1006a7b5", puvar9, write_unaligned, 0);
             puvar9 = puvar9.add(1);
             i = i.wrapping_sub(1);
         }
         let mut param_2 = param_2;
-        let i_var5 = param_1.add(3).read_unaligned();
-        let i_var1 = param_1.add(1).read_unaligned();
-        let mut i_var7 = param_1
-            .add(4)
-            .read_unaligned()
-            .wrapping_sub(param_1.add(2).read_unaligned());
-        let base = param_1.read_unaligned();
-        let i_var3 = ((base as u32).wrapping_add(4) as *const i32)
-            .read_unaligned()
-            .wrapping_add(1);
-        let l_var2: i64 = (param_1.add(2).read_unaligned() as i64).wrapping_mul(i_var3 as i64);
-        let mut i_var8 = (base as u32 as *const i32)
-            .read_unaligned()
+        let i_var5 = mech_trace::rd!("1006a7b5", param_1.add(3), read_unaligned);
+        let i_var1 = mech_trace::rd!("1006a7b5", param_1.add(1), read_unaligned);
+        let mut i_var7 = mech_trace::rd!("1006a7b5", param_1.add(4), read_unaligned)
+            .wrapping_sub(mech_trace::rd!("1006a7b5", param_1.add(2), read_unaligned));
+        let base = mech_trace::rd!("1006a7b5", param_1, read_unaligned);
+        let i_var3 = mech_trace::rd!(
+            "1006a7b5",
+            ((base as u32).wrapping_add(4) as *const i32),
+            read_unaligned
+        )
+        .wrapping_add(1);
+        let l_var2: i64 = (mech_trace::rd!("1006a7b5", param_1.add(2), read_unaligned) as i64)
+            .wrapping_mul(i_var3 as i64);
+        let mut i_var8 = mech_trace::rd!("1006a7b5", (base as u32 as *const i32), read_unaligned)
             .wrapping_add(l_var2 as i32)
-            .wrapping_add(param_1.add(1).read_unaligned());
+            .wrapping_add(mech_trace::rd!("1006a7b5", param_1.add(1), read_unaligned));
         let mut local_8: i32 = -1;
         let mut i_var6 = i_var5.wrapping_sub(i_var1);
         loop {
             loop {
                 let addr = i_var6.wrapping_add(i_var8) as u32 as *const u8;
-                let u_var4 = u32::from(addr.read());
+                let u_var4 = u32::from(mech_trace::rd!("1006a7b5", addr, read));
                 let mut puvar10 = param_2;
                 let p = tbl.byte_add(u_var4 as usize);
-                if p.read() == 0 {
-                    p.write(p.read() | 1);
+                if mech_trace::rd!("1006a7b5", p, read) == 0 {
+                    mech_trace::wr!(
+                        "1006a7b5",
+                        p,
+                        write,
+                        mech_trace::rd!("1006a7b5", p, read) | 1
+                    );
                     local_8 = local_8.wrapping_add(1);
                     if !param_2.is_null() {
                         puvar10 = param_2.add(1);
-                        param_2.write_unaligned(u_var4);
+                        mech_trace::wr!("1006a7b5", param_2, write_unaligned, u_var4);
                     }
                 }
                 i_var6 = i_var6.wrapping_sub(1);
@@ -65,6 +72,9 @@ pub unsafe extern "C" fn FUN_1006a7b5(param_1: *mut i32, param_2: *mut u32) -> u
             }
         }
         let hi = (((l_var2 as u64) >> 32) as u32 as i32) as i64 as u64;
-        (hi << 32) | (local_8.wrapping_add(1) as i64 as u64)
+        mech_trace::rt!(
+            "1006a7b5",
+            (hi << 32) | (local_8.wrapping_add(1) as i64 as u64)
+        )
     }
 }

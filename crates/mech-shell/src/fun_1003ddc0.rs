@@ -13,6 +13,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1003ddc0(str2: *mut i8, param_2: i32) -> i32 {
+    mech_trace::enter!("1003ddc0", str2, param_2);
     let mut i_var2: i32 = 0;
     if 0 < param_2 {
         // SAFETY: the table and the compare routine are the game's own; the
@@ -20,9 +21,9 @@ pub unsafe extern "C" fn FUN_1003ddc0(str2: *mut i8, param_2: i32) -> i32 {
         unsafe {
             let mut str1: *mut i8 = (&raw mut DAT_100d0970).cast::<i8>();
             loop {
-                let i_var1 = __strcmpi(str1, str2);
+                let i_var1 = mech_trace::cr!("1003ddc0", "__strcmpi", __strcmpi(str1, str2));
                 if i_var1 == 0 {
-                    return i_var2;
+                    return mech_trace::rt!("1003ddc0", i_var2);
                 }
                 str1 = str1.byte_add(0xf);
                 i_var2 = i_var2.wrapping_add(1);
@@ -32,5 +33,5 @@ pub unsafe extern "C" fn FUN_1003ddc0(str2: *mut i8, param_2: i32) -> i32 {
             }
         }
     }
-    -1
+    mech_trace::rt!("1003ddc0", -1)
 }

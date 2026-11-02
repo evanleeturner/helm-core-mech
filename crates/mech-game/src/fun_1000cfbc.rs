@@ -15,17 +15,32 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1000cfbc() {
+    mech_trace::enter!("1000cfbc");
     // SAFETY: the globals and the callee are the game's own memory; the
     // table read happens only when the index is below 0x80000000, as in the original.
     unsafe {
-        DAT_100a7594 = DAT_100a7594.wrapping_sub(1);
-        if DAT_100a7594 < 0x80000000 {
-            let p = (&raw mut DAT_102155a0)
-                .cast::<u8>()
-                .byte_add(DAT_100a7594.wrapping_mul(4) as usize);
-            DAT_100a7590 = p.cast::<u32>().read_unaligned();
+        mech_trace::gw!(
+            "1000cfbc",
+            "100a7594",
+            DAT_100a7594,
+            mech_trace::gr!("1000cfbc", "100a7594", DAT_100a7594).wrapping_sub(1)
+        );
+        if mech_trace::gr!("1000cfbc", "100a7594", DAT_100a7594) < 0x80000000 {
+            let p = (&raw mut DAT_102155a0).cast::<u8>().byte_add(
+                mech_trace::gr!("1000cfbc", "100a7594", DAT_100a7594).wrapping_mul(4) as usize,
+            );
+            mech_trace::gw!(
+                "1000cfbc",
+                "100a7590",
+                DAT_100a7590,
+                mech_trace::rd!("1000cfbc", p.cast::<u32>(), read_unaligned)
+            );
         } else {
-            FUN_100108a0(0x22, core::ptr::null_mut());
+            mech_trace::cr!(
+                "1000cfbc",
+                "100108a0",
+                FUN_100108a0(0x22, core::ptr::null_mut())
+            );
         }
     }
 }

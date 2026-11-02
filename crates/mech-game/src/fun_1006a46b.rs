@@ -20,6 +20,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1006a46b() {
+    mech_trace::enter!("1006a46b");
     // SAFETY: the callee and the globals are the game's own; only their
     // addresses are passed, in the original's order.
     unsafe {

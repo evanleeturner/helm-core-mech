@@ -14,6 +14,7 @@ pub unsafe extern "C" fn FUN_100037f0(
     param_4: u32,
     param_5: i32,
 ) {
+    mech_trace::enter!("100037f0", param_1, param_2, param_3, param_4, param_5);
     // SAFETY: the callee is the game's own function; arguments are passed through unchanged.
     unsafe {
         FUN_10003658(param_1, param_2, param_3, param_4, param_5);

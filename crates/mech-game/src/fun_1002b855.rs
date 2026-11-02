@@ -18,53 +18,82 @@ unsafe extern "C" {
 
 unsafe fn r32(p: i32, off: i32) -> i32 {
     // SAFETY: caller supplies a valid game object address.
-    unsafe { ((p as usize).wrapping_add(off as usize) as *const i32).read_unaligned() }
+    unsafe {
+        mech_trace::rd!(
+            "1002b855",
+            ((p as usize).wrapping_add(off as usize) as *const i32),
+            read_unaligned
+        )
+    }
 }
 
 unsafe fn r16u(p: i32, off: i32) -> u16 {
     // SAFETY: caller supplies a valid game object address.
-    unsafe { ((p as usize).wrapping_add(off as usize) as *const u16).read_unaligned() }
+    unsafe {
+        mech_trace::rd!(
+            "1002b855",
+            ((p as usize).wrapping_add(off as usize) as *const u16),
+            read_unaligned
+        )
+    }
 }
 
 unsafe fn r16s(p: i32, off: i32) -> i16 {
     // SAFETY: caller supplies a valid game object address.
-    unsafe { ((p as usize).wrapping_add(off as usize) as *const i16).read_unaligned() }
+    unsafe {
+        mech_trace::rd!(
+            "1002b855",
+            ((p as usize).wrapping_add(off as usize) as *const i16),
+            read_unaligned
+        )
+    }
 }
 
 unsafe fn r8(p: i32, off: i32) -> u8 {
     // SAFETY: caller supplies a valid game object address.
-    unsafe { ((p as usize).wrapping_add(off as usize) as *const u8).read() }
+    unsafe {
+        mech_trace::rd!(
+            "1002b855",
+            ((p as usize).wrapping_add(off as usize) as *const u8),
+            read
+        )
+    }
 }
 
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1002b855(param_1: i32, param_2: u32) -> u32 {
+    mech_trace::enter!("1002b855", param_1, param_2);
     let mut local_38: [i32; 5] = [0; 5];
     let mut local_14: u32 = 0;
     let local_4c: u32;
 
     if (param_2 & 0xf000) != 0 {
-        return 0;
+        return mech_trace::rt!("1002b855", 0);
     }
     // SAFETY: the callees and globals are the game's own; all pointers read
     // are game object addresses supplied by the game's tables.
     unsafe {
-        let mut i_var1 = FUN_1004d47f(param_1);
+        let mut i_var1 = mech_trace::cr!("1002b855", "1004d47f", FUN_1004d47f(param_1));
         if i_var1 == -1 {
-            return 0;
+            return mech_trace::rt!("1002b855", 0);
         }
-        let i_var2 = FUN_1002b6fe(param_1, local_38.as_mut_ptr(), 1);
+        let i_var2 = mech_trace::cr!(
+            "1002b855",
+            "1002b6fe",
+            FUN_1002b6fe(param_1, local_38.as_mut_ptr(), 1)
+        );
         if i_var2 == 0 {
-            return 0;
+            return mech_trace::rt!("1002b855", 0);
         }
         if (param_2 & 0xf00) == 0x200 {
             let tbl = (&raw mut DAT_100eef40).cast::<i32>();
-            let obj = tbl.offset((param_2 & 0xff) as isize).read();
+            let obj = mech_trace::rd!("1002b855", tbl.offset((param_2 & 0xff) as isize), read);
             local_14 = r16u(obj, 0x17c) as u32;
         }
         let u_var6 = param_2 as u16;
         let d3130 = (&raw mut DAT_10123130).cast::<i32>();
-        let dat = d3130.offset(param_1 as isize).read();
+        let dat = mech_trace::rd!("1002b855", d3130.offset(param_1 as isize), read);
         let local_8: i32 =
             ((&raw mut DAT_101600e0).cast::<u8>() as i32).wrapping_add(param_1.wrapping_mul(0x3c));
         if dat == 4 {
@@ -83,7 +112,8 @@ pub unsafe extern "C" fn FUN_1002b855(param_1: i32, param_2: u32) -> u32 {
                 let local_10 = local_38[local_18 as usize];
                 let t = r32(local_10, 0x182);
                 if r16s(local_10, 0x176) != 2 && r16s(local_10, 0x176) != 3 {
-                    i_var1 = FUN_10044933(r32(local_10, 0x20));
+                    i_var1 =
+                        mech_trace::cr!("1002b855", "10044933", FUN_10044933(r32(local_10, 0x20)));
                     if i_var1 == 0 && t != 0 {
                         FUN_1002a4e0(local_10, 2, u_var6, 1);
                         res = 1;
@@ -94,7 +124,8 @@ pub unsafe extern "C" fn FUN_1002b855(param_1: i32, param_2: u32) -> u32 {
             if r32(local_8, 8) != 0 {
                 let local_10 = local_38[4];
                 if r16s(local_10, 0x176) != 2 && r16s(local_10, 0x176) != 3 {
-                    i_var1 = FUN_10044933(r32(local_10, 0x20));
+                    i_var1 =
+                        mech_trace::cr!("1002b855", "10044933", FUN_10044933(r32(local_10, 0x20)));
                     if i_var1 == 0 {
                         let t = r32(local_10, 0x182);
                         if t != 0 {
@@ -104,7 +135,7 @@ pub unsafe extern "C" fn FUN_1002b855(param_1: i32, param_2: u32) -> u32 {
                     }
                 }
             }
-            return res;
+            return mech_trace::rt!("1002b855", res);
         } else {
             let mut local_c: i32 = -1;
             let mut local_48: i32 = 0x7fff;
@@ -116,7 +147,8 @@ pub unsafe extern "C" fn FUN_1002b855(param_1: i32, param_2: u32) -> u32 {
                     && r16s(local_10, 0x176) != 2
                     && r16s(local_10, 0x176) != 3
                 {
-                    let i_var3 = FUN_10044933(r32(local_10, 0x20));
+                    let i_var3 =
+                        mech_trace::cr!("1002b855", "10044933", FUN_10044933(r32(local_10, 0x20)));
                     if i_var3 == 0 {
                         let t = r32(local_10, 0x182);
                         if t != 0 {
@@ -139,7 +171,8 @@ pub unsafe extern "C" fn FUN_1002b855(param_1: i32, param_2: u32) -> u32 {
                     && r16s(local_10, 0x176) != 2
                     && r16s(local_10, 0x176) != 3
                 {
-                    let i_var2b = FUN_10044933(r32(local_10, 0x20));
+                    let i_var2b =
+                        mech_trace::cr!("1002b855", "10044933", FUN_10044933(r32(local_10, 0x20)));
                     if i_var2b == 0 {
                         let t = r32(local_10, 0x182);
                         if t != 0 {
@@ -156,7 +189,7 @@ pub unsafe extern "C" fn FUN_1002b855(param_1: i32, param_2: u32) -> u32 {
             let tbl = (&raw mut DAT_100eef40).cast::<i32>();
             let mut local_10: i32;
             if local_c == -1 {
-                local_10 = tbl.offset(i_var1 as isize).read();
+                local_10 = mech_trace::rd!("1002b855", tbl.offset(i_var1 as isize), read);
                 let t = r32(local_10, 0x182);
                 if (r8(local_10, 0x17e) & 3) != 0
                     || r16s(local_10, 0x176) == 2
@@ -164,30 +197,31 @@ pub unsafe extern "C" fn FUN_1002b855(param_1: i32, param_2: u32) -> u32 {
                 {
                     local_10 = 0;
                 } else {
-                    i_var1 = FUN_10044933(r32(local_10, 0x20));
+                    i_var1 =
+                        mech_trace::cr!("1002b855", "10044933", FUN_10044933(r32(local_10, 0x20)));
                     if i_var1 != 0 || t == 0 {
                         local_10 = 0;
                     }
                 }
             } else {
-                local_10 = tbl.offset(local_c as isize).read();
+                local_10 = mech_trace::rd!("1002b855", tbl.offset(local_c as isize), read);
             }
             if local_10 == 0 {
                 local_4c = 0;
             } else {
                 FUN_1002a4e0(local_10, 2, u_var6, 1);
                 let pp = (local_10 as usize).wrapping_add(0x17e) as *mut u32;
-                let mut tmp_u = pp.read_unaligned();
+                let mut tmp_u = mech_trace::rd!("1002b855", pp, read_unaligned);
                 tmp_u |= 0x20;
-                pp.write_unaligned(tmp_u);
-                tmp_u = pp.read_unaligned();
+                mech_trace::wr!("1002b855", pp, write_unaligned, tmp_u);
+                tmp_u = mech_trace::rd!("1002b855", pp, read_unaligned);
                 tmp_u &= 0xffffffbf;
-                pp.write_unaligned(tmp_u);
+                mech_trace::wr!("1002b855", pp, write_unaligned, tmp_u);
                 local_4c = 1;
             }
         }
     }
-    local_4c
+    mech_trace::rt!("1002b855", local_4c)
 }
 
 #[inline(always)]

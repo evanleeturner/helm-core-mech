@@ -14,6 +14,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1001046c() {
+    mech_trace::enter!("1001046c");
     let mut local_c: i32 = 0;
     while local_c < 0x60 {
         // SAFETY: the callee and the globals are the game's own; the table
@@ -30,6 +31,6 @@ pub unsafe extern "stdcall" fn FUN_1001046c() {
     }
     // SAFETY: DAT_100a9df0 is the game's own global.
     unsafe {
-        DAT_100a9df0 = 0;
+        mech_trace::gw!("1001046c", "100a9df0", DAT_100a9df0, 0);
     }
 }

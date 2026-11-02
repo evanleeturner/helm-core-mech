@@ -19,21 +19,34 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1006a16d() {
+    mech_trace::enter!("1006a16d");
     let mut local_2c: [i8; 40] = [0; 40];
     // SAFETY: the globals and callees are the game's own; local_2c is a
     // local buffer large enough for the formatted output.
     unsafe {
-        if DAT_100b3a68 == 0 {
-            DAT_100b3a68 = 1;
+        if mech_trace::gr!("1006a16d", "100b3a68", DAT_100b3a68) == 0 {
+            mech_trace::gw!("1006a16d", "100b3a68", DAT_100b3a68, 1);
         }
-        _sprintf(local_2c.as_mut_ptr(), s__8_8ld_100b3bf0.as_ptr(), 0i32);
-        if DAT_100b3a64 != 0 {
-            FUN_1005c0df(
-                0x37,
-                1,
+        mech_trace::cr!(
+            "1006a16d",
+            "_sprintf",
+            _sprintf(
                 local_2c.as_mut_ptr(),
-                DAT_100b3a38 as i32,
-                DAT_100b3a3c as i32,
+                mech_trace::gr!("1006a16d", "s__8_8ld_100b3bf0", s__8_8ld_100b3bf0).as_ptr(),
+                0i32
+            )
+        );
+        if mech_trace::gr!("1006a16d", "100b3a64", DAT_100b3a64) != 0 {
+            mech_trace::cr!(
+                "1006a16d",
+                "1005c0df",
+                FUN_1005c0df(
+                    0x37,
+                    1,
+                    local_2c.as_mut_ptr(),
+                    mech_trace::gr!("1006a16d", "100b3a38", DAT_100b3a38) as i32,
+                    mech_trace::gr!("1006a16d", "100b3a3c", DAT_100b3a3c) as i32,
+                )
             );
         }
     }

@@ -17,28 +17,52 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10012be0(param_1: i32, param_2: i32) {
+    mech_trace::enter!("10012be0", param_1, param_2);
     let mut local_68: [i8; 100] = [0; 100];
     // SAFETY: the globals, callees and param_1 record are the game's own memory;
     // the buffer is the local 100-byte array, written where the original does.
     unsafe {
-        let entry = (&raw mut DAT_100eef40)
-            .cast::<u32>()
-            .offset(param_2 as isize)
-            .read_unaligned();
-        if entry != 0 {
-            (param_1.wrapping_add(0x52) as *mut u8).write(0);
-            let entry = (&raw mut DAT_100eef40)
+        let entry = mech_trace::rd!(
+            "10012be0",
+            (&raw mut DAT_100eef40)
                 .cast::<u32>()
-                .offset(param_2 as isize)
-                .read_unaligned();
-            _sprintf(
-                local_68.as_mut_ptr(),
-                (&raw const DAT_100aa25c).cast::<i8>(),
-                entry.wrapping_add(0x110),
-                param_1.wrapping_add(2),
+                .offset(param_2 as isize),
+            read_unaligned
+        );
+        if entry != 0 {
+            mech_trace::wr!(
+                "10012be0",
+                (param_1.wrapping_add(0x52) as *mut u8),
+                write,
+                0
             );
-            FUN_1005be24(local_68.as_mut_ptr(), 1, 0x43e, 0x32);
-            FUN_10003742(0xf0, 100, 0x40, 5, 0x32);
+            let entry = mech_trace::rd!(
+                "10012be0",
+                (&raw mut DAT_100eef40)
+                    .cast::<u32>()
+                    .offset(param_2 as isize),
+                read_unaligned
+            );
+            mech_trace::cr!(
+                "10012be0",
+                "_sprintf",
+                _sprintf(
+                    local_68.as_mut_ptr(),
+                    (&raw const DAT_100aa25c).cast::<i8>(),
+                    entry.wrapping_add(0x110),
+                    param_1.wrapping_add(2),
+                )
+            );
+            mech_trace::cr!(
+                "10012be0",
+                "1005be24",
+                FUN_1005be24(local_68.as_mut_ptr(), 1, 0x43e, 0x32)
+            );
+            mech_trace::cr!(
+                "10012be0",
+                "10003742",
+                FUN_10003742(0xf0, 100, 0x40, 5, 0x32)
+            );
         }
     }
 }

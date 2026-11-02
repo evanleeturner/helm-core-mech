@@ -10,22 +10,28 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1004baf4() -> *mut u8 {
+    mech_trace::enter!("1004baf4");
     // SAFETY: the globals are the game's own memory; the table entry is read
     // at the same offset the original computes.
     unsafe {
-        let idx = DAT_100b06f0;
-        if idx == 0xFFFF_FFFF
-            || (&raw mut DAT_101ec7a0)
-                .cast::<u8>()
-                .wrapping_byte_add(idx.wrapping_mul(0x60) as usize)
-                .cast::<i32>()
-                .read_unaligned()
-                == 0
-        {
-            DAT_100b06f0 = 0xFFFF_FFFF;
-            core::ptr::null_mut()
-        } else {
-            (&raw mut DAT_100c7e10).cast::<u8>()
-        }
+        let idx = mech_trace::gr!("1004baf4", "100b06f0", DAT_100b06f0);
+        mech_trace::rt!(
+            "1004baf4",
+            if idx == 0xFFFF_FFFF
+                || mech_trace::rd!(
+                    "1004baf4",
+                    (&raw mut DAT_101ec7a0)
+                        .cast::<u8>()
+                        .wrapping_byte_add(idx.wrapping_mul(0x60) as usize)
+                        .cast::<i32>(),
+                    read_unaligned
+                ) == 0
+            {
+                mech_trace::gw!("1004baf4", "100b06f0", DAT_100b06f0, 0xFFFF_FFFF);
+                core::ptr::null_mut()
+            } else {
+                (&raw mut DAT_100c7e10).cast::<u8>()
+            }
+        )
     }
 }

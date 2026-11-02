@@ -29,27 +29,32 @@ pub unsafe extern "C" fn FUN_1005fb3a(
     param_4: i32,
     param_5: *mut i32,
 ) -> i32 {
+    mech_trace::enter!("1005fb3a", param_1, param_2, param_3, param_4, param_5);
     let mut local_10: i32 = 0;
     let mut local_c: i32 = 0;
     let mut local_8: u32 = 0;
     // SAFETY: the callee and globals are the game's own; locals are valid
     // for the callee's writes and param_5 is the caller's output pointer.
     unsafe {
-        FUN_1005fbab(
-            param_1,
-            param_2,
-            param_3,
-            param_4,
-            &raw mut local_8,
-            (&raw mut local_c).cast::<u32>(),
-            &raw mut local_10,
+        mech_trace::cr!(
+            "1005fb3a",
+            "1005fbab",
+            FUN_1005fbab(
+                param_1,
+                param_2,
+                param_3,
+                param_4,
+                &raw mut local_8,
+                (&raw mut local_c).cast::<u32>(),
+                &raw mut local_10,
+            )
         );
         if local_c != 0 {
-            param_5.write_unaligned(local_10);
-            DAT_100aa548 = 0;
-            DAT_100aa540 = 0;
-            DAT_100aa544 = 0x10000;
+            mech_trace::wr!("1005fb3a", param_5, write_unaligned, local_10);
+            mech_trace::gw!("1005fb3a", "100aa548", DAT_100aa548, 0);
+            mech_trace::gw!("1005fb3a", "100aa540", DAT_100aa540, 0);
+            mech_trace::gw!("1005fb3a", "100aa544", DAT_100aa544, 0x10000);
         }
     }
-    local_c
+    mech_trace::rt!("1005fb3a", local_c)
 }

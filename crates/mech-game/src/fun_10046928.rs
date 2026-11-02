@@ -19,25 +19,32 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10046928() -> i32 {
+    mech_trace::enter!("10046928");
     // SAFETY: the globals and callees are the game's own; the pointer passed
     // to FUN_10046dbc is the address of the game's global.
     unsafe {
-        if DAT_100b04c4 == 0 {
-            return 0;
+        if mech_trace::gr!("10046928", "100b04c4", DAT_100b04c4) == 0 {
+            return mech_trace::rt!("10046928", 0);
         }
-        let i_var1 = FUN_10046563();
-        if DAT_100c7d00 == i_var1 {
-            return 0;
+        let i_var1 = mech_trace::cr!("10046928", "10046563", FUN_10046563());
+        if mech_trace::gr!("10046928", "100c7d00", DAT_100c7d00) == i_var1 {
+            return mech_trace::rt!("10046928", 0);
         }
         match i_var1 {
             1 => {
                 FUN_10046f04(0x100b04b8);
             }
             2 => {
-                if DAT_100c7d00 == 1 {
+                if mech_trace::gr!("10046928", "100c7d00", DAT_100c7d00) == 1 {
                     let mut local_c: i32 = 0;
-                    while local_c < 3 && FUN_10046dbc(&raw mut DAT_100b04b8) != 0 {
-                        __putch(7);
+                    while local_c < 3
+                        && mech_trace::cr!(
+                            "10046928",
+                            "10046dbc",
+                            FUN_10046dbc(&raw mut DAT_100b04b8)
+                        ) != 0
+                    {
+                        mech_trace::cr!("10046928", "__putch", __putch(7));
                         local_c = local_c.wrapping_add(1);
                     }
                     if local_c == 3 {
@@ -47,7 +54,7 @@ pub unsafe extern "stdcall" fn FUN_10046928() -> i32 {
             }
             _ => {}
         }
-        DAT_100c7d00 = i_var1;
-        1
+        mech_trace::gw!("10046928", "100c7d00", DAT_100c7d00, i_var1);
+        mech_trace::rt!("10046928", 1)
     }
 }

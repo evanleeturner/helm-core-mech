@@ -19,6 +19,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1001e3ac(param_1: i32) {
+    mech_trace::enter!("1001e3ac", param_1);
     let off = param_1.wrapping_mul(0x14a);
     // SAFETY: the globals and callees are the game's own memory; the offsets
     // index the game's per-slot records exactly as the original does.
@@ -26,37 +27,62 @@ pub unsafe extern "C" fn FUN_1001e3ac(param_1: i32) {
         let p46 = (&raw mut DAT_101e8546)
             .wrapping_byte_add(off as usize)
             .cast::<u32>();
-        FUN_1001dfab(p46.read_unaligned());
-        p46.write_unaligned(0);
+        mech_trace::cr!(
+            "1001e3ac",
+            "1001dfab",
+            FUN_1001dfab(mech_trace::rd!("1001e3ac", p46, read_unaligned))
+        );
+        mech_trace::wr!("1001e3ac", p46, write_unaligned, 0);
         let mut i: u16 = 0;
         while i < 0x20 {
             let o = (i as u32).wrapping_mul(8).wrapping_add(off as u32) as i32 as usize;
             let pa = (&raw mut DAT_101e856a).wrapping_byte_add(o).cast::<i32>();
-            if pa.read_unaligned() != 0 {
-                FUN_1001dfab(pa.read_unaligned() as u32);
-                pa.write_unaligned(0);
+            if mech_trace::rd!("1001e3ac", pa, read_unaligned) != 0 {
+                mech_trace::cr!(
+                    "1001e3ac",
+                    "1001dfab",
+                    FUN_1001dfab(mech_trace::rd!("1001e3ac", pa, read_unaligned) as u32)
+                );
+                mech_trace::wr!("1001e3ac", pa, write_unaligned, 0);
             }
             let pb = (&raw mut DAT_101e856e).wrapping_byte_add(o).cast::<i32>();
-            if pb.read_unaligned() != 0 {
-                FUN_1001dfab(pb.read_unaligned() as u32);
-                pb.write_unaligned(0);
+            if mech_trace::rd!("1001e3ac", pb, read_unaligned) != 0 {
+                mech_trace::cr!(
+                    "1001e3ac",
+                    "1001dfab",
+                    FUN_1001dfab(mech_trace::rd!("1001e3ac", pb, read_unaligned) as u32)
+                );
+                mech_trace::wr!("1001e3ac", pb, write_unaligned, 0);
             }
             i = i.wrapping_add(1);
         }
-        (&raw mut DAT_101e8544)
-            .wrapping_byte_add(off as usize)
-            .cast::<u16>()
-            .write_unaligned(0);
-        __strnset(
-            (off.wrapping_add(0x101e866a) as u32 as usize) as *mut i8,
-            0,
-            0x20,
-        );
-        __close(
-            (&raw mut DAT_101e8540)
+        mech_trace::wr!(
+            "1001e3ac",
+            (&raw mut DAT_101e8544)
                 .wrapping_byte_add(off as usize)
-                .cast::<i32>()
-                .read_unaligned(),
+                .cast::<u16>(),
+            write_unaligned,
+            0
+        );
+        mech_trace::cr!(
+            "1001e3ac",
+            "__strnset",
+            __strnset(
+                (off.wrapping_add(0x101e866a) as u32 as usize) as *mut i8,
+                0,
+                0x20,
+            )
+        );
+        mech_trace::cr!(
+            "1001e3ac",
+            "__close",
+            __close(mech_trace::rd!(
+                "1001e3ac",
+                (&raw mut DAT_101e8540)
+                    .wrapping_byte_add(off as usize)
+                    .cast::<i32>(),
+                read_unaligned
+            ),)
         );
     }
 }

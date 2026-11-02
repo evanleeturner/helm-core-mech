@@ -20,18 +20,19 @@ unsafe extern "C" {
 #[inline(always)]
 unsafe fn rd<T>(p: *mut i32, off: usize) -> T {
     // SAFETY: caller guarantees p points at a structure covering off.
-    unsafe { p.byte_add(off).cast::<T>().read_unaligned() }
+    unsafe { mech_trace::rd!("100269a7", p.byte_add(off).cast::<T>(), read_unaligned) }
 }
 
 #[inline(always)]
 unsafe fn wr<T>(p: *mut i32, off: usize, v: T) {
     // SAFETY: caller guarantees p points at a structure covering off.
-    unsafe { p.byte_add(off).cast::<T>().write_unaligned(v) }
+    unsafe { mech_trace::wr!("100269a7", p.byte_add(off).cast::<T>(), write_unaligned, v) }
 }
 
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_100269a7(param_1: *mut i32) {
+    mech_trace::enter!("100269a7", param_1);
     // SAFETY: param_1 is the game's record; globals and callees are the
     // game's own; all accesses mirror the original's offsets and order.
     unsafe {
@@ -41,10 +42,18 @@ pub unsafe extern "C" fn FUN_100269a7(param_1: *mut i32) {
         wr::<u16>(param_1, 0x176, 0);
         wr::<u32>(param_1, 0x1a2, 0x1000);
         wr::<u32>(param_1, 0x192, 0);
-        FUN_10026e24(param_1.cast::<u32>());
+        mech_trace::cr!("100269a7", "10026e24", FUN_10026e24(param_1.cast::<u32>()));
         let tbl = (&raw mut DAT_100eef40).cast::<u32>();
-        let ent: u32 = tbl.add(DAT_100adf38 as usize).read_unaligned();
-        let cur: i32 = ((ent as usize + 8) as *const i32).read_unaligned();
+        let ent: u32 = mech_trace::rd!(
+            "100269a7",
+            tbl.add(mech_trace::gr!("100269a7", "100adf38", DAT_100adf38) as usize),
+            read_unaligned
+        );
+        let cur: i32 = mech_trace::rd!(
+            "100269a7",
+            ((ent as usize + 8) as *const i32),
+            read_unaligned
+        );
         let id: i32 = rd(param_1, 8);
         if cur == id {
             wr::<u32>(param_1, 0x182, 0);
@@ -54,9 +63,17 @@ pub unsafe extern "C" fn FUN_100269a7(param_1: *mut i32) {
         let kind: i32 = rd(param_1, 0x10);
         if kind == 2 {
             let id: i32 = rd(param_1, 8);
-            let u = FUN_1004d47f(id);
-            FUN_1002b4cf(param_1.cast::<u32>(), 0, 0, u as i16);
-            let ent: u32 = tbl.add(DAT_100adf38 as usize).read_unaligned();
+            let u = mech_trace::cr!("100269a7", "1004d47f", FUN_1004d47f(id));
+            mech_trace::cr!(
+                "100269a7",
+                "1002b4cf",
+                FUN_1002b4cf(param_1.cast::<u32>(), 0, 0, u as i16)
+            );
+            let ent: u32 = mech_trace::rd!(
+                "100269a7",
+                tbl.add(mech_trace::gr!("100269a7", "100adf38", DAT_100adf38) as usize),
+                read_unaligned
+            );
             let i_var1 = ent as i32;
             let v: i32 = rd(param_1, 0x15c);
             wr::<u8>(param_1, 0x186, v as u8);
@@ -96,13 +113,17 @@ pub unsafe extern "C" fn FUN_100269a7(param_1: *mut i32) {
             let w: u16 = rd(param_1, 0x16a);
             wr::<u32>(param_1, 0x18a, u32::from(w));
             let id: i32 = rd(param_1, 8);
-            let other: i32 = ((i_var1 as usize + 8) as *const i32).read_unaligned();
+            let other: i32 = mech_trace::rd!(
+                "100269a7",
+                ((i_var1 as usize + 8) as *const i32),
+                read_unaligned
+            );
             if id == other {
                 let a: i32 = rd(param_1, 0xc);
                 let b: i32 = rd(param_1, 0x18a);
-                FUN_10008371(a, b);
+                mech_trace::cr!("100269a7", "10008371", FUN_10008371(a, b));
             }
-            FUN_10026c76(param_1);
+            mech_trace::cr!("100269a7", "10026c76", FUN_10026c76(param_1));
             let b: u8 = rd(param_1, 0x186);
             wr::<u8>(param_1, 0x186, b.wrapping_add(1));
             let v: i32 = rd(param_1, 0x19e);
@@ -111,7 +132,7 @@ pub unsafe extern "C" fn FUN_100269a7(param_1: *mut i32) {
             wr::<i32>(param_1, 0x196, v.wrapping_mul(100));
             let v: i32 = rd(param_1, 0x19a);
             wr::<i32>(param_1, 0x19a, v.wrapping_mul(100));
-            FUN_10042289(param_1);
+            mech_trace::cr!("100269a7", "10042289", FUN_10042289(param_1));
         }
     }
 }

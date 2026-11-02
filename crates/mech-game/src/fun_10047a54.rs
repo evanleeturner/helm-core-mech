@@ -20,23 +20,55 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10047a54(param_1: *mut i8, buf: *mut u8) -> u32 {
+    mech_trace::enter!("10047a54", param_1, buf);
     // SAFETY: the callees and globals are the game's own; the pointers are
     // the caller's and are passed through unchanged.
     unsafe {
-        let file_handle = FID_conflict___open(param_1, 0x8101, 0x80);
+        let file_handle = mech_trace::cr!(
+            "10047a54",
+            "FID_conflict___open",
+            FID_conflict___open(param_1, 0x8101, 0x80)
+        );
         if file_handle == -1 {
-            return 0;
+            return mech_trace::rt!("10047a54", 0);
         }
-        let b = FUN_1008668b(DAT_100af17c as i32, 0xd, DAT_100af0cc as *mut i32);
+        let b = mech_trace::cr!(
+            "10047a54",
+            "1008668b",
+            FUN_1008668b(
+                mech_trace::gr!("10047a54", "100af17c", DAT_100af17c) as i32,
+                0xd,
+                mech_trace::gr!("10047a54", "100af0cc", DAT_100af0cc) as *mut i32
+            )
+        );
         if b.is_null() {
-            __close(file_handle);
-            return 0;
+            mech_trace::cr!("10047a54", "__close", __close(file_handle));
+            return mech_trace::rt!("10047a54", 0);
         }
-        __write(file_handle, b as *const u8, 0x20);
-        __write(file_handle, buf, 0x300);
-        __write(file_handle, DAT_101f5300, DAT_101f52d8);
-        __close(file_handle);
-        FUN_1008664f(0xd, DAT_100af0cc as *mut i32);
-        1
+        mech_trace::cr!(
+            "10047a54",
+            "__write",
+            __write(file_handle, b as *const u8, 0x20)
+        );
+        mech_trace::cr!("10047a54", "__write", __write(file_handle, buf, 0x300));
+        mech_trace::cr!(
+            "10047a54",
+            "__write",
+            __write(
+                file_handle,
+                mech_trace::gr!("10047a54", "101f5300", DAT_101f5300),
+                mech_trace::gr!("10047a54", "101f52d8", DAT_101f52d8)
+            )
+        );
+        mech_trace::cr!("10047a54", "__close", __close(file_handle));
+        mech_trace::cr!(
+            "10047a54",
+            "1008664f",
+            FUN_1008664f(
+                0xd,
+                mech_trace::gr!("10047a54", "100af0cc", DAT_100af0cc) as *mut i32
+            )
+        );
+        mech_trace::rt!("10047a54", 1)
     }
 }

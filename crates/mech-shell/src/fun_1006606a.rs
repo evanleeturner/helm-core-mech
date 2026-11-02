@@ -19,36 +19,44 @@ pub unsafe extern "C" fn FUN_1006606a(
     param_4: i32,
     param_5: i32,
 ) -> i32 {
+    mech_trace::enter!("1006606a", param_1, param_2, param_3, param_4, param_5);
     // SAFETY: the surface, the sprite data, the clip rectangle and the remap
     // table are the game's own memory; every access mirrors the original's
     // reads and writes.
     unsafe {
-        let rd = |a: i32| -> i32 { (a as u32 as usize as *const i32).read_unaligned() };
+        let rd = |a: i32| -> i32 {
+            mech_trace::rd!(
+                "1006606a",
+                (a as u32 as usize as *const i32),
+                read_unaligned
+            )
+        };
 
-        let pi2 = param_1.read_unaligned() as u32 as usize as *const i32;
-        let mut iv11 = pi2.add(1).read_unaligned();
+        let pi2 =
+            mech_trace::rd!("1006606a", param_1, read_unaligned) as u32 as usize as *const i32;
+        let mut iv11 = mech_trace::rd!("1006606a", pi2.add(1), read_unaligned);
         let iv7 = iv11.wrapping_add(1);
         if iv7 == 0 || iv11 < -1 {
-            return -1;
+            return mech_trace::rt!("1006606a", -1);
         }
-        let mut iv12 = pi2.add(2).read_unaligned();
+        let mut iv12 = mech_trace::rd!("1006606a", pi2.add(2), read_unaligned);
         if iv12 < 0 {
-            return -1;
+            return mech_trace::rt!("1006606a", -1);
         }
-        let mut iv3 = param_1.add(1).read_unaligned();
+        let mut iv3 = mech_trace::rd!("1006606a", param_1.add(1), read_unaligned);
         let iv8 = if iv3 < 1 { 0 } else { iv3 };
-        let mut iv4 = param_1.add(2).read_unaligned();
+        let mut iv4 = mech_trace::rd!("1006606a", param_1.add(2), read_unaligned);
         let iv9 = if iv4 < 1 { 0 } else { iv4 };
-        let mut iv10 = param_1.add(3).read_unaligned();
-        if iv11 <= param_1.add(3).read_unaligned() {
+        let mut iv10 = mech_trace::rd!("1006606a", param_1.add(3), read_unaligned);
+        if iv11 <= mech_trace::rd!("1006606a", param_1.add(3), read_unaligned) {
             iv10 = iv11;
         }
-        iv11 = param_1.add(4).read_unaligned();
-        if iv12 <= param_1.add(4).read_unaligned() {
+        iv11 = mech_trace::rd!("1006606a", param_1.add(4), read_unaligned);
+        if iv12 <= mech_trace::rd!("1006606a", param_1.add(4), read_unaligned) {
             iv11 = iv12;
         }
         if iv10 < iv8 || iv11 < iv9 {
-            return -2;
+            return mech_trace::rt!("1006606a", -2);
         }
         iv3 = param_4.wrapping_add(iv3);
         iv4 = param_5.wrapping_add(iv4);
@@ -63,7 +71,7 @@ pub unsafe extern "C" fn FUN_1006606a(
         let iv14 = rd(iv21.wrapping_add(0x14)).wrapping_add(iv4);
         let mut p = (iv21.wrapping_add(0x18)) as u32 as usize as *const u8;
         if iv13 < iv12 || iv14 < l24 {
-            return -4;
+            return mech_trace::rt!("1006606a", -4);
         }
         let b18: u8 = (((((iv12.wrapping_sub(iv8) < 0) as i32 * 2
             + (iv10.wrapping_sub(iv12) < 0) as i32)
@@ -78,25 +86,29 @@ pub unsafe extern "C" fn FUN_1006606a(
             * 2)
             + (iv11.wrapping_sub(iv14) < 0) as i32) as u8;
         if (b20 & b18) != 0 {
-            return -3;
+            return mech_trace::rt!("1006606a", -3);
         }
         if b18 == 0 && b20 == 0 {
-            FUN_10066542(
-                param_1,
-                iv21,
-                iv3.wrapping_sub(param_1.add(1).read_unaligned()),
-                iv4.wrapping_sub(param_1.add(2).read_unaligned()),
+            mech_trace::cr!(
+                "1006606a",
+                "10066542",
+                FUN_10066542(
+                    param_1,
+                    iv21,
+                    iv3.wrapping_sub(mech_trace::rd!("1006606a", param_1.add(1), read_unaligned)),
+                    iv4.wrapping_sub(mech_trace::rd!("1006606a", param_1.add(2), read_unaligned)),
+                )
             );
-            return 0;
+            return mech_trace::rt!("1006606a", 0);
         }
         let mut l28: i32 = l24
             .wrapping_mul(iv7)
-            .wrapping_add(pi2.read_unaligned())
+            .wrapping_add(mech_trace::rd!("1006606a", pi2, read_unaligned))
             .wrapping_add(iv12);
 
         while l24 < iv9 {
             loop {
-                let c = p.read();
+                let c = mech_trace::rd!("1006606a", p, read);
                 p = p.add(1);
                 let bit = c & 1;
                 let cnt = (c >> 1) as usize;
@@ -120,16 +132,16 @@ pub unsafe extern "C" fn FUN_1006606a(
 
         loop {
             if iv14 < l24 {
-                return 0;
+                return mech_trace::rt!("1006606a", 0);
             }
             if iv11 < l24 {
-                return 0;
+                return mech_trace::rt!("1006606a", 0);
             }
             let mut d = l28;
             let mut left_active = left_flag;
             let mut skipping = false;
             loop {
-                let c = p.read();
+                let c = mech_trace::rd!("1006606a", p, read);
                 p = p.add(1);
                 let bit = c & 1;
                 let mut cnt = (c >> 1) as i32;
@@ -138,7 +150,7 @@ pub unsafe extern "C" fn FUN_1006606a(
                         break;
                     }
                     if !skipping {
-                        d = d.wrapping_add(p.read() as i32);
+                        d = d.wrapping_add(mech_trace::rd!("1006606a", p, read) as i32);
                     }
                     p = p.add(1);
                     continue;
@@ -174,10 +186,19 @@ pub unsafe extern "C" fn FUN_1006606a(
                         excess = if x < 0 { 0 } else { x };
                     }
                     let n = cnt - excess;
-                    let v = DAT_100aa2c8[p.read() as usize];
+                    let v = mech_trace::gr!(
+                        "1006606a",
+                        "100aa2c8",
+                        DAT_100aa2c8[mech_trace::rd!("1006606a", p, read) as usize]
+                    );
                     let mut i = 0;
                     while i < n {
-                        (d.wrapping_add(i) as u32 as usize as *mut u8).write(v);
+                        mech_trace::wr!(
+                            "1006606a",
+                            (d.wrapping_add(i) as u32 as usize as *mut u8),
+                            write,
+                            v
+                        );
                         i += 1;
                     }
                     d = d.wrapping_add(n).wrapping_add(excess);
@@ -212,8 +233,17 @@ pub unsafe extern "C" fn FUN_1006606a(
                     let n = cnt - excess;
                     let mut i = 0;
                     while i < n {
-                        let v = DAT_100aa2c8[p.read() as usize];
-                        (d.wrapping_add(i) as u32 as usize as *mut u8).write(v);
+                        let v = mech_trace::gr!(
+                            "1006606a",
+                            "100aa2c8",
+                            DAT_100aa2c8[mech_trace::rd!("1006606a", p, read) as usize]
+                        );
+                        mech_trace::wr!(
+                            "1006606a",
+                            (d.wrapping_add(i) as u32 as usize as *mut u8),
+                            write,
+                            v
+                        );
                         p = p.add(1);
                         i += 1;
                     }

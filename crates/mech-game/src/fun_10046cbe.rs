@@ -23,12 +23,13 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10046cbe(param_1: u32, param_2: u32) {
+    mech_trace::enter!("10046cbe", param_1, param_2);
     let mut local_14: [u32; 4] = [0; 4];
     // SAFETY: the callees and globals are the game's own; local_14 is a
     // valid buffer for the callee to fill.
     unsafe {
-        if DAT_100b04c4 != 0 {
-            let i_var1 = FUN_10046563() as i32;
+        if mech_trace::gr!("10046cbe", "100b04c4", DAT_100b04c4) != 0 {
+            let i_var1 = mech_trace::cr!("10046cbe", "10046563", FUN_10046563()) as i32;
             if i_var1 != 1 && 1 < i_var1 && i_var1 < 5 {
                 FUN_10046824(local_14.as_mut_ptr());
                 if param_1 < param_2 {
@@ -37,9 +38,9 @@ pub unsafe extern "C" fn FUN_10046cbe(param_1: u32, param_2: u32) {
                         FUN_100463ee(param_1, param_2 as i32);
                     } else if i_var1 == 4 {
                         FUN_100463ee(param_1, param_2 as i32);
-                        DAT_100c7cf0 = 0;
-                        DAT_100c7cf4 = 0;
-                        DAT_100c7cf8 = 0;
+                        mech_trace::gw!("10046cbe", "100c7cf0", DAT_100c7cf0, 0);
+                        mech_trace::gw!("10046cbe", "100c7cf4", DAT_100c7cf4, 0);
+                        mech_trace::gw!("10046cbe", "100c7cf8", DAT_100c7cf8, 0);
                     } else {
                         FUN_100463ee(param_1, param_2 as i32);
                     }

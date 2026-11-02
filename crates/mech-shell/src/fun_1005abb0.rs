@@ -25,16 +25,25 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1005abb0() {
+    mech_trace::enter!("1005abb0");
     // SAFETY: the callees and globals are the game's own; the buffer is the
     // game's 0x54-byte config area, filled only if the file opened.
     unsafe {
-        let file = __wfopen(
-            (&raw const s_MW2SND_CFG_100a50d0).cast(),
-            (&raw const DAT_100a50cc).cast(),
+        let file = mech_trace::cr!(
+            "1005abb0",
+            "__wfopen",
+            __wfopen(
+                (&raw const s_MW2SND_CFG_100a50d0).cast(),
+                (&raw const DAT_100a50cc).cast(),
+            )
         );
         if !file.is_null() {
-            _fread((&raw mut DAT_100a67f0).cast(), 0x54, 1, file);
-            _fclose(file);
+            mech_trace::cr!(
+                "1005abb0",
+                "_fread",
+                _fread((&raw mut DAT_100a67f0).cast(), 0x54, 1, file)
+            );
+            mech_trace::cr!("1005abb0", "_fclose", _fclose(file));
         }
     }
 }

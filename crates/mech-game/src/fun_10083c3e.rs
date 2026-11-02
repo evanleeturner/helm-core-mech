@@ -14,14 +14,16 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10083c3e(param_1: i32) {
+    mech_trace::enter!("10083c3e", param_1);
     // SAFETY: the globals and the callee are the game's own; the index is
     // read from the game's global and used as the original does.
     unsafe {
-        let idx = DAT_100adf38 as usize;
-        let v = (&raw mut DAT_100eef40)
-            .cast::<u32>()
-            .add(idx)
-            .read_unaligned();
+        let idx = mech_trace::gr!("10083c3e", "100adf38", DAT_100adf38) as usize;
+        let v = mech_trace::rd!(
+            "10083c3e",
+            (&raw mut DAT_100eef40).cast::<u32>().add(idx),
+            read_unaligned
+        );
         FUN_1008276d(v, param_1, 0x40008);
     }
 }

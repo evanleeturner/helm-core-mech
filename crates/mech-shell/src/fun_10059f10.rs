@@ -12,11 +12,12 @@ pub unsafe extern "C" fn FUN_10059f10(
     dest_buffer: *mut u8,
     byte_count: u32,
 ) -> u32 {
+    mech_trace::enter!("10059f10", file_handle, dest_buffer, byte_count);
     let mut dest_buffer = dest_buffer;
     let mut bytes_left = byte_count;
     loop {
         if bytes_left == 0 {
-            return byte_count;
+            return mech_trace::rt!("10059f10", byte_count);
         }
         let mut chunk_size = bytes_left;
         if 0x3fff < bytes_left {
@@ -24,12 +25,18 @@ pub unsafe extern "C" fn FUN_10059f10(
         }
         // SAFETY: __read is the C runtime's function; dest_buffer points at
         // the caller's buffer with at least bytes_left bytes remaining.
-        let bytes_read = unsafe { __read(file_handle, dest_buffer, chunk_size) } as u32;
+        let bytes_read = unsafe {
+            mech_trace::cr!(
+                "10059f10",
+                "__read",
+                __read(file_handle, dest_buffer, chunk_size)
+            )
+        } as u32;
         if bytes_read != chunk_size {
             break;
         }
         bytes_left = bytes_left.wrapping_sub(chunk_size);
         dest_buffer = dest_buffer.wrapping_add(chunk_size as usize);
     }
-    0xffffffff
+    mech_trace::rt!("10059f10", 0xffffffff)
 }

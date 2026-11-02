@@ -19,26 +19,33 @@ unsafe extern "C" {
 
 unsafe fn rd<T>(a: u32) -> T {
     // SAFETY: the caller supplies an address of a live game object.
-    unsafe { (a as usize as *const T).read_unaligned() }
+    unsafe { mech_trace::rd!("1001261d", (a as usize as *const T), read_unaligned) }
 }
 
 unsafe fn wr<T>(a: u32, v: T) {
     // SAFETY: the caller supplies an address of a live game object.
-    unsafe { (a as usize as *mut T).write_unaligned(v) }
+    unsafe { mech_trace::wr!("1001261d", (a as usize as *mut T), write_unaligned, v) }
 }
 
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1001261d() {
+    mech_trace::enter!("1001261d");
     // SAFETY: all globals and the objects they point to are the game's own
     // memory; reads and writes happen in the original's order.
     unsafe {
-        let b = || DAT_100aa1dc as u32;
+        let b = || mech_trace::gr!("1001261d", "100aa1dc", DAT_100aa1dc) as u32;
 
-        wr::<u16>(b(), DAT_100aa254);
-        let i_var2: u32 = (&raw mut DAT_100eef40 as *const u32)
-            .add(DAT_100adf38 as usize)
-            .read();
+        wr::<u16>(b(), mech_trace::gr!("1001261d", "100aa254", DAT_100aa254));
+        let i_var2: u32 = mech_trace::rd!(
+            "1001261d",
+            (&raw mut DAT_100eef40 as *const u32).add(mech_trace::gr!(
+                "1001261d",
+                "100adf38",
+                DAT_100adf38
+            ) as usize),
+            read
+        );
         let pi_var3: u32 = rd::<u32>(i_var2.wrapping_add(0x20));
         wr::<u16>(b().wrapping_add(7), 0);
         wr::<u8>(b().wrapping_add(2), rd::<u8>(i_var2.wrapping_add(4)));
@@ -131,7 +138,10 @@ pub unsafe extern "stdcall" fn FUN_1001261d() {
                 wr::<u16>(b().wrapping_add(7), o | 0x200);
             }
         }
-        wr::<u32>(b().wrapping_add(0x55), DAT_100b38fc);
+        wr::<u32>(
+            b().wrapping_add(0x55),
+            mech_trace::gr!("1001261d", "100b38fc", DAT_100b38fc),
+        );
         let mut local_14: i32 = 0;
         while local_14 < 8 {
             let pu_var1: u32 = rd::<u32>(pi_var3.wrapping_add(0x16 * 4))
@@ -155,6 +165,13 @@ pub unsafe extern "stdcall" fn FUN_1001261d() {
             );
             local_14 = local_14.wrapping_add(1);
         }
-        FUN_10006e00(DAT_100aa1dc as u32, DAT_100aa1e0);
+        mech_trace::cr!(
+            "1001261d",
+            "10006e00",
+            FUN_10006e00(
+                mech_trace::gr!("1001261d", "100aa1dc", DAT_100aa1dc) as u32,
+                mech_trace::gr!("1001261d", "100aa1e0", DAT_100aa1e0)
+            )
+        );
     }
 }

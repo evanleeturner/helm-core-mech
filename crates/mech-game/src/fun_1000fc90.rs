@@ -47,10 +47,13 @@ unsafe fn div_step(prod: i64, d: i32) -> i32 {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1000fc90(param_1: i32, param_2: i32, param_3: i32) -> i32 {
+    mech_trace::enter!("1000fc90", param_1, param_2, param_3);
     // SAFETY: param_3 is the caller's struct address; fields are read at the original's offsets.
     unsafe {
         let base = param_3 as usize as *const u8;
-        let rd = |off: usize| -> i32 { base.byte_add(off).cast::<i32>().read_unaligned() };
+        let rd = |off: usize| -> i32 {
+            mech_trace::rd!("1000fc90", base.byte_add(off).cast::<i32>(), read_unaligned)
+        };
 
         let a = (param_1 as u32).wrapping_sub(rd(0x8c) as u32) as i32;
         let d = rd(0x94);
@@ -64,6 +67,6 @@ pub unsafe extern "C" fn FUN_1000fc90(param_1: i32, param_2: i32, param_3: i32) 
 
         let lhs = (0u32.wrapping_sub(rd(0x70) as u32) as i32) >> 16;
         let rhs = (t1 as u32).wrapping_add(t2 as u32) as i32;
-        (lhs <= rhs) as i32
+        mech_trace::rt!("1000fc90", (lhs <= rhs) as i32)
     }
 }

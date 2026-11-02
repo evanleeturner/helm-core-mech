@@ -13,12 +13,22 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1004633a() -> u32 {
+    mech_trace::enter!("1004633a");
     let mut local_8: u32 = 0;
     // SAFETY: the global and the MCI call are the game's own; local_8 lives
     // on this frame for the duration of the call.
     unsafe {
-        mciSendCommandA(DAT_100b04b0, 0x804, 0, (&raw mut local_8) as usize as u32);
-        DAT_100b04b0 = 0xffffffff;
+        mech_trace::cr!(
+            "1004633a",
+            "mciSendCommandA",
+            mciSendCommandA(
+                mech_trace::gr!("1004633a", "100b04b0", DAT_100b04b0),
+                0x804,
+                0,
+                (&raw mut local_8) as usize as u32
+            )
+        );
+        mech_trace::gw!("1004633a", "100b04b0", DAT_100b04b0, 0xffffffff);
     }
-    0
+    mech_trace::rt!("1004633a", 0)
 }

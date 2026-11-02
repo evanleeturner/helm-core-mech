@@ -9,19 +9,28 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10051f43(param_1: i32) -> i32 {
+    mech_trace::enter!("10051f43", param_1);
     // SAFETY: the globals are the game's own memory; the table index is read
     // as the original does, and the division uses the machine's idiv.
     unsafe {
-        let i_var1 = (DAT_100b09e0.wrapping_mul(4)) as i32;
-        DAT_100b09e0 = DAT_100b09e0.wrapping_add(1);
-        if DAT_100b09e0 == 0x7f {
-            DAT_100b09e0 = 0;
+        let i_var1 = (mech_trace::gr!("10051f43", "100b09e0", DAT_100b09e0).wrapping_mul(4)) as i32;
+        mech_trace::gw!(
+            "10051f43",
+            "100b09e0",
+            DAT_100b09e0,
+            mech_trace::gr!("10051f43", "100b09e0", DAT_100b09e0).wrapping_add(1)
+        );
+        if mech_trace::gr!("10051f43", "100b09e0", DAT_100b09e0) == 0x7f {
+            mech_trace::gw!("10051f43", "100b09e0", DAT_100b09e0, 0);
         }
-        let v = (&raw mut DAT_101153c0)
-            .cast::<u8>()
-            .byte_offset(i_var1 as isize)
-            .cast::<i32>()
-            .read_unaligned();
+        let v = mech_trace::rd!(
+            "10051f43",
+            (&raw mut DAT_101153c0)
+                .cast::<u8>()
+                .byte_offset(i_var1 as isize)
+                .cast::<i32>(),
+            read_unaligned
+        );
         let rem: i32;
         core::arch::asm!(
             "cdq",
@@ -30,6 +39,6 @@ pub unsafe extern "C" fn FUN_10051f43(param_1: i32) -> i32 {
             inout("eax") v => _,
             out("edx") rem,
         );
-        rem
+        mech_trace::rt!("10051f43", rem)
     }
 }

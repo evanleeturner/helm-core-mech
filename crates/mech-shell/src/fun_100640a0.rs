@@ -14,12 +14,17 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_100640a0(mut format: *mut i8) {
+    mech_trace::enter!("100640a0", format);
     // SAFETY: the callees and the buffer are the game's own; the variadic
     // arguments follow `format` on the cdecl stack, so the va_list is the
     // address just past the parameter slot.
     unsafe {
         let args = (&raw mut format).add(1).cast::<i8>();
-        __vsnprintf((&raw mut DAT_100c5940).cast::<i8>(), 0x100, format, args);
+        mech_trace::cr!(
+            "100640a0",
+            "__vsnprintf",
+            __vsnprintf((&raw mut DAT_100c5940).cast::<i8>(), 0x100, format, args)
+        );
         FUN_1004f2c0((&raw mut DAT_100c5940).cast::<i8>());
     }
 }

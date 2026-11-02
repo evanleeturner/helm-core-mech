@@ -3,6 +3,7 @@
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1002b08b(param_1: i32, param_2: i32, match_sign: i32) -> i32 {
+    mech_trace::enter!("1002b08b", param_1, param_2, match_sign);
     let mut param_1 = param_1;
     let mut param_2 = param_2;
     if match_sign != 0 {
@@ -20,5 +21,5 @@ pub unsafe extern "C" fn FUN_1002b08b(param_1: i32, param_2: i32, match_sign: i3
     } else {
         param_1 = 0x400;
     }
-    param_1
+    mech_trace::rt!("1002b08b", param_1)
 }

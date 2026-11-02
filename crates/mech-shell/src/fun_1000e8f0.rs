@@ -32,20 +32,34 @@ unsafe extern "fastcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1000e8f0(param_1: u32, msg: u32, w_param: u32) -> u32 {
+    mech_trace::enter!("1000e8f0", param_1, msg, w_param);
     // SAFETY: the callees and globals are the game's own memory and code.
     unsafe {
         FUN_1000f360();
-        let i_var1 = FUN_1000f6d0(0, param_1, 0, 0, 0x1000, 0);
+        let i_var1 = mech_trace::cr!(
+            "1000e8f0",
+            "1000f6d0",
+            FUN_1000f6d0(0, param_1, 0, 0, 0x1000, 0)
+        );
         if i_var1 == -1 {
-            PostMessageA(DAT_100d08e8, msg, w_param, 0);
-            return 0;
+            mech_trace::cr!(
+                "1000e8f0",
+                "PostMessageA",
+                PostMessageA(
+                    mech_trace::gr!("1000e8f0", "100d08e8", DAT_100d08e8),
+                    msg,
+                    w_param,
+                    0
+                )
+            );
+            return mech_trace::rt!("1000e8f0", 0);
         }
-        if DAT_10098220 != 0 {
-            FUN_100133d0(DAT_100a672c);
+        if mech_trace::gr!("1000e8f0", "10098220", DAT_10098220) != 0 {
+            FUN_100133d0(mech_trace::gr!("1000e8f0", "100a672c", DAT_100a672c));
         }
-        DAT_1008e3e4 = msg;
-        DAT_1008e3e8 = w_param;
+        mech_trace::gw!("1000e8f0", "1008e3e4", DAT_1008e3e4, msg);
+        mech_trace::gw!("1000e8f0", "1008e3e8", DAT_1008e3e8, w_param);
         FUN_10016b50(LAB_1000e7f0 as usize as u32);
-        1
+        mech_trace::rt!("1000e8f0", 1)
     }
 }

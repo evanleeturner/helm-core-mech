@@ -17,38 +17,54 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_100699d2(param_1: *mut i32, param_2: i32) -> u32 {
+    mech_trace::enter!("100699d2", param_1, param_2);
     // SAFETY: all pointers are the game's own memory; reads, writes and
     // calls happen in the same order as the original.
     unsafe {
         let mut local_3c: u32 = 0;
-        let p1 = param_1.add(1).read();
-        let p2 = param_1.add(2).read();
-        let p3 = param_1.add(3).read();
-        let p4 = param_1.add(4).read();
+        let p1 = mech_trace::rd!("100699d2", param_1.add(1), read);
+        let p2 = mech_trace::rd!("100699d2", param_1.add(2), read);
+        let p3 = mech_trace::rd!("100699d2", param_1.add(3), read);
+        let p4 = mech_trace::rd!("100699d2", param_1.add(4), read);
         let pu_var6: i32 = (p3 as u32).wrapping_sub(p1 as u32).wrapping_add(1) as i32;
         let mut u_var7: i32 = (p4 as u32).wrapping_sub(p2 as u32).wrapping_add(1) as i32;
         let mut local_2c: i32 = 0;
-        let i_var2: i32 =
-            ((param_2 as u32 as usize).wrapping_add(8) as *const i32).read_unaligned();
+        let i_var2: i32 = mech_trace::rd!(
+            "100699d2",
+            ((param_2 as u32 as usize).wrapping_add(8) as *const i32),
+            read_unaligned
+        );
 
-        let pu_var8 = FUN_10069990(&raw mut DAT_10069984, param_2);
-        let pu_var9: i32 = ((u32::from(*pu_var8) << 8) | u32::from(*pu_var8.add(1))) as i32;
-        let mut local_c: u32 = (u32::from(*pu_var8.add(2)) << 8) | u32::from(*pu_var8.add(3));
+        let pu_var8 = mech_trace::cr!(
+            "100699d2",
+            "10069990",
+            FUN_10069990(&raw mut DAT_10069984, param_2)
+        );
+        let pu_var9: i32 = ((u32::from(mech_trace::dr!("100699d2", pu_var8)) << 8)
+            | u32::from(mech_trace::dr!("100699d2", pu_var8.add(1))))
+            as i32;
+        let mut local_c: u32 = (u32::from(mech_trace::dr!("100699d2", pu_var8.add(2))) << 8)
+            | u32::from(mech_trace::dr!("100699d2", pu_var8.add(3)));
         if u_var7 <= local_c as i32 {
             local_c = u_var7 as u32;
         }
 
-        if *pu_var8.add(9) != 1 {
-            let u_var4 = *pu_var8.add(10);
-            local_3c = u32::from(*pu_var8.add(0xd));
-            u_var7 = ((pu_var9 as u32 >> 3).wrapping_add(1))
-                .wrapping_sub(u32::from((*pu_var8.add(1) & 7) == 0)) as i32;
+        if mech_trace::dr!("100699d2", pu_var8.add(9)) != 1 {
+            let u_var4 = mech_trace::dr!("100699d2", pu_var8.add(10));
+            local_3c = u32::from(mech_trace::dr!("100699d2", pu_var8.add(0xd)));
+            u_var7 = ((pu_var9 as u32 >> 3).wrapping_add(1)).wrapping_sub(u32::from(
+                (mech_trace::dr!("100699d2", pu_var8.add(1)) & 7) == 0,
+            )) as i32;
             let i_var15: i32 = (u_var7 as u32).wrapping_add(u_var7 as u32 & 1) as i32;
             let mut pu_var10 = pu_var9;
             if pu_var6 <= pu_var9 {
                 pu_var10 = pu_var6;
             }
-            let mut local_14: *mut u8 = FUN_10069990(&raw mut DAT_1006998c, param_2);
+            let mut local_14: *mut u8 = mech_trace::cr!(
+                "100699d2",
+                "10069990",
+                FUN_10069990(&raw mut DAT_1006998c, param_2)
+            );
             let buf: *mut u8 = &raw mut DAT_100a9cb1;
             let out: *mut u8 = &raw mut DAT_100a8fb1;
 
@@ -60,39 +76,54 @@ pub unsafe extern "C" fn FUN_100699d2(param_1: *mut i32, param_2: i32) -> u32 {
                     while pbvar18 < end {
                         let pbvar17 = local_14;
                         local_14 = pbvar17.wrapping_add(1);
-                        let mut u7: u32 = u32::from(*pbvar17);
+                        let mut u7: u32 = u32::from(mech_trace::dr!("100699d2", pbvar17));
                         if u7 != 0x80 {
                             if u7 < 0x81 {
                                 let mut c = u7.wrapping_add(1) & 3;
                                 while c != 0 {
-                                    *pbvar18 = *local_14;
+                                    mech_trace::dw!(
+                                        "100699d2",
+                                        pbvar18,
+                                        mech_trace::dr!("100699d2", local_14)
+                                    );
                                     local_14 = local_14.wrapping_add(1);
                                     pbvar18 = pbvar18.wrapping_add(1);
                                     c -= 1;
                                 }
                                 u7 = u7.wrapping_add(1) >> 2;
                                 while u7 != 0 {
-                                    let v = (local_14 as *const u32).read_unaligned();
-                                    (pbvar18 as *mut u32).write_unaligned(v);
+                                    let v = mech_trace::rd!(
+                                        "100699d2",
+                                        (local_14 as *const u32),
+                                        read_unaligned
+                                    );
+                                    mech_trace::wr!(
+                                        "100699d2",
+                                        (pbvar18 as *mut u32),
+                                        write_unaligned,
+                                        v
+                                    );
                                     local_14 = local_14.wrapping_add(4);
                                     pbvar18 = pbvar18.wrapping_add(4);
                                     u7 -= 1;
                                 }
                             } else {
-                                let b14 = *local_14;
-                                let b12 = 1u32.wrapping_sub(u32::from(*pbvar17)) as u8;
+                                let b14 = mech_trace::dr!("100699d2", local_14);
+                                let b12 = 1u32
+                                    .wrapping_sub(u32::from(mech_trace::dr!("100699d2", pbvar17)))
+                                    as u8;
                                 let mut n = u32::from(b12 & 3);
                                 while n != 0 {
-                                    *pbvar18 = b14;
+                                    mech_trace::dw!("100699d2", pbvar18, b14);
                                     pbvar18 = pbvar18.wrapping_add(1);
                                     n -= 1;
                                 }
                                 n = u32::from(b12 >> 2);
                                 while n != 0 {
-                                    *pbvar18 = b14;
-                                    *pbvar18.add(1) = b14;
-                                    *pbvar18.add(2) = b14;
-                                    *pbvar18.add(3) = b14;
+                                    mech_trace::dw!("100699d2", pbvar18, b14);
+                                    mech_trace::dw!("100699d2", pbvar18.add(1), b14);
+                                    mech_trace::dw!("100699d2", pbvar18.add(2), b14);
+                                    mech_trace::dw!("100699d2", pbvar18.add(3), b14);
                                     pbvar18 = pbvar18.wrapping_add(4);
                                     n -= 1;
                                 }
@@ -117,7 +148,12 @@ pub unsafe extern "C" fn FUN_100699d2(param_1: *mut i32, param_2: i32) -> u32 {
                             let mut c11: u8 = 1;
                             let mut u5: u8 = 0;
                             loop {
-                                if (*pbvar18.wrapping_offset(i_var16 as isize) & b14) != 0 {
+                                if (mech_trace::dr!(
+                                    "100699d2",
+                                    pbvar18.wrapping_offset(i_var16 as isize)
+                                ) & b14)
+                                    != 0
+                                {
                                     u5 |= c11;
                                 }
                                 i_var16 = i_var16.wrapping_add(i_var15);
@@ -126,7 +162,7 @@ pub unsafe extern "C" fn FUN_100699d2(param_1: *mut i32, param_2: i32) -> u32 {
                                     break;
                                 }
                             }
-                            *pu_var19 = u5;
+                            mech_trace::dw!("100699d2", pu_var19, u5);
                             pu_var19 = pu_var19.wrapping_add(1);
                             local_18 = local_18.wrapping_sub(1);
                             if local_18 == 0 {
@@ -154,6 +190,6 @@ pub unsafe extern "C" fn FUN_100699d2(param_1: *mut i32, param_2: i32) -> u32 {
                 }
             }
         }
-        local_3c
+        mech_trace::rt!("100699d2", local_3c)
     }
 }

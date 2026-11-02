@@ -14,14 +14,15 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1005ddde(param_1: u32, param_2: i32) {
+    mech_trace::enter!("1005ddde", param_1, param_2);
     let _ = param_1;
     // SAFETY: the callees and the global are the game's own; the call order
     // and the conditional write match the original.
     unsafe {
-        let i_var1 = FUN_10003d60(param_2, 0xf);
-        if i_var1 != DAT_100ab23c {
-            DAT_100ab23c = i_var1;
-            FUN_1001d916(i_var1 as u32);
+        let i_var1 = mech_trace::cr!("1005ddde", "10003d60", FUN_10003d60(param_2, 0xf));
+        if i_var1 != mech_trace::gr!("1005ddde", "100ab23c", DAT_100ab23c) {
+            mech_trace::gw!("1005ddde", "100ab23c", DAT_100ab23c, i_var1);
+            mech_trace::cr!("1005ddde", "1001d916", FUN_1001d916(i_var1 as u32));
         }
     }
 }

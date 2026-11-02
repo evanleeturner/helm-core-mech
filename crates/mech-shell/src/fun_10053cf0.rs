@@ -19,22 +19,23 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10053cf0() {
+    mech_trace::enter!("10053cf0");
     // SAFETY: all globals and callees are the game's own memory and code;
     // pointers are walked exactly as the original does.
     unsafe {
         let slots = (&raw mut DAT_100bfd98).cast::<u32>();
         let mut index: i32 = 0;
         loop {
-            let i_var2 = FUN_100576a0(index);
+            let i_var2 = mech_trace::cr!("10053cf0", "100576a0", FUN_100576a0(index));
             if i_var2 == 0 {
-                slots.add(index as usize).write(0);
+                mech_trace::wr!("10053cf0", slots.add(index as usize), write, 0);
             } else {
                 let mut a = (i_var2.wrapping_add(4) as u32 as usize) as *const u8;
                 let mut b = (&raw const DAT_1009fe94).cast::<u8>();
                 let mut equal = true;
                 loop {
-                    let ca = a.read();
-                    let cb = b.read();
+                    let ca = mech_trace::rd!("10053cf0", a, read);
+                    let cb = mech_trace::rd!("10053cf0", b, read);
                     if ca != cb {
                         equal = false;
                         break;
@@ -46,9 +47,9 @@ pub unsafe extern "stdcall" fn FUN_10053cf0() {
                     b = b.add(1);
                 }
                 if equal {
-                    slots.add(index as usize).write(1);
+                    mech_trace::wr!("10053cf0", slots.add(index as usize), write, 1);
                 } else {
-                    slots.add(index as usize).write(0);
+                    mech_trace::wr!("10053cf0", slots.add(index as usize), write, 0);
                 }
             }
             index = index.wrapping_add(1);
@@ -56,14 +57,25 @@ pub unsafe extern "stdcall" fn FUN_10053cf0() {
                 index = 0;
                 let mut record_cursor = (&raw mut DAT_100bdf94).cast::<i32>();
                 loop {
-                    let v = record_cursor.read_unaligned();
+                    let v = mech_trace::rd!("10053cf0", record_cursor, read_unaligned);
                     if -1 < v {
-                        DAT_1009c558 = v as u32;
-                        let r = FUN_100576a0(v);
+                        mech_trace::gw!("10053cf0", "1009c558", DAT_1009c558, v as u32);
+                        let r = mech_trace::cr!("10053cf0", "100576a0", FUN_100576a0(v));
                         if r == 0 {
-                            FUN_10053fc0(index, record_cursor.wrapping_sub(1).cast::<u32>());
+                            mech_trace::cr!(
+                                "10053cf0",
+                                "10053fc0",
+                                FUN_10053fc0(index, record_cursor.wrapping_sub(1).cast::<u32>())
+                            );
                         } else {
-                            slots.add(DAT_1009c558 as usize).write(1);
+                            mech_trace::wr!(
+                                "10053cf0",
+                                slots
+                                    .add(mech_trace::gr!("10053cf0", "1009c558", DAT_1009c558)
+                                        as usize),
+                                write,
+                                1
+                            );
                         }
                     }
                     record_cursor = record_cursor.wrapping_add(6);
@@ -73,14 +85,22 @@ pub unsafe extern "stdcall" fn FUN_10053cf0() {
                     }
                 }
                 index = 0;
-                DAT_1009c6a8 = 0;
+                mech_trace::gw!("10053cf0", "1009c6a8", DAT_1009c6a8, 0);
                 loop {
-                    let r = FUN_100576a0(index);
-                    if r == 0 || slots.add(index as usize).read() == 0 || 3 < DAT_1009c6a8 as i32 {
-                        slots.add(index as usize).write(0);
+                    let r = mech_trace::cr!("10053cf0", "100576a0", FUN_100576a0(index));
+                    if r == 0
+                        || mech_trace::rd!("10053cf0", slots.add(index as usize), read) == 0
+                        || 3 < mech_trace::gr!("10053cf0", "1009c6a8", DAT_1009c6a8) as i32
+                    {
+                        mech_trace::wr!("10053cf0", slots.add(index as usize), write, 0);
                     } else {
-                        DAT_1009c6a8 = DAT_1009c6a8.wrapping_add(1);
-                        DAT_1009c558 = index as u32;
+                        mech_trace::gw!(
+                            "10053cf0",
+                            "1009c6a8",
+                            DAT_1009c6a8,
+                            mech_trace::gr!("10053cf0", "1009c6a8", DAT_1009c6a8).wrapping_add(1)
+                        );
+                        mech_trace::gw!("10053cf0", "1009c558", DAT_1009c558, index as u32);
                     }
                     index = index.wrapping_add(1);
                     if !(index < 0x10) {

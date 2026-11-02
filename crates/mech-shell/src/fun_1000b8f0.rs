@@ -14,6 +14,7 @@ pub unsafe extern "C" fn FUN_1000b8f0(
     param_3: i32,
     param_4: *mut i32,
 ) -> u32 {
+    mech_trace::enter!("1000b8f0", param_1, param_2, param_3, param_4);
     let _ = param_1;
     let mut position: i32 = 0;
     let off = param_3.wrapping_mul(0x14) as isize;
@@ -21,22 +22,23 @@ pub unsafe extern "C" fn FUN_1000b8f0(
     // computed from their base, and reads happen where the original reads.
     unsafe {
         let limit = (&raw mut DAT_100b043c).wrapping_offset(off);
-        if 0 < (limit.read_unaligned() as i16) {
+        if 0 < (mech_trace::rd!("1000b8f0", limit, read_unaligned) as i16) {
             let mut entry_ptr = (&raw mut DAT_100b0424).wrapping_offset(off) as *const u16;
             loop {
-                if u32::from(entry_ptr.read_unaligned()) == param_2 {
+                if u32::from(mech_trace::rd!("1000b8f0", entry_ptr, read_unaligned)) == param_2 {
                     if !param_4.is_null() {
-                        param_4.write_unaligned(position);
+                        mech_trace::wr!("1000b8f0", param_4, write_unaligned, position);
                     }
-                    return 1;
+                    return mech_trace::rt!("1000b8f0", 1);
                 }
                 entry_ptr = entry_ptr.wrapping_add(1);
                 position = position.wrapping_add(1);
-                if !(position < (limit.read_unaligned() as i16 as i32)) {
+                if !(position < (mech_trace::rd!("1000b8f0", limit, read_unaligned) as i16 as i32))
+                {
                     break;
                 }
             }
         }
     }
-    0
+    mech_trace::rt!("1000b8f0", 0)
 }

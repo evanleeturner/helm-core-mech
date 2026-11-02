@@ -14,23 +14,44 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10050975() {
+    mech_trace::enter!("10050975");
     let mut b_var1 = false;
     let mut local_c: i32 = 0;
     // SAFETY: the globals and the callee are the game's own; the table entries
     // are pointers to records with a field at offset 0x1c, accessed as the original does.
     unsafe {
-        while local_c < DAT_100b38d8 && !b_var1 {
+        while local_c < mech_trace::gr!("10050975", "100b38d8", DAT_100b38d8) && !b_var1 {
             let base = (&raw mut DAT_100eef40).cast::<u32>();
-            let rec = base.offset(local_c as isize).read_unaligned();
-            if ((rec.wrapping_add(0x1c)) as *const i32).read_unaligned() != -1 {
+            let rec = mech_trace::rd!("10050975", base.offset(local_c as isize), read_unaligned);
+            if mech_trace::rd!(
+                "10050975",
+                ((rec.wrapping_add(0x1c)) as *const i32),
+                read_unaligned
+            ) != -1
+            {
                 b_var1 = true;
-                let rec = base.offset(local_c as isize).read_unaligned();
-                FUN_10050498(
-                    local_c,
-                    ((rec.wrapping_add(0x1c)) as *const i32).read_unaligned(),
+                let rec =
+                    mech_trace::rd!("10050975", base.offset(local_c as isize), read_unaligned);
+                mech_trace::cr!(
+                    "10050975",
+                    "10050498",
+                    FUN_10050498(
+                        local_c,
+                        mech_trace::rd!(
+                            "10050975",
+                            ((rec.wrapping_add(0x1c)) as *const i32),
+                            read_unaligned
+                        ),
+                    )
                 );
-                let rec = base.offset(local_c as isize).read_unaligned();
-                ((rec.wrapping_add(0x1c)) as *mut u32).write_unaligned(0xffff_ffff);
+                let rec =
+                    mech_trace::rd!("10050975", base.offset(local_c as isize), read_unaligned);
+                mech_trace::wr!(
+                    "10050975",
+                    ((rec.wrapping_add(0x1c)) as *mut u32),
+                    write_unaligned,
+                    0xffff_ffff
+                );
             }
             local_c = local_c.wrapping_add(1);
         }

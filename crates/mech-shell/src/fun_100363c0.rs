@@ -30,28 +30,49 @@ pub unsafe extern "stdcall" fn FUN_100363c0(
     param_2: u32,
     param_3: u32,
 ) -> *mut c_void {
+    mech_trace::enter!("100363c0", param_1, param_2, param_3);
     let _ = param_2;
     if param_1 != -2 {
-        return core::ptr::null_mut();
+        return mech_trace::rt!("100363c0", core::ptr::null_mut());
     }
     let mut local_20 = [0i8; 32];
     // SAFETY: the callees and globals are the game's own; local_20 is a
     // writable buffer passed as the original does, and the file handle is
     // used only between its open and close.
     unsafe {
-        _sprintf(
-            local_20.as_mut_ptr(),
-            &raw mut s__s_BWD_10093c74 as *mut i8,
-            param_3,
+        mech_trace::cr!(
+            "100363c0",
+            "_sprintf",
+            _sprintf(
+                local_20.as_mut_ptr(),
+                &raw mut s__s_BWD_10093c74 as *mut i8,
+                param_3,
+            )
         );
-        let file = FID_conflict___wfopen(local_20.as_mut_ptr(), &raw mut DAT_10093c7c as *mut i8);
+        let file = mech_trace::cr!(
+            "100363c0",
+            "FID_conflict___wfopen",
+            FID_conflict___wfopen(local_20.as_mut_ptr(), &raw mut DAT_10093c7c as *mut i8)
+        );
         if file.is_null() {
-            return core::ptr::null_mut();
+            return mech_trace::rt!("100363c0", core::ptr::null_mut());
         }
-        let dw_bytes = FUN_1005bae0(file) as u32;
-        let dst = HeapAlloc(DAT_10098224, 1, dw_bytes);
-        _fread(dst, dw_bytes as usize, 1, file);
-        _fclose(file);
-        dst
+        let dw_bytes = mech_trace::cr!("100363c0", "1005bae0", FUN_1005bae0(file)) as u32;
+        let dst = mech_trace::cr!(
+            "100363c0",
+            "HeapAlloc",
+            HeapAlloc(
+                mech_trace::gr!("100363c0", "10098224", DAT_10098224),
+                1,
+                dw_bytes
+            )
+        );
+        mech_trace::cr!(
+            "100363c0",
+            "_fread",
+            _fread(dst, dw_bytes as usize, 1, file)
+        );
+        mech_trace::cr!("100363c0", "_fclose", _fclose(file));
+        mech_trace::rt!("100363c0", dst)
     }
 }

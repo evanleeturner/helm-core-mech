@@ -15,29 +15,49 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1004e27d() {
+    mech_trace::enter!("1004e27d");
     // SAFETY: all globals and the memory they address belong to the game;
     // reads and writes happen at the same offsets and in the same order as the original.
     unsafe {
         let mut local_c: i32 = -0x7fff;
         let mut b_var2 = false;
-        if DAT_100aa1ac != 0 && (DAT_100adf34.wrapping_add(10) as *const u8).read() == 0 {
+        if mech_trace::gr!("1004e27d", "100aa1ac", DAT_100aa1ac) != 0
+            && mech_trace::rd!(
+                "1004e27d",
+                (mech_trace::gr!("1004e27d", "100adf34", DAT_100adf34).wrapping_add(10)
+                    as *const u8),
+                read
+            ) == 0
+        {
             let mut local_34: i32 = 0;
             let mut b_var1 = false;
             let mut local_18: i32 = 0;
             loop {
-                let base = (DAT_100b0710 as u32).wrapping_mul(0x3c0a);
-                let cnt = (&raw mut DAT_10123240)
-                    .cast::<u8>()
-                    .byte_add(base as usize)
-                    .cast::<i32>()
-                    .read_unaligned();
+                let base = (mech_trace::gr!("1004e27d", "100b0710", DAT_100b0710) as u32)
+                    .wrapping_mul(0x3c0a);
+                let cnt = mech_trace::rd!(
+                    "1004e27d",
+                    (&raw mut DAT_10123240)
+                        .cast::<u8>()
+                        .byte_add(base as usize)
+                        .cast::<i32>(),
+                    read_unaligned
+                );
                 if !(local_18 < cnt) {
                     break;
                 }
                 let i_var3 = base.wrapping_add((local_18 as u32).wrapping_mul(0x13f)) as usize;
-                let a = (&raw mut DAT_101232ee).cast::<u8>().byte_add(i_var3).read();
+                let a = mech_trace::rd!(
+                    "1004e27d",
+                    (&raw mut DAT_101232ee).cast::<u8>().byte_add(i_var3),
+                    read
+                );
                 local_34 = (local_34 as u32).wrapping_add(a as u32) as i32;
-                let b = (&raw mut DAT_1012327b).cast::<u8>().byte_add(i_var3).read();
+                let b = mech_trace::rd!(
+                    "1004e27d",
+                    (&raw mut DAT_1012327b).cast::<u8>().byte_add(i_var3),
+                    read
+                );
                 if a != 0 && b == 2 {
                     b_var1 = true;
                 }
@@ -54,11 +74,14 @@ pub unsafe extern "stdcall" fn FUN_1004e27d() {
                     let mut local_24: i32 = 0;
                     while local_24 < 8 {
                         let idx = (local_1c * 8 + local_24) as usize;
-                        let v = (&raw mut DAT_101658a2)
-                            .cast::<u8>()
-                            .byte_add(idx * 2)
-                            .cast::<u16>()
-                            .read_unaligned() as u32;
+                        let v = mech_trace::rd!(
+                            "1004e27d",
+                            (&raw mut DAT_101658a2)
+                                .cast::<u8>()
+                                .byte_add(idx * 2)
+                                .cast::<u16>(),
+                            read_unaligned
+                        ) as u32;
                         let u_var4 = if local_24 == local_1c {
                             0u32.wrapping_sub(v)
                         } else {
@@ -75,9 +98,12 @@ pub unsafe extern "stdcall" fn FUN_1004e27d() {
                     }
                     local_1c += 1;
                 }
-                (&raw mut DAT_10165922)
-                    .cast::<i32>()
-                    .write_unaligned(local_14);
+                mech_trace::wr!(
+                    "1004e27d",
+                    (&raw mut DAT_10165922).cast::<i32>(),
+                    write_unaligned,
+                    local_14
+                );
             }
         }
     }

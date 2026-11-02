@@ -15,18 +15,51 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1008072a(param_1: i32, param_2: i32) {
+    mech_trace::enter!("1008072a", param_1, param_2);
     // SAFETY: param_1 and param_2 are addresses of the game's own structures;
     // reads happen at the same offsets and in the same order as the original.
     unsafe {
-        let idx_off = ((param_1 as u32).wrapping_add(4) as *const i32).read_unaligned();
-        let b = ((idx_off.wrapping_add(param_1)) as u32 as *const u8).read();
+        let idx_off = mech_trace::rd!(
+            "1008072a",
+            ((param_1 as u32).wrapping_add(4) as *const i32),
+            read_unaligned
+        );
+        let b = mech_trace::rd!(
+            "1008072a",
+            ((idx_off.wrapping_add(param_1)) as u32 as *const u8),
+            read
+        );
         let i_var1 = (b as i32).wrapping_mul(0x44).wrapping_add(param_2);
-        let a1 = ((i_var1.wrapping_add(0xc)) as u32 as *const i32).read_unaligned();
-        let a2 = ((i_var1.wrapping_add(0x10)) as u32 as *const i32).read_unaligned();
-        let a3 = ((i_var1.wrapping_add(0x14)) as u32 as *const i32).read_unaligned();
-        let a4 = ((param_1.wrapping_add(0x14)) as u32 as *const i32).read_unaligned();
-        let a5 = ((param_1.wrapping_add(0x18)) as u32 as *const i32).read_unaligned();
-        let a6 = ((param_1.wrapping_add(0x1c)) as u32 as *const i32).read_unaligned();
-        FUN_100807b5(a1, a2, a3, a4, a5, a6);
+        let a1 = mech_trace::rd!(
+            "1008072a",
+            ((i_var1.wrapping_add(0xc)) as u32 as *const i32),
+            read_unaligned
+        );
+        let a2 = mech_trace::rd!(
+            "1008072a",
+            ((i_var1.wrapping_add(0x10)) as u32 as *const i32),
+            read_unaligned
+        );
+        let a3 = mech_trace::rd!(
+            "1008072a",
+            ((i_var1.wrapping_add(0x14)) as u32 as *const i32),
+            read_unaligned
+        );
+        let a4 = mech_trace::rd!(
+            "1008072a",
+            ((param_1.wrapping_add(0x14)) as u32 as *const i32),
+            read_unaligned
+        );
+        let a5 = mech_trace::rd!(
+            "1008072a",
+            ((param_1.wrapping_add(0x18)) as u32 as *const i32),
+            read_unaligned
+        );
+        let a6 = mech_trace::rd!(
+            "1008072a",
+            ((param_1.wrapping_add(0x1c)) as u32 as *const i32),
+            read_unaligned
+        );
+        mech_trace::cr!("1008072a", "100807b5", FUN_100807b5(a1, a2, a3, a4, a5, a6));
     }
 }

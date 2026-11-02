@@ -8,6 +8,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_100609d0(param_1: i32, param_2: i32, param_3: i32, param_4: i32) {
+    mech_trace::enter!("100609d0", param_1, param_2, param_3, param_4);
     if param_2 < 8 {
         let mut i_var2: i32 = param_2.wrapping_mul(0xc);
         let mut i_var1: i32 = param_3;
@@ -24,8 +25,15 @@ pub unsafe extern "C" fn FUN_100609d0(param_1: i32, param_2: i32, param_3: i32, 
                 // SAFETY: the table and the flag array are the game's own memory;
                 // the read and write happen where the original does.
                 unsafe {
-                    if (addr as usize as *const i32).read_unaligned() == param_4 {
-                        (&raw mut DAT_100c4af8).byte_offset(idx as isize).write(1);
+                    if mech_trace::rd!("100609d0", (addr as usize as *const i32), read_unaligned)
+                        == param_4
+                    {
+                        mech_trace::wr!(
+                            "100609d0",
+                            (&raw mut DAT_100c4af8).byte_offset(idx as isize),
+                            write,
+                            1
+                        );
                     }
                 }
             }

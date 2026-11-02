@@ -12,6 +12,9 @@ pub unsafe extern "C" fn FUN_100258ea(
     param_7: *mut i32,
     param_8: *mut i32,
 ) -> u32 {
+    mech_trace::enter!(
+        "100258ea", param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8
+    );
     let mut local_34: i32 = 0x7fffffff;
     let mut local_30: i32 = 0x7fffffff;
     let mut local_14: i32 = 0x7fffffff;
@@ -24,22 +27,42 @@ pub unsafe extern "C" fn FUN_100258ea(
     // caller-provided output slots.
     unsafe {
         loop {
-            let count = ((param_1.wrapping_add(2)) as *const u16).read_unaligned() as i32;
+            let count = mech_trace::rd!(
+                "100258ea",
+                ((param_1.wrapping_add(2)) as *const u16),
+                read_unaligned
+            ) as i32;
             if local_28 >= count {
                 break;
             }
-            let base = ((param_1.wrapping_add(4)) as *const u32).read_unaligned();
+            let base = mech_trace::rd!(
+                "100258ea",
+                ((param_1.wrapping_add(4)) as *const u32),
+                read_unaligned
+            );
             let addr = base
                 .wrapping_add(local_28 as u32)
                 .wrapping_add(param_1 as u32);
-            let b = (addr as usize as *const u8).read() as u32;
+            let b = mech_trace::rd!("100258ea", (addr as usize as *const u8), read) as u32;
             let i_var3 = b
                 .wrapping_mul(0x44)
                 .wrapping_add(param_2 as u32)
                 .wrapping_add(0x18);
-            let i_var1 = (i_var3.wrapping_add(0xc) as usize as *const i32).read_unaligned();
-            let i_var2 = (i_var3.wrapping_add(0x10) as usize as *const i32).read_unaligned();
-            let i_var3 = (i_var3.wrapping_add(0x14) as usize as *const i32).read_unaligned();
+            let i_var1 = mech_trace::rd!(
+                "100258ea",
+                (i_var3.wrapping_add(0xc) as usize as *const i32),
+                read_unaligned
+            );
+            let i_var2 = mech_trace::rd!(
+                "100258ea",
+                (i_var3.wrapping_add(0x10) as usize as *const i32),
+                read_unaligned
+            );
+            let i_var3 = mech_trace::rd!(
+                "100258ea",
+                (i_var3.wrapping_add(0x14) as usize as *const i32),
+                read_unaligned
+            );
             if i_var1 < local_14 {
                 local_14 = i_var1;
             }
@@ -60,12 +83,16 @@ pub unsafe extern "C" fn FUN_100258ea(
             }
             local_28 = local_28.wrapping_add(1);
         }
-        if param_4 < local_14 || local_38 < param_3 || param_6 < local_34 || local_10 < param_5 {
-            0
-        } else {
-            param_7.write_unaligned(local_30);
-            param_8.write_unaligned(local_c);
-            1
-        }
+        mech_trace::rt!(
+            "100258ea",
+            if param_4 < local_14 || local_38 < param_3 || param_6 < local_34 || local_10 < param_5
+            {
+                0
+            } else {
+                mech_trace::wr!("100258ea", param_7, write_unaligned, local_30);
+                mech_trace::wr!("100258ea", param_8, write_unaligned, local_c);
+                1
+            }
+        )
     }
 }

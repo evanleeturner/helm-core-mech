@@ -20,6 +20,7 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1000d5a0() {
+    mech_trace::enter!("1000d5a0");
     // SAFETY: the callees and the string data are the game's own; the
     // strings are passed by address, in the original's call order.
     unsafe {

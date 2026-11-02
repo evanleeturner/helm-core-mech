@@ -63,19 +63,42 @@ macro_rules! rd_loop {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_100396a0(param_1: *mut i8) -> u32 {
+    mech_trace::enter!("100396a0", param_1);
     // SAFETY: all globals, the state struct and the callees belong to the
     // game; offsets and reads/writes follow the original exactly.
     unsafe {
-        let file = FID_conflict___wfopen(param_1, &raw mut DAT_10094530);
+        let file = mech_trace::cr!(
+            "100396a0",
+            "FID_conflict___wfopen",
+            FID_conflict___wfopen(param_1, &raw mut DAT_10094530)
+        );
         if file.is_null() {
-            return 0;
+            return mech_trace::rt!("100396a0", 0);
         }
 
-        let base = DAT_10083508 as usize;
-        let u1: i32 = ((base.wrapping_add(0x23c3)) as *const i32).read_unaligned();
-        let u2: i32 = ((base.wrapping_add(0x23c7)) as *const i32).read_unaligned();
-        ((base.wrapping_add(0x23c7)) as *mut i32).write_unaligned(u1);
-        (DAT_10083508 as usize as *mut u8).write(0);
+        let base = mech_trace::gr!("100396a0", "10083508", DAT_10083508) as usize;
+        let u1: i32 = mech_trace::rd!(
+            "100396a0",
+            ((base.wrapping_add(0x23c3)) as *const i32),
+            read_unaligned
+        );
+        let u2: i32 = mech_trace::rd!(
+            "100396a0",
+            ((base.wrapping_add(0x23c7)) as *const i32),
+            read_unaligned
+        );
+        mech_trace::wr!(
+            "100396a0",
+            ((base.wrapping_add(0x23c7)) as *mut i32),
+            write_unaligned,
+            u1
+        );
+        mech_trace::wr!(
+            "100396a0",
+            (mech_trace::gr!("100396a0", "10083508", DAT_10083508) as usize as *mut u8),
+            write,
+            0
+        );
 
         fill!(0x12e, DAT_100a6798);
         fill!(0x132, DAT_100a67a4);
@@ -90,11 +113,30 @@ pub unsafe extern "C" fn FUN_100396a0(param_1: *mut i8) -> u32 {
         fill!(0x156, DAT_100a67b0);
         fill!(0x15a, DAT_100a67ac);
 
-        _fread(DAT_10083508 as usize as *mut u8, 0x2dfb, 1, file);
+        mech_trace::cr!(
+            "100396a0",
+            "_fread",
+            _fread(
+                mech_trace::gr!("100396a0", "10083508", DAT_10083508) as usize as *mut u8,
+                0x2dfb,
+                1,
+                file
+            )
+        );
 
-        let base = DAT_10083508 as usize;
-        ((base.wrapping_add(0x23c7)) as *mut i32).write_unaligned(u2);
-        ((base.wrapping_add(0x23c3)) as *mut i32).write_unaligned(u1);
+        let base = mech_trace::gr!("100396a0", "10083508", DAT_10083508) as usize;
+        mech_trace::wr!(
+            "100396a0",
+            ((base.wrapping_add(0x23c7)) as *mut i32),
+            write_unaligned,
+            u2
+        );
+        mech_trace::wr!(
+            "100396a0",
+            ((base.wrapping_add(0x23c3)) as *mut i32),
+            write_unaligned,
+            u1
+        );
 
         rd_loop!(file, 0x156, DAT_100a67b0, 0x853);
         rd_loop!(file, 0x15a, DAT_100a67ac, 0x1a);
@@ -111,7 +153,7 @@ pub unsafe extern "C" fn FUN_100396a0(param_1: *mut i8) -> u32 {
         rd_loop!(file, 0x13a, DAT_100a67b4, 0x1a);
         rd_loop!(file, 0x13e, DAT_100a67b8, 0x1a);
 
-        let r = _fclose(file);
-        ((r as u32) & 0xffffff00) | 1
+        let r = mech_trace::cr!("100396a0", "_fclose", _fclose(file));
+        mech_trace::rt!("100396a0", ((r as u32) & 0xffffff00) | 1)
     }
 }

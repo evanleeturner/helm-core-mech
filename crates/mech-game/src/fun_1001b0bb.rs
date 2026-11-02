@@ -28,6 +28,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1001b0bb() {
+    mech_trace::enter!("1001b0bb");
     let mut local_1c: i32 = 0;
     let mut local_18: i32 = 0;
     let mut local_14: i32 = 0;
@@ -45,33 +46,63 @@ pub unsafe extern "stdcall" fn FUN_1001b0bb() {
             &mut local_8,
             &mut local_c,
         );
-        if DAT_100ab07c != 4 {
-            DAT_100ab0b0 = 0;
-            DAT_100aaf68
-                .byte_add(0x10)
-                .cast::<i32>()
-                .write_unaligned(0x5a0000);
-            DAT_100ab0b8 = DAT_100b38fc;
+        if mech_trace::gr!("1001b0bb", "100ab07c", DAT_100ab07c) != 4 {
+            mech_trace::gw!("1001b0bb", "100ab0b0", DAT_100ab0b0, 0);
+            mech_trace::wr!(
+                "1001b0bb",
+                mech_trace::gr!("1001b0bb", "100aaf68", DAT_100aaf68)
+                    .byte_add(0x10)
+                    .cast::<i32>(),
+                write_unaligned,
+                0x5a0000
+            );
+            mech_trace::gw!(
+                "1001b0bb",
+                "100ab0b8",
+                DAT_100ab0b8,
+                mech_trace::gr!("1001b0bb", "100b38fc", DAT_100b38fc)
+            );
             FUN_1001a635(0);
         }
         FUN_1001b520(
-            DAT_100aaf68.byte_add(4).cast::<i32>(),
+            mech_trace::gr!("1001b0bb", "100aaf68", DAT_100aaf68)
+                .byte_add(4)
+                .cast::<i32>(),
             &raw mut DAT_100ab0b0,
-            DAT_100ab0b4,
-            DAT_100b3904,
+            mech_trace::gr!("1001b0bb", "100ab0b4", DAT_100ab0b4),
+            mech_trace::gr!("1001b0bb", "100b3904", DAT_100b3904),
         );
-        DAT_100aaf68.cast::<i32>().write_unaligned(local_1c);
-        DAT_100aaf68
-            .byte_add(8)
-            .cast::<i32>()
-            .write_unaligned(local_c);
-        let old = DAT_100aaf68.byte_add(0xc).cast::<i32>().read_unaligned() as u32;
-        let delta = (DAT_100b38fc as u32)
-            .wrapping_sub(DAT_100ab0b8 as u32)
+        mech_trace::wr!(
+            "1001b0bb",
+            mech_trace::gr!("1001b0bb", "100aaf68", DAT_100aaf68).cast::<i32>(),
+            write_unaligned,
+            local_1c
+        );
+        mech_trace::wr!(
+            "1001b0bb",
+            mech_trace::gr!("1001b0bb", "100aaf68", DAT_100aaf68)
+                .byte_add(8)
+                .cast::<i32>(),
+            write_unaligned,
+            local_c
+        );
+        let old = mech_trace::rd!(
+            "1001b0bb",
+            mech_trace::gr!("1001b0bb", "100aaf68", DAT_100aaf68)
+                .byte_add(0xc)
+                .cast::<i32>(),
+            read_unaligned
+        ) as u32;
+        let delta = (mech_trace::gr!("1001b0bb", "100b38fc", DAT_100b38fc) as u32)
+            .wrapping_sub(mech_trace::gr!("1001b0bb", "100ab0b8", DAT_100ab0b8) as u32)
             .wrapping_mul(300);
-        DAT_100aaf68
-            .byte_add(0xc)
-            .cast::<i32>()
-            .write_unaligned(old.wrapping_add(delta) as i32);
+        mech_trace::wr!(
+            "1001b0bb",
+            mech_trace::gr!("1001b0bb", "100aaf68", DAT_100aaf68)
+                .byte_add(0xc)
+                .cast::<i32>(),
+            write_unaligned,
+            old.wrapping_add(delta) as i32
+        );
     }
 }

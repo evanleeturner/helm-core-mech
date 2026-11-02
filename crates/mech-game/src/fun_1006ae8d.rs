@@ -15,6 +15,7 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1006ae8d() {
+    mech_trace::enter!("1006ae8d");
     // SAFETY: the callees are the game's own functions, called in the original order.
     unsafe {
         FUN_1000389e(0);

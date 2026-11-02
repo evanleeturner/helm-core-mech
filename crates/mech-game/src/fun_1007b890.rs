@@ -16,35 +16,66 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1007b890(param_1: u32, str2: *mut i8) -> i32 {
+    mech_trace::enter!("1007b890", param_1, str2);
     let mut local_2c: [i8; 12] = [0; 12];
     let mut local_10: i32 = -1;
     // SAFETY: globals and callees are the game's own; the record pointer
     // returned by FUN_1008668b is read at the offsets the original uses.
     unsafe {
-        let local_14 = FUN_1008668b(DAT_100af17c as i32, param_1, DAT_100af0cc as *mut i32);
+        let local_14 = mech_trace::cr!(
+            "1007b890",
+            "1008668b",
+            FUN_1008668b(
+                mech_trace::gr!("1007b890", "100af17c", DAT_100af17c) as i32,
+                param_1,
+                mech_trace::gr!("1007b890", "100af0cc", DAT_100af0cc) as *mut i32
+            )
+        );
         if !local_14.is_null() {
             let mut local_18 = local_14.add(6);
             for i in 0..10usize {
-                let v = 0x100i32.wrapping_sub(local_18.cast::<i8>().add(i).read() as i32);
+                let v = 0x100i32.wrapping_sub(mech_trace::rd!(
+                    "1007b890",
+                    local_18.cast::<i8>().add(i),
+                    read
+                ) as i32);
                 local_2c[i] = v as i8;
             }
             let mut local_1c: i32 = 0;
             let local_c = local_14;
-            while local_1c < (local_c.add(4).read_unaligned() as i16 as i32)
-                && __strcmpi(local_2c.as_mut_ptr(), str2) != 0
+            while local_1c
+                < (mech_trace::rd!("1007b890", local_c.add(4), read_unaligned) as i16 as i32)
+                && mech_trace::cr!(
+                    "1007b890",
+                    "__strcmpi",
+                    __strcmpi(local_2c.as_mut_ptr(), str2)
+                ) != 0
             {
                 local_18 = local_18.add(6);
                 local_1c = local_1c.wrapping_add(1);
                 for i in 0..10usize {
-                    let v = 0x100i32.wrapping_sub(local_18.cast::<i8>().add(i).read() as i32);
+                    let v = 0x100i32.wrapping_sub(mech_trace::rd!(
+                        "1007b890",
+                        local_18.cast::<i8>().add(i),
+                        read
+                    ) as i32);
                     local_2c[i] = v as i8;
                 }
             }
-            if __strcmpi(local_2c.as_mut_ptr(), str2) == 0 {
-                local_10 = local_18.add(5).read_unaligned() as i16 as i32;
+            if mech_trace::cr!(
+                "1007b890",
+                "__strcmpi",
+                __strcmpi(local_2c.as_mut_ptr(), str2)
+            ) == 0
+            {
+                local_10 =
+                    mech_trace::rd!("1007b890", local_18.add(5), read_unaligned) as i16 as i32;
             }
-            FUN_1008664f(param_1, DAT_100af0cc as *mut i32);
+            FUN_1008664f(
+                param_1,
+                mech_trace::gr!("1007b890", "100af0cc", DAT_100af0cc) as *mut i32,
+            );
         }
     }
-    local_10
+    mech_trace::rt!("1007b890", local_10)
 }

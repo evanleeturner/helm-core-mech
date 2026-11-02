@@ -10,10 +10,11 @@ unsafe extern "thiscall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1000c4a0(param_1: *mut c_void, param_2: i32, param_3: *mut i8) -> i32 {
+    mech_trace::enter!("1000c4a0", param_1, param_2, param_3);
     // SAFETY: the callee is the game's own function; the arguments are passed
     // through unchanged.
     unsafe {
-        let method_result = FUN_10050b20(param_1, param_3);
-        param_2.wrapping_sub(method_result)
+        let method_result = mech_trace::cr!("1000c4a0", "10050b20", FUN_10050b20(param_1, param_3));
+        mech_trace::rt!("1000c4a0", param_2.wrapping_sub(method_result))
     }
 }

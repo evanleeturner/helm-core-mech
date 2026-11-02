@@ -17,13 +17,14 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10044fd0() {
+    mech_trace::enter!("10044fd0");
     // SAFETY: the globals and the callee are the game's own; the address of
     // DAT_10098fb8 is passed on without creating a reference.
     unsafe {
-        _DAT_10099050 = 0;
-        _DAT_10099088 = 0;
-        _DAT_100990c0 = 0;
-        _DAT_100990f8 = 0;
+        mech_trace::gw!("10044fd0", "_DAT_10099050", _DAT_10099050, 0);
+        mech_trace::gw!("10044fd0", "_DAT_10099088", _DAT_10099088, 0);
+        mech_trace::gw!("10044fd0", "_DAT_100990c0", _DAT_100990c0, 0);
+        mech_trace::gw!("10044fd0", "_DAT_100990f8", _DAT_100990f8, 0);
         FUN_10063de0(&raw mut DAT_10098fb8);
     }
 }

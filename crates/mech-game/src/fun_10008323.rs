@@ -14,6 +14,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10008323(param_1: i32) {
+    mech_trace::enter!("10008323", param_1);
     // SAFETY: the globals and the callee are the game's own; only addresses
     // of the globals are taken, and the callee is called as the original does.
     unsafe {
@@ -21,6 +22,6 @@ pub unsafe extern "C" fn FUN_10008323(param_1: i32) {
         let b = (&raw mut DAT_100a5360)
             .wrapping_byte_offset(param_1.wrapping_mul(0xc) as isize)
             .cast::<i32>();
-        FUN_10007440(a, b, -1);
+        mech_trace::cr!("10008323", "10007440", FUN_10007440(a, b, -1));
     }
 }

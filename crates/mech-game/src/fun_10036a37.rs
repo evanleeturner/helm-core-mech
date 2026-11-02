@@ -11,6 +11,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10036a37(param_1: u32) -> i32 {
+    mech_trace::enter!("10036a37", param_1);
     let mut param_1 = param_1;
     let p: *mut u8;
     let i_var1: u32;
@@ -19,16 +20,17 @@ pub unsafe extern "C" fn FUN_10036a37(param_1: u32) -> i32 {
     unsafe {
         if (param_1 & 0x80) == 0 {
             p = &raw mut DAT_100ade20 as *mut u8;
-            i_var1 = DAT_100adf24;
+            i_var1 = mech_trace::gr!("10036a37", "100adf24", DAT_100adf24);
         } else {
             param_1 ^= 0x80;
             p = &raw mut DAT_100add20 as *mut u8;
-            i_var1 = DAT_100adf20;
+            i_var1 = mech_trace::gr!("10036a37", "100adf20", DAT_100adf20);
         }
-        let v = p
-            .byte_add((param_1 as usize).wrapping_mul(4))
-            .cast::<u32>()
-            .read_unaligned();
-        i_var1.wrapping_sub(v) as i32
+        let v = mech_trace::rd!(
+            "10036a37",
+            p.byte_add((param_1 as usize).wrapping_mul(4)).cast::<u32>(),
+            read_unaligned
+        );
+        mech_trace::rt!("10036a37", i_var1.wrapping_sub(v) as i32)
     }
 }

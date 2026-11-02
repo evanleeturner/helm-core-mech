@@ -36,26 +36,46 @@ pub unsafe extern "C" fn FUN_10033980(
     param_6: i32,
     param_7: i32,
 ) {
+    mech_trace::enter!(
+        "10033980", param_1, param_2, param_3, param_4, param_5, param_6, param_7
+    );
     // SAFETY: the globals and callees are the game's own; param_1 is passed
     // through untouched to the callees as the original does.
     unsafe {
-        if DAT_100adcd0 != 0 {
-            if DAT_100adcdc != 0 {
-                FUN_10034a3b(DAT_100adca0, DAT_100adca4, param_2, param_3);
-                FUN_1003481a(
-                    param_1,
-                    DAT_100adca0,
-                    DAT_100adca4,
-                    param_4,
-                    param_5,
-                    param_6,
+        if mech_trace::gr!("10033980", "100adcd0", DAT_100adcd0) != 0 {
+            if mech_trace::gr!("10033980", "100adcdc", DAT_100adcdc) != 0 {
+                mech_trace::cr!(
+                    "10033980",
+                    "10034a3b",
+                    FUN_10034a3b(
+                        mech_trace::gr!("10033980", "100adca0", DAT_100adca0),
+                        mech_trace::gr!("10033980", "100adca4", DAT_100adca4),
+                        param_2,
+                        param_3
+                    )
+                );
+                mech_trace::cr!(
+                    "10033980",
+                    "1003481a",
+                    FUN_1003481a(
+                        param_1,
+                        mech_trace::gr!("10033980", "100adca0", DAT_100adca0),
+                        mech_trace::gr!("10033980", "100adca4", DAT_100adca4),
+                        param_4,
+                        param_5,
+                        param_6,
+                    )
                 );
             }
-            if DAT_100adcd4 != 0 {
-                FUN_10033f29(param_1, param_5, param_6, param_7);
+            if mech_trace::gr!("10033980", "100adcd4", DAT_100adcd4) != 0 {
+                mech_trace::cr!(
+                    "10033980",
+                    "10033f29",
+                    FUN_10033f29(param_1, param_5, param_6, param_7)
+                );
             }
-            if DAT_100adcd8 != 0 {
-                FUN_1003468e(param_1);
+            if mech_trace::gr!("10033980", "100adcd8", DAT_100adcd8) != 0 {
+                mech_trace::cr!("10033980", "1003468e", FUN_1003468e(param_1));
             }
         }
     }

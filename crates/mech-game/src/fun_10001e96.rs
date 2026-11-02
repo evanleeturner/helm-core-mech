@@ -23,15 +23,19 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10001e96(str1: *const i8, param_2: u32, param_3: u16) {
+    mech_trace::enter!("10001e96", str1, param_2, param_3);
     let mut local_14: i32 = 0;
     // SAFETY: all globals and callees are the game's own memory and code; the
     // offsets mirror the original's table layouts.
     unsafe {
-        while local_14 < DAT_10123230 {
-            let entry = (&raw mut DAT_10168410)
-                .byte_offset((local_14 as isize).wrapping_mul(4))
-                .cast::<i32>()
-                .read_unaligned();
+        while local_14 < mech_trace::gr!("10001e96", "10123230", DAT_10123230) {
+            let entry = mech_trace::rd!(
+                "10001e96",
+                (&raw mut DAT_10168410)
+                    .byte_offset((local_14 as isize).wrapping_mul(4))
+                    .cast::<i32>(),
+                read_unaligned
+            );
             if entry != 0 {
                 let mut local_c: i32 = 0;
                 while local_c < 0x30 {
@@ -39,29 +43,45 @@ pub unsafe extern "C" fn FUN_10001e96(str1: *const i8, param_2: u32, param_3: u1
                         .wrapping_mul(0x3c0a)
                         .wrapping_add(local_c.wrapping_mul(0x13f))
                         as isize;
-                    if (&raw mut DAT_1012327a).byte_offset(off).read() == 7 {
+                    if mech_trace::rd!("10001e96", (&raw mut DAT_1012327a).byte_offset(off), read)
+                        == 7
+                    {
                         let name = (entry as u32)
                             .wrapping_add((local_c as u32).wrapping_mul(0x97))
                             .wrapping_add(0x70) as *const i8;
-                        let ivar2 = __strcmpi(str1, name);
+                        let ivar2 = mech_trace::cr!("10001e96", "__strcmpi", __strcmpi(str1, name));
                         if ivar2 == 0
                             && (param_2
-                                & (&raw mut DAT_1012327c)
-                                    .byte_offset(off)
-                                    .cast::<u32>()
-                                    .read_unaligned())
+                                & mech_trace::rd!(
+                                    "10001e96",
+                                    (&raw mut DAT_1012327c).byte_offset(off).cast::<u32>(),
+                                    read_unaligned
+                                ))
                                 != 0
-                            && (&raw mut DAT_10123368).byte_offset(off).read() < 0x28
+                            && mech_trace::rd!(
+                                "10001e96",
+                                (&raw mut DAT_10123368).byte_offset(off),
+                                read
+                            ) < 0x28
                         {
                             let p = (&raw mut DAT_10123368).byte_offset(off);
-                            let bvar1 = p.read();
-                            p.write(p.read().wrapping_add(1));
-                            (&raw mut DAT_10123369)
-                                .byte_offset(off)
-                                .byte_add((bvar1 as usize).wrapping_mul(2))
-                                .cast::<u16>()
-                                .write_unaligned(param_3);
-                            FUN_1004fee5();
+                            let bvar1 = mech_trace::rd!("10001e96", p, read);
+                            mech_trace::wr!(
+                                "10001e96",
+                                p,
+                                write,
+                                mech_trace::rd!("10001e96", p, read).wrapping_add(1)
+                            );
+                            mech_trace::wr!(
+                                "10001e96",
+                                (&raw mut DAT_10123369)
+                                    .byte_offset(off)
+                                    .byte_add((bvar1 as usize).wrapping_mul(2))
+                                    .cast::<u16>(),
+                                write_unaligned,
+                                param_3
+                            );
+                            mech_trace::cr!("10001e96", "1004fee5", FUN_1004fee5());
                         }
                     }
                     local_c = local_c.wrapping_add(1);

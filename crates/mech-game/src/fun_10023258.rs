@@ -17,17 +17,18 @@ unsafe extern "C" {
 
 unsafe fn ri(a: i32) -> i32 {
     // SAFETY: the caller passes an address of the game's own memory.
-    unsafe { (a as *const i32).read_unaligned() }
+    unsafe { mech_trace::rd!("10023258", (a as *const i32), read_unaligned) }
 }
 
 unsafe fn wi(a: i32, v: i32) {
     // SAFETY: the caller passes an address of the game's own memory.
-    unsafe { (a as *mut i32).write_unaligned(v) }
+    unsafe { mech_trace::wr!("10023258", (a as *mut i32), write_unaligned, v) }
 }
 
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10023258(param_1: i32, param_2: *mut u32) -> i32 {
+    mech_trace::enter!("10023258", param_1, param_2);
     // SAFETY: all pointers and globals belong to the game; reads and writes
     // happen in the original's order.
     unsafe {
@@ -53,8 +54,17 @@ pub unsafe extern "C" fn FUN_10023258(param_1: i32, param_2: *mut u32) -> i32 {
                 let base_c = (&raw mut DAT_100a7be4) as usize as i32;
                 let mut cond = false;
                 if ri(param_1.wrapping_add(0xdc)) != -1
-                    && ((param_1.wrapping_add(0xdd) as *const u8).read() & 0x10) == 0
-                    && FUN_1004c610(param_1, base_a.wrapping_add(i_var1)) == 2
+                    && (mech_trace::rd!(
+                        "10023258",
+                        (param_1.wrapping_add(0xdd) as *const u8),
+                        read
+                    ) & 0x10)
+                        == 0
+                    && mech_trace::cr!(
+                        "10023258",
+                        "1004c610",
+                        FUN_1004c610(param_1, base_a.wrapping_add(i_var1))
+                    ) == 2
                 {
                     let f20 = ri(i_var4.wrapping_add(0x20));
                     if f20 == 9999
@@ -71,7 +81,8 @@ pub unsafe extern "C" fn FUN_10023258(param_1: i32, param_2: *mut u32) -> i32 {
                 }
                 if cond {
                     let v_c = ri(base_c.wrapping_add(i_var1));
-                    if (ri(param_1.wrapping_add(4)) as u32) != DAT_100adf38
+                    if (ri(param_1.wrapping_add(4)) as u32)
+                        != mech_trace::gr!("10023258", "100adf38", DAT_100adf38)
                         && ri(param_1.wrapping_add(0x1b0))
                             <= ((v_c as u32)
                                 .wrapping_add(ri(i_var2.wrapping_add(0x3cc)) as u32)
@@ -105,12 +116,12 @@ pub unsafe extern "C" fn FUN_10023258(param_1: i32, param_2: *mut u32) -> i32 {
             }
             if finish {
                 if local_24 == 0 {
-                    FUN_10062d5f(i_var2, 1);
+                    mech_trace::cr!("10023258", "10062d5f", FUN_10062d5f(i_var2, 1));
                 } else {
                     let p = ri(param_1.wrapping_add(0x4c));
                     wi(p, ri(p).wrapping_add(local_18));
                     if local_8 == 0 {
-                        FUN_1006312b(i_var2, 1);
+                        mech_trace::cr!("10023258", "1006312b", FUN_1006312b(i_var2, 1));
                     } else {
                         wi(
                             i_var2.wrapping_add(0x3e0),
@@ -119,9 +130,9 @@ pub unsafe extern "C" fn FUN_10023258(param_1: i32, param_2: *mut u32) -> i32 {
                     }
                 }
                 if local_24 != 0 && local_8 != 0 {
-                    param_2.write_unaligned(1);
+                    mech_trace::wr!("10023258", param_2, write_unaligned, 1);
                 }
-                return local_24;
+                return mech_trace::rt!("10023258", local_24);
             }
         }
     }

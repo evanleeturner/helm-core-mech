@@ -21,18 +21,23 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1000cf60(param_1: *mut core::ffi::c_void) -> i32 {
+    mech_trace::enter!("1000cf60", param_1);
     // SAFETY: the callees and the string data are the game's own; param_1 is
     // the caller's buffer, filled by fread exactly as the original does.
     unsafe {
-        let cfg_file = __wfopen(
-            (&raw const s_mw2rmg_cfg_1008d078).cast::<i8>(),
-            (&raw const DAT_1008d074).cast::<i8>(),
+        let cfg_file = mech_trace::cr!(
+            "1000cf60",
+            "__wfopen",
+            __wfopen(
+                (&raw const s_mw2rmg_cfg_1008d078).cast::<i8>(),
+                (&raw const DAT_1008d074).cast::<i8>(),
+            )
         );
         if !cfg_file.is_null() {
-            _fread(param_1, 0xf3, 1, cfg_file);
-            _fclose(cfg_file);
-            return 1;
+            mech_trace::cr!("1000cf60", "_fread", _fread(param_1, 0xf3, 1, cfg_file));
+            mech_trace::cr!("1000cf60", "_fclose", _fclose(cfg_file));
+            return mech_trace::rt!("1000cf60", 1);
         }
-        0
+        mech_trace::rt!("1000cf60", 0)
     }
 }

@@ -20,20 +20,42 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10007218(str: *mut i8) {
+    mech_trace::enter!("10007218", str);
     // SAFETY: the globals and the C runtime functions are the game's own;
     // str points at the caller's NUL-terminated string.
     unsafe {
-        if DAT_100a41ec.is_null() {
-            DAT_100a41ec = FUN_fopen(
-                (&raw mut DAT_100a41f0).cast::<i8>(),
-                (&raw mut DAT_100a4344).cast::<i8>(),
+        if mech_trace::gr!("10007218", "100a41ec", DAT_100a41ec).is_null() {
+            mech_trace::gw!(
+                "10007218",
+                "100a41ec",
+                DAT_100a41ec,
+                mech_trace::cr!(
+                    "10007218",
+                    "FUN_fopen",
+                    FUN_fopen(
+                        (&raw mut DAT_100a41f0).cast::<i8>(),
+                        (&raw mut DAT_100a4344).cast::<i8>(),
+                    )
+                )
             );
         }
-        if !DAT_100a41ec.is_null() {
-            FUN_fputs(str, DAT_100a41ec);
-            FUN_fflush(DAT_100a41ec);
-            FUN_fclose(DAT_100a41ec);
-            DAT_100a41ec = core::ptr::null_mut();
+        if !mech_trace::gr!("10007218", "100a41ec", DAT_100a41ec).is_null() {
+            mech_trace::cr!(
+                "10007218",
+                "FUN_fputs",
+                FUN_fputs(str, mech_trace::gr!("10007218", "100a41ec", DAT_100a41ec))
+            );
+            mech_trace::cr!(
+                "10007218",
+                "FUN_fflush",
+                FUN_fflush(mech_trace::gr!("10007218", "100a41ec", DAT_100a41ec))
+            );
+            mech_trace::cr!(
+                "10007218",
+                "FUN_fclose",
+                FUN_fclose(mech_trace::gr!("10007218", "100a41ec", DAT_100a41ec))
+            );
+            mech_trace::gw!("10007218", "100a41ec", DAT_100a41ec, core::ptr::null_mut());
         }
     }
 }

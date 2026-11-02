@@ -26,11 +26,16 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10016651(param_1: i32) {
+    mech_trace::enter!("10016651", param_1);
     // SAFETY: param_1 is the caller's object pointer as an integer; the globals
     // and callees are the game's own, and all reads follow the original.
     unsafe {
         let rd = |off: i32| -> i32 {
-            ((param_1 as u32).wrapping_add(off as u32) as *const i32).read_unaligned()
+            mech_trace::rd!(
+                "10016651",
+                ((param_1 as u32).wrapping_add(off as u32) as *const i32),
+                read_unaligned
+            )
         };
         let pi_var1 = rd(0xa4) as *mut i32;
         let mut local_10: i32 = 0;
@@ -38,17 +43,36 @@ pub unsafe extern "C" fn FUN_10016651(param_1: i32) {
         let local_c: i32;
         let mut local_8: i32;
 
-        let entry = (&raw mut DAT_100eef40)
-            .cast::<i32>()
-            .offset(DAT_100adf38 as isize)
-            .read_unaligned();
-        let inner = ((entry as u32).wrapping_add(0x20) as *const i32).read_unaligned();
-        let a = ((inner as u32).wrapping_add(0x3c4) as *const i32).read_unaligned();
-        let b = ((inner as u32).wrapping_add(0x3d0) as *const i32).read_unaligned();
-        let v = (a as u32).wrapping_sub((b as u32).wrapping_mul(DAT_100b3904 as u32)) as i32;
-        DAT_100aa58c = v >> 6;
+        let entry = mech_trace::rd!(
+            "10016651",
+            (&raw mut DAT_100eef40)
+                .cast::<i32>()
+                .offset(mech_trace::gr!("10016651", "100adf38", DAT_100adf38) as isize),
+            read_unaligned
+        );
+        let inner = mech_trace::rd!(
+            "10016651",
+            ((entry as u32).wrapping_add(0x20) as *const i32),
+            read_unaligned
+        );
+        let a = mech_trace::rd!(
+            "10016651",
+            ((inner as u32).wrapping_add(0x3c4) as *const i32),
+            read_unaligned
+        );
+        let b = mech_trace::rd!(
+            "10016651",
+            ((inner as u32).wrapping_add(0x3d0) as *const i32),
+            read_unaligned
+        );
+        let v = (a as u32).wrapping_sub((b as u32).wrapping_mul(mech_trace::gr!(
+            "10016651",
+            "100b3904",
+            DAT_100b3904
+        ) as u32)) as i32;
+        mech_trace::gw!("10016651", "100aa58c", DAT_100aa58c, v >> 6);
 
-        local_8 = FUN_10067d51(&raw mut DAT_100aa588);
+        local_8 = mech_trace::cr!("10016651", "10067d51", FUN_10067d51(&raw mut DAT_100aa588));
         if local_8 < 1 {
             local_14 = 7;
             local_c = 7;
@@ -62,7 +86,11 @@ pub unsafe extern "C" fn FUN_10016651(param_1: i32) {
             local_8 = (local_8 as u32).wrapping_sub(0x300) as i32;
         }
         if 0 < local_8 {
-            local_10 = FUN_10011e60(rd(0x9c), local_8, 0x300);
+            local_10 = mech_trace::cr!(
+                "10016651",
+                "10011e60",
+                FUN_10011e60(rd(0x9c), local_8, 0x300)
+            );
             if local_10 < 0 {
                 local_10 = 0;
             } else if rd(0x9c) < local_10 {

@@ -15,11 +15,12 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1005f8e0(param_1: u32) {
+    mech_trace::enter!("1005f8e0", param_1);
     // SAFETY: the globals and the callee are the game's own; accesses happen
     // in the original's order.
     unsafe {
-        DAT_100a71e0 = 1;
-        DAT_100a71e4 = param_1;
-        FUN_10010820(DAT_100a6724);
+        mech_trace::gw!("1005f8e0", "100a71e0", DAT_100a71e0, 1);
+        mech_trace::gw!("1005f8e0", "100a71e4", DAT_100a71e4, param_1);
+        FUN_10010820(mech_trace::gr!("1005f8e0", "100a6724", DAT_100a6724));
     }
 }

@@ -32,21 +32,25 @@ unsafe extern "C" {
 #[inline(always)]
 unsafe fn rd(addr: i32) -> i32 {
     // SAFETY: the caller guarantees addr is a readable address in the game's memory.
-    unsafe { (addr as usize as *const i32).read_unaligned() }
+    unsafe { mech_trace::rd!("1000f1f0", (addr as usize as *const i32), read_unaligned) }
 }
 
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1000f1f0(param_1: i32) {
+    mech_trace::enter!("1000f1f0", param_1);
     // SAFETY: all addresses are the game's own structures and globals; reads
     // and calls happen in the original's order.
     unsafe {
-        if rd(param_1.wrapping_add(0xc)) > -1 && DAT_100b2ce8 != 0 {
-            let idx = DAT_100adf38 as usize;
-            let entry = (&raw const DAT_100eef40)
-                .cast::<u32>()
-                .add(idx)
-                .read_unaligned() as i32;
+        if rd(param_1.wrapping_add(0xc)) > -1
+            && mech_trace::gr!("1000f1f0", "100b2ce8", DAT_100b2ce8) != 0
+        {
+            let idx = mech_trace::gr!("1000f1f0", "100adf38", DAT_100adf38) as usize;
+            let entry = mech_trace::rd!(
+                "1000f1f0",
+                (&raw const DAT_100eef40).cast::<u32>().add(idx),
+                read_unaligned
+            ) as i32;
             let i_var1 = rd(entry.wrapping_add(0x20));
             let local_8 = rd(param_1.wrapping_add(0xc))
                 .wrapping_mul(0x40)
@@ -68,58 +72,87 @@ pub unsafe extern "C" fn FUN_1000f1f0(param_1: i32) {
                     _ => local_50 = 0xb,
                 }
                 let mut local_48 = [0u8; 64];
-                let puv = FUN_1008668b(
-                    DAT_100af17c as i32,
-                    DAT_101686f0.wrapping_add(1),
-                    DAT_100af0b8 as usize as *mut i32,
+                let puv = mech_trace::cr!(
+                    "1000f1f0",
+                    "1008668b",
+                    FUN_1008668b(
+                        mech_trace::gr!("1000f1f0", "100af17c", DAT_100af17c) as i32,
+                        mech_trace::gr!("1000f1f0", "101686f0", DAT_101686f0).wrapping_add(1),
+                        mech_trace::gr!("1000f1f0", "100af0b8", DAT_100af0b8) as usize as *mut i32,
+                    )
                 );
                 if !puv.is_null() {
-                    DAT_100eebbe = local_50 as u8;
+                    mech_trace::gw!("1000f1f0", "100eebbe", DAT_100eebbe, local_50 as u8);
                     if rd(local_8.wrapping_add(0x20)) == 9999 {
-                        sprintf(
-                            local_48.as_mut_ptr().cast::<i8>(),
-                            (&raw const DAT_100a9d6c).cast::<i8>(),
-                            param_1.wrapping_add(0x10),
+                        mech_trace::cr!(
+                            "1000f1f0",
+                            "sprintf",
+                            sprintf(
+                                local_48.as_mut_ptr().cast::<i8>(),
+                                (&raw const DAT_100a9d6c).cast::<i8>(),
+                                param_1.wrapping_add(0x10),
+                            )
                         );
                         let p = rd(param_1.wrapping_add(0xa8));
-                        FUN_1005acaa(
-                            rd(param_1.wrapping_add(0xa4)) as usize as *mut i32,
-                            rd(p),
-                            rd(p.wrapping_add(4)),
-                            puv as usize as i32,
-                            local_48.as_mut_ptr(),
-                            0x100eebb0,
+                        mech_trace::cr!(
+                            "1000f1f0",
+                            "1005acaa",
+                            FUN_1005acaa(
+                                rd(param_1.wrapping_add(0xa4)) as usize as *mut i32,
+                                rd(p),
+                                rd(p.wrapping_add(4)),
+                                puv as usize as i32,
+                                local_48.as_mut_ptr(),
+                                0x100eebb0,
+                            )
                         );
                     } else {
                         let v = rd(i_var1
                             .wrapping_add(0x66)
                             .wrapping_add(rd(local_8.wrapping_add(0x20)).wrapping_mul(0x3a)));
-                        sprintf(
-                            local_48.as_mut_ptr().cast::<i8>(),
-                            (&raw const DAT_100a9d70).cast::<i8>(),
-                            param_1.wrapping_add(0x10),
-                            v,
+                        mech_trace::cr!(
+                            "1000f1f0",
+                            "sprintf",
+                            sprintf(
+                                local_48.as_mut_ptr().cast::<i8>(),
+                                (&raw const DAT_100a9d70).cast::<i8>(),
+                                param_1.wrapping_add(0x10),
+                                v,
+                            )
                         );
                         let p = rd(param_1.wrapping_add(0xa8));
-                        FUN_1005acaa(
-                            rd(param_1.wrapping_add(0xa4)) as usize as *mut i32,
-                            rd(p),
-                            rd(p.wrapping_add(4)),
-                            puv as usize as i32,
-                            local_48.as_mut_ptr(),
-                            0x100eebb0,
+                        mech_trace::cr!(
+                            "1000f1f0",
+                            "1005acaa",
+                            FUN_1005acaa(
+                                rd(param_1.wrapping_add(0xa4)) as usize as *mut i32,
+                                rd(p),
+                                rd(p.wrapping_add(4)),
+                                puv as usize as i32,
+                                local_48.as_mut_ptr(),
+                                0x100eebb0,
+                            )
                         );
                     }
-                    DAT_100eebbe = 0xe;
-                    FUN_1008664f(
-                        DAT_101686f0.wrapping_add(1),
-                        DAT_100af0b8 as usize as *mut i32,
+                    mech_trace::gw!("1000f1f0", "100eebbe", DAT_100eebbe, 0xe);
+                    mech_trace::cr!(
+                        "1000f1f0",
+                        "1008664f",
+                        FUN_1008664f(
+                            mech_trace::gr!("1000f1f0", "101686f0", DAT_101686f0).wrapping_add(1),
+                            mech_trace::gr!("1000f1f0", "100af0b8", DAT_100af0b8) as usize
+                                as *mut i32,
+                        )
                     );
                 }
                 if rd(param_1.wrapping_add(0xc)) == rd(i_var1.wrapping_add(0x3e0)) {
-                    FUN_10066609(
-                        rd(param_1.wrapping_add(0xa4)) as usize as *mut i32,
-                        local_50,
+                    mech_trace::cr!(
+                        "1000f1f0",
+                        "10066609",
+                        FUN_10066609(
+                            rd(param_1.wrapping_add(0xa4)) as usize as *mut i32,
+                            local_50,
+                        )
                     );
                 }
             }

@@ -16,6 +16,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1006a4bb(param_1: *mut i8, param_2: i32) {
+    mech_trace::enter!("1006a4bb", param_1, param_2);
     let mut local_54: [i8; 80] = [0; 80];
     let buf = local_54.as_mut_ptr();
     // SAFETY: the callees and globals are the game's own; buf points at an
@@ -25,12 +26,12 @@ pub unsafe extern "C" fn FUN_1006a4bb(param_1: *mut i8, param_2: i32) {
             buf,
             b"%s  Res:%dx%d  Mem:%ld\0".as_ptr().cast(),
             param_1,
-            DAT_101f52c8[0],
-            DAT_101f52c8[1],
+            mech_trace::gr!("1006a4bb", "101f52c8", DAT_101f52c8[0]),
+            mech_trace::gr!("1006a4bb", "101f52c8", DAT_101f52c8[1]),
             param_2,
         );
         FUN_1005be24(buf, 0, 0x4f3, 0x50);
-        if DAT_100eee64 != 0 {
+        if mech_trace::gr!("1006a4bb", "100eee64", DAT_100eee64) != 0 {
             _sprintf(
                 buf,
                 b"WarThink / MechWarrior II %s %ld\0".as_ptr().cast(),

@@ -14,6 +14,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1006a133() {
+    mech_trace::enter!("1006a133");
     let mut local_20: [i8; 28] = [0; 28];
     // SAFETY: the callee and the globals are the game's own; local_20 is a
     // local buffer passed to sprintf as the original does.
@@ -24,6 +25,6 @@ pub unsafe extern "stdcall" fn FUN_1006a133() {
             0x19,
             0x19,
         );
-        DAT_100b3a70 = 0;
+        mech_trace::gw!("1006a133", "100b3a70", DAT_100b3a70, 0);
     }
 }

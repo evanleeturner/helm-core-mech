@@ -10,6 +10,9 @@ pub unsafe extern "C" fn FUN_10056e8b(
     param_5: i32,
     param_6: u8,
 ) -> u32 {
+    mech_trace::enter!(
+        "10056e8b", param_1, param_2, param_3, param_4, param_5, param_6
+    );
     let mut param_2 = param_2;
     let mut param_3 = param_3;
     let mut param_4 = param_4;
@@ -18,32 +21,33 @@ pub unsafe extern "C" fn FUN_10056e8b(
     // points at the surface descriptor; the pixel writes stay where the
     // original writes them.
     unsafe {
-        let pi_var1 = param_1.read_unaligned() as u32 as usize as *const i32;
-        let mut i_var9 = pi_var1.add(1).read_unaligned();
+        let pi_var1 =
+            mech_trace::rd!("10056e8b", param_1, read_unaligned) as u32 as usize as *const i32;
+        let mut i_var9 = mech_trace::rd!("10056e8b", pi_var1.add(1), read_unaligned);
         let i_var5 = i_var9.wrapping_add(1);
         if i_var5 == 0 || i_var9 < -1 {
-            return 0xffffffff;
+            return mech_trace::rt!("10056e8b", 0xffffffff);
         }
-        let mut i_var11 = pi_var1.add(2).read_unaligned();
+        let mut i_var11 = mech_trace::rd!("10056e8b", pi_var1.add(2), read_unaligned);
         if i_var11 < 0 {
-            return 0xffffffff;
+            return mech_trace::rt!("10056e8b", 0xffffffff);
         }
-        let i_var2 = param_1.add(1).read_unaligned();
+        let i_var2 = mech_trace::rd!("10056e8b", param_1.add(1), read_unaligned);
         let mut i_var6 = i_var2;
         if i_var2 < 1 {
             i_var6 = 0;
         }
-        let i_var3 = param_1.add(2).read_unaligned();
+        let i_var3 = mech_trace::rd!("10056e8b", param_1.add(2), read_unaligned);
         let mut i_var7 = i_var3;
         if i_var3 < 1 {
             i_var7 = 0;
         }
-        let mut i_var8 = param_1.add(3).read_unaligned();
-        if i_var9 <= param_1.add(3).read_unaligned() {
+        let mut i_var8 = mech_trace::rd!("10056e8b", param_1.add(3), read_unaligned);
+        if i_var9 <= mech_trace::rd!("10056e8b", param_1.add(3), read_unaligned) {
             i_var8 = i_var9;
         }
-        i_var9 = param_1.add(4).read_unaligned();
-        if i_var11 <= param_1.add(4).read_unaligned() {
+        i_var9 = mech_trace::rd!("10056e8b", param_1.add(4), read_unaligned);
+        if i_var11 <= mech_trace::rd!("10056e8b", param_1.add(4), read_unaligned) {
             i_var9 = i_var11;
         }
         if i_var6 <= i_var8 && i_var7 <= i_var9 {
@@ -64,7 +68,7 @@ pub unsafe extern "C" fn FUN_10056e8b(
                 param_5 = i_var9;
             }
             if param_2 <= param_4 {
-                let base = pi_var1.read_unaligned();
+                let base = mech_trace::rd!("10056e8b", pi_var1, read_unaligned);
                 let mut pu_var10 = param_3
                     .wrapping_mul(i_var5)
                     .wrapping_add(base)
@@ -80,7 +84,7 @@ pub unsafe extern "C" fn FUN_10056e8b(
                             pu_var13 = pu_var10.wrapping_add(1);
                         }
                         loop {
-                            pu_var13.write(param_6);
+                            mech_trace::wr!("10056e8b", pu_var13, write, param_6);
                             i_var11 = i_var9.wrapping_sub(2);
                             let b_var4 = 1 < i_var9;
                             i_var9 = i_var11;
@@ -95,11 +99,11 @@ pub unsafe extern "C" fn FUN_10056e8b(
                         }
                         pu_var10 = pu_var10.wrapping_offset(i_var5 as isize);
                     }
-                    return 0;
+                    return mech_trace::rt!("10056e8b", 0);
                 }
             }
-            return 0xfffffffc;
+            return mech_trace::rt!("10056e8b", 0xfffffffc);
         }
-        0xfffffffe
+        mech_trace::rt!("10056e8b", 0xfffffffe)
     }
 }

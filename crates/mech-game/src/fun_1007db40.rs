@@ -27,6 +27,9 @@ pub unsafe extern "C" fn FUN_1007db40(
     param_5: u32,
     param_6: i32,
 ) {
+    mech_trace::enter!(
+        "1007db40", param_1, param_2, param_3, param_4, param_5, param_6
+    );
     let _ = (param_1, param_2, param_4, param_5);
     if param_6 == 0 {
         return;
@@ -34,16 +37,27 @@ pub unsafe extern "C" fn FUN_1007db40(
     // SAFETY: param_6 points at the caller's structure; the globals and
     // callees are the game's own, accessed in the original's order.
     unsafe {
-        let field = (param_6.wrapping_add(0x10) as *const i32).read_unaligned();
-        if (field == param_3 && DAT_10160be4 == 0xd)
-            || DAT_10160be4.wrapping_sub(0x31) == param_3 as u32
+        let field = mech_trace::rd!(
+            "1007db40",
+            (param_6.wrapping_add(0x10) as *const i32),
+            read_unaligned
+        );
+        if (field == param_3 && mech_trace::gr!("1007db40", "10160be4", DAT_10160be4) == 0xd)
+            || mech_trace::gr!("1007db40", "10160be4", DAT_10160be4).wrapping_sub(0x31)
+                == param_3 as u32
         {
-            ((DAT_100adf34.wrapping_add(1)) as *mut u8).write(0);
-            let u_var1 = DAT_100a40cc;
-            DAT_100a40cc = 0;
-            FUN_10053021(0x71);
-            DAT_100a40cc = u_var1;
-            FUN_1004839c();
+            mech_trace::wr!(
+                "1007db40",
+                ((mech_trace::gr!("1007db40", "100adf34", DAT_100adf34).wrapping_add(1))
+                    as *mut u8),
+                write,
+                0
+            );
+            let u_var1 = mech_trace::gr!("1007db40", "100a40cc", DAT_100a40cc);
+            mech_trace::gw!("1007db40", "100a40cc", DAT_100a40cc, 0);
+            mech_trace::cr!("1007db40", "10053021", FUN_10053021(0x71));
+            mech_trace::gw!("1007db40", "100a40cc", DAT_100a40cc, u_var1);
+            mech_trace::cr!("1007db40", "1004839c", FUN_1004839c());
         }
     }
 }

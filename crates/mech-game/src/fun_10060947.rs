@@ -22,14 +22,26 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10060947() {
+    mech_trace::enter!("10060947");
     // SAFETY: the globals and callees are the game's own; the array's address
     // is passed on as the original does.
     unsafe {
-        if DAT_100b36f4 != 0 {
-            FUN_100718bd((&raw mut DAT_100c7e60).cast::<u32>());
-            DAT_100b36f4 = 0;
-            FUN_1008664f(DAT_100b36f8, DAT_100af0c8 as *mut i32);
-            DAT_100b36f8 = 0xffffffff;
+        if mech_trace::gr!("10060947", "100b36f4", DAT_100b36f4) != 0 {
+            mech_trace::cr!(
+                "10060947",
+                "100718bd",
+                FUN_100718bd((&raw mut DAT_100c7e60).cast::<u32>())
+            );
+            mech_trace::gw!("10060947", "100b36f4", DAT_100b36f4, 0);
+            mech_trace::cr!(
+                "10060947",
+                "1008664f",
+                FUN_1008664f(
+                    mech_trace::gr!("10060947", "100b36f8", DAT_100b36f8),
+                    mech_trace::gr!("10060947", "100af0c8", DAT_100af0c8) as *mut i32
+                )
+            );
+            mech_trace::gw!("10060947", "100b36f8", DAT_100b36f8, 0xffffffff);
             FUN_10060517();
         }
     }

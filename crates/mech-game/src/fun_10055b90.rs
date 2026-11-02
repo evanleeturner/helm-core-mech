@@ -14,6 +14,7 @@ pub unsafe extern "C" fn FUN_10055b90(
     param_4: i32,
     param_5: i32,
 ) -> i32 {
+    mech_trace::enter!("10055b90", param_1, param_2, param_3, param_4, param_5);
     let a: u64 = (param_1 as i64 as u64).wrapping_mul(param_4 as i64 as u64);
     let b: u64 = (param_2 as i64 as u64).wrapping_mul(param_3 as i64 as u64);
     let dividend: i64 = a.wrapping_sub(b) as i64;
@@ -51,5 +52,5 @@ pub unsafe extern "C" fn FUN_10055b90(
             RaiseException(0xC0000094, 0, 0, core::ptr::null());
         }
     }
-    q as i32
+    mech_trace::rt!("10055b90", q as i32)
 }

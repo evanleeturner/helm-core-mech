@@ -9,25 +9,43 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_100421c0(param_1: i32) {
+    mech_trace::enter!("100421c0", param_1);
     // SAFETY: param_1 points at a game list node; the globals are the game's
     // own list head and tail, accessed in the original's order.
     unsafe {
         let node = param_1 as u32 as *mut u8;
-        if node.byte_add(2).cast::<i16>().read_unaligned() != 0 {
-            node.byte_add(2).cast::<u16>().write_unaligned(0);
-            if DAT_100d08c8 != 0 {
-                (DAT_100d08c8 as usize as *mut u8)
-                    .byte_add(0xc)
-                    .cast::<i32>()
-                    .write_unaligned(param_1);
+        if mech_trace::rd!("100421c0", node.byte_add(2).cast::<i16>(), read_unaligned) != 0 {
+            mech_trace::wr!(
+                "100421c0",
+                node.byte_add(2).cast::<u16>(),
+                write_unaligned,
+                0
+            );
+            if mech_trace::gr!("100421c0", "100d08c8", DAT_100d08c8) != 0 {
+                mech_trace::wr!(
+                    "100421c0",
+                    (mech_trace::gr!("100421c0", "100d08c8", DAT_100d08c8) as usize as *mut u8)
+                        .byte_add(0xc)
+                        .cast::<i32>(),
+                    write_unaligned,
+                    param_1
+                );
             }
-            node.byte_add(0x10)
-                .cast::<u32>()
-                .write_unaligned(DAT_100d08c8);
-            DAT_100d08c8 = param_1 as u32;
-            node.byte_add(0xc).cast::<u32>().write_unaligned(0);
-            if DAT_100d08c4 == 0 {
-                DAT_100d08c4 = param_1 as u32;
+            mech_trace::wr!(
+                "100421c0",
+                node.byte_add(0x10).cast::<u32>(),
+                write_unaligned,
+                mech_trace::gr!("100421c0", "100d08c8", DAT_100d08c8)
+            );
+            mech_trace::gw!("100421c0", "100d08c8", DAT_100d08c8, param_1 as u32);
+            mech_trace::wr!(
+                "100421c0",
+                node.byte_add(0xc).cast::<u32>(),
+                write_unaligned,
+                0
+            );
+            if mech_trace::gr!("100421c0", "100d08c4", DAT_100d08c4) == 0 {
+                mech_trace::gw!("100421c0", "100d08c4", DAT_100d08c4, param_1 as u32);
             }
         }
     }

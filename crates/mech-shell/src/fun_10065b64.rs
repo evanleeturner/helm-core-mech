@@ -8,25 +8,25 @@ unsafe extern "C" {
 #[inline(always)]
 unsafe fn rd32(a: u32) -> i32 {
     // SAFETY: the address is the game's own memory, read where the original reads.
-    unsafe { (a as *const i32).read_unaligned() }
+    unsafe { mech_trace::rd!("10065b64", (a as *const i32), read_unaligned) }
 }
 
 #[inline(always)]
 unsafe fn rd8(a: u32) -> u32 {
     // SAFETY: the address is the game's own memory, read where the original reads.
-    unsafe { u32::from((a as *const u8).read()) }
+    unsafe { u32::from(mech_trace::rd!("10065b64", (a as *const u8), read)) }
 }
 
 #[inline(always)]
 unsafe fn wr8(a: u32, v: u32) {
     // SAFETY: the address is the game's own pixel memory, written where the original writes.
-    unsafe { (a as *mut u8).write(v as u8) }
+    unsafe { mech_trace::wr!("10065b64", (a as *mut u8), write, v as u8) }
 }
 
 #[inline(always)]
 unsafe fn wr32(a: u32, v: u32) {
     // SAFETY: the address is the game's own pixel memory, written where the original writes.
-    unsafe { (a as *mut u32).write_unaligned(v) }
+    unsafe { mech_trace::wr!("10065b64", (a as *mut u32), write_unaligned, v) }
 }
 
 const DISPATCH: u8 = 0;
@@ -48,23 +48,31 @@ pub unsafe extern "C" fn FUN_10065b64(
     draw_x: i32,
     draw_y: i32,
 ) -> u32 {
+    mech_trace::enter!(
+        "10065b64",
+        clip_target,
+        image_table,
+        image_index,
+        draw_x,
+        draw_y
+    );
     // SAFETY: all pointers and addresses are the game's own memory; the
     // original's reads and writes happen in the same order.
     unsafe {
-        let surface = clip_target.read() as u32;
+        let surface = mech_trace::rd!("10065b64", clip_target, read) as u32;
         let mut clip_bottom = rd32(surface.wrapping_add(4));
         let row_pitch = clip_bottom.wrapping_add(1);
         if row_pitch == 0 || clip_bottom < -1 {
-            return 0xffff_ffff;
+            return mech_trace::rt!("10065b64", 0xffff_ffff);
         }
         let mut image_left = rd32(surface.wrapping_add(8));
         if image_left < 0 {
-            return 0xffff_ffff;
+            return mech_trace::rt!("10065b64", 0xffff_ffff);
         }
-        let ct1 = clip_target.byte_add(4).read();
-        let ct2 = clip_target.byte_add(8).read();
-        let ct3 = clip_target.byte_add(12).read();
-        let ct4 = clip_target.byte_add(16).read();
+        let ct1 = mech_trace::rd!("10065b64", clip_target.byte_add(4), read);
+        let ct2 = mech_trace::rd!("10065b64", clip_target.byte_add(8), read);
+        let ct3 = mech_trace::rd!("10065b64", clip_target.byte_add(12), read);
+        let ct4 = mech_trace::rd!("10065b64", clip_target.byte_add(16), read);
         let origin_x0 = ct1;
         let clip_left = if origin_x0 < 1 { 0 } else { origin_x0 };
         let origin_y0 = ct2;
@@ -78,7 +86,7 @@ pub unsafe extern "C" fn FUN_10065b64(
             clip_bottom = image_left;
         }
         if clip_right < clip_left || clip_bottom < clip_top {
-            return 0xffff_fffe;
+            return mech_trace::rt!("10065b64", 0xffff_fffe);
         }
         let origin_x = draw_x.wrapping_add(origin_x0);
         let origin_y = draw_y.wrapping_add(origin_y0);
@@ -93,7 +101,7 @@ pub unsafe extern "C" fn FUN_10065b64(
         let image_bottom = rd32(image_record.wrapping_add(0x14)).wrapping_add(origin_y);
         let mut src = image_record.wrapping_add(0x18);
         if image_right < image_left || image_bottom < row_y {
-            return 0xffff_fffc;
+            return mech_trace::rt!("10065b64", 0xffff_fffc);
         }
         let neg = |a: i32, b: i32| -> u32 { (a.wrapping_sub(b) < 0) as u32 };
         let tl: u32 = (((neg(image_left, clip_left) * 2 + neg(clip_right, image_left)) * 2
@@ -107,13 +115,15 @@ pub unsafe extern "C" fn FUN_10065b64(
             + neg(clip_bottom, image_bottom))
             & 0xff;
         if (br & tl) != 0 {
-            return 0xffff_fffd;
+            return mech_trace::rt!("10065b64", 0xffff_fffd);
         }
         if tl == 0 && br == 0 {
-            let a = origin_x.wrapping_sub(clip_target.byte_add(4).read());
-            let b = origin_y.wrapping_sub(clip_target.byte_add(8).read());
+            let a =
+                origin_x.wrapping_sub(mech_trace::rd!("10065b64", clip_target.byte_add(4), read));
+            let b =
+                origin_y.wrapping_sub(mech_trace::rd!("10065b64", clip_target.byte_add(8), read));
             FUN_10065f68(clip_target, image_record as i32, a, b);
-            return 0;
+            return mech_trace::rt!("10065b64", 0);
         }
         let pitch = row_pitch as u32;
         let mut row_start = (row_y as u32)
@@ -143,10 +153,10 @@ pub unsafe extern "C" fn FUN_10065b64(
 
         loop {
             if image_bottom < row_y {
-                return 0;
+                return mech_trace::rt!("10065b64", 0);
             }
             if clip_bottom < row_y {
-                return 0;
+                return mech_trace::rt!("10065b64", 0);
             }
             let mut dest = row_start;
             let mut mode: u32 = if (tl & 8) == 0 {
@@ -275,7 +285,8 @@ pub unsafe extern "C" fn FUN_10065b64(
                         }
                         let mut n = total >> 2;
                         while n != 0 {
-                            let w = (src as *const u32).read_unaligned();
+                            let w =
+                                mech_trace::rd!("10065b64", (src as *const u32), read_unaligned);
                             wr32(dest, w);
                             src = src.wrapping_add(4);
                             dest = dest.wrapping_add(4);

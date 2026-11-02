@@ -19,39 +19,45 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1005ae32(param_1: *mut i32, param_2: i32) -> u32 {
+    mech_trace::enter!("1005ae32", param_1, param_2);
     // SAFETY: all pointers are the game's own memory; reads, writes and calls
     // happen in the same order as the original.
     unsafe {
-        let i_var6: i32 = param_1
-            .add(3)
-            .read_unaligned()
-            .wrapping_sub(param_1.add(1).read_unaligned())
+        let i_var6: i32 = mech_trace::rd!("1005ae32", param_1.add(3), read_unaligned)
+            .wrapping_sub(mech_trace::rd!("1005ae32", param_1.add(1), read_unaligned))
             .wrapping_add(1);
-        let mut u_var7: u32 = (param_1.add(4).read_unaligned() as u32)
-            .wrapping_sub(param_1.add(2).read_unaligned() as u32)
+        let mut u_var7: u32 = (mech_trace::rd!("1005ae32", param_1.add(4), read_unaligned) as u32)
+            .wrapping_sub(mech_trace::rd!("1005ae32", param_1.add(2), read_unaligned) as u32)
             .wrapping_add(1);
         let mut local_2c: i32 = 0;
-        let i_var2: i32 =
-            ((param_2 as u32 as usize).wrapping_add(8) as *const i32).read_unaligned();
+        let i_var2: i32 = mech_trace::rd!(
+            "1005ae32",
+            ((param_2 as u32 as usize).wrapping_add(8) as *const i32),
+            read_unaligned
+        );
         let mut local_3c: u32 = 0;
 
         let buf = (&raw mut DAT_100b24f9).cast::<u8>();
         let chunky = (&raw mut DAT_100b17f9).cast::<u8>();
 
-        let puv8 = FUN_1005adf0((&raw mut DAT_1005ade4).cast::<i16>(), param_2);
-        let u_var1: u16 = puv8.read_unaligned();
+        let puv8 = mech_trace::cr!(
+            "1005ae32",
+            "1005adf0",
+            FUN_1005adf0((&raw mut DAT_1005ade4).cast::<i16>(), param_2)
+        );
+        let u_var1: u16 = mech_trace::rd!("1005ae32", puv8, read_unaligned);
         let u_var3: u16 = u_var1.swap_bytes();
         let u_var9: u32 = u_var3 as u32;
-        let h: u16 = puv8.add(1).read_unaligned();
+        let h: u16 = mech_trace::rd!("1005ae32", puv8.add(1), read_unaligned);
         let mut local_c: u32 = h.swap_bytes() as u32;
         if (u_var7 as i32) <= (local_c as i32) {
             local_c = u_var7;
         }
 
         let hdr = puv8.cast::<u8>();
-        if hdr.add(9).read() != 1 {
-            let u_var4: u8 = hdr.add(10).read();
-            local_3c = hdr.add(0xd).read() as u32;
+        if mech_trace::rd!("1005ae32", hdr.add(9), read) != 1 {
+            let u_var4: u8 = mech_trace::rd!("1005ae32", hdr.add(10), read);
+            local_3c = mech_trace::rd!("1005ae32", hdr.add(0xd), read) as u32;
 
             u_var7 = ((u_var3 as u32) >> 3)
                 .wrapping_add(1)
@@ -63,8 +69,12 @@ pub unsafe extern "C" fn FUN_1005ae32(param_1: *mut i32, param_2: i32) -> u32 {
                 i_var10 = i_var6;
             }
 
-            let mut local_14: *mut u8 =
-                FUN_1005adf0((&raw mut DAT_1005adec).cast::<i16>(), param_2).cast::<u8>();
+            let mut local_14: *mut u8 = mech_trace::cr!(
+                "1005ae32",
+                "1005adf0",
+                FUN_1005adf0((&raw mut DAT_1005adec).cast::<i16>(), param_2)
+            )
+            .cast::<u8>();
 
             loop {
                 let mut pbvar18: *mut u8;
@@ -74,37 +84,56 @@ pub unsafe extern "C" fn FUN_1005ae32(param_1: *mut i32, param_2: i32) -> u32 {
                     while pbvar18 < limit {
                         let pbvar17 = local_14;
                         local_14 = pbvar17.wrapping_add(1);
-                        let n: u32 = pbvar17.read() as u32;
+                        let n: u32 = mech_trace::rd!("1005ae32", pbvar17, read) as u32;
                         if n != 0x80 {
                             if n < 0x81 {
                                 let mut cnt = n.wrapping_add(1) & 3;
                                 while cnt != 0 {
-                                    pbvar18.write(local_14.read());
+                                    mech_trace::wr!(
+                                        "1005ae32",
+                                        pbvar18,
+                                        write,
+                                        mech_trace::rd!("1005ae32", local_14, read)
+                                    );
                                     local_14 = local_14.wrapping_add(1);
                                     pbvar18 = pbvar18.wrapping_add(1);
                                     cnt -= 1;
                                 }
                                 cnt = n.wrapping_add(1) >> 2;
                                 while cnt != 0 {
-                                    let v = local_14.cast::<u32>().read_unaligned();
-                                    pbvar18.cast::<u32>().write_unaligned(v);
+                                    let v = mech_trace::rd!(
+                                        "1005ae32",
+                                        local_14.cast::<u32>(),
+                                        read_unaligned
+                                    );
+                                    mech_trace::wr!(
+                                        "1005ae32",
+                                        pbvar18.cast::<u32>(),
+                                        write_unaligned,
+                                        v
+                                    );
                                     local_14 = local_14.wrapping_add(4);
                                     pbvar18 = pbvar18.wrapping_add(4);
                                     cnt -= 1;
                                 }
                             } else {
-                                let b14: u8 = local_14.read();
+                                let b14: u8 = mech_trace::rd!("1005ae32", local_14, read);
                                 let b12: u8 = 1u8.wrapping_sub(n as u8);
                                 let mut cnt = (b12 & 3) as u32;
                                 while cnt != 0 {
-                                    pbvar18.write(b14);
+                                    mech_trace::wr!("1005ae32", pbvar18, write, b14);
                                     pbvar18 = pbvar18.wrapping_add(1);
                                     cnt -= 1;
                                 }
                                 let fill = u32::from_le_bytes([b14, b14, b14, b14]);
                                 cnt = (b12 >> 2) as u32;
                                 while cnt != 0 {
-                                    pbvar18.cast::<u32>().write_unaligned(fill);
+                                    mech_trace::wr!(
+                                        "1005ae32",
+                                        pbvar18.cast::<u32>(),
+                                        write_unaligned,
+                                        fill
+                                    );
                                     pbvar18 = pbvar18.wrapping_add(4);
                                     cnt -= 1;
                                 }
@@ -129,7 +158,13 @@ pub unsafe extern "C" fn FUN_1005ae32(param_1: *mut i32, param_2: i32) -> u32 {
                             let mut lo: u8 = 0;
                             let mut hi: u8 = 1;
                             loop {
-                                if (pbvar18.offset(i_var16 as isize).read() & b14) != 0 {
+                                if (mech_trace::rd!(
+                                    "1005ae32",
+                                    pbvar18.offset(i_var16 as isize),
+                                    read
+                                ) & b14)
+                                    != 0
+                                {
                                     lo |= hi;
                                 }
                                 i_var16 = i_var16.wrapping_add(i_var15);
@@ -138,7 +173,7 @@ pub unsafe extern "C" fn FUN_1005ae32(param_1: *mut i32, param_2: i32) -> u32 {
                                     break;
                                 }
                             }
-                            out.write(lo);
+                            mech_trace::wr!("1005ae32", out, write, lo);
                             out = out.wrapping_add(1);
                             local_18 = local_18.wrapping_sub(1);
                             if local_18 == 0 {
@@ -166,6 +201,6 @@ pub unsafe extern "C" fn FUN_1005ae32(param_1: *mut i32, param_2: i32) -> u32 {
                 }
             }
         }
-        local_3c
+        mech_trace::rt!("1005ae32", local_3c)
     }
 }

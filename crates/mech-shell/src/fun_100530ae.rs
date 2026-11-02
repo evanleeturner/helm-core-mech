@@ -25,12 +25,13 @@ unsafe extern "thiscall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_100530ae() {
+    mech_trace::enter!("100530ae");
     let mut local_buf = [0u8; 0x104];
     // SAFETY: the globals and the callee are the game's own; the source
     // strings are NUL-terminated and fit the local buffer, and the enclosing
     // frame's pointer addresses at least six ints.
     unsafe {
-        let src: *const u8 = if in_ZF != 0 {
+        let src: *const u8 = if mech_trace::gr!("100530ae", "in_ZF", in_ZF) != 0 {
             &raw mut DAT_1009faa8 as *const u8
         } else {
             &raw mut DAT_1009fac0 as *const u8
@@ -38,7 +39,7 @@ pub unsafe extern "stdcall" fn FUN_100530ae() {
 
         let mut len: usize = 0;
         loop {
-            let c = src.add(len).read();
+            let c = mech_trace::rd!("100530ae", src.add(len), read);
             len += 1;
             if c == 0 {
                 break;
@@ -47,14 +48,24 @@ pub unsafe extern "stdcall" fn FUN_100530ae() {
 
         let mut i = 0;
         while i < len {
-            local_buf[i] = src.add(i).read();
+            local_buf[i] = mech_trace::rd!("100530ae", src.add(i), read);
             i += 1;
         }
 
-        let p = in_stack_00000104;
-        let a = p.read_unaligned();
-        let b = p.add(1).read_unaligned();
-        let d = p.add(5).read_unaligned();
-        FUN_10050b80(DAT_100a6744, a, b, local_buf.as_mut_ptr().cast::<i8>(), d);
+        let p = mech_trace::gr!("100530ae", "in_stack_00000104", in_stack_00000104);
+        let a = mech_trace::rd!("100530ae", p, read_unaligned);
+        let b = mech_trace::rd!("100530ae", p.add(1), read_unaligned);
+        let d = mech_trace::rd!("100530ae", p.add(5), read_unaligned);
+        mech_trace::cr!(
+            "100530ae",
+            "10050b80",
+            FUN_10050b80(
+                mech_trace::gr!("100530ae", "100a6744", DAT_100a6744),
+                a,
+                b,
+                local_buf.as_mut_ptr().cast::<i8>(),
+                d
+            )
+        );
     }
 }

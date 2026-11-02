@@ -8,6 +8,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10066ec0(divisor: i32, dividend: u32, quotient: *mut u32) -> i32 {
+    mech_trace::enter!("10066ec0", divisor, dividend, quotient);
     let failed: i32;
     if divisor == 0 {
         failed = 1;
@@ -34,9 +35,9 @@ pub unsafe extern "C" fn FUN_10066ec0(divisor: i32, dividend: u32, quotient: *mu
         // SAFETY: the callee is the game's own; quotient points at the
         // caller's output slot.
         unsafe {
-            let u_var1 = FUN_10002570(dividend, divisor);
-            quotient.write_unaligned(u_var1);
+            let u_var1 = mech_trace::cr!("10066ec0", "10002570", FUN_10002570(dividend, divisor));
+            mech_trace::wr!("10066ec0", quotient, write_unaligned, u_var1);
         }
     }
-    failed
+    mech_trace::rt!("10066ec0", failed)
 }

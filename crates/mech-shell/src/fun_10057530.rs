@@ -23,34 +23,53 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10057530(record_index: i16, logo_number: i16) -> u32 {
+    mech_trace::enter!("10057530", record_index, logo_number);
     let mut cel_file_name = [0i8; 16];
     // SAFETY: globals and callees are the game's own; the table lookup and
     // buffers are used exactly as the original does.
     unsafe {
         let off = (record_index as i32).wrapping_mul(0xe);
-        let id = (&raw mut DAT_100a1ae8)
-            .byte_add(off as usize)
-            .cast::<i16>()
-            .read_unaligned() as i32;
-        let cel_buffer = FUN_100425b0(
-            DAT_100986b4 as i32,
-            id as u32,
-            PTR_DAT_100985ec as usize as *mut i32,
+        let id = mech_trace::rd!(
+            "10057530",
+            (&raw mut DAT_100a1ae8).byte_add(off as usize).cast::<i16>(),
+            read_unaligned
+        ) as i32;
+        let cel_buffer = mech_trace::cr!(
+            "10057530",
+            "100425b0",
+            FUN_100425b0(
+                mech_trace::gr!("10057530", "100986b4", DAT_100986b4) as i32,
+                id as u32,
+                mech_trace::gr!("10057530", "PTR_DAT_100985ec", PTR_DAT_100985ec) as usize
+                    as *mut i32,
+            )
         );
         if cel_buffer.is_null() {
-            return 3;
+            return mech_trace::rt!("10057530", 3);
         }
-        sprintf(
-            cel_file_name.as_mut_ptr(),
-            &raw const DAT_100a3640,
-            logo_number as i32,
+        mech_trace::cr!(
+            "10057530",
+            "sprintf",
+            sprintf(
+                cel_file_name.as_mut_ptr(),
+                &raw const DAT_100a3640,
+                logo_number as i32,
+            )
         );
-        let cel_file = FID_conflict___wfopen(cel_file_name.as_ptr(), &raw const DAT_100a3650);
+        let cel_file = mech_trace::cr!(
+            "10057530",
+            "FID_conflict___wfopen",
+            FID_conflict___wfopen(cel_file_name.as_ptr(), &raw const DAT_100a3650)
+        );
         if cel_file.is_null() {
-            return 1;
+            return mech_trace::rt!("10057530", 1);
         }
-        fread(cel_buffer.cast::<c_void>(), 1, 0x1002, cel_file);
-        let close_result = fclose(cel_file) as u32;
-        close_result & 0xffff0000
+        mech_trace::cr!(
+            "10057530",
+            "fread",
+            fread(cel_buffer.cast::<c_void>(), 1, 0x1002, cel_file)
+        );
+        let close_result = mech_trace::cr!("10057530", "fclose", fclose(cel_file)) as u32;
+        mech_trace::rt!("10057530", close_result & 0xffff0000)
     }
 }

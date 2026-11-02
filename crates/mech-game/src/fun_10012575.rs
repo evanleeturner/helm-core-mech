@@ -26,22 +26,63 @@ unsafe extern "stdcall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10012575() {
+    mech_trace::enter!("10012575");
     // SAFETY: the callees and globals are the game's own memory; the heap
     // pointers are freed in the original's order under the original's checks.
     unsafe {
-        FUN_10013faa();
-        if DAT_100aa1f0 != 0 {
-            if !DAT_100aa1dc.is_null() {
-                HeapFree(DAT_100adf74, 1, DAT_100aa1dc);
+        mech_trace::cr!("10012575", "10013faa", FUN_10013faa());
+        if mech_trace::gr!("10012575", "100aa1f0", DAT_100aa1f0) != 0 {
+            if !mech_trace::gr!("10012575", "100aa1dc", DAT_100aa1dc).is_null() {
+                mech_trace::cr!(
+                    "10012575",
+                    "HeapFree",
+                    HeapFree(
+                        mech_trace::gr!("10012575", "100adf74", DAT_100adf74),
+                        1,
+                        mech_trace::gr!("10012575", "100aa1dc", DAT_100aa1dc)
+                    )
+                );
             }
-            if !DAT_100aa1e8.is_null() {
-                HeapFree(DAT_100adf74, 1, DAT_100aa1e8);
+            if !mech_trace::gr!("10012575", "100aa1e8", DAT_100aa1e8).is_null() {
+                mech_trace::cr!(
+                    "10012575",
+                    "HeapFree",
+                    HeapFree(
+                        mech_trace::gr!("10012575", "100adf74", DAT_100adf74),
+                        1,
+                        mech_trace::gr!("10012575", "100aa1e8", DAT_100aa1e8)
+                    )
+                );
             }
-            if !DAT_100aa1ec.is_null() {
-                HeapFree(DAT_100adf74, 1, DAT_100aa1ec);
+            if !mech_trace::gr!("10012575", "100aa1ec", DAT_100aa1ec).is_null() {
+                mech_trace::cr!(
+                    "10012575",
+                    "HeapFree",
+                    HeapFree(
+                        mech_trace::gr!("10012575", "100adf74", DAT_100adf74),
+                        1,
+                        mech_trace::gr!("10012575", "100aa1ec", DAT_100aa1ec)
+                    )
+                );
             }
-            HeapFree(DAT_100adf74, 1, DAT_101eb4c4);
-            HeapFree(DAT_100adf74, 1, DAT_101eb4c0);
+            mech_trace::cr!(
+                "10012575",
+                "HeapFree",
+                HeapFree(
+                    mech_trace::gr!("10012575", "100adf74", DAT_100adf74),
+                    1,
+                    mech_trace::gr!("10012575", "101eb4c4", DAT_101eb4c4)
+                )
+            );
+            mech_trace::cr!(
+                "10012575",
+                "HeapFree",
+                HeapFree(
+                    mech_trace::gr!("10012575", "100adf74", DAT_100adf74),
+                    1,
+                    mech_trace::gr!("10012575", "101eb4c0", DAT_101eb4c0)
+                )
+            );
         }
     }
 }

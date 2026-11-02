@@ -15,6 +15,7 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_100895ca(param_1: *mut i32, param_2: *mut i32, param_3: *mut u32) {
+    mech_trace::enter!("100895ca", param_1, param_2, param_3);
     let mut local_40: i32;
     let mut local_3c: i32;
     let mut local_38: i32;
@@ -23,19 +24,31 @@ pub unsafe extern "C" fn FUN_100895ca(param_1: *mut i32, param_2: *mut i32, para
     // caller's data, and local_34 holds the nine-int output plus the three
     // trailing ints copied out afterwards, as in the original stack layout.
     unsafe {
-        FUN_1008941c(param_1, param_2, local_34.as_mut_ptr());
-        local_38 = param_2.add(9).read_unaligned();
-        local_3c = param_2.add(10).read_unaligned();
-        local_40 = param_2.add(11).read_unaligned();
-        FUN_10089060(
-            param_1,
-            &raw mut local_38,
-            &raw mut local_3c,
-            &raw mut local_40,
+        mech_trace::cr!(
+            "100895ca",
+            "1008941c",
+            FUN_1008941c(param_1, param_2, local_34.as_mut_ptr())
+        );
+        local_38 = mech_trace::rd!("100895ca", param_2.add(9), read_unaligned);
+        local_3c = mech_trace::rd!("100895ca", param_2.add(10), read_unaligned);
+        local_40 = mech_trace::rd!("100895ca", param_2.add(11), read_unaligned);
+        mech_trace::cr!(
+            "100895ca",
+            "10089060",
+            FUN_10089060(
+                param_1,
+                &raw mut local_38,
+                &raw mut local_3c,
+                &raw mut local_40,
+            )
         );
         local_34[9] = local_38;
         local_34[10] = local_3c;
         local_34[11] = local_40;
-        FUN_10086973(param_3, local_34.as_mut_ptr().cast::<u32>(), 0x30);
+        mech_trace::cr!(
+            "100895ca",
+            "10086973",
+            FUN_10086973(param_3, local_34.as_mut_ptr().cast::<u32>(), 0x30)
+        );
     }
 }

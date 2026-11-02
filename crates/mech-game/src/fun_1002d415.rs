@@ -13,17 +13,22 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1002d415(param_1: i32) -> *mut u8 {
+    mech_trace::enter!("1002d415", param_1);
     // SAFETY: the globals and sprintf are the game's own; the buffer is the
     // game's formatting buffer, written by sprintf and returned as is.
     unsafe {
         let i_var1 = (param_1 % 0xe10) / 0x3c;
-        sprintf(
-            &raw mut DAT_100c6b28 as *mut i8,
-            &raw const s__2_2d__2_2d__2_2d_100ad6fc as *const i8,
-            param_1 / 0xe10,
-            i_var1,
-            (param_1 % 0xe10).wrapping_add(i_var1.wrapping_mul(-0x3c)),
+        mech_trace::cr!(
+            "1002d415",
+            "sprintf",
+            sprintf(
+                &raw mut DAT_100c6b28 as *mut i8,
+                &raw const s__2_2d__2_2d__2_2d_100ad6fc as *const i8,
+                param_1 / 0xe10,
+                i_var1,
+                (param_1 % 0xe10).wrapping_add(i_var1.wrapping_mul(-0x3c)),
+            )
         );
-        &raw mut DAT_100c6b28 as *mut u8
+        mech_trace::rt!("1002d415", &raw mut DAT_100c6b28 as *mut u8)
     }
 }

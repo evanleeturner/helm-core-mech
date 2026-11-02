@@ -9,10 +9,18 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_100837cb() -> u32 {
+    mech_trace::enter!("100837cb");
     // SAFETY: the callees are the game's own functions; the value from the
     // first is passed to the second as the original does.
     unsafe {
-        let i_var1 = FUN_10083808();
-        if i_var1 == 0 { 0 } else { FUN_1002f28d(i_var1) }
+        let i_var1 = mech_trace::cr!("100837cb", "10083808", FUN_10083808());
+        mech_trace::rt!(
+            "100837cb",
+            if i_var1 == 0 {
+                0
+            } else {
+                mech_trace::cr!("100837cb", "1002f28d", FUN_1002f28d(i_var1))
+            }
+        )
     }
 }

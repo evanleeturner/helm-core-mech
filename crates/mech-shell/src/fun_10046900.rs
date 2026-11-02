@@ -21,15 +21,44 @@ unsafe extern "thiscall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10046900() {
+    mech_trace::enter!("10046900");
     // SAFETY: the callee and the globals are the game's own; each global
     // holds the object pointer the original passes as `this`.
     unsafe {
-        FUN_1005f7d0(DAT_10098f88, 0);
-        FUN_1005f7d0(DAT_10098f8c, 0);
-        FUN_1005f7d0(DAT_10098f90, 0);
-        FUN_1005f7d0(DAT_10098f94, 0);
-        FUN_1005f7d0(DAT_10098f98, 0);
-        FUN_1005f7d0(DAT_10098fa0, 0);
-        FUN_1005f7d0(DAT_10098fa4, 0);
+        mech_trace::cr!(
+            "10046900",
+            "1005f7d0",
+            FUN_1005f7d0(mech_trace::gr!("10046900", "10098f88", DAT_10098f88), 0)
+        );
+        mech_trace::cr!(
+            "10046900",
+            "1005f7d0",
+            FUN_1005f7d0(mech_trace::gr!("10046900", "10098f8c", DAT_10098f8c), 0)
+        );
+        mech_trace::cr!(
+            "10046900",
+            "1005f7d0",
+            FUN_1005f7d0(mech_trace::gr!("10046900", "10098f90", DAT_10098f90), 0)
+        );
+        mech_trace::cr!(
+            "10046900",
+            "1005f7d0",
+            FUN_1005f7d0(mech_trace::gr!("10046900", "10098f94", DAT_10098f94), 0)
+        );
+        mech_trace::cr!(
+            "10046900",
+            "1005f7d0",
+            FUN_1005f7d0(mech_trace::gr!("10046900", "10098f98", DAT_10098f98), 0)
+        );
+        mech_trace::cr!(
+            "10046900",
+            "1005f7d0",
+            FUN_1005f7d0(mech_trace::gr!("10046900", "10098fa0", DAT_10098fa0), 0)
+        );
+        mech_trace::cr!(
+            "10046900",
+            "1005f7d0",
+            FUN_1005f7d0(mech_trace::gr!("10046900", "10098fa4", DAT_10098fa4), 0)
+        );
     }
 }

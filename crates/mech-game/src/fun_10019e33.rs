@@ -26,42 +26,43 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10019e33(param_1: i32, param_2: *mut i32, param_3: u32) {
+    mech_trace::enter!("10019e33", param_1, param_2, param_3);
     // SAFETY: the globals, callbacks and callees are the game's own; param_2
     // points at the caller's int array, read where the original reads it.
     unsafe {
-        if param_1 == 1 && DAT_100aaf88 != 0 {
+        if param_1 == 1 && mech_trace::gr!("10019e33", "100aaf88", DAT_100aaf88) != 0 {
             if param_3 == 0x1000 {
                 return;
             }
             FUN_100562d8(
                 &raw mut DAT_101f52e0,
-                param_2.read_unaligned(),
-                param_2.add(1).read_unaligned(),
+                mech_trace::rd!("10019e33", param_2, read_unaligned),
+                mech_trace::rd!("10019e33", param_2.add(1), read_unaligned),
                 param_3 as u8,
             );
             return;
         }
-        if param_1 == 2 && DAT_100aaf84 != 0 {
+        if param_1 == 2 && mech_trace::gr!("10019e33", "100aaf84", DAT_100aaf84) != 0 {
             FUN_10056489(
                 &raw mut DAT_101f52e0,
-                param_2.read_unaligned(),
-                param_2.add(1).read_unaligned(),
-                param_2.add(6).read_unaligned(),
-                param_2.add(7).read_unaligned(),
+                mech_trace::rd!("10019e33", param_2, read_unaligned),
+                mech_trace::rd!("10019e33", param_2.add(1), read_unaligned),
+                mech_trace::rd!("10019e33", param_2.add(6), read_unaligned),
+                mech_trace::rd!("10019e33", param_2.add(7), read_unaligned),
                 0,
                 param_3,
             );
             return;
         }
-        if DAT_100aafa4 == 0 {
+        if mech_trace::gr!("10019e33", "100aafa4", DAT_100aafa4) == 0 {
             DAT_100aafd4(param_1, param_2, param_3);
             return;
         }
-        if DAT_100aafa4 == 3 {
+        if mech_trace::gr!("10019e33", "100aafa4", DAT_100aafa4) == 3 {
             DAT_100aafd4(param_1, param_2, param_3);
             return;
         }
-        if DAT_100aafa4 != 1 {
+        if mech_trace::gr!("10019e33", "100aafa4", DAT_100aafa4) != 1 {
             DAT_100aafd4(param_1, param_2, param_3 | 0xa000);
             return;
         }

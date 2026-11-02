@@ -8,30 +8,36 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_1008628d(entry_id: u32, four_char_key: *mut i32) -> *mut u16 {
+    mech_trace::enter!("1008628d", entry_id, four_char_key);
     if (entry_id as i32) < 0 {
-        return core::ptr::null_mut();
+        return mech_trace::rt!("1008628d", core::ptr::null_mut());
     }
     // SAFETY: the key points at the caller's four bytes; the table global and
     // the chain entries are the game's own memory, read where the original does.
     unsafe {
         let kb = four_char_key.cast::<i8>();
-        let sum = (kb.byte_add(2).read() as i32)
-            .wrapping_add(kb.byte_add(3).read() as i32)
-            .wrapping_add(kb.read() as i32)
-            .wrapping_add(kb.byte_add(1).read() as i32)
+        let sum = (mech_trace::rd!("1008628d", kb.byte_add(2), read) as i32)
+            .wrapping_add(mech_trace::rd!("1008628d", kb.byte_add(3), read) as i32)
+            .wrapping_add(mech_trace::rd!("1008628d", kb, read) as i32)
+            .wrapping_add(mech_trace::rd!("1008628d", kb.byte_add(1), read) as i32)
             .wrapping_add(entry_id as i32);
         let idx = sum % 0x3f1;
-        let slot = DAT_100ba7bc.wrapping_add((idx as u32).wrapping_mul(4)) as *const *mut u16;
-        let mut entry: *mut u16 = slot.read_unaligned();
+        let slot = mech_trace::gr!("1008628d", "100ba7bc", DAT_100ba7bc)
+            .wrapping_add((idx as u32).wrapping_mul(4)) as *const *mut u16;
+        let mut entry: *mut u16 = mech_trace::rd!("1008628d", slot, read_unaligned);
         while !entry.is_null() {
-            if u32::from(entry.read_unaligned()) == entry_id
-                && entry.byte_add(4).cast::<i32>().read_unaligned()
-                    == four_char_key.read_unaligned()
+            if u32::from(mech_trace::rd!("1008628d", entry, read_unaligned)) == entry_id
+                && mech_trace::rd!("1008628d", entry.byte_add(4).cast::<i32>(), read_unaligned)
+                    == mech_trace::rd!("1008628d", four_char_key, read_unaligned)
             {
                 break;
             }
-            entry = entry.byte_add(8).cast::<*mut u16>().read_unaligned();
+            entry = mech_trace::rd!(
+                "1008628d",
+                entry.byte_add(8).cast::<*mut u16>(),
+                read_unaligned
+            );
         }
-        entry
+        mech_trace::rt!("1008628d", entry)
     }
 }
