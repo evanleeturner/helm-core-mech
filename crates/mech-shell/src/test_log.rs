@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-//! A test-only log sink: it keeps each DEBUG message on the thread that
-//! logged it, so a test reads the lines its own call wrote while other
-//! tests run beside it.
+//! A test-only log sink: it keeps each DEBUG line on the thread that
+//! logged it, rendered `event k=v` by the logline adapter, so a test reads
+//! the lines its own call wrote while other tests run beside it.
 //!
-//! Call: [`debug_lines`] `(call) -> Vec<String>`, the DEBUG messages `call`
+//! Call: [`debug_lines`] `(call) -> Vec<String>`, the DEBUG lines `call`
 //! logged on this thread, in order.
 
 use std::cell::RefCell;
@@ -24,7 +24,7 @@ impl Log for ThreadSink {
 
     fn log(&self, record: &Record<'_>) {
         if self.enabled(record.metadata()) {
-            LINES.with(|lines| lines.borrow_mut().push(record.args().to_string()));
+            LINES.with(|lines| lines.borrow_mut().push(mech_logline::body(record)));
         }
     }
 

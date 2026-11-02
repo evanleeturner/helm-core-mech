@@ -2,14 +2,11 @@
 //! `MW2SHELL.DLL` 1004b060, from `src/mw2shell/1004b060.c` (`FUN_1004b060`): `__stdcall`, no
 //! arguments, returns 0 as an `unsigned char`.
 
-use log::debug;
-
 /// Returns 0.
 #[must_use]
 pub fn FUN_1004b060() -> u8 {
     let result = 0;
-    debug!("FUN_1004b060() -> {result}");
-    result
+    mech_trace::rt!("1004b060", result)
 }
 
 #[cfg(test)]
@@ -24,6 +21,6 @@ mod tests {
         let lines = debug_lines(|| {
             assert_eq!(FUN_1004b060(), 0, "harvest/1004b060.log:272");
         });
-        assert!(lines.iter().any(|line| line.contains("FUN_1004b060")));
+        assert!(lines.iter().any(|line| line.contains("f=1004b060")));
     }
 }

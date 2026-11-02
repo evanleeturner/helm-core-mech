@@ -3,16 +3,13 @@
 //! `__stdcall`, no arguments, returns the game's `unsigned int` at
 //! `DAT_100a67f4`, here [`ShellState::dat_100a67f4`].
 
-use log::debug;
-
 use crate::ShellState;
 
 /// Returns the word at `DAT_100a67f4`.
 #[must_use]
 pub fn FUN_10010930(state: &ShellState) -> u32 {
-    let value = state.dat_100a67f4;
-    debug!("FUN_10010930() -> {value:#x}");
-    value
+    let value = mech_trace::gr!("10010930", "100a67f4", state.dat_100a67f4);
+    mech_trace::rt!("10010930", value)
 }
 
 #[cfg(test)]
@@ -34,6 +31,6 @@ mod tests {
         let lines = debug_lines(|| {
             assert_eq!(FUN_10010930(&state), 65536, "harvest/10010930.log:273");
         });
-        assert!(lines.iter().any(|line| line.contains("FUN_10010930")));
+        assert!(lines.iter().any(|line| line.contains("f=10010930")));
     }
 }

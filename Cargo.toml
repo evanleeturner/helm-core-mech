@@ -1,4 +1,4 @@
 # The public tree's Rust: one workspace, a crate a game file.
 [workspace]
-members = ["crates/mech-game", "crates/mech-launcher", "crates/mech-shell", "crates/mech-trace"]
+members = ["crates/mech-game", "crates/mech-launcher", "crates/mech-logline", "crates/mech-shell", "crates/mech-trace"]
 resolver = "3"

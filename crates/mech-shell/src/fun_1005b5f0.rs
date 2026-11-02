@@ -3,14 +3,11 @@
 //! (`ReturnRecordCountOfOne_Likely`): `__stdcall`, no arguments, returns 1 as
 //! an `unsigned int`.
 
-use log::debug;
-
 /// Returns 1.
 #[must_use]
 pub fn FUN_1005b5f0() -> u32 {
     let result = 1;
-    debug!("FUN_1005b5f0() -> {result}");
-    result
+    mech_trace::rt!("1005b5f0", result)
 }
 
 #[cfg(test)]
@@ -25,6 +22,6 @@ mod tests {
         let lines = debug_lines(|| {
             assert_eq!(FUN_1005b5f0(), 1, "harvest/1005b5f0.log:272");
         });
-        assert!(lines.iter().any(|line| line.contains("FUN_1005b5f0")));
+        assert!(lines.iter().any(|line| line.contains("f=1005b5f0")));
     }
 }

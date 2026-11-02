@@ -1,0 +1,73 @@
+{
+  "program": "helm-core-mech",
+  "grammar": 1,
+  "about": "The workspace's event catalog: every log line is one of these events, its id and values only; the sentence is the template here. Addresses are the original game file's, in hex; values print in hex, floats in decimal, a value of no printable type as ?.",
+  "events": [
+    {
+      "id": "fn.in",
+      "level": "D",
+      "fields": { "f": "the function's address", "a": "its arguments, in order (absent when it takes none)" },
+      "template": "{f} entered, arguments {a}"
+    },
+    {
+      "id": "fn.ret",
+      "level": "D",
+      "fields": { "f": "the function's address", "v": "the value it returns" },
+      "template": "{f} returns {v}"
+    },
+    {
+      "id": "mem.rd",
+      "level": "D",
+      "fields": { "f": "the function's address", "a": "the address read", "v": "the value read" },
+      "template": "{f} read {v} at {a}"
+    },
+    {
+      "id": "mem.wr",
+      "level": "D",
+      "fields": { "f": "the function's address", "a": "the address written", "v": "the value written" },
+      "template": "{f} wrote {v} at {a}"
+    },
+    {
+      "id": "mem.upd",
+      "level": "D",
+      "fields": { "f": "the function's address", "a": "the address updated", "op": "the compound operator", "v": "its right-hand value" },
+      "template": "{f} updated {a}: {op} {v}"
+    },
+    {
+      "id": "glob.rd",
+      "level": "D",
+      "fields": { "f": "the function's address", "g": "the global's address", "v": "the value read" },
+      "template": "{f} read global {g}: {v}"
+    },
+    {
+      "id": "glob.wr",
+      "level": "D",
+      "fields": { "f": "the function's address", "g": "the global's address", "v": "the value written" },
+      "template": "{f} wrote {v} to global {g}"
+    },
+    {
+      "id": "glob.upd",
+      "level": "D",
+      "fields": { "f": "the function's address", "g": "the global's address", "op": "the compound operator", "v": "its right-hand value" },
+      "template": "{f} updated global {g}: {op} {v}"
+    },
+    {
+      "id": "call.ret",
+      "level": "D",
+      "fields": { "f": "the caller's address", "c": "the callee, by address or import name", "v": "the value the call returned" },
+      "template": "{f}'s call to {c} returned {v}"
+    },
+    {
+      "id": "mem.copy",
+      "level": "D",
+      "fields": { "f": "the function's address", "s": "the source address", "d": "the destination address", "n": "the count passed" },
+      "template": "{f} copies count {n} from {s} to {d}"
+    },
+    {
+      "id": "mem.fill",
+      "level": "D",
+      "fields": { "f": "the function's address", "d": "the destination address", "b": "the fill byte", "n": "the count passed" },
+      "template": "{f} fills count {n} at {d} with {b}"
+    }
+  ]
+}

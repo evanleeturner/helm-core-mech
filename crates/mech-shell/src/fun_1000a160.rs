@@ -6,13 +6,10 @@
 //! returns nothing, so the port keeps no result. The callee is not ported
 //! here: the caller passes it in.
 
-use log::debug;
-
 /// Calls `fun_1000a140`, standing for the game's `FUN_1000a140`, on
 /// `value + 0x32`, wrapping.
 pub fn FUN_1000a160(value: i32, fun_1000a140: impl FnOnce(i32)) {
-    debug!("FUN_1000a160(value={value})");
+    mech_trace::enter!("1000a160", value);
     let argument = value.wrapping_add(0x32);
-    debug!("FUN_1000a160: calls FUN_1000a140({argument})");
     fun_1000a140(argument);
 }

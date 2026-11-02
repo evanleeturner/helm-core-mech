@@ -4,23 +4,19 @@
 //! [`ShellState::dat_1009bdf8`], and returns 0 when it lies in 0 to 4, else
 //! returns 2 and stores nothing.
 
-use log::debug;
-
 use crate::ShellState;
 
 /// Stores `param_1` at `DAT_1009bdf8` and returns 0 for 0 to 4; returns 2
 /// otherwise. The C's test, `-1 < param_1 && param_1 < 5`, is the range.
 pub fn FUN_1004f240(state: &mut ShellState, param_1: i32) -> i32 {
-    debug!("FUN_1004f240(param_1={param_1})");
+    mech_trace::enter!("1004f240", param_1);
     let result = if (0..5).contains(&param_1) {
-        state.dat_1009bdf8 = param_1;
-        debug!("FUN_1004f240: dat_1009bdf8 = {}", state.dat_1009bdf8);
+        mech_trace::gw!("1004f240", "1009bdf8", state.dat_1009bdf8, param_1);
         0
     } else {
         2
     };
-    debug!("FUN_1004f240 -> {result}");
-    result
+    mech_trace::rt!("1004f240", result)
 }
 
 #[cfg(test)]
@@ -87,7 +83,7 @@ mod tests {
         let refused = debug_lines(|| {
             FUN_1004f240(&mut ShellState::default(), 127);
         });
-        assert!(stored.iter().any(|line| line.contains("dat_1009bdf8")));
-        assert!(!refused.iter().any(|line| line.contains("dat_1009bdf8")));
+        assert!(stored.iter().any(|line| line.contains("g=1009bdf8")));
+        assert!(!refused.iter().any(|line| line.contains("g=1009bdf8")));
     }
 }
