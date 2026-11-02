@@ -46,6 +46,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "mech_swap"
+version = "0.1.0"
+dependencies = [
+ "log",
+ "mech_logline",
+ "mech_trace",
+]
+
+[[package]]
 name = "mech_trace"
 version = "0.1.0"
 dependencies = [
