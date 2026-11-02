@@ -3,6 +3,11 @@
 //! installs the sink; the sink, one `WriteFile` a line; and the panic
 //! handler, which traps (`ud2`) as the checker's builds do, so a port's
 //! panic shows as an illegal instruction in Wine's `seh` trace.
+//!
+//! The panic handler and the personality are the swap profile's alone
+//! (`panic = "abort"`, the crate built by itself, no `std`): in the
+//! workspace's own builds `mech_logline` turns on `log`'s `std`, which
+//! brings `std`'s handler, and a second one is a duplicate lang item.
 use core::ffi::c_void;
 use core::fmt::Write as _;
 use core::sync::atomic::{AtomicUsize, Ordering};
@@ -157,6 +162,7 @@ pub extern "system" fn DllMain(_module: *mut c_void, reason: u32, _reserved: *mu
     1
 }
 
+#[cfg(panic = "abort")]
 #[panic_handler]
 fn panic(_: &core::panic::PanicInfo<'_>) -> ! {
     // SAFETY: ud2 raises an illegal instruction and never returns.
@@ -165,6 +171,7 @@ fn panic(_: &core::panic::PanicInfo<'_>) -> ! {
 
 /// Core's code names the unwinding personality; a `panic = "abort"` build
 /// never calls it. It traps if called.
+#[cfg(panic = "abort")]
 #[unsafe(no_mangle)]
 pub extern "C" fn rust_eh_personality() {
     // SAFETY: as the panic handler's.
