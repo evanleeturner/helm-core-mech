@@ -1,4 +1,13 @@
 # The public tree's Rust: one workspace, a crate a game file.
 [workspace]
-members = ["crates/mech-game", "crates/mech-launcher", "crates/mech-logline", "crates/mech-shell", "crates/mech-trace"]
+members = ["crates/mech-game", "crates/mech-launcher", "crates/mech-logline", "crates/mech-shell", "crates/mech-swap", "crates/mech-trace"]
 resolver = "3"
+
+# The swap's library (crates/mech-swap): no unwinding, and one object of the
+# crate's own, as the checker builds its Rust arm; the other crates' profiles
+# stand as they were.
+[profile.swap]
+inherits = "release"
+panic = "abort"
+lto = true
+codegen-units = 1

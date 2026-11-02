@@ -1,0 +1,21 @@
+# The swap: the shell library's 488 ported functions in one library the live
+# game loads beside its own (HC5), each exported as HC5_<address>, its
+# globals and callees linked to the shell's own addresses by the swap's
+# build. 32-bit x86 Windows only; on any other target the crate is its
+# sink's line alone, for the host test. Build it with
+# `cargo rustc -p mech_swap --profile swap --target i686-pc-windows-gnu
+# --crate-type staticlib`.
+[package]
+name = "mech_swap"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+license = "MIT"
+publish = false
+
+[dependencies]
+mech_trace = { path = "../mech-trace" }
+log = { version = "0.4", features = ["kv"] }
+
+[dev-dependencies]
+mech_logline = { path = "../mech-logline" }
