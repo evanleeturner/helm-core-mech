@@ -576,13 +576,20 @@ pub unsafe extern "C" fn FUN_10057ad5(
                             | ((u5.wrapping_add(u_var22) < u5) as u32);
                         local_d4 = local_d4.wrapping_add(u_var17);
                         u5 = u5.wrapping_add(u_var22);
-                        p24 = p24.wrapping_offset(*g.add(20 + car as usize) as isize);
+                        p24 = p24
+                            .wrapping_offset(
+                                mech_trace::dr!("10057ad5", g.add(20 + car as usize)) as isize
+                            );
                     };
                 }
                 macro_rules! put {
                     ($k:expr) => {
-                        if *p24 != -1 {
-                            *p26.add($k) = *p24;
+                        if mech_trace::dr!("10057ad5", p24) != -1 {
+                            mech_trace::dw!(
+                                "10057ad5",
+                                p26.add($k),
+                                mech_trace::dr!("10057ad5", p24)
+                            );
                         }
                     };
                 }

@@ -61,16 +61,16 @@ pub unsafe extern "stdcall" fn FUN_100164f0() -> u32 {
             PeekMessageA(msg.cast(), core::ptr::null_mut(), 0, 0, 1)
         );
         if b_var1 != 0 {
-            if (*msg).message == 0x12 {
-                PostQuitMessage((*msg).w_param as i32);
+            if mech_trace::dr!("100164f0", &raw const (*msg).message) == 0x12 {
+                PostQuitMessage(mech_trace::dr!("100164f0", &raw const (*msg).w_param) as i32);
                 return mech_trace::rt!("100164f0", 0);
             }
             let mut u_var2: u32 = 1;
             mech_trace::cr!("100164f0", "TranslateMessage", TranslateMessage(msg.cast()));
-            if (*msg).message == 0x111
-                && ((*msg).w_param == 0x9c41
-                    || (*msg).w_param == 0x9c97
-                    || (*msg).w_param == 0x9c43)
+            if mech_trace::dr!("100164f0", &raw const (*msg).message) == 0x111
+                && (mech_trace::dr!("100164f0", &raw const (*msg).w_param) == 0x9c41
+                    || mech_trace::dr!("100164f0", &raw const (*msg).w_param) == 0x9c97
+                    || mech_trace::dr!("100164f0", &raw const (*msg).w_param) == 0x9c43)
             {
                 u_var2 = 0;
             }

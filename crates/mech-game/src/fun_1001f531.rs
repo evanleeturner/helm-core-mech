@@ -318,7 +318,7 @@ pub unsafe extern "C" fn FUN_1001f531(param_1: *mut i32) {
                         if local_88 < 1 {
                             local_c = 0;
                         } else {
-                            local_c = ng(DAT_100a40a8);
+                            local_c = ng(mech_trace::gr!("1001f531", "100a40a8", DAT_100a40a8));
                         }
                     };
                 }
@@ -658,7 +658,7 @@ pub unsafe extern "C" fn FUN_1001f531(param_1: *mut i32) {
                     seto!(0x80, obj!(0x80) & -2);
                     seto!(0x80, obj!(0x80) | 4);
                     if local_1c != 0 && mech_trace::gr!("1001f531", "100ab314", DAT_100ab314) != 0 {
-                        mech_trace::gw!("1001f531", "_DAT_100ab310", _DAT_100ab310, 1);
+                        mech_trace::gw!("1001f531", "100ab310", _DAT_100ab310, 1);
                     }
                 } else {
                     seto!(0x80, obj!(0x80) & -5);
@@ -753,7 +753,16 @@ pub unsafe extern "C" fn FUN_1001f531(param_1: *mut i32) {
                 seto!(0x50, local_80);
                 seto!(0x54, local_8c);
                 seto!(0x58, local_14);
-                seto!(0x60, ad(obj!(0x60), ml(m!(0xf), DAT_100b3904) / 0xb5));
+                seto!(
+                    0x60,
+                    ad(
+                        obj!(0x60),
+                        ml(
+                            m!(0xf),
+                            mech_trace::gr!("1001f531", "100b3904", DAT_100b3904)
+                        ) / 0xb5
+                    )
+                );
                 seto!(0x60, obj!(0x60) % 0x1680000);
                 setm!(0x10a, local_7c);
                 setm!(0x10b, local_88);

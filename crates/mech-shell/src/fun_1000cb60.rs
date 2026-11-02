@@ -22,7 +22,11 @@ unsafe extern "C" {
 
 macro_rules! count {
     ($src:expr) => {
-        (($src).wrapping_add(4) as *const i32).read_unaligned()
+        mech_trace::rd!(
+            "1000cb60",
+            (($src).wrapping_add(4) as *const i32),
+            read_unaligned
+        )
     };
 }
 
@@ -32,8 +36,9 @@ macro_rules! copy_loop {
         if 0 < count!($src) {
             loop {
                 let i_var3 = i_var4.wrapping_add(1);
-                let u_var1 = FUN_10018060($src as i32, i_var4);
-                FUN_10017df0($dst, u_var1);
+                let u_var1 =
+                    mech_trace::cr!("1000cb60", "10018060", FUN_10018060($src as i32, i_var4));
+                mech_trace::cr!("1000cb60", "10017df0", FUN_10017df0($dst, u_var1));
                 i_var4 = i_var3;
                 if !(i_var3 < count!($src)) {
                     break;
@@ -56,7 +61,7 @@ pub unsafe extern "stdcall" fn FUN_1000cb60() {
         copy_loop!(DAT_100a67c4, DAT_100a67b4);
 
         let mut i_var4: i32 = 0;
-        if 0 < count!(DAT_100a67c8) {
+        if 0 < count!(mech_trace::gr!("1000cb60", "100a67c8", DAT_100a67c8)) {
             loop {
                 let pi_var2 = mech_trace::cr!(
                     "1000cb60",
@@ -77,7 +82,7 @@ pub unsafe extern "stdcall" fn FUN_1000cb60() {
                     );
                 }
                 i_var4 = i_var4.wrapping_add(1);
-                if !(i_var4 < count!(DAT_100a67c8)) {
+                if !(i_var4 < count!(mech_trace::gr!("1000cb60", "100a67c8", DAT_100a67c8))) {
                     break;
                 }
             }

@@ -42,15 +42,17 @@ pub unsafe extern "C" fn FUN_1003a0e9(param_1: i32, param_2: i32) {
 
     macro_rules! rd {
         ($o:expr) => {
-            src.byte_add($o).cast::<u32>().read_unaligned()
+            mech_trace::rd!("1003a0e9", src.byte_add($o).cast::<u32>(), read_unaligned)
         };
     }
     macro_rules! put {
         ($d:ident, $v:expr) => {
-            (&raw mut $d)
-                .byte_add(off)
-                .cast::<u32>()
-                .write_unaligned($v)
+            mech_trace::wr!(
+                "1003a0e9",
+                (&raw mut $d).byte_add(off).cast::<u32>(),
+                write_unaligned,
+                $v
+            )
         };
     }
 

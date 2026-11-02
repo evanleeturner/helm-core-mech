@@ -203,7 +203,7 @@ pub unsafe extern "stdcall" fn FUN_1000edbb() {
                     let src = &raw mut DAT_101f52e0;
                     let mut i = 0;
                     while i < 5 {
-                        local_1c[i] = (*src)[i];
+                        local_1c[i] = mech_trace::dr!("1000edbb", &raw const (*src)[i]);
                         i += 1;
                     }
                     FUN_1006657e(

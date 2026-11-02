@@ -53,8 +53,8 @@ pub unsafe extern "stdcall" fn FUN_10037cb1() {
             );
             if b_var1 != 0 {
                 while mech_trace::gr!("10037cb1", "100adf94", DAT_100adf94) == 0
-                    && 0x1ff < (*p).message
-                    && (*p).message < 0x20a
+                    && 0x1ff < mech_trace::dr!("10037cb1", &raw const (*p).message)
+                    && mech_trace::dr!("10037cb1", &raw const (*p).message) < 0x20a
                 {
                     mech_trace::cr!(
                         "10037cb1",
@@ -62,7 +62,9 @@ pub unsafe extern "stdcall" fn FUN_10037cb1() {
                         PeekMessageA(p.cast(), core::ptr::null_mut(), 0, 0, 1)
                     );
                 }
-                if (*p).hwnd.is_null() || (*p).message != 0x12 {
+                if mech_trace::dr!("10037cb1", &raw const (*p).hwnd).is_null()
+                    || mech_trace::dr!("10037cb1", &raw const (*p).message) != 0x12
+                {
                     mech_trace::cr!("10037cb1", "TranslateMessage", TranslateMessage(p.cast()));
                     mech_trace::cr!("10037cb1", "DispatchMessageA", DispatchMessageA(p.cast()));
                 } else {

@@ -30,28 +30,40 @@ unsafe extern "C" {
 
 macro_rules! fill {
     ($off:expr, $dat:expr) => {{
-        let dst = (DAT_10083508 as usize).wrapping_add($off) as *mut i32;
+        let dst = (mech_trace::gr!("100396a0", "10083508", DAT_10083508) as usize)
+            .wrapping_add($off) as *mut i32;
         let d = $dat;
         if d == 0 {
-            dst.write_unaligned(0);
+            mech_trace::wr!("100396a0", dst, write_unaligned, 0);
         } else {
-            dst.write_unaligned((d.wrapping_add(4) as usize as *const i32).read_unaligned());
+            mech_trace::wr!(
+                "100396a0",
+                dst,
+                write_unaligned,
+                mech_trace::rd!(
+                    "100396a0",
+                    (d.wrapping_add(4) as usize as *const i32),
+                    read_unaligned
+                )
+            );
         }
     }};
 }
 
 macro_rules! rd_loop {
     ($file:expr, $off:expr, $dat:expr, $size:expr) => {{
-        let cp = (DAT_10083508 as usize).wrapping_add($off) as *const i32;
+        let cp = (mech_trace::gr!("100396a0", "10083508", DAT_10083508) as usize).wrapping_add($off)
+            as *const i32;
         let mut i: i32 = 0;
-        let mut count: i32 = cp.read_unaligned();
+        let mut count: i32 = mech_trace::rd!("100396a0", cp, read_unaligned);
         if 0 < count {
             loop {
                 let i5 = i.wrapping_add(1);
-                let p = FUN_10018060($dat, i) as usize as *mut u8;
-                _fread(p, $size, 1, $file);
+                let p = mech_trace::cr!("100396a0", "10018060", FUN_10018060($dat, i)) as usize
+                    as *mut u8;
+                mech_trace::cr!("100396a0", "_fread", _fread(p, $size, 1, $file));
                 i = i5;
-                count = cp.read_unaligned();
+                count = mech_trace::rd!("100396a0", cp, read_unaligned);
                 if !(i5 < count) {
                     break;
                 }
@@ -100,18 +112,18 @@ pub unsafe extern "C" fn FUN_100396a0(param_1: *mut i8) -> u32 {
             0
         );
 
-        fill!(0x12e, DAT_100a6798);
-        fill!(0x132, DAT_100a67a4);
-        fill!(0x136, DAT_100a67a8);
-        fill!(0x13a, DAT_100a67b4);
-        fill!(0x13e, DAT_100a67b8);
-        fill!(0x142, DAT_100a679c);
-        fill!(0x146, DAT_100a67e4);
-        fill!(0x14a, DAT_100a67e8);
-        fill!(0x14e, DAT_100a67cc);
-        fill!(0x152, DAT_100a67d0);
-        fill!(0x156, DAT_100a67b0);
-        fill!(0x15a, DAT_100a67ac);
+        fill!(0x12e, mech_trace::gr!("100396a0", "100a6798", DAT_100a6798));
+        fill!(0x132, mech_trace::gr!("100396a0", "100a67a4", DAT_100a67a4));
+        fill!(0x136, mech_trace::gr!("100396a0", "100a67a8", DAT_100a67a8));
+        fill!(0x13a, mech_trace::gr!("100396a0", "100a67b4", DAT_100a67b4));
+        fill!(0x13e, mech_trace::gr!("100396a0", "100a67b8", DAT_100a67b8));
+        fill!(0x142, mech_trace::gr!("100396a0", "100a679c", DAT_100a679c));
+        fill!(0x146, mech_trace::gr!("100396a0", "100a67e4", DAT_100a67e4));
+        fill!(0x14a, mech_trace::gr!("100396a0", "100a67e8", DAT_100a67e8));
+        fill!(0x14e, mech_trace::gr!("100396a0", "100a67cc", DAT_100a67cc));
+        fill!(0x152, mech_trace::gr!("100396a0", "100a67d0", DAT_100a67d0));
+        fill!(0x156, mech_trace::gr!("100396a0", "100a67b0", DAT_100a67b0));
+        fill!(0x15a, mech_trace::gr!("100396a0", "100a67ac", DAT_100a67ac));
 
         mech_trace::cr!(
             "100396a0",
@@ -138,20 +150,90 @@ pub unsafe extern "C" fn FUN_100396a0(param_1: *mut i8) -> u32 {
             u1
         );
 
-        rd_loop!(file, 0x156, DAT_100a67b0, 0x853);
-        rd_loop!(file, 0x15a, DAT_100a67ac, 0x1a);
-        rd_loop!(file, 0x142, DAT_100a679c, 0x853);
-        rd_loop!(file, 0x142, DAT_100a67a0, 0x853);
-        rd_loop!(file, 0x146, DAT_100a67e4, 0x2066);
-        rd_loop!(file, 0x14a, DAT_100a67e8, 0x205e);
-        rd_loop!(file, 0x14e, DAT_100a67cc, 0x1a);
-        rd_loop!(file, 0x152, DAT_100a67d0, 0x1a);
-        rd_loop!(file, 0x12e, DAT_100a6798, 0x853);
-        rd_loop!(file, 0x12e, DAT_100a678c, 0x853);
-        rd_loop!(file, 0x132, DAT_100a67a4, 0x2066);
-        rd_loop!(file, 0x136, DAT_100a67a8, 0x205e);
-        rd_loop!(file, 0x13a, DAT_100a67b4, 0x1a);
-        rd_loop!(file, 0x13e, DAT_100a67b8, 0x1a);
+        rd_loop!(
+            file,
+            0x156,
+            mech_trace::gr!("100396a0", "100a67b0", DAT_100a67b0),
+            0x853
+        );
+        rd_loop!(
+            file,
+            0x15a,
+            mech_trace::gr!("100396a0", "100a67ac", DAT_100a67ac),
+            0x1a
+        );
+        rd_loop!(
+            file,
+            0x142,
+            mech_trace::gr!("100396a0", "100a679c", DAT_100a679c),
+            0x853
+        );
+        rd_loop!(
+            file,
+            0x142,
+            mech_trace::gr!("100396a0", "100a67a0", DAT_100a67a0),
+            0x853
+        );
+        rd_loop!(
+            file,
+            0x146,
+            mech_trace::gr!("100396a0", "100a67e4", DAT_100a67e4),
+            0x2066
+        );
+        rd_loop!(
+            file,
+            0x14a,
+            mech_trace::gr!("100396a0", "100a67e8", DAT_100a67e8),
+            0x205e
+        );
+        rd_loop!(
+            file,
+            0x14e,
+            mech_trace::gr!("100396a0", "100a67cc", DAT_100a67cc),
+            0x1a
+        );
+        rd_loop!(
+            file,
+            0x152,
+            mech_trace::gr!("100396a0", "100a67d0", DAT_100a67d0),
+            0x1a
+        );
+        rd_loop!(
+            file,
+            0x12e,
+            mech_trace::gr!("100396a0", "100a6798", DAT_100a6798),
+            0x853
+        );
+        rd_loop!(
+            file,
+            0x12e,
+            mech_trace::gr!("100396a0", "100a678c", DAT_100a678c),
+            0x853
+        );
+        rd_loop!(
+            file,
+            0x132,
+            mech_trace::gr!("100396a0", "100a67a4", DAT_100a67a4),
+            0x2066
+        );
+        rd_loop!(
+            file,
+            0x136,
+            mech_trace::gr!("100396a0", "100a67a8", DAT_100a67a8),
+            0x205e
+        );
+        rd_loop!(
+            file,
+            0x13a,
+            mech_trace::gr!("100396a0", "100a67b4", DAT_100a67b4),
+            0x1a
+        );
+        rd_loop!(
+            file,
+            0x13e,
+            mech_trace::gr!("100396a0", "100a67b8", DAT_100a67b8),
+            0x1a
+        );
 
         let r = mech_trace::cr!("100396a0", "_fclose", _fclose(file));
         mech_trace::rt!("100396a0", ((r as u32) & 0xffffff00) | 1)

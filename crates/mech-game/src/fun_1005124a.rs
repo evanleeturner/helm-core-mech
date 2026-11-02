@@ -62,17 +62,24 @@ pub unsafe extern "C" fn FUN_1005124a(param_1: u32) {
 
     macro_rules! say {
         ($s:ident) => {{
-            sprintf(buf, (&raw const $s).cast::<i8>());
-            FUN_1005be24(buf, 1, 0x16a, 0x32);
+            mech_trace::cr!(
+                "1005124a",
+                "sprintf",
+                sprintf(buf, (&raw const $s).cast::<i8>())
+            );
+            mech_trace::cr!("1005124a", "1005be24", FUN_1005be24(buf, 1, 0x16a, 0x32));
         }};
     }
 
     macro_rules! cell {
         () => {
             (&raw mut DAT_1012327a).cast::<u8>().offset(
-                (DAT_100aca50 as i32)
+                (mech_trace::gr!("1005124a", "100aca50", DAT_100aca50) as i32)
                     .wrapping_mul(0x3c0a)
-                    .wrapping_add((DAT_100aca54 as i32).wrapping_mul(0x13f)) as isize,
+                    .wrapping_add(
+                        (mech_trace::gr!("1005124a", "100aca54", DAT_100aca54) as i32)
+                            .wrapping_mul(0x13f),
+                    ) as isize,
             )
         };
     }
