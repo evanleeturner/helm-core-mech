@@ -30,7 +30,7 @@ unsafe extern "C" {
 
 #[allow(non_snake_case)]
 unsafe extern "C" {
-    fn FUN_10056be0() -> i32;
+    fn FUN_10056be0(lo: i32, hi: i32) -> i64;
     fn FUN_10057200(param_1: i32, param_2: *mut c_void) -> *mut *mut i8;
     fn FUN_1005e020(param_1: i32, param_2: *mut i8) -> i32;
     fn FUN_1005e290(
@@ -79,8 +79,9 @@ pub unsafe extern "C" fn FUN_10056dd0(
     param_2: i32,
     param_3: i32,
     param_4: *mut i16,
+    param_5: i32,
 ) -> u32 {
-    mech_trace::enter!("10056dd0", param_1, param_2, param_3, param_4);
+    mech_trace::enter!("10056dd0", param_1, param_2, param_3, param_4, param_5);
     let p2 = param_2 as usize as *mut u8;
     let mut f = Frame {
         local_70: [0; 4],
@@ -135,8 +136,12 @@ pub unsafe extern "C" fn FUN_10056dd0(
                     local_84 = 8;
                 }
                 FUN_1005e670();
-                iv3 =
-                    (mech_trace::cr!("10056dd0", "10056be0", FUN_10056be0()) / 10).wrapping_add(1);
+                // param_5, a fifth argument Ghidra did not store: the original
+                // reads its word at 10056e98, and the generator pops 0x14.
+                let roll_hi = if param_5 as i16 == 1 { 0x13 } else { 0x1d };
+                iv3 = (mech_trace::cr!("10056dd0", "10056be0", FUN_10056be0(0, roll_hi)) as i32
+                    / 10)
+                    .wrapping_add(1);
                 let mut local_7c: i32 = 0;
                 let local_78 = iv3 as i16;
                 mech_trace::dw!(
@@ -160,7 +165,9 @@ pub unsafe extern "C" fn FUN_10056dd0(
                         );
                         let mut iv7: i32;
                         loop {
-                            iv7 = mech_trace::cr!("10056dd0", "10056be0", FUN_10056be0()) / 10;
+                            iv7 = mech_trace::cr!("10056dd0", "10056be0", FUN_10056be0(0, 0x81))
+                                as i32
+                                / 10;
                             let mut iv8: i32 = 0;
                             let mut pi5: *mut i32 = l70;
                             if pi5 < pi11 {
