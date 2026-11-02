@@ -23,42 +23,56 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_10001000(param_1: *mut i8) -> u32 {
+    mech_trace::enter!("10001000", param_1);
     let mut local_8c: [i8; 136] = [0; 136];
     // SAFETY: the callees and globals are the game's own; local_8c is a
     // local buffer of the size the original uses, and indices come from strspn on it.
     unsafe {
-        DAT_100a4030 = 0xffff_ffff;
-        let file = _fopen(
-            (&raw mut s_MW2_INI_100a4038).cast::<i8>(),
-            (&raw mut DAT_100a4034).cast::<i8>(),
+        mech_trace::gw!("10001000", "100a4030", DAT_100a4030, 0xffff_ffff);
+        let file = mech_trace::cr!(
+            "10001000",
+            "_fopen",
+            _fopen(
+                (&raw mut s_MW2_INI_100a4038).cast::<i8>(),
+                (&raw mut DAT_100a4034).cast::<i8>(),
+            )
         );
         if file.is_null() {
-            return 0x41;
+            return mech_trace::rt!("10001000", 0x41);
         }
-        let pc_var2 = FUN_100012e5(param_1);
+        let pc_var2 = mech_trace::cr!("10001000", "100012e5", FUN_100012e5(param_1));
         let buf = local_8c.as_mut_ptr();
         loop {
-            let pc_var3 = _fgets(buf, 0x85, file);
+            let pc_var3 = mech_trace::cr!("10001000", "_fgets", _fgets(buf, 0x85, file));
             if pc_var3.is_null() {
-                _fclose(file);
-                return 0x4a;
+                mech_trace::cr!("10001000", "_fclose", _fclose(file));
+                return mech_trace::rt!("10001000", 0x4a);
             }
-            let s_var4 = _strspn(buf, (&raw mut DAT_100a4040).cast::<i8>()) as usize;
-            if *buf.add(s_var4) != b'[' as i8 {
+            let s_var4 = mech_trace::cr!(
+                "10001000",
+                "_strspn",
+                _strspn(buf, (&raw mut DAT_100a4040).cast::<i8>())
+            ) as usize;
+            if mech_trace::dr!("10001000", buf.add(s_var4)) != b'[' as i8 {
                 continue;
             }
-            let p = _strchr(buf.add(s_var4 + 1), 0x5d);
+            let p = mech_trace::cr!("10001000", "_strchr", _strchr(buf.add(s_var4 + 1), 0x5d));
             if p.is_null() {
                 continue;
             }
-            *p = 0;
-            let str1 = FUN_100012e5(buf.add(s_var4 + 1));
-            if __strcmpi(str1, pc_var2) == 0 {
+            mech_trace::dw!("10001000", p, 0);
+            let str1 = mech_trace::cr!("10001000", "100012e5", FUN_100012e5(buf.add(s_var4 + 1)));
+            if mech_trace::cr!("10001000", "__strcmpi", __strcmpi(str1, pc_var2)) == 0 {
                 break;
             }
         }
-        DAT_100a4030 = _ftell(file) as u32;
-        _fclose(file);
-        0
+        mech_trace::gw!(
+            "10001000",
+            "100a4030",
+            DAT_100a4030,
+            mech_trace::cr!("10001000", "_ftell", _ftell(file)) as u32
+        );
+        mech_trace::cr!("10001000", "_fclose", _fclose(file));
+        mech_trace::rt!("10001000", 0)
     }
 }

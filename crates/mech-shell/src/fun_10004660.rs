@@ -17,33 +17,46 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10004660() {
+    mech_trace::enter!("10004660");
     // SAFETY: the globals and callees are the game's own; they are read,
     // written and called in the original's order.
     unsafe {
-        let mut i_var2 = DAT_10083740;
-        DAT_10083740 = ((DAT_10083720 as i32) / -0x19)
-            .wrapping_add((DAT_1008373c as i32) / 100)
-            .wrapping_add(10);
-        if DAT_10083740 < 0 {
-            DAT_10083740 = 0;
+        let mut i_var2 = mech_trace::gr!("10004660", "10083740", DAT_10083740);
+        mech_trace::gw!(
+            "10004660",
+            "10083740",
+            DAT_10083740,
+            ((mech_trace::gr!("10004660", "10083720", DAT_10083720) as i32) / -0x19)
+                .wrapping_add((mech_trace::gr!("10004660", "1008373c", DAT_1008373c) as i32) / 100)
+                .wrapping_add(10)
+        );
+        if mech_trace::gr!("10004660", "10083740", DAT_10083740) < 0 {
+            mech_trace::gw!("10004660", "10083740", DAT_10083740, 0);
         }
-        if -1 < i_var2 && i_var2 != DAT_10083740 {
-            if DAT_10083740 < i_var2 {
+        if -1 < i_var2 && i_var2 != mech_trace::gr!("10004660", "10083740", DAT_10083740) {
+            if mech_trace::gr!("10004660", "10083740", DAT_10083740) < i_var2 {
                 loop {
                     let i_var1 = i_var2.wrapping_add(8000);
                     i_var2 = i_var2.wrapping_sub(1);
-                    FUN_1000a180(i_var1);
-                    if !(DAT_10083740 < i_var2) {
+                    mech_trace::cr!("10004660", "1000a180", FUN_1000a180(i_var1));
+                    if !(mech_trace::gr!("10004660", "10083740", DAT_10083740) < i_var2) {
                         break;
                     }
                 }
             }
-            if i_var2 < DAT_10083740 {
+            if i_var2 < mech_trace::gr!("10004660", "10083740", DAT_10083740) {
                 loop {
                     let i_var1 = i_var2.wrapping_add(0x1f41);
                     i_var2 = i_var2.wrapping_add(1);
-                    FUN_1000a3f0(i_var1, DAT_10083738);
-                    if !(i_var2 < DAT_10083740) {
+                    mech_trace::cr!(
+                        "10004660",
+                        "1000a3f0",
+                        FUN_1000a3f0(
+                            i_var1,
+                            mech_trace::gr!("10004660", "10083738", DAT_10083738)
+                        )
+                    );
+                    if !(i_var2 < mech_trace::gr!("10004660", "10083740", DAT_10083740)) {
                         break;
                     }
                 }

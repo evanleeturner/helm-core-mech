@@ -12,6 +12,7 @@ pub unsafe extern "C" fn FUN_1000bf23(
     param_2: *mut i32,
     param_3: *mut i32,
 ) -> u32 {
+    mech_trace::enter!("1000bf23", param_1, param_2, param_3);
     let mut param_2 = param_2;
     let mut param_3 = param_3;
     let mut l: [i16; 70] = [
@@ -22,36 +23,46 @@ pub unsafe extern "C" fn FUN_1000bf23(
     ];
     // SAFETY: all pointers are the caller's game structures; the global is the game's table.
     unsafe {
-        let mut local_a0: u32 = param_1.read_unaligned() & 0xffff;
+        let mut local_a0: u32 = mech_trace::rd!("1000bf23", param_1, read_unaligned) & 0xffff;
         let mut s_var2: i16 = 0;
         let mut local_8: i32 = 0;
         let mut local_9c: i32 = 0;
         loop {
             if 7 < local_9c {
                 local_9c = 0;
-                while local_9c < (param_1.byte_add(16).read_unaligned() as i32) && local_9c < 0xe {
-                    let idx = param_3.read_unaligned() / 100;
+                while local_9c
+                    < (mech_trace::rd!("1000bf23", param_1.byte_add(16), read_unaligned) as i32)
+                    && local_9c < 0xe
+                {
+                    let idx = mech_trace::rd!("1000bf23", param_3, read_unaligned) / 100;
                     let p = (&raw mut DAT_100a73d0)
                         .cast::<u8>()
                         .offset((idx as isize) * 2);
-                    let v = p.cast::<i16>().read_unaligned();
+                    let v = mech_trace::rd!("1000bf23", p.cast::<i16>(), read_unaligned);
                     local_a0 = v.wrapping_add(local_a0 as i16) as u16 as u32;
                     param_3 = param_3.add(2);
                     local_9c += 1;
                 }
-                return (((param_1 as usize as u32) >> 16) << 16) | (local_a0 as u16 as u32);
+                return mech_trace::rt!(
+                    "1000bf23",
+                    (((param_1 as usize as u32) >> 16) << 16) | (local_a0 as u16 as u32)
+                );
             }
-            let cnt = param_2.byte_add(36).read_unaligned() as i16 as i32;
+            let cnt =
+                mech_trace::rd!("1000bf23", param_2.byte_add(36), read_unaligned) as i16 as i32;
             let mut local_a4: i32 = 0;
             while local_a4 < cnt {
                 local_8 = local_8
-                    .wrapping_add(param_2.add(1).read_unaligned())
-                    .wrapping_add(param_2.read_unaligned());
-                let v = param_2
-                    .cast::<u8>()
-                    .offset((local_a4 as isize) * 2 + 0xc)
-                    .cast::<u16>()
-                    .read_unaligned() as i32;
+                    .wrapping_add(mech_trace::rd!("1000bf23", param_2.add(1), read_unaligned))
+                    .wrapping_add(mech_trace::rd!("1000bf23", param_2, read_unaligned));
+                let v = mech_trace::rd!(
+                    "1000bf23",
+                    param_2
+                        .cast::<u8>()
+                        .offset((local_a4 as isize) * 2 + 0xc)
+                        .cast::<u16>(),
+                    read_unaligned
+                ) as i32;
                 let mut a8: i32 = 0x16;
                 while -1 < a8 {
                     if (l[(a8 * 3) as usize] as i32) < v {
@@ -77,7 +88,7 @@ pub unsafe extern "C" fn FUN_1000bf23(
                     if l[b + 1] < 0 {
                         local_a0 = s_var1.wrapping_sub(prod) as u16 as u32;
                     } else {
-                        let p1 = param_1.read_unaligned() as i16;
+                        let p1 = mech_trace::rd!("1000bf23", param_1, read_unaligned) as i16;
                         local_a0 = prod.wrapping_mul(p1).wrapping_add(s_var1) as u16 as u32;
                     }
                 }
@@ -87,7 +98,7 @@ pub unsafe extern "C" fn FUN_1000bf23(
             if l[0x41] != 0 {
                 s_var3 = s_var2.wrapping_mul(2);
             }
-            let p2 = param_2.add(2).read_unaligned() as i16;
+            let p2 = mech_trace::rd!("1000bf23", param_2.add(2), read_unaligned) as i16;
             local_a0 = p2
                 .wrapping_add(s_var1)
                 .wrapping_add(s_var3)

@@ -11,13 +11,27 @@ checksum = "5d15f86d12da44cd8d4ec3c73984537eb7f4cadcb9776a575a0a8a05ca11005c"
 [[package]]
 name = "mech_game"
 version = "0.1.0"
+dependencies = [
+ "mech_trace",
+]
 
 [[package]]
 name = "mech_launcher"
 version = "0.1.0"
+dependencies = [
+ "mech_trace",
+]
 
 [[package]]
 name = "mech_shell"
+version = "0.1.0"
+dependencies = [
+ "log",
+ "mech_trace",
+]
+
+[[package]]
+name = "mech_trace"
 version = "0.1.0"
 dependencies = [
  "log",

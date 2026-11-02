@@ -39,6 +39,9 @@ pub unsafe extern "C" fn FUN_10003686(
     param_5: i32,
     param_6: u16,
 ) -> i32 {
+    mech_trace::enter!(
+        "10003686", param_1, param_2, param_3, param_4, param_5, param_6
+    );
     let mut local_1c: i32 = 0;
     let mut local_18: i32 = 0;
     let mut local_10: i32 = 0;
@@ -47,32 +50,50 @@ pub unsafe extern "C" fn FUN_10003686(
     // SAFETY: the callees and globals are the game's own; the locals passed
     // by address are live for the calls.
     unsafe {
-        FUN_10083a59(
-            param_1,
-            param_2,
-            param_3,
-            &raw mut local_18,
-            (&raw mut local_1c).cast::<u32>(),
-            &raw mut local_8,
-            &raw mut local_10,
+        mech_trace::cr!(
+            "10003686",
+            "10083a59",
+            FUN_10083a59(
+                param_1,
+                param_2,
+                param_3,
+                &raw mut local_18,
+                (&raw mut local_1c).cast::<u32>(),
+                &raw mut local_8,
+                &raw mut local_10,
+            )
         );
-        if (local_1c / 100 < DAT_100a40b0 as i32) || (DAT_100a40b0 == 0) {
-            let mut local_14 = FUN_10003cf8(local_1c / 100);
+        if (local_1c / 100 < mech_trace::gr!("10003686", "100a40b0", DAT_100a40b0) as i32)
+            || (mech_trace::gr!("10003686", "100a40b0", DAT_100a40b0) == 0)
+        {
+            let mut local_14 =
+                mech_trace::cr!("10003686", "10003cf8", FUN_10003cf8(local_1c / 100));
             if 0 < local_14 {
                 if param_5 != 0 {
                     local_14 >>= 1;
                 }
-                let local_c = FUN_10003d60(local_1c, DAT_100a40a4 as i32);
-                FUN_10003783(
-                    local_c,
-                    local_18 as u32,
-                    param_4,
-                    local_14,
-                    0xffff_ffff,
-                    param_6,
+                let local_c = mech_trace::cr!(
+                    "10003686",
+                    "10003d60",
+                    FUN_10003d60(
+                        local_1c,
+                        mech_trace::gr!("10003686", "100a40a4", DAT_100a40a4) as i32
+                    )
+                );
+                mech_trace::cr!(
+                    "10003686",
+                    "10003783",
+                    FUN_10003783(
+                        local_c,
+                        local_18 as u32,
+                        param_4,
+                        local_14,
+                        0xffff_ffff,
+                        param_6,
+                    )
                 );
             }
         }
     }
-    local_1c
+    mech_trace::rt!("10003686", local_1c)
 }
