@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
-//! The 42 imports the shell's screens call (HC6 session 21's list), one
-//! row each: the name the counter labels it by, the import, its
+//! The 34 imports the shell's screens call past its file calls (HC6
+//! session 21's 42, less the 11 file calls the seam now answers,
+//! [`crate::files`]), one row each: the name the counter labels it by, the import, its
 //! arguments, its return. Each row makes a module of the import's name
 //! holding the real import, from the swap DLL's own import table, and its
 //! layer function, exported `HC6_<name>`; stdcall, as the shell calls
@@ -67,28 +68,17 @@ layer!("USER32!PostMessageA", PostMessageA(window: Handle, message: u32, w: usiz
 layer!("KERNEL32!HeapAlloc", HeapAlloc(heap: Handle, flags: u32, bytes: usize) -> Pointer);
 layer!("KERNEL32!HeapReAlloc", HeapReAlloc(heap: Handle, flags: u32, block: Pointer, bytes: usize) -> Pointer);
 layer!("KERNEL32!HeapFree", HeapFree(heap: Handle, flags: u32, block: Pointer) -> i32);
-layer!("KERNEL32!FindFirstFileA", FindFirstFileA(name: Text, data: Pointer) -> Handle);
 layer!("KERNEL32!GetLastError", GetLastError() -> u32);
 layer!("KERNEL32!TlsGetValue", TlsGetValue(index: u32) -> Pointer);
 layer!("KERNEL32!SetLastError", SetLastError(code: u32));
-layer!("KERNEL32!DeleteFileA", DeleteFileA(name: Text) -> i32);
 layer!("KERNEL32!InitializeCriticalSection", InitializeCriticalSection(section: Pointer));
 layer!("KERNEL32!DeleteCriticalSection", DeleteCriticalSection(section: Pointer));
-layer!("KERNEL32!SetFilePointer", SetFilePointer(file: Handle, distance: i32, high: *mut i32, method: u32) -> u32);
-layer!("KERNEL32!ReadFile", ReadFile(file: Handle, buffer: Pointer, bytes: u32, read: *mut u32, overlapped: Pointer) -> i32);
-layer!(
-    "KERNEL32!CreateFileA",
-    CreateFileA(name: Text, access: u32, share: u32, security: Pointer, disposition: u32, flags: u32, template: Handle) -> Handle
-);
-layer!("KERNEL32!GetFileType", GetFileType(file: Handle) -> u32);
-layer!("KERNEL32!CloseHandle", CloseHandle(object: Handle) -> i32);
 layer!("KERNEL32!GetLocalTime", GetLocalTime(time: Pointer));
 layer!("KERNEL32!GetTimeZoneInformation", GetTimeZoneInformation(zone: Pointer) -> u32);
 layer!(
     "KERNEL32!CompareStringA",
     CompareStringA(locale: u32, flags: u32, first: Text, first_count: i32, second: Text, second_count: i32) -> i32
 );
-layer!("KERNEL32!MoveFileA", MoveFileA(from: Text, to: Text) -> i32);
 layer!("KERNEL32!GetCurrentThreadId", GetCurrentThreadId() -> u32);
 
 layer!(
