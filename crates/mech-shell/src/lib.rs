@@ -8,7 +8,8 @@
 //! - RT1's 20 (`rust/mw2shell/src/` at `02b7520`, judged against
 //!   `MW2SHELL.DLL` under Wine), each global made a field of
 //!   [`ShellState`], re-exported below as safe functions.
-//! - The other 488 (RT2, RT3, `rust/` at `14b3e31`), copied unchanged:
+//! - The other 499: RT2 and RT3's 488 (`rust/` at `14b3e31`), copied
+//!   unchanged, and HC6's 11, ported from mercs' rebuilt C by RT3's route;
 //!   each exported as `FUN_<address>` with the original's calling
 //!   convention, its globals and callees linked by name. Those conventions
 //!   exist only on 32-bit x86, so each module's `mod` line carries
@@ -292,6 +293,14 @@ mod fun_10012220;
 #[cfg(target_arch = "x86")]
 mod fun_10012270;
 #[cfg(target_arch = "x86")]
+mod fun_10012590;
+#[cfg(target_arch = "x86")]
+mod fun_10012620;
+#[cfg(target_arch = "x86")]
+mod fun_10013100;
+#[cfg(target_arch = "x86")]
+mod fun_10013380;
+#[cfg(target_arch = "x86")]
 mod fun_10013420;
 #[cfg(target_arch = "x86")]
 mod fun_100164f0;
@@ -387,6 +396,8 @@ mod fun_1001d840;
 mod fun_1001da50;
 #[cfg(target_arch = "x86")]
 mod fun_1001db00;
+#[cfg(target_arch = "x86")]
+mod fun_1001e6b0;
 mod fun_1002f31a;
 #[cfg(target_arch = "x86")]
 mod fun_1002f337;
@@ -724,6 +735,8 @@ mod fun_10055340;
 mod fun_10055350;
 mod fun_10055ae0;
 #[cfg(target_arch = "x86")]
+mod fun_10055bf0;
+#[cfg(target_arch = "x86")]
 mod fun_10056bb0;
 #[cfg(target_arch = "x86")]
 mod fun_10056be0;
@@ -827,6 +840,12 @@ mod fun_1005e870;
 #[cfg(target_arch = "x86")]
 mod fun_1005e910;
 #[cfg(target_arch = "x86")]
+mod fun_1005efc0;
+#[cfg(target_arch = "x86")]
+mod fun_1005f120;
+#[cfg(target_arch = "x86")]
+mod fun_1005f8c0;
+#[cfg(target_arch = "x86")]
 mod fun_1005f8e0;
 #[cfg(target_arch = "x86")]
 mod fun_1005f900;
@@ -879,6 +898,10 @@ mod fun_10063f70;
 #[cfg(target_arch = "x86")]
 mod fun_100640a0;
 mod fun_100640f0;
+#[cfg(target_arch = "x86")]
+mod fun_100648b0;
+#[cfg(target_arch = "x86")]
+mod fun_10064e00;
 #[cfg(target_arch = "x86")]
 mod fun_10064e59;
 #[cfg(target_arch = "x86")]
