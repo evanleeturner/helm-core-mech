@@ -1,7 +1,7 @@
 # The shell library's functions in Rust, ported from the decompile's Rust:
 # RT1's 20 with each global an owned field, DEBUG logs, and tests harvested
 # from the original under Wine; RT2 and RT3's 488 copied unchanged and
-# HC6's 11 ported by RT3's route, 32-bit x86 only, as their calling
+# HC6's 61 ported by RT3's route, 32-bit x86 only, as their calling
 # conventions are.
 [package]
 name = "mech_shell"

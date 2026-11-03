@@ -1,4 +1,4 @@
-# The swap: the shell library's 499 ported functions in one library the live
+# The swap: the shell library's 549 ported functions in one library the live
 # game loads beside its own (HC5), each exported as HC5_<address>, its
 # globals and callees linked to the shell's own addresses by the swap's
 # build. 32-bit x86 Windows only; on any other target the crate is its

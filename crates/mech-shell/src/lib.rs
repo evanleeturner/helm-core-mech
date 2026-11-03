@@ -8,8 +8,9 @@
 //! - RT1's 20 (`rust/mw2shell/src/` at `02b7520`, judged against
 //!   `MW2SHELL.DLL` under Wine), each global made a field of
 //!   [`ShellState`], re-exported below as safe functions.
-//! - The other 499: RT2 and RT3's 488 (`rust/` at `14b3e31`), copied
-//!   unchanged, and HC6's 11, ported from mercs' rebuilt C by RT3's route;
+//! - The other 549: RT2 and RT3's 488 (`rust/` at `14b3e31`), copied
+//!   unchanged, and HC6's 61, ported from mercs' rebuilt C by RT3's route
+//!   (four of them `swap_<address>`, the swappable twins of RT1's);
 //!   each exported as `FUN_<address>` with the original's calling
 //!   convention, its globals and callees linked by name. Those conventions
 //!   exist only on 32-bit x86, so each module's `mod` line carries
@@ -272,8 +273,30 @@ mod fun_1000fd70;
 mod fun_1000fdb0;
 #[cfg(target_arch = "x86")]
 mod fun_1000fe40;
+#[cfg(target_arch = "x86")]
+mod fun_100107a0;
+#[cfg(target_arch = "x86")]
+mod fun_10010890;
+#[cfg(target_arch = "x86")]
+mod fun_100108b0;
 mod fun_10010920;
 mod fun_10010930;
+#[cfg(target_arch = "x86")]
+mod fun_10010ae0;
+#[cfg(target_arch = "x86")]
+mod fun_10010c80;
+#[cfg(target_arch = "x86")]
+mod fun_10010d60;
+#[cfg(target_arch = "x86")]
+mod fun_10010d80;
+#[cfg(target_arch = "x86")]
+mod fun_10010db0;
+#[cfg(target_arch = "x86")]
+mod fun_10010de0;
+#[cfg(target_arch = "x86")]
+mod fun_10010e30;
+#[cfg(target_arch = "x86")]
+mod fun_10010e80;
 #[cfg(target_arch = "x86")]
 mod fun_100110d0;
 #[cfg(target_arch = "x86")]
@@ -293,13 +316,33 @@ mod fun_10012220;
 #[cfg(target_arch = "x86")]
 mod fun_10012270;
 #[cfg(target_arch = "x86")]
+mod fun_100124d0;
+#[cfg(target_arch = "x86")]
 mod fun_10012590;
 #[cfg(target_arch = "x86")]
 mod fun_10012620;
 #[cfg(target_arch = "x86")]
+mod fun_10012ca0;
+#[cfg(target_arch = "x86")]
+mod fun_10012d40;
+#[cfg(target_arch = "x86")]
+mod fun_10012f10;
+#[cfg(target_arch = "x86")]
+mod fun_10013090;
+#[cfg(target_arch = "x86")]
 mod fun_10013100;
 #[cfg(target_arch = "x86")]
+mod fun_10013180;
+#[cfg(target_arch = "x86")]
+mod fun_10013330;
+#[cfg(target_arch = "x86")]
+mod fun_10013360;
+#[cfg(target_arch = "x86")]
 mod fun_10013380;
+#[cfg(target_arch = "x86")]
+mod fun_100133b0;
+#[cfg(target_arch = "x86")]
+mod fun_100133d0;
 #[cfg(target_arch = "x86")]
 mod fun_10013420;
 #[cfg(target_arch = "x86")]
@@ -396,6 +439,12 @@ mod fun_1001d840;
 mod fun_1001da50;
 #[cfg(target_arch = "x86")]
 mod fun_1001db00;
+#[cfg(target_arch = "x86")]
+mod fun_1001e600;
+#[cfg(target_arch = "x86")]
+mod fun_1001e620;
+#[cfg(target_arch = "x86")]
+mod fun_1001e650;
 #[cfg(target_arch = "x86")]
 mod fun_1001e6b0;
 mod fun_1002f31a;
@@ -507,9 +556,13 @@ mod fun_10036280;
 #[cfg(target_arch = "x86")]
 mod fun_10036340;
 #[cfg(target_arch = "x86")]
+mod fun_10036390;
+#[cfg(target_arch = "x86")]
 mod fun_100363c0;
 #[cfg(target_arch = "x86")]
 mod fun_100364f0;
+#[cfg(target_arch = "x86")]
+mod fun_10036510;
 #[cfg(target_arch = "x86")]
 mod fun_10036540;
 #[cfg(target_arch = "x86")]
@@ -568,6 +621,14 @@ mod fun_1003f8f0;
 mod fun_1003fd30;
 #[cfg(target_arch = "x86")]
 mod fun_10040270;
+#[cfg(target_arch = "x86")]
+mod fun_100402b0;
+#[cfg(target_arch = "x86")]
+mod fun_10040590;
+#[cfg(target_arch = "x86")]
+mod fun_10040640;
+#[cfg(target_arch = "x86")]
+mod fun_10040680;
 mod fun_100406b0;
 #[cfg(target_arch = "x86")]
 mod fun_10040af0;
@@ -695,6 +756,10 @@ mod fun_100504a0;
 mod fun_10050a10;
 #[cfg(target_arch = "x86")]
 mod fun_10050a30;
+#[cfg(target_arch = "x86")]
+mod fun_10050b20;
+#[cfg(target_arch = "x86")]
+mod fun_10050d90;
 mod fun_10051650;
 #[cfg(target_arch = "x86")]
 mod fun_10051700;
@@ -730,10 +795,18 @@ mod fun_10054270;
 mod fun_10054460;
 #[cfg(target_arch = "x86")]
 mod fun_10054b30;
+#[cfg(target_arch = "x86")]
+mod fun_10054ef0;
+#[cfg(target_arch = "x86")]
+mod fun_10054f20;
+#[cfg(target_arch = "x86")]
+mod fun_10054fe0;
 mod fun_10055340;
 #[cfg(target_arch = "x86")]
 mod fun_10055350;
 mod fun_10055ae0;
+#[cfg(target_arch = "x86")]
+mod fun_10055b10;
 #[cfg(target_arch = "x86")]
 mod fun_10055bf0;
 #[cfg(target_arch = "x86")]
@@ -840,9 +913,23 @@ mod fun_1005e870;
 #[cfg(target_arch = "x86")]
 mod fun_1005e910;
 #[cfg(target_arch = "x86")]
+mod fun_1005ed50;
+#[cfg(target_arch = "x86")]
+mod fun_1005ed70;
+#[cfg(target_arch = "x86")]
+mod fun_1005ed90;
+#[cfg(target_arch = "x86")]
+mod fun_1005ee60;
+#[cfg(target_arch = "x86")]
 mod fun_1005efc0;
 #[cfg(target_arch = "x86")]
 mod fun_1005f120;
+#[cfg(target_arch = "x86")]
+mod fun_1005f410;
+#[cfg(target_arch = "x86")]
+mod fun_1005f7d0;
+#[cfg(target_arch = "x86")]
+mod fun_1005f810;
 #[cfg(target_arch = "x86")]
 mod fun_1005f8c0;
 #[cfg(target_arch = "x86")]
@@ -899,7 +986,13 @@ mod fun_10063f70;
 mod fun_100640a0;
 mod fun_100640f0;
 #[cfg(target_arch = "x86")]
+mod fun_10064780;
+#[cfg(target_arch = "x86")]
 mod fun_100648b0;
+#[cfg(target_arch = "x86")]
+mod fun_10064c50;
+#[cfg(target_arch = "x86")]
+mod fun_10064d50;
 #[cfg(target_arch = "x86")]
 mod fun_10064e00;
 #[cfg(target_arch = "x86")]
@@ -1042,6 +1135,14 @@ mod fun_1006dfd0;
 #[cfg(target_arch = "x86")]
 mod fun_1006e020;
 mod state;
+#[cfg(target_arch = "x86")]
+mod swap_1000a160;
+#[cfg(target_arch = "x86")]
+mod swap_1000a6e0;
+#[cfg(target_arch = "x86")]
+mod swap_10010930;
+#[cfg(target_arch = "x86")]
+mod swap_10016b50;
 #[cfg(test)]
 mod test_log;
 
