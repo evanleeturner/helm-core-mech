@@ -84,6 +84,14 @@ unsafe fn copy_bytes(src: i32, dst: i32, count: i32) {
     }
 }
 
+/// Clamps the owner's changed area (0x82 to 0x8e) to its screen (0x5a to
+/// 0x66), copies it to the display, then resets it to empty.
+///
+/// Fixed against the original's code, HC6 wall 4: mercs' rebuilt C called
+/// the display table's slot 0x1c with no arguments in the changed-area
+/// branch. The original pushes the area's left, top, right and bottom
+/// before choosing between `FUN_1000e070` and slot 0x1c, so both receive
+/// them; without them the setup screen drew its frames alone.
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "fastcall" fn FUN_10012620(rect_owner: i32) {
@@ -107,7 +115,14 @@ pub unsafe extern "fastcall" fn FUN_10012620(rect_owner: i32) {
         if rd(r, 0x1e) == 0 {
             if rd(r, 0x82) <= rd(r, 0x8a) && rd(r, 0x86) <= rd(r, 0x8e) {
                 if mech_trace::gr!("10012620", "10098214", DAT_10098214) == 0 {
-                    call0(mech_trace::gr!("10012620", "100a724c", DAT_100a724c), 0x1c);
+                    call4(
+                        mech_trace::gr!("10012620", "100a724c", DAT_100a724c),
+                        0x1c,
+                        rd(r, 0x82),
+                        rd(r, 0x86),
+                        rd(r, 0x8a),
+                        rd(r, 0x8e),
+                    );
                 } else {
                     mech_trace::cr!(
                         "10012620",
