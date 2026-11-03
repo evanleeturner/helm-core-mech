@@ -4,7 +4,10 @@
 //! `c` the row's name and its `e` the error the shell reads (0 on
 //! success), and leaves that error as the folder's last. The names are
 //! a1's (`records/2026-11-03-lane-a/helm-files-hc9/a1-file-lines.txt`);
-//! the bytes are the tests' own fill.
+//! the bytes are the tests' own fill. Falsifier 3's, a1's whole stretches,
+//! are [`harvested`].
+mod harvested;
+
 use std::ffi::CStr;
 
 use crate::memory::Memory;
