@@ -15,6 +15,11 @@
 //! Ghidra index names, and each calls the real function through the
 //! shell's slot, which the loader never writes.
 //!
+//! The C library inside the DLL is not an import: its functions the
+//! screens call get stand-ins ([`crt`], ruling 1381), exported
+//! `HC5_<address>` and swapped as the ports are, which do the job with
+//! Rust's own code and log the same `imp.call` line.
+//!
 //! The thread's last error is read after the call and set back after the
 //! line is written, so the sink's `WriteFile` cannot change what the
 //! caller reads (`TlsGetValue` and `CreateFileA` set it on success).
@@ -64,6 +69,8 @@ macro_rules! imp_call {
     }};
 }
 
+#[cfg(all(target_arch = "x86", target_os = "windows"))]
+pub mod crt;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
 pub mod imports;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
