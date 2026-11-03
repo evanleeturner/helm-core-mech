@@ -69,5 +69,30 @@ pub const SHELL: Row = Row {
     }),
 };
 
+/// The launcher, `mercswin`: its heap is made once, unserialized, of one
+/// 4K page at first, at `00402420`; its handle is `DAT_0040a264`. Its new-handler
+/// caller, `00403080`, takes no lock.
+pub const LAUNCHER: Row = Row {
+    file: "mercswin",
+    heap: 0x0040_a264,
+    new_mode: 0x0040_8650,
+    call_new_handler: 0x0040_3080,
+    malloc: Helper {
+        address: 0x0040_54a0,
+        name: "FUN_004054a0",
+    },
+    operator_new: None,
+    free: Helper {
+        address: 0x0040_19a0,
+        name: "FUN_004019a0",
+    },
+    operator_delete: None,
+    calloc: Some(Helper {
+        address: 0x0040_1a30,
+        name: "FUN_00401a30",
+    }),
+    realloc: None,
+};
+
 /// Every file the helpers serve, one row each.
-pub const FILES: &[&Row] = &[&SHELL];
+pub const FILES: &[&Row] = &[&SHELL, &LAUNCHER];
