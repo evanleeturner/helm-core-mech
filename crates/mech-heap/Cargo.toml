@@ -27,3 +27,6 @@ undocumented_unsafe_blocks = "deny"
 [dependencies]
 mech_trace = { path = "../mech-trace" }
 log = { version = "0.4", features = ["kv"] }
+
+[dev-dependencies]
+mech_logline = { path = "../mech-logline" }

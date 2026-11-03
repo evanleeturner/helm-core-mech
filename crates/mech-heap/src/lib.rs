@@ -48,6 +48,10 @@
 #![cfg_attr(not(test), no_std)]
 
 pub mod table;
+#[cfg(test)]
+mod test_log;
+#[cfg(test)]
+mod tests;
 
 use core::ptr::null_mut;
 use mech_trace::{Args, Shown};
