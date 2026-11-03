@@ -37,7 +37,7 @@ pub unsafe extern "thiscall" fn FUN_10012d40(
 ) {
     mech_trace::enter!("10012d40", this, param_1, pos_x, pos_y, width, height);
     // SAFETY: the callees and globals are the game's own; `this` points at the
-    // caller's object, and the local record and its pointer live for the calls.
+    // caller's object, and `outer` and `inner` live for the calls.
     unsafe {
         let mut check_result = mech_trace::cr!(
             "10012d40",
@@ -45,8 +45,20 @@ pub unsafe extern "thiscall" fn FUN_10012d40(
             FUN_10012590(this, pos_x, pos_y, width, height)
         );
         if check_result != 0 {
-            let mut record_data: u32 = param_1;
-            let mut record_ptr: *mut u32 = &raw mut record_data;
+            // Two records, as the original builds them (10012d68 to 10012d99):
+            // the first argument points at `outer`, whose first word points at `inner`.
+            let mut inner: [u32; 3] = [
+                param_1,
+                width.wrapping_sub(1) as u32,
+                height.wrapping_sub(1) as u32,
+            ];
+            let mut outer: [u32; 5] = [
+                inner.as_mut_ptr() as u32,
+                0,
+                0,
+                width.wrapping_sub(1) as u32,
+                height.wrapping_sub(1) as u32,
+            ];
             check_result = -1;
             if mech_trace::gr!("10012d40", "10098204", DAT_10098204) != 0 {
                 let f = mech_trace::rd!(
@@ -60,7 +72,7 @@ pub unsafe extern "thiscall" fn FUN_10012d40(
             }
             if check_result == 0 {
                 FUN_10067af3(
-                    (&raw mut record_ptr).cast::<i32>(),
+                    outer.as_mut_ptr().cast::<i32>(),
                     0,
                     0,
                     this.byte_add(0x56).cast::<i32>(),
