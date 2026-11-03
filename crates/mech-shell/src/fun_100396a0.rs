@@ -23,7 +23,7 @@ unsafe extern "C" {
 #[allow(non_snake_case)]
 unsafe extern "C" {
     fn FID_conflict___wfopen(param_1: *mut i8, param_2: *mut u8) -> *mut u8;
-    fn _fread(buf: *mut u8, size: u32, count: u32, file: *mut u8) -> u32;
+    fn FUN_1006ece0(buf: *mut u8, size: u32, count: u32, file: *mut u8) -> u32;
     fn _fclose(file: *mut u8) -> i32;
     fn FUN_10018060(param_1: i32, param_2: i32) -> i32;
 }
@@ -61,7 +61,7 @@ macro_rules! rd_loop {
                 let i5 = i.wrapping_add(1);
                 let p = mech_trace::cr!("100396a0", "10018060", FUN_10018060($dat, i)) as usize
                     as *mut u8;
-                mech_trace::cr!("100396a0", "_fread", _fread(p, $size, 1, $file));
+                mech_trace::cr!("100396a0", "1006ece0", FUN_1006ece0(p, $size, 1, $file));
                 i = i5;
                 count = mech_trace::rd!("100396a0", cp, read_unaligned);
                 if !(i5 < count) {
@@ -127,8 +127,8 @@ pub unsafe extern "C" fn FUN_100396a0(param_1: *mut i8) -> u32 {
 
         mech_trace::cr!(
             "100396a0",
-            "_fread",
-            _fread(
+            "1006ece0",
+            FUN_1006ece0(
                 mech_trace::gr!("100396a0", "10083508", DAT_10083508) as usize as *mut u8,
                 0x2dfb,
                 1,

@@ -19,7 +19,7 @@ unsafe extern "C" {
         filename: *const core::ffi::c_void,
         mode: *const core::ffi::c_void,
     ) -> *mut core::ffi::c_void;
-    fn _fread(
+    fn FUN_1006f790(
         ptr: *mut core::ffi::c_void,
         size: u32,
         count: u32,
@@ -74,18 +74,18 @@ pub unsafe extern "C" fn FUN_10054270(param_1: i32) {
         if !cpc_file.is_null() {
             mech_trace::cr!(
                 "10054270",
-                "_fread",
-                _fread((&raw mut DAT_100bd950).cast(), 0x40, 1, cpc_file)
+                "1006f790",
+                FUN_1006f790((&raw mut DAT_100bd950).cast(), 0x40, 1, cpc_file)
             );
             mech_trace::cr!(
                 "10054270",
-                "_fread",
-                _fread((&raw mut DAT_100bfed8).cast(), 0x10, 0x10, cpc_file)
+                "1006f790",
+                FUN_1006f790((&raw mut DAT_100bfed8).cast(), 0x10, 0x10, cpc_file)
             );
             mech_trace::cr!(
                 "10054270",
-                "_fread",
-                _fread((&raw mut DAT_100bdf90).cast(), 0xde0, 1, cpc_file)
+                "1006f790",
+                FUN_1006f790((&raw mut DAT_100bdf90).cast(), 0xde0, 1, cpc_file)
             );
             mech_trace::cr!("10054270", "_fclose", _fclose(cpc_file));
             FUN_10053df0((&raw mut DAT_100bdf90).cast());

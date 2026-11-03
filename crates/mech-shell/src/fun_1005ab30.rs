@@ -10,7 +10,7 @@ unsafe extern "C" {
 #[allow(non_snake_case)]
 unsafe extern "C" {
     fn __wfopen(filename: *mut u16, mode: *mut u16) -> *mut core::ffi::c_void;
-    fn _fread(
+    fn FUN_1006f790(
         buffer: *mut core::ffi::c_void,
         size: u32,
         count: u32,
@@ -37,8 +37,8 @@ pub unsafe extern "stdcall" fn FUN_1005ab30() {
         if !cfg_file.is_null() {
             mech_trace::cr!(
                 "1005ab30",
-                "_fread",
-                _fread(
+                "1006f790",
+                FUN_1006f790(
                     (&raw mut DAT_100a6848).cast::<core::ffi::c_void>(),
                     0x17,
                     1,

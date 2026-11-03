@@ -24,7 +24,7 @@ unsafe extern "C" {
 unsafe extern "C" {
     #[link_name = "FID_conflict___wfopen"]
     fn fid_wfopen(param_1: *const i8, param_2: *const i8) -> *mut u8;
-    #[link_name = "_fread"]
+    #[link_name = "FUN_1006ece0"]
     fn c_fread(param_1: *mut u8, param_2: u32, param_3: u32, param_4: *mut u8) -> u32;
     #[link_name = "_fclose"]
     fn c_fclose(param_1: *mut u8) -> i32;
@@ -112,7 +112,7 @@ pub unsafe extern "C" fn FUN_10011170(param_1: u32, param_2: u8, param_3: *mut i
         if !file.is_null() {
             mech_trace::cr!(
                 "10011170",
-                "c_fread",
+                "1006ece0",
                 c_fread((&raw mut DAT_100b07f0).cast::<u8>(), 0x344, 1, file)
             );
             mech_trace::cr!("10011170", "c_fclose", c_fclose(file));

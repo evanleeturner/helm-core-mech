@@ -10,7 +10,7 @@ unsafe extern "C" {
 #[allow(non_snake_case)]
 unsafe extern "C" {
     fn FID_conflict___wfopen(_Filename: *mut i8, _Mode: *mut i8) -> *mut u8;
-    fn _fread(_DstBuf: *mut u8, _ElementSize: u32, _Count: u32, _File: *mut u8) -> u32;
+    fn FUN_1006f790(_DstBuf: *mut u8, _ElementSize: u32, _Count: u32, _File: *mut u8) -> u32;
     fn _fclose(_File: *mut u8) -> i32;
 }
 
@@ -33,8 +33,8 @@ pub unsafe extern "C" fn FUN_1004c000(param_1: *mut u32) {
         if !file.is_null() {
             mech_trace::cr!(
                 "1004c000",
-                "_fread",
-                _fread(param_1.cast::<u8>(), 0x9d4, 1, file)
+                "1006f790",
+                FUN_1006f790(param_1.cast::<u8>(), 0x9d4, 1, file)
             );
             mech_trace::cr!("1004c000", "_fclose", _fclose(file));
             let mut src = param_1;

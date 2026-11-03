@@ -13,7 +13,7 @@ unsafe extern "C" {
         filename: *const core::ffi::c_void,
         mode: *const core::ffi::c_void,
     ) -> *mut core::ffi::c_void;
-    fn _fread(
+    fn FUN_1006ece0(
         ptr: *mut core::ffi::c_void,
         size: i32,
         count: i32,
@@ -40,8 +40,8 @@ pub unsafe extern "stdcall" fn FUN_1005abb0() {
         if !file.is_null() {
             mech_trace::cr!(
                 "1005abb0",
-                "_fread",
-                _fread((&raw mut DAT_100a67f0).cast(), 0x54, 1, file)
+                "1006ece0",
+                FUN_1006ece0((&raw mut DAT_100a67f0).cast(), 0x54, 1, file)
             );
             mech_trace::cr!("1005abb0", "_fclose", _fclose(file));
         }

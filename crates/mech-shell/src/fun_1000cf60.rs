@@ -9,7 +9,7 @@ unsafe extern "C" {
 #[allow(non_snake_case)]
 unsafe extern "C" {
     fn __wfopen(filename: *const i8, mode: *const i8) -> *mut core::ffi::c_void;
-    fn _fread(
+    fn FUN_1006f790(
         ptr: *mut core::ffi::c_void,
         size: u32,
         nmemb: u32,
@@ -34,7 +34,11 @@ pub unsafe extern "C" fn FUN_1000cf60(param_1: *mut core::ffi::c_void) -> i32 {
             )
         );
         if !cfg_file.is_null() {
-            mech_trace::cr!("1000cf60", "_fread", _fread(param_1, 0xf3, 1, cfg_file));
+            mech_trace::cr!(
+                "1000cf60",
+                "1006f790",
+                FUN_1006f790(param_1, 0xf3, 1, cfg_file)
+            );
             mech_trace::cr!("1000cf60", "_fclose", _fclose(cfg_file));
             return mech_trace::rt!("1000cf60", 1);
         }

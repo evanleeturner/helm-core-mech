@@ -11,7 +11,7 @@ unsafe extern "C" {
 unsafe extern "C" {
     fn FUN_1005a230(slot_index: i32, entry_name: *mut i8) -> u16;
     fn FUN_1005a2d0(slot_index: i32) -> u32;
-    fn __write(file_handle: i32, buf: *mut u8, max_char_count: u32) -> i32;
+    fn FUN_10074a70(file_handle: i32, buf: *mut u8, max_char_count: u32) -> i32;
     fn FUN_10059f10(slot_index: i32, entry_name: *mut u8, item_index: u32) -> u32;
 }
 
@@ -68,8 +68,8 @@ pub unsafe extern "C" fn FUN_1005a570(
             rd(rd(tbl).wrapping_add(0x16).wrapping_add(item_off)).wrapping_add(entry_base as i32);
         let r = mech_trace::cr!(
             "1005a570",
-            "__write",
-            __write(handle, pos as usize as *mut u8, 0)
+            "10074a70",
+            FUN_10074a70(handle, pos as usize as *mut u8, 0)
         );
         if r == -1 {
             return mech_trace::rt!("1005a570", -1);

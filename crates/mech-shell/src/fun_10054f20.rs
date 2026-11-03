@@ -25,7 +25,7 @@ unsafe extern "C" {
     fn _fflush(file: *mut c_void) -> i32;
     fn FUN_1006fde0(param_1: u32);
     fn _fseek(file: *mut c_void, offset: i32, origin: i32) -> i32;
-    fn _fread(dst: *mut c_void, size: u32, count: u32, file: *mut c_void) -> u32;
+    fn FUN_1006f790(dst: *mut c_void, size: u32, count: u32, file: *mut c_void) -> u32;
 }
 
 #[unsafe(no_mangle)]
@@ -100,8 +100,8 @@ pub unsafe extern "thiscall" fn FUN_10054f20(
         );
         mech_trace::cr!(
             "10054f20",
-            "_fread",
-            _fread(
+            "1006f790",
+            FUN_1006f790(
                 dst,
                 1,
                 mech_trace::rd!("10054f20", pl_var1.byte_add(4), read_unaligned) as u32,

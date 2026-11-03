@@ -20,7 +20,7 @@ unsafe extern "C" {
         width: u32,
         comp: unsafe extern "C" fn(*const c_void, *const c_void) -> i32,
     );
-    fn _fread(ptr: *mut c_void, size: u32, count: u32, stream: *mut c_void) -> u32;
+    fn FUN_1006f790(ptr: *mut c_void, size: u32, count: u32, stream: *mut c_void) -> u32;
     fn _fclose(stream: *mut c_void) -> i32;
     fn FUN_1000fcb0(a: *const c_void, b: *const c_void) -> i32;
 }
@@ -87,8 +87,8 @@ pub unsafe extern "stdcall" fn FUN_1000fce0() {
         }
         mech_trace::cr!(
             "1000fce0",
-            "_fread",
-            _fread(
+            "1006f790",
+            FUN_1006f790(
                 (&raw mut DAT_100c42c0).cast::<c_void>(),
                 0x2b6,
                 1,

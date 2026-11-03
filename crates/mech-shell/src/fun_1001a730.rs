@@ -22,7 +22,7 @@ unsafe extern "C" {
     fn FUN_1001a480(a: *mut i8, b: *mut i8, c: *mut i8, d: i32, e: i32, f: i32, g: i32, h: i32);
     fn FUN_10036780(a: *const i8);
     fn FID_conflict___wfopen(a: *const i8, b: *const i8) -> *mut u8;
-    fn _fread(buf: *mut u8, size: u32, count: u32, file: *mut u8) -> u32;
+    fn FUN_1006f790(buf: *mut u8, size: u32, count: u32, file: *mut u8) -> u32;
     fn _fclose(file: *mut u8) -> i32;
     fn _sprintf(dest: *mut i8, fmt: *const i8, ...) -> i32;
 }
@@ -156,8 +156,8 @@ pub unsafe extern "C" fn FUN_1001a730(param_1: i32, param_2: i32, param_3: i32, 
                 if !f.is_null() {
                     mech_trace::cr!(
                         "1001a730",
-                        "_fread",
-                        _fread(dif_bytes.as_mut_ptr(), 0x17, 1, f)
+                        "1006f790",
+                        FUN_1006f790(dif_bytes.as_mut_ptr(), 0x17, 1, f)
                     );
                     mech_trace::cr!("1001a730", "_fclose", _fclose(f));
                     if dif_bytes[5] as i8 == 0 {

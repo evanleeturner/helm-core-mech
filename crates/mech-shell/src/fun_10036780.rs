@@ -11,7 +11,7 @@ unsafe extern "C" {
 #[allow(non_snake_case)]
 unsafe extern "C" {
     fn __wfopen(filename: *mut i8, mode: *mut i8) -> *mut core::ffi::c_void;
-    fn _fread(
+    fn FUN_1006ece0(
         dst: *mut core::ffi::c_void,
         size: i32,
         count: i32,
@@ -41,8 +41,8 @@ pub unsafe extern "C" fn FUN_10036780(param_1: *mut i8) {
         if !file_stream.is_null() {
             mech_trace::cr!(
                 "10036780",
-                "_fread",
-                _fread(
+                "1006ece0",
+                FUN_1006ece0(
                     (&raw mut DAT_100b5298).cast::<core::ffi::c_void>(),
                     1,
                     mech_trace::gr!("10036780", "10093c60", DAT_10093c60),

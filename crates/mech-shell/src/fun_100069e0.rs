@@ -74,7 +74,7 @@ unsafe extern "C" {
     fn sprintf(dest: *mut u8, format: *const u8, ...) -> i32;
     fn fopen(filename: *const u8, mode: *const u8) -> *mut u8;
     fn FUN_1007e180(param_1: *const u8) -> u32;
-    fn fread(dst: *mut u8, size: u32, count: u32, file: *mut u8) -> u32;
+    fn FUN_1006ece0(dst: *mut u8, size: u32, count: u32, file: *mut u8) -> u32;
     fn fclose(file: *mut u8) -> i32;
 }
 
@@ -459,18 +459,18 @@ pub unsafe extern "C" fn FUN_100069e0(param_1: u32) -> u32 {
         }
         mech_trace::cr!(
             "100069e0",
-            "fread",
-            fread((&raw mut DAT_100b0330).cast::<u8>(), 0x18, 1, file)
+            "1006ece0",
+            FUN_1006ece0((&raw mut DAT_100b0330).cast::<u8>(), 0x18, 1, file)
         );
         mech_trace::cr!(
             "100069e0",
-            "fread",
-            fread((&raw mut DAT_100b0418).cast::<u8>(), 0x28, 8, file)
+            "1006ece0",
+            FUN_1006ece0((&raw mut DAT_100b0418).cast::<u8>(), 0x28, 8, file)
         );
         mech_trace::cr!(
             "100069e0",
-            "fread",
-            fread(
+            "1006ece0",
+            FUN_1006ece0(
                 (&raw mut DAT_100b0388).cast::<u8>(),
                 8,
                 mech_trace::gr!("100069e0", "100b0340", DAT_100b0340),
@@ -479,8 +479,8 @@ pub unsafe extern "C" fn FUN_100069e0(param_1: u32) -> u32 {
         );
         mech_trace::cr!(
             "100069e0",
-            "fread",
-            fread(
+            "1006ece0",
+            FUN_1006ece0(
                 (&raw mut DAT_100b0260).cast::<u8>(),
                 8,
                 mech_trace::gr!("100069e0", "100b0344", DAT_100b0344),
@@ -489,8 +489,8 @@ pub unsafe extern "C" fn FUN_100069e0(param_1: u32) -> u32 {
         );
         mech_trace::cr!(
             "100069e0",
-            "fread",
-            fread((&raw mut DAT_100b0348).cast::<u8>(), 0x3a, 1, file)
+            "1006ece0",
+            FUN_1006ece0((&raw mut DAT_100b0348).cast::<u8>(), 0x3a, 1, file)
         );
         mech_trace::cr!("100069e0", "fclose", fclose(file));
         mech_trace::rt!("100069e0", 1)

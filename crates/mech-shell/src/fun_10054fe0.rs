@@ -18,7 +18,7 @@ unsafe extern "thiscall" {
 #[allow(non_snake_case)]
 unsafe extern "C" {
     fn _fseek(file: *mut c_void, offset: i32, origin: i32) -> i32;
-    fn _fread(dst: *mut c_void, size: usize, count: usize, file: *mut c_void) -> usize;
+    fn FUN_1006f790(dst: *mut c_void, size: usize, count: usize, file: *mut c_void) -> usize;
     fn FID_conflict__fwprintf(file: *mut c_void, format: *const u16, ...) -> i32;
     fn _fflush(file: *mut c_void) -> i32;
     fn FUN_1006fde0(param_1: u32);
@@ -69,8 +69,8 @@ pub unsafe extern "thiscall" fn FUN_10054fe0(
         );
         let s = mech_trace::cr!(
             "10054fe0",
-            "_fread",
-            _fread((&raw mut local_8).cast::<c_void>(), 4, 1, file)
+            "1006f790",
+            FUN_1006f790((&raw mut local_8).cast::<c_void>(), 4, 1, file)
         );
         if s != 1 {
             return mech_trace::rt!("10054fe0", 1);

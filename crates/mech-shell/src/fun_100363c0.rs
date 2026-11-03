@@ -14,7 +14,7 @@ unsafe extern "C" {
     fn _sprintf(dest: *mut i8, format: *mut i8, ...) -> i32;
     fn FID_conflict___wfopen(filename: *mut i8, mode: *mut i8) -> *mut c_void;
     fn FUN_1005bae0(param_1: *mut c_void) -> i32;
-    fn _fread(dst: *mut c_void, size: usize, count: usize, file: *mut c_void) -> usize;
+    fn FUN_1006f790(dst: *mut c_void, size: usize, count: usize, file: *mut c_void) -> usize;
     fn _fclose(file: *mut c_void) -> i32;
 }
 
@@ -69,8 +69,8 @@ pub unsafe extern "stdcall" fn FUN_100363c0(
         );
         mech_trace::cr!(
             "100363c0",
-            "_fread",
-            _fread(dst, dw_bytes as usize, 1, file)
+            "1006f790",
+            FUN_1006f790(dst, dw_bytes as usize, 1, file)
         );
         mech_trace::cr!("100363c0", "_fclose", _fclose(file));
         mech_trace::rt!("100363c0", dst)

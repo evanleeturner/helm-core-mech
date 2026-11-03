@@ -13,7 +13,7 @@ unsafe extern "C" {
     #[link_name = "FUN_10059f10"]
     fn ReadFileInChunks(param_1: i32, param_2: *mut u8, param_3: u32) -> u32;
     fn FUN_10059ea0(param_1: *mut u8);
-    fn __write(param_1: i32, param_2: *mut u8, param_3: i32);
+    fn FUN_10074a70(param_1: i32, param_2: *mut u8, param_3: i32);
 }
 
 #[unsafe(no_mangle)]
@@ -72,7 +72,7 @@ pub unsafe extern "C" fn FUN_1005a2d0(param_1: i32) -> i32 {
                         i_var1.byte_add(4).cast::<*mut u8>(),
                         read_unaligned
                     );
-                    __write(temp_int, temp_ptr, 0);
+                    FUN_10074a70(temp_int, temp_ptr, 0);
                     let u_var8 = mech_trace::cr!(
                         "1005a2d0",
                         "ReadFileInChunks",

@@ -8,7 +8,7 @@ unsafe extern "C" {
 
 #[allow(non_snake_case)]
 unsafe extern "C" {
-    fn _fread(dst: *mut u8, size: u32, count: u32, file: *mut u8) -> u32;
+    fn FUN_1006ece0(dst: *mut u8, size: u32, count: u32, file: *mut u8) -> u32;
 }
 
 #[unsafe(no_mangle)]
@@ -61,8 +61,8 @@ pub unsafe extern "C" fn FUN_100115d0(file: *mut u8) {
         mech_trace::gw!("100115d0", "100a50f0", DAT_100a50f0, i_var1 as u32);
         mech_trace::cr!(
             "100115d0",
-            "_fread",
-            _fread(
+            "1006ece0",
+            FUN_1006ece0(
                 mech_trace::gr!("100115d0", "100c61fc", DAT_100c61fc),
                 8,
                 1,
@@ -81,8 +81,8 @@ pub unsafe extern "C" fn FUN_100115d0(file: *mut u8) {
             {
                 mech_trace::cr!(
                     "100115d0",
-                    "_fread",
-                    _fread(
+                    "1006ece0",
+                    FUN_1006ece0(
                         mech_trace::gr!("100115d0", "100c61fc", DAT_100c61fc)
                             .byte_add(i_var3 as usize)
                             .byte_add(8),

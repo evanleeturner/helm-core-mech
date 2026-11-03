@@ -16,7 +16,12 @@ unsafe extern "C" {
     fn FUN_100425b0(record_index: i32, logo_number: u32, param_3: *mut i32) -> *mut u16;
     fn sprintf(dest: *mut i8, format: *const i8, ...) -> i32;
     fn FID_conflict___wfopen(filename: *const i8, mode: *const i8) -> *mut c_void;
-    fn fread(buf: *mut c_void, element_size: usize, count: usize, file: *mut c_void) -> usize;
+    fn FUN_1006ece0(
+        buf: *mut c_void,
+        element_size: usize,
+        count: usize,
+        file: *mut c_void,
+    ) -> usize;
     fn fclose(file: *mut c_void) -> i32;
 }
 
@@ -65,8 +70,8 @@ pub unsafe extern "C" fn FUN_10057530(record_index: i16, logo_number: i16) -> u3
         }
         mech_trace::cr!(
             "10057530",
-            "fread",
-            fread(cel_buffer.cast::<c_void>(), 1, 0x1002, cel_file)
+            "1006ece0",
+            FUN_1006ece0(cel_buffer.cast::<c_void>(), 1, 0x1002, cel_file)
         );
         let close_result = mech_trace::cr!("10057530", "fclose", fclose(cel_file)) as u32;
         mech_trace::rt!("10057530", close_result & 0xffff0000)

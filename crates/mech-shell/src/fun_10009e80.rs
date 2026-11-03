@@ -19,7 +19,7 @@ unsafe extern "C" {
     fn __strnicmp(str: *const i8, param_2: *const i8, param_3: u32) -> i32;
     fn _strchr(str: *const i8, param_2: i32) -> *mut i8;
     fn FID_conflict___wfopen(str: *const i8, param_2: *const i8) -> *mut core::ffi::c_void;
-    fn _fread(
+    fn FUN_1006f790(
         str: *mut core::ffi::c_void,
         param_2: u32,
         param_3: u32,
@@ -124,8 +124,8 @@ pub unsafe extern "C" fn FUN_10009e80(str: *mut i8) -> *mut u8 {
         let buf = (&raw mut DAT_100ae1e0).cast::<u8>();
         mech_trace::cr!(
             "10009e80",
-            "_fread",
-            _fread(buf.cast::<core::ffi::c_void>(), 1, 0x800, file)
+            "1006f790",
+            FUN_1006f790(buf.cast::<core::ffi::c_void>(), 1, 0x800, file)
         );
         mech_trace::cr!("10009e80", "_fclose", _fclose(file));
         mech_trace::rt!("10009e80", buf)

@@ -19,7 +19,7 @@ unsafe extern "C" {
     fn FUN_10053df0(param_1: i32);
     fn _sprintf(param_1: *mut i8, param_2: *const i8, ...) -> i32;
     fn FID_conflict___wfopen(param_1: *const i8, param_2: *const i8) -> *mut u8;
-    fn _fread(param_1: *mut u8, param_2: u32, param_3: u32, param_4: *mut u8) -> u32;
+    fn FUN_1006f790(param_1: *mut u8, param_2: u32, param_3: u32, param_4: *mut u8) -> u32;
     fn _fclose(param_1: *mut u8) -> i32;
 }
 
@@ -58,18 +58,18 @@ pub unsafe extern "stdcall" fn FUN_100540d0() {
         }
         mech_trace::cr!(
             "100540d0",
-            "_fread",
-            _fread((&raw mut DAT_100bd950).cast::<u8>(), 0x40, 1, file)
+            "1006f790",
+            FUN_1006f790((&raw mut DAT_100bd950).cast::<u8>(), 0x40, 1, file)
         );
         mech_trace::cr!(
             "100540d0",
-            "_fread",
-            _fread((&raw mut DAT_100bfed8).cast::<u8>(), 0x10, 0x10, file)
+            "1006f790",
+            FUN_1006f790((&raw mut DAT_100bfed8).cast::<u8>(), 0x10, 0x10, file)
         );
         mech_trace::cr!(
             "100540d0",
-            "_fread",
-            _fread((&raw mut DAT_100beeb8).cast::<u8>(), 0xde0, 1, file)
+            "1006f790",
+            FUN_1006f790((&raw mut DAT_100beeb8).cast::<u8>(), 0xde0, 1, file)
         );
         mech_trace::cr!("100540d0", "_fclose", _fclose(file));
         let base = (&raw mut DAT_100beeb8).cast::<u8>();
