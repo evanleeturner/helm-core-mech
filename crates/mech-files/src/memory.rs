@@ -91,7 +91,9 @@ impl Memory {
     /// the given half's.
     #[must_use]
     pub fn contents(&self, name: &str) -> Option<Vec<u8>> {
-        self.with_file(&key(name.as_bytes()), |file| file.map(|file| file.bytes.clone()))
+        self.with_file(&key(name.as_bytes()), |file| {
+            file.map(|file| file.bytes.clone())
+        })
     }
 
     /// The last error the front kept.
@@ -162,7 +164,9 @@ impl Memory {
     fn found(&self, folder: &[u8], pattern: &[u8]) -> Vec<Vec<u8>> {
         let own = self.own.borrow();
         let given = self.given.iter().filter(|(key, _)| !own.contains_key(*key));
-        let made = own.iter().filter_map(|(key, file)| Some((key, file.as_ref()?)));
+        let made = own
+            .iter()
+            .filter_map(|(key, file)| Some((key, file.as_ref()?)));
         let mut names: BTreeMap<&Vec<u8>, &File> = given.collect();
         names.extend(made);
         names
@@ -187,7 +191,10 @@ impl Folder for Memory {
             let name = self.with_file(&key, |file| {
                 file.map_or_else(|| last(name.to_bytes()).to_vec(), |file| file.name.clone())
             });
-            let file = File { name, bytes: Vec::new() };
+            let file = File {
+                name,
+                bytes: Vec::new(),
+            };
             self.own.borrow_mut().insert(key.clone(), Some(file));
         } else if mode.write && !self.own.borrow().contains_key(&key) {
             let copy = self.given.get(&key).cloned();
@@ -253,7 +260,9 @@ impl Folder for Memory {
             Origin::Start => 0,
             Origin::Here => i64::from(open.at),
             Origin::End => self.with_file(&open.key, |file| {
-                file.map_or(0, |file| i64::try_from(file.bytes.len()).unwrap_or(i64::MAX))
+                file.map_or(0, |file| {
+                    i64::try_from(file.bytes.len()).unwrap_or(i64::MAX)
+                })
             }),
         };
         let at = u32::try_from(base + i64::from(distance)).map_err(|_| Error::BadSeek)?;
@@ -292,7 +301,8 @@ impl Folder for Memory {
     fn rename(&self, from: &CStr, to: &CStr) -> Result<(), Error> {
         let from_key = self.file_key(from)?;
         let to_key = self.file_key(to)?;
-        let Some(bytes) = self.with_file(&from_key, |file| file.map(|file| file.bytes.clone())) else {
+        let Some(bytes) = self.with_file(&from_key, |file| file.map(|file| file.bytes.clone()))
+        else {
             return Err(Error::NotFound);
         };
         if self.exists(&to_key) {
@@ -320,7 +330,9 @@ impl Folder for Memory {
         let first = names.first().ok_or(Error::NotFound)?;
         put(first, name);
         let find = self.handle();
-        self.finds.borrow_mut().insert(find, Find { names, next: 1 });
+        self.finds
+            .borrow_mut()
+            .insert(find, Find { names, next: 1 });
         Ok(find)
     }
 
@@ -349,7 +361,13 @@ impl Folder for Memory {
 /// A name's key: ASCII case folded, `/` as `\`.
 fn key(name: &[u8]) -> Vec<u8> {
     name.iter()
-        .map(|&byte| if byte == b'/' { b'\\' } else { byte.to_ascii_lowercase() })
+        .map(|&byte| {
+            if byte == b'/' {
+                b'\\'
+            } else {
+                byte.to_ascii_lowercase()
+            }
+        })
         .collect()
 }
 
@@ -372,7 +390,9 @@ fn matches(pattern: &[u8], name: &[u8]) -> bool {
     match pattern.split_first() {
         None => name.is_empty(),
         Some((b'*', rest)) => (0..=name.len()).any(|skip| matches(rest, &name[skip..])),
-        Some((b'?', rest)) => name.split_first().is_some_and(|(_, tail)| matches(rest, tail)),
+        Some((b'?', rest)) => name
+            .split_first()
+            .is_some_and(|(_, tail)| matches(rest, tail)),
         Some((byte, rest)) => name
             .split_first()
             .is_some_and(|(first, tail)| first == byte && matches(rest, tail)),

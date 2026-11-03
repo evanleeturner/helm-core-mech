@@ -25,7 +25,13 @@ unsafe extern "system" {
         flags: u32,
         template: *mut c_void,
     ) -> *mut c_void;
-    fn ReadFile(file: *mut c_void, buffer: *mut c_void, bytes: u32, read: *mut u32, overlapped: *mut c_void) -> i32;
+    fn ReadFile(
+        file: *mut c_void,
+        buffer: *mut c_void,
+        bytes: u32,
+        read: *mut u32,
+        overlapped: *mut c_void,
+    ) -> i32;
     fn WriteFile(
         file: *mut c_void,
         buffer: *const c_void,
@@ -64,14 +70,22 @@ fn last_error() -> Error {
 
 /// A yes-or-no import's answer.
 fn done(answer: i32) -> Result<(), Error> {
-    if answer == 0 { Err(last_error()) } else { Ok(()) }
+    if answer == 0 {
+        Err(last_error())
+    } else {
+        Ok(())
+    }
 }
 
 impl Win32 {
     /// A handle the import answered, or its failure.
     fn opened(&self, answer: *mut c_void) -> Result<u32, Error> {
         let number = u32::try_from(answer.addr()).unwrap_or(self.0.invalid);
-        if number == self.0.invalid { Err(last_error()) } else { Ok(number) }
+        if number == self.0.invalid {
+            Err(last_error())
+        } else {
+            Ok(number)
+        }
     }
 
     /// The found name, from the folder's find data into the front's.
@@ -103,7 +117,15 @@ impl Folder for Win32 {
         let bytes = u32::try_from(into.len()).map_err(|_| Error::BadArgument)?;
         let mut read = 0;
         // SAFETY: `into` holds `bytes`; the count is this frame's.
-        let answer = unsafe { ReadFile(handle(file), into.as_mut_ptr().cast(), bytes, &raw mut read, null_mut()) };
+        let answer = unsafe {
+            ReadFile(
+                handle(file),
+                into.as_mut_ptr().cast(),
+                bytes,
+                &raw mut read,
+                null_mut(),
+            )
+        };
         done(answer).map(|()| read)
     }
 
@@ -111,14 +133,27 @@ impl Folder for Win32 {
         let bytes = u32::try_from(from.len()).map_err(|_| Error::BadArgument)?;
         let mut written = 0;
         // SAFETY: `from` holds `bytes`; the count is this frame's.
-        let answer = unsafe { WriteFile(handle(file), from.as_ptr().cast(), bytes, &raw mut written, null_mut()) };
+        let answer = unsafe {
+            WriteFile(
+                handle(file),
+                from.as_ptr().cast(),
+                bytes,
+                &raw mut written,
+                null_mut(),
+            )
+        };
         done(answer).map(|()| written)
     }
 
     fn seek(&self, file: u32, distance: i32, origin: Origin) -> Result<u32, Error> {
         // SAFETY: no high half, as the shell's one seek passes none.
-        let at = unsafe { SetFilePointer(handle(file), distance, null_mut(), self.0.method(origin)) };
-        if at == self.0.invalid { Err(last_error()) } else { Ok(at) }
+        let at =
+            unsafe { SetFilePointer(handle(file), distance, null_mut(), self.0.method(origin)) };
+        if at == self.0.invalid {
+            Err(last_error())
+        } else {
+            Ok(at)
+        }
     }
 
     fn kind(&self, file: u32) -> Result<Kind, Error> {
@@ -254,7 +289,12 @@ unsafe extern "system" fn write_file(
 }
 
 #[unsafe(export_name = "HC6_SetFilePointer")]
-unsafe extern "system" fn set_file_pointer(file: *mut c_void, distance: i32, _high: *mut i32, method: u32) -> u32 {
+unsafe extern "system" fn set_file_pointer(
+    file: *mut c_void,
+    distance: i32,
+    _high: *mut i32,
+    method: u32,
+) -> u32 {
     SHELL_FILES.seek(number(file), distance, method)
 }
 

@@ -37,7 +37,13 @@ const fn access(read: bool, write: bool) -> u32 {
 
 /// An open the way a1's opens are: the row's sharing and attributes.
 fn open(files: &Files<Memory>, name: &CStr, access: u32, create: Create) -> u32 {
-    files.open(name, access, SHELL.share, SHELL.disposition(create), SHELL.plain)
+    files.open(
+        name,
+        access,
+        SHELL.share,
+        SHELL.disposition(create),
+        SHELL.plain,
+    )
 }
 
 /// A line's value for `key`.
@@ -56,7 +62,11 @@ fn logged<T>(files: &Files<Memory>, name: &str, error: u32, call: impl FnOnce() 
     let line = &lines[0];
     assert!(line.starts_with("imp.call "), "{line}");
     assert_eq!(field(line, "c"), Some(name), "{line}");
-    assert_eq!(field(line, "e"), Some(format!("{error:x}").as_str()), "{line}");
+    assert_eq!(
+        field(line, "e"),
+        Some(format!("{error:x}").as_str()),
+        "{line}"
+    );
     if error != 0 {
         assert_eq!(files.folder().last_error(), error, "{line}");
     }
@@ -87,7 +97,12 @@ fn open_in_a_missing_folder_fails_no_path() {
     let files = files();
     let error = SHELL.errors.no_path;
     let file = logged(&files, SHELL.calls.open, error, || {
-        open(&files, c"rmg\\mis7scn1.bwd", access(true, true), Create::Existing)
+        open(
+            &files,
+            c"rmg\\mis7scn1.bwd",
+            access(true, true),
+            Create::Existing,
+        )
     });
     assert_eq!(file, SHELL.invalid);
 }
@@ -97,7 +112,13 @@ fn open_with_an_unknown_disposition_fails_bad_argument() {
     let files = files();
     let error = SHELL.errors.bad_argument;
     let file = logged(&files, SHELL.calls.open, error, || {
-        files.open(c"userstar.bwd", access(false, true), SHELL.share, 0, SHELL.plain)
+        files.open(
+            c"userstar.bwd",
+            access(false, true),
+            SHELL.share,
+            0,
+            SHELL.plain,
+        )
     });
     assert_eq!(file, SHELL.invalid);
 }
@@ -108,8 +129,16 @@ fn read_counts_the_bytes_and_logs_them() {
     let file = open(&files, c"MW2DIF.CFG", access(true, false), Create::Existing);
     let mut into = vec![0; FILL.len() + 1];
     let mut count = 0;
-    let done = logged(&files, SHELL.calls.read, 0, || files.read(file, &mut into, Some(&mut count)));
-    assert_eq!((done, count), (1, u32::try_from(FILL.len()).expect("invariant: a short fill")));
+    let done = logged(&files, SHELL.calls.read, 0, || {
+        files.read(file, &mut into, Some(&mut count))
+    });
+    assert_eq!(
+        (done, count),
+        (
+            1,
+            u32::try_from(FILL.len()).expect("invariant: a short fill")
+        )
+    );
     assert_eq!(&into[..FILL.len()], FILL);
 }
 
@@ -129,9 +158,20 @@ fn write_counts_the_bytes_and_keeps_them() {
     let files = files();
     let file = open(&files, c"userstar.bwd", access(false, true), Create::Always);
     let mut count = 0;
-    let done = logged(&files, SHELL.calls.write, 0, || files.write(file, FILL, Some(&mut count)));
-    assert_eq!((done, count), (1, u32::try_from(FILL.len()).expect("invariant: a short fill")));
-    assert_eq!(files.folder().contents("USERSTAR.BWD").as_deref(), Some(FILL));
+    let done = logged(&files, SHELL.calls.write, 0, || {
+        files.write(file, FILL, Some(&mut count))
+    });
+    assert_eq!(
+        (done, count),
+        (
+            1,
+            u32::try_from(FILL.len()).expect("invariant: a short fill")
+        )
+    );
+    assert_eq!(
+        files.folder().contents("USERSTAR.BWD").as_deref(),
+        Some(FILL)
+    );
 }
 
 #[test]
@@ -139,7 +179,9 @@ fn write_on_a_handle_opened_to_read_fails_denied() {
     let files = files();
     let file = open(&files, c"MW2DIF.CFG", access(true, false), Create::Existing);
     let error = SHELL.errors.denied;
-    let done = logged(&files, SHELL.calls.write, error, || files.write(file, FILL, None));
+    let done = logged(&files, SHELL.calls.write, error, || {
+        files.write(file, FILL, None)
+    });
     assert_eq!(done, 0);
     assert_eq!(files.folder().contents("MW2DIF.CFG").as_deref(), Some(FILL));
 }
@@ -148,8 +190,13 @@ fn write_on_a_handle_opened_to_read_fails_denied() {
 fn seek_answers_the_position() {
     let files = files();
     let file = open(&files, c"MW2DIF.CFG", access(true, false), Create::Existing);
-    let end = logged(&files, SHELL.calls.seek, 0, || files.seek(file, 0, SHELL.methods[2]));
-    assert_eq!(end, u32::try_from(FILL.len()).expect("invariant: a short fill"));
+    let end = logged(&files, SHELL.calls.seek, 0, || {
+        files.seek(file, 0, SHELL.methods[2])
+    });
+    assert_eq!(
+        end,
+        u32::try_from(FILL.len()).expect("invariant: a short fill")
+    );
 }
 
 #[test]
@@ -157,7 +204,9 @@ fn seek_before_the_start_fails_bad_seek() {
     let files = files();
     let file = open(&files, c"MW2DIF.CFG", access(true, false), Create::Existing);
     let error = SHELL.errors.bad_seek;
-    let at = logged(&files, SHELL.calls.seek, error, || files.seek(file, -1, SHELL.methods[1]));
+    let at = logged(&files, SHELL.calls.seek, error, || {
+        files.seek(file, -1, SHELL.methods[1])
+    });
     assert_eq!(at, SHELL.invalid);
 }
 
@@ -173,7 +222,9 @@ fn kind_of_an_open_file_is_disk() {
 fn kind_of_a_closed_handle_fails_bad_handle() {
     let files = files();
     let error = SHELL.errors.bad_handle;
-    let kind = logged(&files, SHELL.calls.kind, error, || files.kind(SHELL.invalid));
+    let kind = logged(&files, SHELL.calls.kind, error, || {
+        files.kind(SHELL.invalid)
+    });
     assert_eq!(kind, SHELL.unknown);
 }
 
@@ -181,25 +232,47 @@ fn kind_of_a_closed_handle_fails_bad_handle() {
 fn close_answers_once() {
     let files = files();
     let file = open(&files, c"MW2DIF.CFG", access(true, false), Create::Existing);
-    assert_eq!(logged(&files, SHELL.calls.close, 0, || files.close(file)), 1);
+    assert_eq!(
+        logged(&files, SHELL.calls.close, 0, || files.close(file)),
+        1
+    );
     let error = SHELL.errors.bad_handle;
-    assert_eq!(logged(&files, SHELL.calls.close, error, || files.close(file)), 0);
+    assert_eq!(
+        logged(&files, SHELL.calls.close, error, || files.close(file)),
+        0
+    );
 }
 
 #[test]
 fn delete_takes_the_file_away() {
     let files = files();
-    assert_eq!(logged(&files, SHELL.calls.delete, 0, || files.delete(c"en01star.bwd")), 1);
+    assert_eq!(
+        logged(&files, SHELL.calls.delete, 0, || files
+            .delete(c"en01star.bwd")),
+        1
+    );
     assert_eq!(files.folder().contents("en01star.bwd"), None);
 }
 
 #[test]
 fn delete_of_an_open_file_fails_busy() {
     let files = files();
-    open(&files, c"en01star.bwd", access(true, true), Create::Existing);
+    open(
+        &files,
+        c"en01star.bwd",
+        access(true, true),
+        Create::Existing,
+    );
     let error = SHELL.errors.busy;
-    assert_eq!(logged(&files, SHELL.calls.delete, error, || files.delete(c"en01star.bwd")), 0);
-    assert_eq!(files.folder().contents("en01star.bwd").as_deref(), Some(FILL));
+    assert_eq!(
+        logged(&files, SHELL.calls.delete, error, || files
+            .delete(c"en01star.bwd")),
+        0
+    );
+    assert_eq!(
+        files.folder().contents("en01star.bwd").as_deref(),
+        Some(FILL)
+    );
 }
 
 #[test]
@@ -210,7 +283,10 @@ fn move_carries_the_bytes() {
     });
     assert_eq!(moved, 1);
     assert_eq!(files.folder().contents("ran0wld1.bwd"), None);
-    assert_eq!(files.folder().contents("randwld1.bwd").as_deref(), Some(FILL));
+    assert_eq!(
+        files.folder().contents("randwld1.bwd").as_deref(),
+        Some(FILL)
+    );
 }
 
 #[test]
@@ -232,20 +308,35 @@ fn found(data: &[u8]) -> &CStr {
 fn find_walks_the_names_in_order_then_closes() {
     let files = files();
     let mut data = [u8::MAX; FIND_BYTES];
-    let find = logged(&files, SHELL.calls.find_first, 0, || files.find_first(c"*.bwd", &mut data));
+    let find = logged(&files, SHELL.calls.find_first, 0, || {
+        files.find_first(c"*.bwd", &mut data)
+    });
     assert_ne!(find, SHELL.invalid);
     assert_eq!(found(&data), c"en01star.bwd");
     assert!(data[..SHELL.name_at].iter().all(|&byte| byte == 0));
-    let next = logged(&files, SHELL.calls.find_next, 0, || files.find_next(find, &mut data));
+    let next = logged(&files, SHELL.calls.find_next, 0, || {
+        files.find_next(find, &mut data)
+    });
     assert_eq!((next, found(&data)), (1, c"en02star.bwd"));
-    let next = logged(&files, SHELL.calls.find_next, 0, || files.find_next(find, &mut data));
+    let next = logged(&files, SHELL.calls.find_next, 0, || {
+        files.find_next(find, &mut data)
+    });
     assert_eq!((next, found(&data)), (1, c"ran0wld1.bwd"));
     let error = SHELL.errors.no_more;
-    let next = logged(&files, SHELL.calls.find_next, error, || files.find_next(find, &mut data));
+    let next = logged(&files, SHELL.calls.find_next, error, || {
+        files.find_next(find, &mut data)
+    });
     assert_eq!((next, found(&data)), (0, c""));
-    assert_eq!(logged(&files, SHELL.calls.find_close, 0, || files.find_close(find)), 1);
+    assert_eq!(
+        logged(&files, SHELL.calls.find_close, 0, || files.find_close(find)),
+        1
+    );
     let error = SHELL.errors.bad_handle;
-    assert_eq!(logged(&files, SHELL.calls.find_close, error, || files.find_close(find)), 0);
+    assert_eq!(
+        logged(&files, SHELL.calls.find_close, error, || files
+            .find_close(find)),
+        0
+    );
 }
 
 #[test]

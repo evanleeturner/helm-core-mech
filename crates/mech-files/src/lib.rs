@@ -236,7 +236,8 @@ impl<F: Folder> Files<F> {
             None => Err(Error::BadArgument),
         };
         let (value, error) = self.settle(answer, row.invalid);
-        let arguments = [&access, &share, &disposition, &flags].map(|each| mech_trace::__shown!(*each));
+        let arguments =
+            [&access, &share, &disposition, &flags].map(|each| mech_trace::__shown!(*each));
         self.folder.quiet(|| {
             log::debug!(
                 c = row.calls.open, a:% = Args(arguments), v:% = mech_trace::__shown!(value),
@@ -272,7 +273,7 @@ impl<F: Folder> Files<F> {
             mech_trace::__shown!(distance),
             mech_trace::__shown!(method),
         ];
-        self.handled(row.calls.seek, arguments, value, error);
+        self.handled(row.calls.seek, arguments, &value, error);
         value
     }
 
@@ -280,17 +281,25 @@ impl<F: Folder> Files<F> {
     pub fn kind(&self, file: u32) -> u32 {
         let row = self.file;
         let answer = self.folder.kind(file).map(|kind| {
-            let at = KINDS.iter().position(|&each| each == kind).unwrap_or_default();
+            let at = KINDS
+                .iter()
+                .position(|&each| each == kind)
+                .unwrap_or_default();
             row.kinds[at]
         });
         let (value, error) = self.settle(answer, row.unknown);
-        self.handled(row.calls.kind, [mech_trace::__shown!(file)], value, error);
+        self.handled(row.calls.kind, [mech_trace::__shown!(file)], &value, error);
         value
     }
 
     pub fn close(&self, file: u32) -> i32 {
         let (value, error) = self.done(self.folder.close(file));
-        self.handled(self.file.calls.close, [mech_trace::__shown!(file)], value, error);
+        self.handled(
+            self.file.calls.close,
+            [mech_trace::__shown!(file)],
+            &value,
+            error,
+        );
         value
     }
 
@@ -353,7 +362,12 @@ impl<F: Folder> Files<F> {
 
     pub fn find_close(&self, find: u32) -> i32 {
         let (value, error) = self.done(self.folder.find_close(find));
-        self.handled(self.file.calls.find_close, [mech_trace::__shown!(find)], value, error);
+        self.handled(
+            self.file.calls.find_close,
+            [mech_trace::__shown!(find)],
+            &value,
+            error,
+        );
         value
     }
 
@@ -382,10 +396,16 @@ impl<F: Folder> Files<F> {
     }
 
     /// A handle's call, its line.
-    fn handled<const N: usize>(&self, name: &'static str, arguments: [Shown<'_>; N], value: impl mech_trace::Value, error: u32) {
+    fn handled<const N: usize>(
+        &self,
+        name: &'static str,
+        arguments: [Shown<'_>; N],
+        value: &impl mech_trace::Value,
+        error: u32,
+    ) {
         self.folder.quiet(|| {
             log::debug!(
-                c = name, a:% = Args(arguments), v:% = mech_trace::__shown!(value),
+                c = name, a:% = Args(arguments), v:% = mech_trace::__shown!(*value),
                 e:% = mech_trace::__shown!(error); "imp.call"
             );
         });
