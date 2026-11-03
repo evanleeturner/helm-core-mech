@@ -27,6 +27,7 @@ unwrap_used = "deny"
 undocumented_unsafe_blocks = "deny"
 
 [dependencies]
+mech_layer = { path = "../mech-layer" }
 mech_trace = { path = "../mech-trace" }
 log = { version = "0.4", features = ["kv"] }
 

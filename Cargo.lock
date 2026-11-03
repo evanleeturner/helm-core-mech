@@ -29,6 +29,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "mech_layer"
+version = "0.1.0"
+dependencies = [
+ "log",
+ "mech_trace",
+]
+
+[[package]]
 name = "mech_logline"
 version = "0.1.0"
 dependencies = [
@@ -50,6 +58,7 @@ name = "mech_swap"
 version = "0.1.0"
 dependencies = [
  "log",
+ "mech_layer",
  "mech_logline",
  "mech_trace",
 ]

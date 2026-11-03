@@ -58,6 +58,12 @@
       "template": "{f}'s call to {c} returned {v}"
     },
     {
+      "id": "imp.call",
+      "level": "D",
+      "fields": { "c": "the import, as DLL!NAME", "a": "its arguments, in order (absent when it takes none)", "v": "the value it returned (absent when void)" },
+      "template": "the layer's call to {c} with {a} returned {v}"
+    },
+    {
       "id": "mem.copy",
       "level": "D",
       "fields": { "f": "the function's address", "s": "the source address", "d": "the destination address", "n": "the count passed" },

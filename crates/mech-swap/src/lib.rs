@@ -31,6 +31,10 @@ include!(concat!(env!("OUT_DIR"), "/ports.rs"));
 #[cfg(all(target_arch = "x86", target_os = "windows", not(test)))]
 mod windows;
 
+// The layer (HC6): linked in so the staticlib carries its exports.
+#[cfg(all(target_arch = "x86", target_os = "windows"))]
+use mech_layer as _;
+
 /// The bytes one trace line may take, its newline included.
 pub const LINE_BYTES: usize = 1024;
 
