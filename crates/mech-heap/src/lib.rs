@@ -47,6 +47,7 @@
 //! backend, `heap.rs`.
 #![cfg_attr(not(test), no_std)]
 
+pub mod debug;
 pub mod table;
 #[cfg(test)]
 mod test_log;
