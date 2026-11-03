@@ -10,9 +10,9 @@ use std::cell::{Cell, RefCell};
 use std::collections::{HashMap, VecDeque};
 
 use crate::memory::{MERCSW, MERCSW_LIST};
+use crate::test_log::debug_lines;
 use kernel_memory::Memory;
 use kernel_memory::debug::{DebugHeap, Words};
-use crate::test_log::debug_lines;
 
 const C37: &str = include_str!("../../../harvest/c37-mercsw-heap.log");
 

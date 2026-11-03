@@ -4,7 +4,10 @@
 //! Wine: c36's own lines, the Rust's (`harvest/c36-heap.log`), and c35's
 //! layer lines on the Windows heap, the original's
 //! (`harvest/c35-heap.log`). Neither run has a null or a zero: those
-//! edges are the bodies' own rules, as the crate's head reads them.
+//! edges are the bodies' own rules, as the crate's head reads them. The
+//! debug build's heap, c37's, is [`debug`].
+mod debug;
+
 use std::cell::RefCell;
 use std::collections::{HashMap, VecDeque};
 

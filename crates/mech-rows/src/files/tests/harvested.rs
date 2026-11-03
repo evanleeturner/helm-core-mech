@@ -192,7 +192,10 @@ fn a1s_copies_read_to_the_end_then_write_it_whole() {
         c.open, c.kind, c.open, c.kind, c.seek, c.seek, c.read, c.read, c.close, c.write, c.close,
     ];
     for (from, to, count) in COPIES {
-        let files = Files::new(&SHELL, MemoryFolder::default().give(text(from), &fill(count)));
+        let files = Files::new(
+            &SHELL,
+            MemoryFolder::default().give(text(from), &fill(count)),
+        );
         as_a1(&calls, || {
             let source = open(&files, from, access(true, true), Create::Existing);
             assert_eq!(files.kind(source), SHELL.kinds[0]);
@@ -227,7 +230,10 @@ fn a1s_records_make_each_file_anew_and_leave_the_settings_be() {
     ];
     let c = SHELL.calls;
     let settings = fill(0x17);
-    let files = Files::new(&SHELL, MemoryFolder::default().give("MW2DIF.CFG", &settings));
+    let files = Files::new(
+        &SHELL,
+        MemoryFolder::default().give("MW2DIF.CFG", &settings),
+    );
     let mut calls = [c.open, c.kind, c.write, c.close].repeat(3);
     for _ in 0..15 {
         calls.extend([
