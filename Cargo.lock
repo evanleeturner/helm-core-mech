@@ -22,6 +22,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "mech_heap"
+version = "0.1.0"
+dependencies = [
+ "log",
+ "mech_trace",
+]
+
+[[package]]
 name = "mech_launcher"
 version = "0.1.0"
 dependencies = [
