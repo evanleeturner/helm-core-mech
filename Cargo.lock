@@ -41,6 +41,7 @@ name = "mech_layer"
 version = "0.1.0"
 dependencies = [
  "log",
+ "mech_heap",
  "mech_trace",
 ]
 

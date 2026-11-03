@@ -72,6 +72,8 @@ macro_rules! imp_call {
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
 pub mod crt;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
+pub mod heap;
+#[cfg(all(target_arch = "x86", target_os = "windows"))]
 pub mod imports;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
 pub mod smack;
