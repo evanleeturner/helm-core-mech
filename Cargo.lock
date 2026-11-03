@@ -31,6 +31,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5d15f86d12da44cd8d4ec3c73984537eb7f4cadcb9776a575a0a8a05ca11005c"
 
 [[package]]
+name = "logical_disc"
+version = "0.1.0"
+dependencies = [
+ "kernel_files",
+]
+
+[[package]]
 name = "mech_game"
 version = "0.1.0"
 dependencies = [

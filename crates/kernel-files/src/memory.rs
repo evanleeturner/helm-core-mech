@@ -28,6 +28,7 @@ use alloc::vec::Vec;
 use core::cell::{Cell, RefCell};
 use core::ffi::CStr;
 
+use crate::names::{self, last, matches, parent};
 use crate::{Create, Error, Folder, Kind, Mode, Origin};
 
 /// A file's name as it was given or made, and its bytes.
@@ -359,45 +360,9 @@ impl Folder for MemoryFolder {
     }
 }
 
-/// A name's key: ASCII case folded, `/` as `\`.
+/// A name's key: each byte folded as names compare.
 fn key(name: &[u8]) -> Vec<u8> {
-    name.iter()
-        .map(|&byte| {
-            if byte == b'/' {
-                b'\\'
-            } else {
-                byte.to_ascii_lowercase()
-            }
-        })
-        .collect()
-}
-
-/// A key's folder: the part before its last `\`, empty at the top.
-fn parent(key: &[u8]) -> &[u8] {
-    key.iter()
-        .rposition(|&byte| byte == b'\\' || byte == b'/')
-        .map_or(&[][..], |at| &key[..at])
-}
-
-/// A name's last part, after its last `\` or `/`.
-fn last(name: &[u8]) -> &[u8] {
-    name.iter()
-        .rposition(|&byte| byte == b'\\' || byte == b'/')
-        .map_or(name, |at| &name[at + 1..])
-}
-
-/// Whether `name` fits `pattern`: `*` any run, `?` one byte; both keys.
-fn matches(pattern: &[u8], name: &[u8]) -> bool {
-    match pattern.split_first() {
-        None => name.is_empty(),
-        Some((b'*', rest)) => (0..=name.len()).any(|skip| matches(rest, &name[skip..])),
-        Some((b'?', rest)) => name
-            .split_first()
-            .is_some_and(|(_, tail)| matches(rest, tail)),
-        Some((byte, rest)) => name
-            .split_first()
-            .is_some_and(|(first, tail)| first == byte && matches(rest, tail)),
-    }
+    name.iter().map(|&byte| names::fold(byte)).collect()
 }
 
 /// `found` into `name`, cut to its room, with its NUL.

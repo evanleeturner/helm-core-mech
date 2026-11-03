@@ -21,7 +21,8 @@
 //! The crate names nothing of any one target, so it builds for
 //! `wasm32-unknown-unknown`; the Windows folder is `mech-layer`'s backend,
 //! `files.rs`. The in-memory folder, [`memory`], is the host tests' and a
-//! page's: its given half as given, its written half its own.
+//! page's: its given half as given, its written half its own. Names
+//! compare by one rule, [`names`], every folder's.
 #![cfg_attr(not(test), no_std)]
 
 #[cfg(any(test, feature = "memory"))]
@@ -29,6 +30,7 @@ extern crate alloc;
 
 #[cfg(any(test, feature = "memory"))]
 pub mod memory;
+pub mod names;
 pub mod table;
 
 use core::ffi::CStr;
