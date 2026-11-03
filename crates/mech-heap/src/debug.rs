@@ -51,6 +51,9 @@ use core::ptr::null_mut;
 use crate::table::{List, Row};
 use crate::{Heap, LARGEST, Memory};
 
+#[cfg(test)]
+mod tests;
+
 /// The header before the user's bytes.
 const HEADER: u32 = 0x20;
 /// What a block asks beyond the user's size: the header and the guard after.
