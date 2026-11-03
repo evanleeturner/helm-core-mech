@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
 //! The shell's file calls (HC9, ruling 1387): open, read, write, seek, the
 //! file's type, close, delete, move and find, written once. Each file the
-//! seam serves is a row of [`table`]; where its bytes live is a backend
-//! behind [`Folder`]; [`Files`] reads the call's numbers through the row,
+//! seam serves is a [`table::Row`], kept in its game's rows crate; where
+//! its bytes live is a backend behind [`Folder`]; [`Files`] reads the
+//! call's numbers through the row,
 //! asks the folder in plain terms, answers in the shell's numbers and
 //! writes one `imp.call` line a call: `c` the row's name, `a` the call's
 //! numbers, `v` its answer, `p` and `to` the names given as text, `n` the
@@ -14,7 +15,7 @@
 //! their count; the position; the file's type; the find data's name; the
 //! last error after a failure. What it never reads is never carried: the
 //! security and template an open passes, a seek's high half (its one
-//! caller, `__lseek_lk` `10074af0`, passes null), a read's overlap, and
+//! caller, the C library's `__lseek_lk`, passes null), a read's overlap, and
 //! every find-data field but the name, which the front clears.
 //!
 //! The crate names nothing of any one target, so it builds for
@@ -29,10 +30,6 @@ extern crate alloc;
 #[cfg(any(test, feature = "memory"))]
 pub mod memory;
 pub mod table;
-#[cfg(test)]
-mod test_log;
-#[cfg(test)]
-mod tests;
 
 use core::ffi::CStr;
 use core::fmt;

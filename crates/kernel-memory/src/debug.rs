@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 //! The debug C library's memory rules (HC8, ruling 1387): malloc and free
-//! as the game file `mercsw` runs them, the 1998 debug build's. Each block
+//! as a game file runs them, the 1998 debug build's. Each block
 //! carries a header of 0x20 bytes before the user's bytes and a guard of 4
 //! after them, and every live block hangs on one list; so a block made
 //! here and freed by the unswapped C library's own free, or made there and
 //! freed here, finds the header and the list as that free reads them.
 //!
-//! The header, as the make `1008d040` writes it and the free `1008da00`
-//! reads it (wall 3), each word at the block's start plus:
+//! The header, as the library's make writes it and its free reads it
+//! (wall 3), each word at the block's start plus:
 //!
 //! | Offset | Word | Written here |
 //! | --- | --- | --- |
@@ -22,15 +22,14 @@
 //! | 0x20 | the user's bytes | not filled: left out |
 //! | 0x20 + size | the guard after | `0xfdfdfdfd` |
 //!
-//! Carried, each for its reader in the unswapped free `1008da00`: the
+//! Carried, each for its reader in the unswapped free: the
 //! links (it unlinks by them), the size (it finds the guard after by it),
 //! the use (it asserts it), the guards (`_CheckBytes`). Left out, read by
-//! nothing the game reaches, since the debug flag `DAT_100c2e80` stays 1
-//! all run and the checks and dumps that would read them never run: the
-//! request number and its counter `DAT_100c2e84`, the break request
-//! `DAT_100c2e88`, the totals `DAT_100c8df4`, `DAT_100c8dfc` and
-//! `DAT_100c8e00`, the fills `0xcd` and `0xdd`, the allocation hook
-//! `100960c0` (it answers yes), and the free's own checks and reports.
+//! nothing the game reaches, since the debug flag stays 1 all run and the
+//! checks and dumps that would read them never run: the request number
+//! and its counter, the break request, the totals, the fills `0xcd` and
+//! `0xdd`, the allocation hook (it answers yes), and the free's own checks
+//! and reports. Each address is the game's, kept in its rows crate.
 //!
 //! - **malloc** reads `_newmode` once, then under the heap lock asks the
 //!   heap for the size plus 0x24. A size whose ask would pass
@@ -50,9 +49,6 @@ use core::ptr::null_mut;
 
 use crate::table::{List, Row};
 use crate::{Heap, LARGEST, Memory};
-
-#[cfg(test)]
-mod tests;
 
 /// The header before the user's bytes.
 const HEADER: u32 = 0x20;

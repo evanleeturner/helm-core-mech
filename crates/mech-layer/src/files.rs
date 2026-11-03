@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-//! The shell's file calls through the seam (HC9, ruling 1387): `mech_files`'
+//! The shell's file calls through the seam (HC9, ruling 1387): `kernel_files`'
 //! front over the Windows folder, the shell's 11 file imports exported
 //! `HC6_<name>` as the layer's other rows are, so the swap's loader points
 //! the shell's own slots at them unchanged.
@@ -12,8 +12,9 @@
 use core::ffi::{CStr, c_char, c_void};
 use core::ptr::{null_mut, without_provenance_mut};
 use core::slice;
-use mech_files::table::{FIND_BYTES, Row, SHELL};
-use mech_files::{Error, Files, Folder, Kind, Mode, Origin};
+use kernel_files::table::{FIND_BYTES, Row};
+use kernel_files::{Error, Files, Folder, Kind, Mode, Origin};
+use mech_rows::files::SHELL;
 
 unsafe extern "system" {
     fn CreateFileA(

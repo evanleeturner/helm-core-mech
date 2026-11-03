@@ -4,7 +4,7 @@
 # `imp.call`. No target's own names: it builds for any target, the browser's
 # included; the Windows heap is `mech-layer`'s backend.
 [package]
-name = "mech_heap"
+name = "kernel_memory"
 version = "0.1.0"
 edition = "2024"
 rust-version = "1.85"
@@ -27,6 +27,3 @@ undocumented_unsafe_blocks = "deny"
 [dependencies]
 mech_trace = { path = "../mech-trace" }
 log = { version = "0.4", features = ["kv"] }
-
-[dev-dependencies]
-mech_logline = { path = "../mech-logline" }

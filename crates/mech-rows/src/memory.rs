@@ -1,40 +1,11 @@
 // SPDX-License-Identifier: MIT
-//! The files' rows: where each file keeps its heap, its `_newmode` and
-//! its new-handler caller, and the address and name of each of its memory
-//! helpers. A file the helpers serve is a row here and nothing else.
+//! mercs's memory rows (HC7, HC8): where each of its files keeps its heap,
+//! its `_newmode` and its new-handler caller, and the address and name of
+//! each of its memory helpers, as `kernel_memory`'s rules serve them.
+use kernel_memory::table::{Helper, List, Row};
 
-/// One memory helper inside a file: its address, and the name its line
-/// carries as `c`, the one `ORDER.tsv` gives it.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub struct Helper {
-    pub address: u32,
-    pub name: &'static str,
-}
-
-/// One file's C library, as its memory helpers see it.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub struct Row {
-    /// The file, as its exports folder spells it.
-    pub file: &'static str,
-    /// The address of the file's heap handle, made once at its start.
-    pub heap: u32,
-    /// The address of `_newmode`: nonzero, a failed malloc calls the new
-    /// handler as operator new does.
-    pub new_mode: u32,
-    /// The address of `__callnewh`, which calls the new handler under
-    /// the C library's own lock.
-    pub call_new_handler: u32,
-    pub malloc: Helper,
-    /// Absent where the file carries no copy: a C program has none.
-    pub operator_new: Option<Helper>,
-    pub free: Helper,
-    /// Absent where the file carries no copy: a C program has none.
-    pub operator_delete: Option<Helper>,
-    /// Absent where the file carries no copy, or none the rules serve.
-    pub calloc: Option<Helper>,
-    /// Absent where the file carries no copy, or none the rules serve.
-    pub realloc: Option<Helper>,
-}
+#[cfg(test)]
+mod tests;
 
 /// The shell, `mw2shell`: its heap is made once, a growable Windows heap
 /// of one 4K page at first, at `10071810`; its handle is `DAT_100d1664`.
@@ -95,29 +66,19 @@ pub const LAUNCHER: Row = Row {
 };
 
 /// Every file the helpers serve, one row each.
-pub const FILES: &[&Row] = &[&SHELL, &LAUNCHER];
-
-/// A debug C library's list of live blocks, as its make and free keep it:
-/// the list's two ends, and the lock both take around it.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub struct List {
-    /// The address of the newest block's header, the list's first end.
-    pub first: u32,
-    /// The address of the oldest block's header, the list's last end.
-    pub last: u32,
-    /// The address of `__lock`, which takes the C library's lock `number`.
-    pub lock: u32,
-    /// The address of the call that gives the lock back.
-    pub unlock: u32,
-    /// The heap's lock among the C library's own, `_HEAP_LOCK`.
-    pub number: u32,
-}
+pub const ROWS: &[&Row] = &[&SHELL, &LAUNCHER];
 
 /// The game, `mercsw`, on the 1998 debug C library (HC8, wall 3): its heap
 /// is made once, a growable Windows heap of one 4K page at first, at
 /// `10096290`, called by the file's entry on attach; its handle is
 /// `DAT_10218180`. The game calls only malloc and free: it names no
 /// operator new or delete, and its calloc and realloc copies stay unread.
+///
+/// Its debug library's addresses, as `kernel_memory::debug` reads it: the
+/// make `1008d040` and the free `1008da00`; the debug flag `DAT_100c2e80`,
+/// 1 all run; left out, the request counter `DAT_100c2e84`, the break
+/// request `DAT_100c2e88`, the totals `DAT_100c8df4`, `DAT_100c8dfc` and
+/// `DAT_100c8e00`, and the allocation hook `100960c0`.
 pub const MERCSW: Row = Row {
     file: "mercsw",
     heap: 0x1021_8180,
@@ -148,4 +109,4 @@ pub const MERCSW_LIST: List = List {
 };
 
 /// Every file on the debug rules, its row and its list.
-pub const DEBUG_FILES: &[(&Row, &List)] = &[(&MERCSW, &MERCSW_LIST)];
+pub const DEBUG_ROWS: &[(&Row, &List)] = &[(&MERCSW, &MERCSW_LIST)];

@@ -9,12 +9,12 @@
 use std::cell::{Cell, RefCell};
 use std::collections::{HashMap, VecDeque};
 
-use super::{DebugHeap, Words};
-use crate::Memory;
-use crate::table::{MERCSW, MERCSW_LIST};
+use crate::memory::{MERCSW, MERCSW_LIST};
+use kernel_memory::Memory;
+use kernel_memory::debug::{DebugHeap, Words};
 use crate::test_log::debug_lines;
 
-const C37: &str = include_str!("../../harvest/c37-mercsw-heap.log");
+const C37: &str = include_str!("../../../harvest/c37-mercsw-heap.log");
 
 /// `mercsw`'s heap handle in c37.
 const MERCSW_HEAP: u32 = 0x015e_0000;

@@ -8,12 +8,13 @@
 use std::cell::RefCell;
 use std::collections::{HashMap, VecDeque};
 
-use crate::table::{FILES, LAUNCHER, Row, SHELL};
+use crate::memory::{LAUNCHER, ROWS, SHELL};
 use crate::test_log::debug_lines;
-use crate::{Heap, Memory};
+use kernel_memory::table::Row;
+use kernel_memory::{Heap, Memory};
 
-const C36: &str = include_str!("../harvest/c36-heap.log");
-const C35: &str = include_str!("../harvest/c35-heap.log");
+const C36: &str = include_str!("../../harvest/c36-heap.log");
+const C35: &str = include_str!("../../harvest/c35-heap.log");
 
 /// The shell's heap handle in both runs.
 const SHELL_HEAP: usize = 0x015e_0000;
@@ -297,8 +298,8 @@ fn calloc_of_zero_asks_one_zeroed_byte_and_realloc_edges_are_malloc_and_free() {
 
 #[test]
 fn each_file_is_a_row_and_logs_its_own_names() {
-    assert_eq!(FILES, [&SHELL, &LAUNCHER]);
-    for file in FILES {
+    assert_eq!(ROWS, [&SHELL, &LAUNCHER]);
+    for file in ROWS {
         let answers = RefCell::new([0x10].into());
         let heap = heap(
             file,

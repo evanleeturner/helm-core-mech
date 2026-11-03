@@ -7,7 +7,7 @@
 //! the real function answers every call, through Wine.
 //!
 //! The 34 imports ([`imports`]) and the 11 file calls ([`files`], HC9:
-//! `mech_files`' seam over the Windows folder) are exported `HC6_<name>`: with
+//! `kernel_files`' seam over the Windows folder) are exported `HC6_<name>`: with
 //! `HC6_LAYER=all` the swap's loader points the shell's own import slot at
 //! each, and each calls the real import through the swap DLL's own import
 //! table, so no call loops back through the shell's slot. The six Smacker

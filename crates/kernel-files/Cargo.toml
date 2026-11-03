@@ -5,7 +5,7 @@
 # Windows folder is `mech-layer`'s backend. The in-memory folder, `memory`,
 # needs an allocator, so it is a feature the swap never turns on.
 [package]
-name = "mech_files"
+name = "kernel_files"
 version = "0.1.0"
 edition = "2024"
 rust-version = "1.85"
@@ -31,6 +31,3 @@ undocumented_unsafe_blocks = "deny"
 [dependencies]
 mech_trace = { path = "../mech-trace" }
 log = { version = "0.4", features = ["kv"] }
-
-[dev-dependencies]
-mech_logline = { path = "../mech-logline" }

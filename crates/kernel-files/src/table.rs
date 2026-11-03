@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 //! The files' rows: each call's name as the counter labels it, and every
 //! number the shell's file calls pass or read back, in the shell's own
-//! spelling. A file the seam serves is a row here and nothing else.
+//! spelling. A file the seam serves is a row, kept in its game's rows
+//! crate, and nothing else.
 
 /// The find data's size: the buffer a find call fills.
 pub const FIND_BYTES: usize = 320;
@@ -67,51 +68,3 @@ pub struct Row {
     pub name_at: usize,
     pub name_bytes: usize,
 }
-
-/// The shell, `mw2shell`: its C library (`_sopen` `10077d00`, `_read_lk`
-/// `100747f0`, `_write_lk` `10072800`, `__lseek_lk` `10074af0`,
-/// `__close_lk` `10073520`, `remove` `1006f750`, `rename` `10070c20`,
-/// `__findfirst` `1006f300`, `__findnext` `1006f450`, `_findclose`
-/// `1006f590`) makes every call (wall 2); the numbers are its imports'.
-pub const SHELL: Row = Row {
-    file: "mw2shell",
-    calls: Calls {
-        open: "KERNEL32!CreateFileA",
-        read: "KERNEL32!ReadFile",
-        write: "KERNEL32!WriteFile",
-        seek: "KERNEL32!SetFilePointer",
-        kind: "KERNEL32!GetFileType",
-        close: "KERNEL32!CloseHandle",
-        delete: "KERNEL32!DeleteFileA",
-        rename: "KERNEL32!MoveFileA",
-        find_first: "KERNEL32!FindFirstFileA",
-        find_next: "KERNEL32!FindNextFileA",
-        find_close: "KERNEL32!FindClose",
-    },
-    read: 0x8000_0000,
-    write: 0x4000_0000,
-    share: 3,
-    plain: 0x80,
-    creates: [1, 2, 3, 4, 5],
-    methods: [0, 1, 2],
-    kinds: [1, 2, 3],
-    unknown: 0,
-    invalid: 0xffff_ffff,
-    errors: Errors {
-        not_found: 2,
-        no_path: 3,
-        denied: 5,
-        bad_handle: 6,
-        no_more: 0x12,
-        exists: 0x50,
-        busy: 0x20,
-        taken: 0xb7,
-        bad_seek: 0x83,
-        bad_argument: 0x57,
-    },
-    name_at: 44,
-    name_bytes: 260,
-};
-
-/// Every file the seam serves, one row each.
-pub const FILES: &[&Row] = &[&SHELL];

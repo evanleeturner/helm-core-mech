@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
 //! The C library's memory helpers (HC7, ruling 1386): malloc, operator
 //! new, free, operator delete, calloc and realloc, written once. Each file
-//! that carries a copy is a row of [`table`]; where its blocks come from
-//! is a backend behind [`Memory`]; [`Heap`] holds the C library's rules
+//! that carries a copy is a [`table::Row`], kept in its game's rows crate;
+//! where its blocks come from is a backend behind [`Memory`]; [`Heap`]
+//! holds the C library's rules
 //! and writes one `imp.call` line a call: `c` the row's name, `a` the
 //! arguments, `h` the heap, `v` the value returned.
 //!
@@ -49,10 +50,6 @@
 
 pub mod debug;
 pub mod table;
-#[cfg(test)]
-mod test_log;
-#[cfg(test)]
-mod tests;
 
 use core::ptr::null_mut;
 use mech_trace::{Args, Shown};

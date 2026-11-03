@@ -8,10 +8,11 @@
 use std::ffi::{CStr, CString};
 
 use super::{FILL, access, field, found, logged, open};
-use crate::memory::Memory;
-use crate::table::{FIND_BYTES, SHELL};
+use crate::files::SHELL;
 use crate::test_log::debug_lines;
-use crate::{Create, Files};
+use kernel_files::memory::MemoryFolder;
+use kernel_files::table::FIND_BYTES;
+use kernel_files::{Create, Files};
 
 /// The test's own bytes, `count` of them.
 fn fill(count: u32) -> Vec<u8> {
@@ -24,14 +25,14 @@ fn text(name: &CStr) -> &str {
 }
 
 /// A write's count, once it answers 1.
-fn written(files: &Files<Memory>, file: u32, from: &[u8]) -> u32 {
+fn written(files: &Files<MemoryFolder>, file: u32, from: &[u8]) -> u32 {
     let mut count = 0;
     assert_eq!(files.write(file, from, Some(&mut count)), 1);
     count
 }
 
 /// A read's bytes, `room` asked for, once it answers 1.
-fn read(files: &Files<Memory>, file: u32, room: usize) -> Vec<u8> {
+fn read(files: &Files<MemoryFolder>, file: u32, room: usize) -> Vec<u8> {
     let mut into = vec![0; room];
     let mut count = 0;
     assert_eq!(files.read(file, &mut into, Some(&mut count)), 1);
@@ -77,7 +78,7 @@ fn a1s_sweep_deletes_each_save_its_find_walks() {
         c"rnd0cam1.bwd",
     ];
     const LOGOS: [&CStr; 3] = [c"mw2logo0.cel", c"mw2logo1.cel", c"mw2logo2.cel"];
-    let mut folder = Memory::default()
+    let mut folder = MemoryFolder::default()
         .give("userstar.bwd", FILL)
         .give("MW2DIF.CFG", FILL);
     for name in SAVES.iter().chain(&LOGOS) {
@@ -157,7 +158,7 @@ fn a1s_saves_write_the_body_then_its_head_at_4() {
     ];
     let head = fill(8);
     for (name, body) in SAVES {
-        let files = Files::new(&SHELL, Memory::default());
+        let files = Files::new(&SHELL, MemoryFolder::default());
         as_a1(&calls, || {
             let file = open(&files, name, access(true, true), Create::Always);
             assert_eq!(files.kind(file), SHELL.kinds[0]);
@@ -191,7 +192,7 @@ fn a1s_copies_read_to_the_end_then_write_it_whole() {
         c.open, c.kind, c.open, c.kind, c.seek, c.seek, c.read, c.read, c.close, c.write, c.close,
     ];
     for (from, to, count) in COPIES {
-        let files = Files::new(&SHELL, Memory::default().give(text(from), &fill(count)));
+        let files = Files::new(&SHELL, MemoryFolder::default().give(text(from), &fill(count)));
         as_a1(&calls, || {
             let source = open(&files, from, access(true, true), Create::Existing);
             assert_eq!(files.kind(source), SHELL.kinds[0]);
@@ -226,7 +227,7 @@ fn a1s_records_make_each_file_anew_and_leave_the_settings_be() {
     ];
     let c = SHELL.calls;
     let settings = fill(0x17);
-    let files = Files::new(&SHELL, Memory::default().give("MW2DIF.CFG", &settings));
+    let files = Files::new(&SHELL, MemoryFolder::default().give("MW2DIF.CFG", &settings));
     let mut calls = [c.open, c.kind, c.write, c.close].repeat(3);
     for _ in 0..15 {
         calls.extend([
@@ -266,7 +267,7 @@ fn a1s_records_make_each_file_anew_and_leave_the_settings_be() {
 fn a1s_log_stays_open_while_the_logos_are_written() {
     const LOGOS: [&CStr; 2] = [c"MW2LOGO0.cel", c"MW2LOGO1.cel"];
     let c = SHELL.calls;
-    let files = Files::new(&SHELL, Memory::default());
+    let files = Files::new(&SHELL, MemoryFolder::default());
     let mut calls = vec![c.open, c.kind, c.seek];
     for _ in LOGOS {
         calls.extend([
@@ -303,7 +304,7 @@ fn a1s_log_stays_open_while_the_logos_are_written() {
 /// error 2); the move onto that name.
 #[test]
 fn a1s_world_moves_onto_the_name_its_sweep_freed() {
-    let files = Files::new(&SHELL, Memory::default());
+    let files = Files::new(&SHELL, MemoryFolder::default());
     let file = open(&files, c"ran0wld1.bwd", access(true, true), Create::Always);
     assert_eq!(written(&files, file, &fill(0x2ec)), 0x2ec);
     assert_eq!(files.close(file), 1);

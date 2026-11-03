@@ -25,7 +25,8 @@ unwrap_used = "deny"
 undocumented_unsafe_blocks = "deny"
 
 [dependencies]
-mech_files = { path = "../mech-files" }
-mech_heap = { path = "../mech-heap" }
+kernel_files = { path = "../kernel-files" }
+kernel_memory = { path = "../kernel-memory" }
+mech_rows = { path = "../mech-rows" }
 mech_trace = { path = "../mech-trace" }
 log = { version = "0.4", features = ["kv"] }

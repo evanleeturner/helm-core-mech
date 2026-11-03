@@ -10,18 +10,19 @@ mod harvested;
 
 use std::ffi::CStr;
 
-use crate::memory::Memory;
-use crate::table::{FIND_BYTES, SHELL};
+use crate::files::SHELL;
 use crate::test_log::debug_lines;
-use crate::{Create, Files, Mode};
+use kernel_files::memory::MemoryFolder;
+use kernel_files::table::FIND_BYTES;
+use kernel_files::{Create, Files, Mode};
 
 /// The test's own bytes, standing for a file's.
 const FILL: &[u8] = b"helm hc9 test fill";
 
 /// A folder holding a1's names: the settings it reads, the saves it
 /// finds and deletes, and the one it moves.
-fn files() -> Files<Memory> {
-    let folder = Memory::default()
+fn files() -> Files<MemoryFolder> {
+    let folder = MemoryFolder::default()
         .give("MW2DIF.CFG", FILL)
         .give("en01star.bwd", FILL)
         .give("en02star.bwd", FILL)
@@ -39,7 +40,7 @@ const fn access(read: bool, write: bool) -> u32 {
 }
 
 /// An open the way a1's opens are: the row's sharing and attributes.
-fn open(files: &Files<Memory>, name: &CStr, access: u32, create: Create) -> u32 {
+fn open(files: &Files<MemoryFolder>, name: &CStr, access: u32, create: Create) -> u32 {
     files.open(
         name,
         access,
@@ -58,7 +59,7 @@ fn field<'a>(line: &'a str, key: &str) -> Option<&'a str> {
 /// Runs `call` and checks its lines: one, `imp.call`, `c` the call's
 /// name, `e` the error in hex; on a failure, the folder's last error that
 /// error. Returns the call's answer.
-fn logged<T>(files: &Files<Memory>, name: &str, error: u32, call: impl FnOnce() -> T) -> T {
+fn logged<T>(files: &Files<MemoryFolder>, name: &str, error: u32, call: impl FnOnce() -> T) -> T {
     let mut answer = None;
     let lines = debug_lines(|| answer = Some(call()));
     assert_eq!(lines.len(), 1, "{lines:?}");

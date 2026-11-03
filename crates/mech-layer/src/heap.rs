@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 //! The C library's memory helpers on the Windows heap (HC7, ruling 1386):
-//! `mech_heap`'s rules over a file's own heap, the shell's six exported
+//! `kernel_memory`'s rules over a file's own heap, the shell's six exported
 //! `HC5_<address>` and swapped as the ports are.
 //!
 //! Each call reads the file's heap handle and `_newmode` at its row's
@@ -11,8 +11,9 @@
 //! `imp_call!` keeps it; the heap calls themselves set it as they did.
 use core::ffi::c_void;
 use core::ptr::with_exposed_provenance;
-use mech_heap::table::{Row, SHELL};
-use mech_heap::{Heap, Memory};
+use kernel_memory::table::Row;
+use kernel_memory::{Heap, Memory};
+use mech_rows::memory::SHELL;
 
 unsafe extern "system" {
     fn HeapAlloc(heap: *mut c_void, flags: u32, bytes: usize) -> *mut c_void;

@@ -8,10 +8,11 @@
 //! Its rules, a1's or the body's own:
 //!
 //! - **Names** match as Windows matches them: ASCII case folded, `/` read
-//!   as `\` (a1 deletes `USERSTAR.BWD`, then opens `userstar.bwd`). A
-//!   folder is given, or holds a given file; the top folder always is.
-//! - **A name in a folder never given** fails `NoPath` (a1:
-//!   `mek\?????mer.mek`, 3); a folder opened or deleted as a file `Denied`.
+//!   as `\` (a1 deletes a name in capitals, then opens it in small
+//!   letters). A folder is given, or holds a given file; the top folder
+//!   always is.
+//! - **A name in a folder never given** fails `NoPath` (a1: 3 calls); a
+//!   folder opened or deleted as a file `Denied`.
 //! - **A find** matches `*` and `?` in its last part, against files alone,
 //!   in key order; past the last name `NoMore` (a1: 0x12). One that matches
 //!   none fails `NotFound`, as Windows answers: a1 holds none.
@@ -52,7 +53,7 @@ struct Find {
 
 /// A folder in memory.
 #[derive(Default)]
-pub struct Memory {
+pub struct MemoryFolder {
     given: BTreeMap<Vec<u8>, File>,
     folders: BTreeSet<Vec<u8>>,
     /// The own half: a file made or changed, or `None` over a given file
@@ -64,7 +65,7 @@ pub struct Memory {
     last_error: Cell<u32>,
 }
 
-impl Memory {
+impl MemoryFolder {
     /// The folder with `name` given, holding `bytes`, its folders with it.
     #[must_use]
     pub fn give(mut self, name: &str, bytes: &[u8]) -> Self {
@@ -177,7 +178,7 @@ impl Memory {
     }
 }
 
-impl Folder for Memory {
+impl Folder for MemoryFolder {
     fn open(&self, name: &CStr, mode: Mode) -> Result<u32, Error> {
         let key = self.file_key(name)?;
         let there = self.exists(&key);
