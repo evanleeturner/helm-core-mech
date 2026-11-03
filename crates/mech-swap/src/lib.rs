@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-//! The swap: the shell library's 549 ported functions in one library the
+//! The swap: the shell library's 580 ported functions in one library the
 //! live game loads beside its own shell (HC5, `JOB.md` I1). Each port is
 //! `mech-shell`'s module, copied by `build.rs` with its definition renamed
 //! `HC5_<address>`; its globals, `DAT_<address>`, and its callees,

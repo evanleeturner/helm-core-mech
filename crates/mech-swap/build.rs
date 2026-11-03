@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-//! Copies the shell library's 549 ported functions out of `mech-shell` into
+//! Copies the shell library's 580 ported functions out of `mech-shell` into
 //! the build folder, each definition renamed from `FUN_<address>` to
 //! `HC5_<address>`, and with it each call a port makes to itself (two
 //! recurse: `10053590` and `10053780`). The game's original keeps the name
@@ -57,8 +57,8 @@ fn main() {
     }
     assert_eq!(
         ports.matches("\nmod ").count(),
-        549,
-        "mech-shell gates 549 ports"
+        580,
+        "mech-shell gates 580 ports"
     );
     fs::write(out.join("ports.rs"), ports).expect("the build folder takes ports.rs");
 }
