@@ -13,8 +13,10 @@ unsafe extern "fastcall" {
     );
 }
 
+// `__cdecl`: the original pops the argument itself (`add esp,4` at
+// 1005f00b) and smackw32's export ends on a bare `ret`.
 #[allow(non_snake_case)]
-unsafe extern "stdcall" {
+unsafe extern "C" {
     fn _SmackDoFrame(smack_object: i32) -> i32;
 }
 

@@ -45,12 +45,19 @@ unsafe extern "thiscall" {
     fn FUN_1005f760(this_: *mut u8, param_1: u32) -> u32;
 }
 
+// `__cdecl`: smackw32's thunks (SmackWait, SmackGoto, SmackNextFrame,
+// SmackDoFrame); the original pops their arguments after each call and
+// each export ends on a bare `ret`.
 #[allow(non_snake_case)]
-unsafe extern "stdcall" {
+unsafe extern "C" {
     fn FUN_1006e76a(param_1: u32) -> i32;
     fn FUN_1006e764(param_1: u32, param_2: u32);
     fn FUN_1006e75e(param_1: u32);
     fn FUN_1006e74c(param_1: u32);
+}
+
+#[allow(non_snake_case)]
+unsafe extern "stdcall" {
     fn timeGetTime() -> u32;
 }
 

@@ -13,11 +13,18 @@ unsafe extern "C" {
 unsafe extern "stdcall" {
     fn AIL_serve();
     fn FUN_1000ed70();
+    fn timeGetTime() -> u32;
+}
+
+// `__cdecl`: smackw32's thunks (SmackDoFrame, SmackWait, SmackGoto,
+// SmackNextFrame); the original pops their arguments after each call and
+// each export ends on a bare `ret`.
+#[allow(non_snake_case)]
+unsafe extern "C" {
     fn FUN_1006e74c(param_1: u32);
     fn FUN_1006e76a(param_1: u32) -> i32;
     fn FUN_1006e764(param_1: u32, param_2: u32);
     fn FUN_1006e75e(param_1: u32);
-    fn timeGetTime() -> u32;
 }
 
 #[allow(non_snake_case)]
