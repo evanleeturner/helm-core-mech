@@ -90,6 +90,35 @@ pub enum Kind {
 
 const KINDS: [Kind; 3] = [Kind::Disk, Kind::Char, Kind::Pipe];
 
+/// The way back: a plain ask in this file's own numbers, for a folder
+/// that calls the file's real imports.
+impl Row {
+    /// An open's access bits.
+    #[must_use]
+    pub const fn access(&self, mode: Mode) -> u32 {
+        let read = if mode.read { self.read } else { 0 };
+        let write = if mode.write { self.write } else { 0 };
+        read | write
+    }
+
+    #[must_use]
+    pub const fn disposition(&self, create: Create) -> u32 {
+        self.creates[create as usize]
+    }
+
+    #[must_use]
+    pub const fn method(&self, origin: Origin) -> u32 {
+        self.methods[origin as usize]
+    }
+
+    /// A file type the import answered, if the row knows it.
+    #[must_use]
+    pub fn kind(&self, number: u32) -> Option<Kind> {
+        let at = self.kinds.iter().position(|&each| each == number)?;
+        Some(KINDS[at])
+    }
+}
+
 /// Why a call failed. A target's own code passes through as `Other`.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Error {
