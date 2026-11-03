@@ -114,7 +114,7 @@ impl<M: Memory> Heap<M> {
     pub fn operator_new(&self, bytes: u32) -> *mut u8 {
         let block = self.allocate(bytes, true);
         self.line(
-            self.file.operator_new.name,
+            name(self.file.operator_new, "operator new"),
             [mech_trace::__shown!(bytes)],
             block,
         );
@@ -141,7 +141,7 @@ impl<M: Memory> Heap<M> {
         // SAFETY: the caller's promise, null excluded here.
         unsafe { self.free_block(block) };
         self.line_void(
-            self.file.operator_delete.name,
+            name(self.file.operator_delete, "operator delete"),
             [mech_trace::__shown!(block)],
         );
     }

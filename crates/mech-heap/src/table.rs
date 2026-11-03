@@ -25,9 +25,11 @@ pub struct Row {
     /// the C library's own lock.
     pub call_new_handler: u32,
     pub malloc: Helper,
-    pub operator_new: Helper,
+    /// Absent where the file carries no copy: a C program has none.
+    pub operator_new: Option<Helper>,
     pub free: Helper,
-    pub operator_delete: Helper,
+    /// Absent where the file carries no copy: a C program has none.
+    pub operator_delete: Option<Helper>,
     /// Absent where the file carries no copy.
     pub calloc: Option<Helper>,
     /// Absent where the file carries no copy.
@@ -45,18 +47,18 @@ pub const SHELL: Row = Row {
         address: 0x1006_fab0,
         name: "FUN_1006fab0",
     },
-    operator_new: Helper {
+    operator_new: Some(Helper {
         address: 0x1006_f200,
         name: "FUN_1006f200",
-    },
+    }),
     free: Helper {
         address: 0x1006_e790,
         name: "FUN_1006e790",
     },
-    operator_delete: Helper {
+    operator_delete: Some(Helper {
         address: 0x1006_ec30,
         name: "FUN_1006ec30",
-    },
+    }),
     calloc: Some(Helper {
         address: 0x1006_e820,
         name: "FUN_1006e820",
@@ -66,3 +68,6 @@ pub const SHELL: Row = Row {
         name: "FUN_10070080",
     }),
 };
+
+/// Every file the helpers serve, one row each.
+pub const FILES: &[&Row] = &[&SHELL];
