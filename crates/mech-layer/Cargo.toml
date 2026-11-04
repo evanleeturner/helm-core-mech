@@ -27,6 +27,7 @@ undocumented_unsafe_blocks = "deny"
 [dependencies]
 kernel_files = { path = "../kernel-files" }
 kernel_memory = { path = "../kernel-memory" }
+kernel_time = { path = "../kernel-time" }
 mech_rows = { path = "../mech-rows" }
 mech_trace = { path = "../mech-trace" }
 log = { version = "0.4", features = ["kv"] }

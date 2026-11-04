@@ -19,13 +19,6 @@ use core::ffi::CStr;
 use core::ptr::null_mut;
 use core::sync::atomic::{AtomicU32, Ordering};
 
-unsafe extern "system" {
-    fn GetSystemTimeAsFileTime(time: *mut u64);
-}
-
-/// Windows' clock at 1970-01-01 00:00 UTC, in its 100 ns ticks.
-const UNIX_EPOCH_TICKS: u64 = 116_444_736_000_000_000;
-
 /// `rand`'s seed; MSVC's starts at 1 until `srand` is called.
 static SEED: AtomicU32 = AtomicU32::new(1);
 
@@ -193,19 +186,13 @@ pub extern "C" fn rand() -> i32 {
     imp_call!("_rand", [], value)
 }
 
-/// time: the whole seconds since 1970 UTC by Windows' clock, also written
-/// to `timer` when it is not null. MSVC reads the local time and takes its
-/// time zone back off, which comes to the same seconds.
+/// time: the whole seconds since 1970 UTC by the shell's wall clock, the
+/// time seam's front ([`kernel_time::Times::seconds`] on
+/// [`crate::time`]'s clocks), also written to `timer` when it is not null.
+/// MSVC reads the local time and takes its time zone back off, which comes
+/// to the same seconds.
 #[unsafe(export_name = "HC5_10070850")]
 pub unsafe extern "C" fn time(timer: *mut i32) -> i32 {
-    let mut ticks = 0u64;
-    // SAFETY: Windows writes the one FILETIME it is handed.
-    unsafe { GetSystemTimeAsFileTime(&raw mut ticks) };
-    let seconds = ticks.saturating_sub(UNIX_EPOCH_TICKS) / 10_000_000;
-    let value = i32::try_from(seconds).unwrap_or(i32::MAX);
-    if !timer.is_null() {
-        // SAFETY: the caller's own `time_t`.
-        unsafe { *timer = value };
-    }
-    imp_call!("_time", [timer], value)
+    // SAFETY: the caller's own `time_t`, or null.
+    crate::time::SHELL_TIMES.seconds(unsafe { timer.as_mut() })
 }

@@ -25,6 +25,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "kernel_time"
+version = "0.1.0"
+dependencies = [
+ "log",
+ "mech_trace",
+]
+
+[[package]]
 name = "log"
 version = "0.4.35"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -58,6 +66,7 @@ version = "0.1.0"
 dependencies = [
  "kernel_files",
  "kernel_memory",
+ "kernel_time",
  "log",
  "mech_rows",
  "mech_trace",
@@ -77,6 +86,7 @@ version = "0.1.0"
 dependencies = [
  "kernel_files",
  "kernel_memory",
+ "kernel_time",
  "log",
  "logical_disc",
  "mech_logline",

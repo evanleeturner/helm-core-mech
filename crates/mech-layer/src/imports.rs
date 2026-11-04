@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-//! The 34 imports the shell's screens call past its file calls (HC6
-//! session 21's 42, less the 11 file calls the seam now answers,
-//! [`crate::files`]), one row each: the name the counter labels it by, the import, its
+//! The 32 imports the shell's screens call past its file and time calls
+//! (HC6 session 21's 42, less the 11 file calls the seam now answers,
+//! [`crate::files`], and the 2 time calls KT1's answers, [`crate::time`]), one row each: the name the counter labels it by, the import, its
 //! arguments, its return. Each row makes a module of the import's name
 //! holding the real import, from the swap DLL's own import table, and its
 //! layer function, exported `HC6_<name>`; stdcall, as the shell calls
@@ -73,8 +73,6 @@ layer!("KERNEL32!TlsGetValue", TlsGetValue(index: u32) -> Pointer);
 layer!("KERNEL32!SetLastError", SetLastError(code: u32));
 layer!("KERNEL32!InitializeCriticalSection", InitializeCriticalSection(section: Pointer));
 layer!("KERNEL32!DeleteCriticalSection", DeleteCriticalSection(section: Pointer));
-layer!("KERNEL32!GetLocalTime", GetLocalTime(time: Pointer));
-layer!("KERNEL32!GetTimeZoneInformation", GetTimeZoneInformation(zone: Pointer) -> u32);
 layer!(
     "KERNEL32!CompareStringA",
     CompareStringA(locale: u32, flags: u32, first: Text, first_count: i32, second: Text, second_count: i32) -> i32
