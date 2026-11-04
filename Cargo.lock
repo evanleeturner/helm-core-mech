@@ -35,6 +35,7 @@ name = "logical_disc"
 version = "0.1.0"
 dependencies = [
  "kernel_files",
+ "log",
 ]
 
 [[package]]

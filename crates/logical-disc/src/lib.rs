@@ -4,7 +4,9 @@
 //! files, or an iso alone. The disc answers what a game reads from it,
 //! never a CD drive rebuilt. Its one way to its bytes is [`ReadAt`], a
 //! trait a target; a file's read takes its own sectors and no more, so an
-//! image of 269M is never loaded whole.
+//! image of 269M is never loaded whole. The data track's files answer as a
+//! `kernel_files::Folder`, read only (`folder.rs`), each call one
+//! `disc.call` line.
 //!
 //! Written from the formats' public descriptions, never from another
 //! reader's code: the cue sheet's grammar (`cue.rs`); the raw sector of
@@ -24,6 +26,8 @@ extern crate alloc;
 mod cue;
 #[cfg(any(test, feature = "disc"))]
 mod disc;
+#[cfg(any(test, feature = "disc"))]
+mod folder;
 #[cfg(any(test, feature = "disc"))]
 mod iso;
 #[cfg(test)]

@@ -7,6 +7,7 @@ use kernel_files::{Error, names};
 
 use crate::ReadAt;
 use crate::cue::{self, Mode};
+use crate::folder::Handles;
 use crate::iso::{Entry, Volume};
 
 /// A raw sector's bytes, data or audio (ECMA-130).
@@ -61,6 +62,8 @@ pub struct Disc<R> {
     #[expect(dead_code, reason = "the audio side's, DS2 step 4")]
     sheet: Vec<cue::File>,
     volume: Volume,
+    /// The open files and finds its `Folder` answers.
+    pub(crate) handles: Handles,
 }
 
 impl<R: ReadAt> Disc<R> {
@@ -86,6 +89,7 @@ impl<R: ReadAt> Disc<R> {
             data,
             sheet,
             volume: Volume::default(),
+            handles: Handles::default(),
         };
         disc.volume = Volume::read(|sector, into| disc.user(sector, 0, into))?;
         Ok(disc)
@@ -98,20 +102,21 @@ impl<R: ReadAt> Disc<R> {
     }
 
     /// The file or folder `name` names, from the volume's top.
-    #[cfg_attr(
-        not(test),
-        expect(dead_code, reason = "the data side's Folder, DS2 step 3")
-    )]
     pub(crate) fn entry(&self, name: &[u8]) -> Option<&Entry> {
         self.volume.entry(name)
     }
 
+    /// The entries in the folder whose key is `folder`, in key order, each
+    /// with its key.
+    pub(crate) fn within<'a>(
+        &'a self,
+        folder: &'a [u8],
+    ) -> impl Iterator<Item = (&'a [u8], &'a Entry)> {
+        self.volume.within(folder)
+    }
+
     /// `entry`'s bytes from `at` into `into`, one range a sector; the count
     /// moved, short at the file's end.
-    #[cfg_attr(
-        not(test),
-        expect(dead_code, reason = "the data side's Folder, DS2 step 3")
-    )]
     pub(crate) fn read(&self, entry: &Entry, at: u64, into: &mut [u8]) -> Result<usize, Error> {
         let left = u64::from(entry.size).saturating_sub(at);
         let count = usize::try_from(left).map_or(into.len(), |left| left.min(into.len()));

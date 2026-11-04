@@ -90,16 +90,32 @@ impl Volume {
         &self.label
     }
 
-    /// The entry `name` names, from the top; a leading `\` or `/` read as
-    /// the top.
+    /// The entry `name` names, from the top.
     pub(crate) fn entry(&self, name: &[u8]) -> Option<&Entry> {
-        let name = name
-            .strip_prefix(b"\\")
-            .or_else(|| name.strip_prefix(b"/"))
-            .unwrap_or(name);
-        let key: Vec<u8> = name.iter().map(|&byte| names::fold(byte)).collect();
-        self.entries.get(&key)
+        self.entries.get(&key(name))
     }
+
+    /// The entries in the folder whose key is `folder`, in key order, each
+    /// with its key.
+    pub(crate) fn within<'a>(
+        &'a self,
+        folder: &'a [u8],
+    ) -> impl Iterator<Item = (&'a [u8], &'a Entry)> {
+        self.entries
+            .iter()
+            .map(|(key, entry)| (key.as_slice(), entry))
+            .filter(move |(key, _)| names::parent(key) == folder)
+    }
+}
+
+/// A name's key, as the table keeps it: from the top, a leading `\` or `/`
+/// read as the top, each byte folded.
+pub(crate) fn key(name: &[u8]) -> Vec<u8> {
+    let name = name
+        .strip_prefix(b"\\")
+        .or_else(|| name.strip_prefix(b"/"))
+        .unwrap_or(name);
+    name.iter().map(|&byte| names::fold(byte)).collect()
 }
 
 /// A record's entry, or `None` when its fields run past its length.

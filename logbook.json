@@ -74,6 +74,12 @@
       "level": "D",
       "fields": { "f": "the function's address", "d": "the destination address", "b": "the fill byte", "n": "the count passed" },
       "template": "{f} fills count {n} at {d} with {b}"
+    },
+    {
+      "id": "disc.call",
+      "level": "D",
+      "fields": { "c": "the folder call the logical disc answered, by its method's name", "a": "the handle or find it was given; 0 when it takes a name", "p": "the name or pattern it was given, as text (a move's first); empty when it takes a handle", "v": "its answer: the handle, find, count or position; 0 for a yes and on a failure", "n": "the bytes a read moved off the disc; 0 for every other call", "e": "the failure, by its name; ok on success" },
+      "template": "the disc's {c} of {a} {p} answered {v}, {n} bytes moved: {e}"
     }
   ]
 }
