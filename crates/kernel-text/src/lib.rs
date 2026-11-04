@@ -9,7 +9,7 @@
 //! Each file the seam serves is a [`table::Row`], kept in its game's rows
 //! crate. [`Front`] answers in the file's numbers and writes one `imp.call`
 //! line a call: `c` the row's name, `a` the call's numbers, `s` the text
-//! it was given, `t` a second text, `v` its answer, `e` the error left.
+//! it was given, `with` a second text, `v` its answer, `e` the error left.
 //!
 //! The crate names no game and nothing of any one target, so it builds for
 //! `wasm32-unknown-unknown`; a game's facts live in its rows crate.
@@ -540,7 +540,7 @@ impl<L: Locale> Front<L> {
         let arguments = [mech_trace::__shown!(locale), mech_trace::__shown!(flags)];
         self.locale.quiet(|| {
             log::debug!(
-                c = self.file.calls.compare, a:% = Args(arguments), s:% = Bytes(first), t:% = Bytes(second),
+                c = self.file.calls.compare, a:% = Args(arguments), s:% = Bytes(first), with:% = Bytes(second),
                 v:% = mech_trace::__shown!(value), e:% = mech_trace::__shown!(error); "imp.call"
             );
         });
@@ -554,7 +554,7 @@ impl<L: Locale> Front<L> {
         let arguments = [mech_trace::__shown!(locale), mech_trace::__shown!(flags)];
         self.locale.quiet(|| {
             log::debug!(
-                c = self.file.calls.compare_w, a:% = Args(arguments), s:% = Units(first), t:% = Units(second),
+                c = self.file.calls.compare_w, a:% = Args(arguments), s:% = Units(first), with:% = Units(second),
                 v:% = mech_trace::__shown!(value), e:% = mech_trace::__shown!(error); "imp.call"
             );
         });

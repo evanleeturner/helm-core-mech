@@ -19,6 +19,7 @@ const CP1252_C1: [u16; 32] = [
 
 /// Bytes `0x80` to `0xFF`: [`CP1252_C1`], then `0xA0` to `0xFF` as the
 /// units of their own numbers, Latin-1's.
+#[allow(clippy::cast_possible_truncation, reason = "the index stays below 128")]
 const fn cp1252_high() -> [u16; 128] {
     let mut high = [0; 128];
     let mut index = 0;
