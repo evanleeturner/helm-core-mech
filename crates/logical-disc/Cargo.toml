@@ -2,7 +2,8 @@
 # its bins, or an iso alone, read only and by range through `ReadAt`, a trait
 # a target. No target's own names and no game's: it builds for any target,
 # the browser's included. The disc and its parsers need an allocator, so they
-# are a feature, `disc`, the swap never turns on: `mech_rows` reaches the swap.
+# are a feature, `disc`, the swap never turns on: a game's rows crate
+# reaches the swap.
 [package]
 name = "logical_disc"
 version = "0.1.0"

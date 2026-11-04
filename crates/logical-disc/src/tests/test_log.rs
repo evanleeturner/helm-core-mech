@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-//! A test-only log sink, as `mech-rows`' but with no logline adapter, so
+//! A test-only log sink, as a rows crate's but with no logline adapter, so
 //! the crate names no game: it keeps each DEBUG line on the thread that
 //! logged it, rendered `event k=v` from the record's own message and
 //! pairs, so a test reads the lines its own calls wrote while other tests
