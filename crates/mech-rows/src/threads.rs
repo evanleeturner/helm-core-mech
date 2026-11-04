@@ -21,6 +21,9 @@
 //! | `TlsSetValue` | `__mtinit`, `__getptd`, `__freeptd` | `__mtinit`, `__getptd`, `__freeptd` |
 //! | `InterlockedIncrement` | not imported | `FUN_1008f400`, the debug heap's |
 //! | `InterlockedDecrement` | not imported | `FUN_1008f400`, the debug heap's |
+#[cfg(test)]
+mod tests;
+
 use kernel_threads::table::{Calls, Row};
 
 /// The shell, `mw2shell`: 9 of the 11, no counter.
