@@ -27,6 +27,7 @@ undocumented_unsafe_blocks = "deny"
 [dependencies]
 kernel_files = { path = "../kernel-files" }
 kernel_memory = { path = "../kernel-memory" }
+kernel_time = { path = "../kernel-time" }
 
 [dev-dependencies]
 kernel_files = { path = "../kernel-files", features = ["memory"] }
