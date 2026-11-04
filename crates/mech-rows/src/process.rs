@@ -1,8 +1,13 @@
 // SPDX-License-Identifier: MIT
 //! mercs's process rows (KP1, ruling 1407): the launcher's, the shell's and
 //! the game file's process calls, as `kernel_process`'s seam serves them.
-//! Every answer here is unmeasured until the census `p0` reads Wine's; the
-//! tests that replay its lines come with it.
+//! The census `p0` (KP1, Wine's `+relay` on the original to the main menu)
+//! measured the launcher's and the shell's answers; the game file never
+//! loaded, so its row is the launcher's, unmeasured. A relay line shows a
+//! pointer, never what it points at: the start-up record and the
+//! environment block stay unmeasured, and `GetCurrentProcess` has no line
+//! at all, Wine's own calls included. The tests replaying `p0` live in
+//! `tests`.
 //!
 //! The 29 names and the files importing each (`mercswin` the launcher,
 //! `mw2shell` the shell, `mercsw` the game file):
@@ -40,6 +45,9 @@
 //! | `UnhandledExceptionFilter` | mercswin |
 use kernel_process::table::{Calls, Errors, Module, Row, Startup};
 
+#[cfg(test)]
+mod tests;
+
 /// Each call's name, the layer's spelling.
 const CALLS: Calls = Calls {
     command_line: "KERNEL32!GetCommandLineA",
@@ -76,7 +84,9 @@ const CALLS: Calls = Calls {
 /// The program's name table. The handles are the stand-in's own: Wine
 /// loads both DLLs at `0x1000_0000`, never together, and the launcher
 /// compares a handle with 0 alone. `KERNEL32.DLL` holds no entry, so
-/// `IsTNT` and the FDIV test's four names answer a logged 0.
+/// `IsTNT` and the FDIV test's four names answer a logged 0. Wine finds
+/// the four (`p0`); the C library's test returns 0 at any null (wall 4), a
+/// choice.
 const MODULES: &[Module] = &[
     Module {
         name: "MW2SHELL.DLL",
@@ -100,20 +110,22 @@ const MODULES: &[Module] = &[
     },
 ];
 
-/// The launcher, `mercswin`. The command line and path are the rig's
-/// shortcut's; `own` the program's handle, which a DLL's
-/// `GetModuleHandleA(NULL)` answers too. `version` is Wine's for its
-/// `win95` setting: the top bit set, so `1000e6cd` asks `VirtualProtect`
-/// for flag 4 (clear, `0x40`); `kernel_memory` takes no flag. The current
-/// process is Wine's pseudo handle (Windows 95's own is `0x7FFF_FFFF`: a
-/// choice). No variable a reader reads, the start-up record all 0 (wall
-/// 4). The errors are Windows' numbers.
+/// The launcher, `mercswin`. The command line is the rig's, quoted, as
+/// `winedbg` starts the program (`p0`'s process trace); the path is the
+/// image's long name, `p0`'s count 52 for both files. `own` the program's
+/// handle, which a DLL's `GetModuleHandleA(NULL)` answers too (`p0`).
+/// `version` is Wine's for its `win95` setting (`p0`): the top bit set, so
+/// `1000e6cd` asks `VirtualProtect` for flag 4 (clear, `0x40`);
+/// `kernel_memory` takes no flag. The current process is Wine's pseudo
+/// handle (Windows 95's own is `0x7FFF_FFFF`: a choice). No variable a
+/// reader reads, the start-up record all 0 (wall 4). The errors are
+/// Windows' numbers.
 pub const LAUNCHER: Row = Row {
     file: "mercswin",
     calls: CALLS,
-    command_line: "C:\\PROG~FBU\\ACTI~QHY\\MERC~ZIR\\MERCSWIN.EXE",
+    command_line: "\"C:\\PROG~FBU\\ACTI~QHY\\MERC~ZIR\\MERCSWIN.EXE\"",
     own: 0x0040_0000,
-    path: "C:\\PROG~FBU\\ACTI~QHY\\MERC~ZIR\\MERCSWIN.EXE",
+    path: "C:\\Program Files\\Activision\\Mercenaries\\MERCSWIN.EXE",
     version: 0xC000_0004,
     current_process: 0xFFFF_FFFF,
     environment: b"\0\0",
