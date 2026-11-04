@@ -6,7 +6,11 @@
 //! constant here stands for them.
 use kernel_time::table::{Calls, Row};
 
-/// The shell, `mw2shell`: its imports' names and the zone call's answers
+#[cfg(test)]
+mod tests;
+
+/// The shell, `mw2shell`: its imports' names, its C library's `time` by the
+/// name `ORDER.tsv` gives its stand-in, and the zone call's answers
 /// (unknown 0, standard 1, daylight 2), as its C library reads them.
 pub const SHELL: Row = Row {
     file: "mw2shell",
@@ -19,6 +23,7 @@ pub const SHELL: Row = Row {
         zone: "KERNEL32!GetTimeZoneInformation",
         to_local_file_time: "KERNEL32!FileTimeToLocalFileTime",
         to_system_time: "KERNEL32!FileTimeToSystemTime",
+        time: "_time",
     },
     ids: [0, 1, 2],
     bad_argument: 0x57,

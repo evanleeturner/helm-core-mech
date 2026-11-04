@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 //! The Kernel's time (step 3, rulings 1389 and 1398): the 8 KERNEL32 time
-//! names the four files import, written once. Every name that measures an
+//! names the four files import, written once, and the C library's `time`
+//! that reads the same wall (KT1's 9th front). Every name that measures an
 //! interval reads one game clock, [`clock::Clock`], handed in and moved
 //! only by its owner: the frame loop on a page, a back on a host, a test.
 //! The date names read a wall clock, handed in the same way. No front
@@ -35,12 +36,15 @@ pub mod table;
 mod tests;
 
 use core::fmt;
-use date::Date;
+use date::{Date, UNIX_EPOCH};
 use mech_trace::Args;
 use table::{DATE_BYTES, Row, ZONE_BYTES};
 
 /// File-time ticks a minute of bias.
 const TICKS_PER_MINUTE: i64 = 600_000_000;
+
+/// File-time ticks a second.
+const TICKS_PER_SECOND: u64 = 10_000_000;
 
 /// Which of the zone's two times is in force.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -296,6 +300,30 @@ impl<C: Clocks> Times<C> {
                 v:% = mech_trace::__shown!(value),
                 w:% = Args(words.each_ref().map(|word| mech_trace::__shown!(*word))),
                 e:% = mech_trace::__shown!(error); "imp.call"
+            );
+        });
+        value
+    }
+
+    /// The C library's `time`: the wall clock's whole seconds since 1970,
+    /// UTC, also into `timer` when there is one; the line's `a` is the
+    /// timer's address, 0 for none. A wall before 1970 answers 0, one past
+    /// 32 bits of seconds `i32::MAX`.
+    pub fn seconds(&self, timer: Option<&mut i32>) -> i32 {
+        let wall = self.clocks.wall();
+        let seconds = wall.saturating_sub(UNIX_EPOCH) / TICKS_PER_SECOND;
+        let value = i32::try_from(seconds).unwrap_or(i32::MAX);
+        let address = timer
+            .as_deref()
+            .map_or(core::ptr::null(), core::ptr::from_ref);
+        if let Some(timer) = timer {
+            *timer = value;
+        }
+        let arguments = [mech_trace::__shown!(address)];
+        self.clocks.quiet(|| {
+            log::debug!(
+                c = self.file.calls.time, a:% = Args(arguments),
+                v:% = mech_trace::__shown!(value), t:% = mech_trace::__shown!(wall); "imp.call"
             );
         });
         value

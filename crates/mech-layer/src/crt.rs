@@ -18,8 +18,6 @@
 use core::ffi::CStr;
 use core::ptr::null_mut;
 use core::sync::atomic::{AtomicU32, Ordering};
-use kernel_time::Clocks;
-use kernel_time::date::UNIX_EPOCH;
 
 /// `rand`'s seed; MSVC's starts at 1 until `srand` is called.
 static SEED: AtomicU32 = AtomicU32::new(1);
@@ -189,25 +187,12 @@ pub extern "C" fn rand() -> i32 {
 }
 
 /// time: the whole seconds since 1970 UTC by the shell's wall clock, the
-/// time seam's ([`crate::time`]), also written to `timer` when it is not
-/// null; its line carries the wall's ticks, `t`. MSVC reads the local time
-/// and takes its time zone back off, which comes to the same seconds.
+/// time seam's front ([`kernel_time::Times::seconds`] on
+/// [`crate::time`]'s clocks), also written to `timer` when it is not null.
+/// MSVC reads the local time and takes its time zone back off, which comes
+/// to the same seconds.
 #[unsafe(export_name = "HC5_10070850")]
 pub unsafe extern "C" fn time(timer: *mut i32) -> i32 {
-    let clocks = crate::time::SHELL_TIMES.clocks();
-    let ticks = clocks.wall();
-    let seconds = ticks.saturating_sub(UNIX_EPOCH) / 10_000_000;
-    let value = i32::try_from(seconds).unwrap_or(i32::MAX);
-    if !timer.is_null() {
-        // SAFETY: the caller's own `time_t`.
-        unsafe { *timer = value };
-    }
-    let arguments = [mech_trace::__shown!(timer)];
-    clocks.quiet(|| {
-        log::debug!(
-            c = "_time", a:% = mech_trace::Args(arguments), v:% = mech_trace::__shown!(value),
-            t:% = mech_trace::__shown!(ticks); "imp.call"
-        );
-    });
-    value
+    // SAFETY: the caller's own `time_t`, or null.
+    crate::time::SHELL_TIMES.seconds(unsafe { timer.as_mut() })
 }

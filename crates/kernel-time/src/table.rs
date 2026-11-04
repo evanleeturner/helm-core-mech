@@ -21,6 +21,9 @@ pub struct Calls {
     pub zone: &'static str,
     pub to_local_file_time: &'static str,
     pub to_system_time: &'static str,
+    /// The C library's `time`, a stand-in's name rather than an import's:
+    /// it reads the same wall clock.
+    pub time: &'static str,
 }
 
 /// One file's time calls.

@@ -19,6 +19,7 @@ const ROW: Row = Row {
         zone: "KERNEL32!GetTimeZoneInformation",
         to_local_file_time: "KERNEL32!FileTimeToLocalFileTime",
         to_system_time: "KERNEL32!FileTimeToSystemTime",
+        time: "_time",
     },
     ids: [0, 1, 2],
     bad_argument: 0x57,
@@ -143,4 +144,17 @@ fn xvt_frames_count_through_the_front() {
     let mut counter = 0;
     assert_eq!(times.counter(&mut counter), 1);
     assert_eq!(counter, 3_600 * 16_667);
+}
+
+/// The C library's `time`: the wall's whole seconds, into the timer when
+/// there is one; a wall before 1970 answers 0.
+#[test]
+fn seconds_are_the_walls_and_fill_the_timer() {
+    let mut timer = 0;
+    assert_eq!(
+        times(NOW + 9_999_999).seconds(Some(&mut timer)),
+        1_793_752_674
+    );
+    assert_eq!(timer, 1_793_752_674);
+    assert_eq!(times(UNIX_EPOCH - 1).seconds(None), 0);
 }
