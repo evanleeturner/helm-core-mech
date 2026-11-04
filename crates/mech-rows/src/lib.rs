@@ -3,7 +3,8 @@
 //! a module a step, constants only: [`memory`] for `kernel_memory`'s
 //! helpers, [`files`] for `kernel_files`' seam, [`disc`] for
 //! `logical_disc`, [`time`] for `kernel_time`'s, [`threads`] for
-//! `kernel_threads`', [`process`] for `kernel_process`'s. The harvested
+//! `kernel_threads`', [`process`] for `kernel_process`'s, [`text`] for
+//! `kernel_text`'s. The harvested
 //! logs (c35, c36, c37) and the tests that replay them live here: they
 //! test the stand-in on this game. It builds for any target, the
 //! browser's included.
@@ -15,5 +16,6 @@ pub mod memory;
 pub mod process;
 #[cfg(test)]
 mod test_log;
+pub mod text;
 pub mod threads;
 pub mod time;
