@@ -9,6 +9,7 @@ use crate::ReadAt;
 use crate::cue::{self, Mode};
 use crate::folder::Handles;
 use crate::iso::{Entry, Volume};
+use crate::tracks::{self, Track};
 
 /// A raw sector's bytes, data or audio (ECMA-130).
 pub(crate) const RAW: u64 = 2352;
@@ -57,10 +58,9 @@ struct Data {
 
 /// A disc, open: read only, and never read whole.
 pub struct Disc<R> {
-    files: Vec<R>,
     data: Data,
-    #[expect(dead_code, reason = "the audio side's, DS2 step 4")]
-    sheet: Vec<cue::File>,
+    pub(crate) files: Vec<R>,
+    pub(crate) tracks: Vec<Track>,
     volume: Volume,
     /// The open files and finds its `Folder` answers.
     pub(crate) handles: Handles,
@@ -84,10 +84,11 @@ impl<R: ReadAt> Disc<R> {
             }
             Source::Image { cue, files } => image(&cue, files)?,
         };
+        let tracks = tracks::of_sheet(&sheet, &files);
         let mut disc = Self {
             files,
             data,
-            sheet,
+            tracks,
             volume: Volume::default(),
             handles: Handles::default(),
         };

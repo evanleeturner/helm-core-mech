@@ -24,7 +24,6 @@ pub(crate) enum Mode {
 /// A track: its number, its kind, and its places in frames from its
 /// file's start.
 pub(crate) struct Track {
-    #[expect(dead_code, reason = "the audio side's, DS2 step 4")]
     pub(crate) number: u8,
     pub(crate) mode: Mode,
     pub(crate) pregap: Option<u32>,
@@ -34,7 +33,6 @@ pub(crate) struct Track {
 /// A file the sheet names, its samples' order, and its tracks.
 pub(crate) struct File {
     pub(crate) name: Vec<u8>,
-    #[expect(dead_code, reason = "the audio side's, DS2 step 4")]
     pub(crate) big_endian: bool,
     pub(crate) tracks: Vec<Track>,
 }

@@ -32,10 +32,53 @@ mod folder;
 mod iso;
 #[cfg(test)]
 mod tests;
+#[cfg(any(test, feature = "disc"))]
+mod tracks;
 
 #[cfg(any(test, feature = "disc"))]
 pub use disc::{Disc, OpenError, Source};
 use kernel_files::Error;
+#[cfg(any(test, feature = "disc"))]
+pub use tracks::{Audio, Encoded, Pcm, Track};
+
+/// A game's disc facts, as its rows crate keeps them: what its finder
+/// looks for, what its music device asks. No game is named here.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Row {
+    /// The file at the disc's root the game's finder looks for.
+    pub marker: &'static str,
+    /// The audio tracks its disc holds.
+    pub tracks: u8,
+    /// The time the game sets on its music device.
+    pub time: Time,
+    /// A store folder's track files, if the game ships as one.
+    pub store: Option<TrackFiles>,
+}
+
+/// A music device's time: TMSF counts within a track; MSF counts from the
+/// disc's start, its 2-second lead-in with it (`mmsystem.h`).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Time {
+    Tmsf,
+    Msf,
+}
+
+/// A store folder's naming rule for its track files:
+/// `<stem><nn><extension>`, two digits, from `first` on.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct TrackFiles {
+    pub stem: &'static str,
+    pub first: u8,
+    pub extension: &'static str,
+    pub format: Format,
+}
+
+/// An encoded track's form, decoded by a library, never by this crate.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Format {
+    /// Ogg Vorbis (RFC 3533, Xiph's Vorbis I).
+    Ogg,
+}
 
 /// One source file's bytes by range: the disc's only way to them.
 pub trait ReadAt {

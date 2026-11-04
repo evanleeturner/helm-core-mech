@@ -267,7 +267,13 @@ impl<R: ReadAt> Folder for Disc<R> {
 }
 
 /// One call's `disc.call` line.
-fn line(call: &'static str, given: u32, name: &[u8], answer: Result<u32, Error>, moved: u32) {
+pub(crate) fn line(
+    call: &'static str,
+    given: u32,
+    name: &[u8],
+    answer: Result<u32, Error>,
+    moved: u32,
+) {
     let (value, failed) = match answer {
         Ok(value) => (value, None),
         Err(error) => (0, Some(error)),

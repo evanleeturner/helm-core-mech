@@ -78,6 +78,7 @@ dependencies = [
  "kernel_files",
  "kernel_memory",
  "log",
+ "logical_disc",
  "mech_logline",
 ]
 

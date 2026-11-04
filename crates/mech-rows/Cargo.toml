@@ -1,6 +1,6 @@
 # mercs's rows (ruling 1389): the game's facts the Kernel stand-in reads, a
 # module a step, constants only: `memory` for kernel_memory's helpers, `files`
-# for kernel_files' seam. Its harvested logs and the tests that replay them
+# for kernel_files' seam, `disc` for logical_disc. Its harvested logs and the tests that replay them
 # test the stand-in on this game. No target's own names: it builds for any
 # target, the browser's included.
 [package]
@@ -27,6 +27,7 @@ undocumented_unsafe_blocks = "deny"
 [dependencies]
 kernel_files = { path = "../kernel-files" }
 kernel_memory = { path = "../kernel-memory" }
+logical_disc = { path = "../logical-disc" }
 
 [dev-dependencies]
 kernel_files = { path = "../kernel-files", features = ["memory"] }

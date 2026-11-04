@@ -30,3 +30,6 @@ undocumented_unsafe_blocks = "deny"
 [dependencies]
 kernel_files = { path = "../kernel-files" }
 log = { version = "0.4", features = ["kv"] }
+
+[dev-dependencies]
+kernel_files = { path = "../kernel-files", features = ["memory"] }
