@@ -8,6 +8,9 @@
 //! rule.
 use logical_disc::{Row, Time};
 
+#[cfg(test)]
+mod tests;
+
 /// The disc the game, the shell and the launcher find.
 pub const DISC: Row = Row {
     marker: "OLD_MERC.DRV",

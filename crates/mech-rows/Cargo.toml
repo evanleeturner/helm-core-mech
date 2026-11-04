@@ -31,5 +31,6 @@ logical_disc = { path = "../logical-disc" }
 
 [dev-dependencies]
 kernel_files = { path = "../kernel-files", features = ["memory"] }
+logical_disc = { path = "../logical-disc", features = ["disc"] }
 mech_logline = { path = "../mech-logline" }
 log = { version = "0.4", features = ["kv"] }
