@@ -2,9 +2,10 @@
 //! mercs's rows (ruling 1389): the game's facts the Kernel stand-in reads,
 //! a module a step, constants only: [`memory`] for `kernel_memory`'s
 //! helpers, [`files`] for `kernel_files`' seam, [`disc`] for
-//! `logical_disc`, [`time`] for `kernel_time`'s. The harvested logs (c35,
-//! c36, c37) and the tests that replay them live here: they test the
-//! stand-in on this game. It builds for any target, the browser's included.
+//! `logical_disc`, [`time`] for `kernel_time`'s, [`threads`] for
+//! `kernel_threads`'. The harvested logs (c35, c36, c37) and the tests
+//! that replay them live here: they test the stand-in on this game. It
+//! builds for any target, the browser's included.
 #![cfg_attr(not(test), no_std)]
 
 pub mod disc;
@@ -12,4 +13,5 @@ pub mod files;
 pub mod memory;
 #[cfg(test)]
 mod test_log;
+pub mod threads;
 pub mod time;
