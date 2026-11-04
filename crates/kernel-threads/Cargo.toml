@@ -25,6 +25,10 @@ undocumented_unsafe_blocks = "deny"
 [features]
 # The host back, `host::Host`: Linux, macOS and Windows through `std`.
 std = []
+# The page back, `page::Page`: the browser's one thread. It allocates its slot
+# table, so it stays off where no allocator is: the swap under Wine is `no_std`
+# with none, and links `kernel_threads` through `mech_rows` (KH1 session 6).
+page = []
 
 [dependencies]
 mech_trace = { path = "../mech-trace" }

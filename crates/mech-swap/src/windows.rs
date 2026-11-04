@@ -4,6 +4,13 @@
 //! handler, which traps (`ud2`) as the checker's builds do, so a port's
 //! panic shows as an illegal instruction in Wine's `seh` trace.
 //!
+//! Each line ends `tid=<hex>`, the writing thread's id (KH1, wall 4): the
+//! Miles timer calls in from a thread of its own, and the line says whose
+//! it is. The field comes last, so a reader's third word is still the
+//! event; a line cut at [`crate::LINE_BYTES`] loses it. Two threads'
+//! lines cannot tear each other: the file is opened for appending and a
+//! line is one `WriteFile`, so each lands whole at the end.
+//!
 //! The panic handler and the personality are the swap profile's alone
 //! (`panic = "abort"`, the crate built by itself, no `std`): in the
 //! workspace's own builds `mech_logline` turns on `log`'s `std`, which
@@ -55,6 +62,7 @@ unsafe extern "system" {
         overlapped: *mut c_void,
     ) -> i32;
     fn GetSystemTime(time: *mut SystemTime);
+    fn GetCurrentThreadId() -> u32;
 }
 
 /// The trace file's handle, `INVALID_HANDLE_VALUE` until `DllMain` opens it.
@@ -97,6 +105,8 @@ impl Log for Sink {
             letter(record.level())
         );
         body(record, &mut line);
+        // SAFETY: reads the calling thread's own id; touches no memory.
+        let _ = write!(line, " tid={:x}", unsafe { GetCurrentThreadId() });
         let _ = line.write_char('\n');
         let bytes = line.as_bytes();
         let mut written = 0;

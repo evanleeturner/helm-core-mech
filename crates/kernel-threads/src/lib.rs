@@ -8,7 +8,7 @@
 //!
 //! Each file the seam serves is a [`table::Row`]; where the threads come
 //! from is a back behind [`Threads`]: the page's one thread,
-//! [`page::Page`]; a host's, `host::Host`; the original's calls under
+//! `page::Page`; a host's, `host::Host`; the original's calls under
 //! Wine. [`ThreadCalls`] answers in the file's numbers and writes one
 //! `imp.call` line a call: `c` the row's name, `a` the call's numbers, `v`
 //! its answer.
@@ -28,10 +28,12 @@
 //! for `wasm32-unknown-unknown`; a game's numbers live in its rows crate.
 #![cfg_attr(not(any(test, feature = "std")), no_std)]
 
+#[cfg(any(test, feature = "page"))]
 extern crate alloc;
 
 #[cfg(any(test, feature = "std"))]
 pub mod host;
+#[cfg(any(test, feature = "page"))]
 pub mod page;
 pub mod table;
 #[cfg(test)]
