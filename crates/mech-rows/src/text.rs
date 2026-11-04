@@ -60,10 +60,11 @@ pub const ROWS: &[&Row] = &[&LAUNCHER, &SHELL, &GAME];
 #[cfg(test)]
 mod tests {
     use super::*;
-    use kernel_text::{Front, Portable};
+    use kernel_text::{Front, Info, Portable};
 
     static SERVED: Row = GAME;
     static SHELL_ROW: Row = SHELL;
+    static LAUNCHER_ROW: Row = LAUNCHER;
 
     /// `x0`'s neutral `CompareStringA` rows (the others carry the box's
     /// environment): the arguments as asked, Wine's answer.
@@ -77,8 +78,70 @@ mod tests {
         assert_eq!(game.compare(0, 1, b"VKD3D_DEBUG", b"MECHWARRIOR"), 3);
         assert_eq!(shell.compare(0, 0, b"\0", b"\0"), 2);
         assert_eq!(shell.compare(0, 1, b"OS", b"TZ"), 1);
-        assert_eq!(shell.ansi_code_page(), 1252);
-        assert!(shell.code_page_info(1252).is_some());
+    }
+
+    /// `x0`'s code page rows, each file's own: `GetACP` 1252, then
+    /// `GetCPInfo(1252)` TRUE. The relay showed TRUE alone; the record is
+    /// the one Wine wrote for that page to KX1's probe (`cp-probe.out`):
+    /// one byte a character, `?` the default, no lead bytes.
+    #[test]
+    fn the_census_code_page_rows_replay() {
+        let wine = Info {
+            max_char_size: 1,
+            default: [b'?', 0],
+            lead_bytes: [0; 12],
+        };
+        for row in [&LAUNCHER_ROW, &SHELL_ROW, &SERVED] {
+            let front = Front::new(row, Portable::new(|_| {}));
+            assert_eq!(front.ansi_code_page(), 1252, "{}", row.file);
+            assert_eq!(front.code_page_info(1252), Some(wine), "{}", row.file);
+        }
+    }
+
+    /// `x0`'s `WideCharToMultiByte` pairs, each file's own: code page 0,
+    /// flags 0, the environment block's units counted, sized with no buffer
+    /// and then written into one that size, no default given, Wine's answer
+    /// the count both times. The relay showed the block's first string
+    /// alone, so a neutral ASCII block of each count stands in: the shape
+    /// replayed, not the input. Its bytes are falsifier 4's, Wine's own.
+    #[test]
+    fn the_census_environment_rows_replay() {
+        for (row, count) in [
+            (&LAUNCHER_ROW, 0x1a84),
+            (&SHELL_ROW, 0x1aab),
+            (&SERVED, 0x1aab),
+        ] {
+            let front = Front::new(row, Portable::new(|_| {}));
+            let units = block(count);
+            let wine = i32::try_from(count).expect("a count");
+            assert_eq!(
+                front.to_bytes(0, 0, &units, None, None).0,
+                wine,
+                "{}",
+                row.file
+            );
+            let mut out = vec![0xff; count];
+            let written = front.to_bytes(0, 0, &units, Some(&mut out), None).0;
+            assert_eq!(written, wine, "{}", row.file);
+            assert!(
+                out.iter()
+                    .zip(&units)
+                    .all(|(&byte, &unit)| u16::from(byte) == unit)
+            );
+        }
+    }
+
+    /// A neutral environment block of `count` units: `KEY=VALUE` strings
+    /// ended by a NUL each, the block by a second.
+    fn block(count: usize) -> Vec<u16> {
+        let mut units: Vec<u16> = b"KEY=VALUE\0"
+            .iter()
+            .cycle()
+            .take(count - 2)
+            .map(|&byte| u16::from(byte))
+            .collect();
+        units.extend([0, 0]);
+        units
     }
 
     /// `x1`'s game-file `CompareStringA` lines, logged through the layer's
