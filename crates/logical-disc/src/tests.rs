@@ -10,6 +10,9 @@ use alloc::vec::Vec;
 use crate::disc::{RAW, USER};
 use crate::{Disc, OpenError, Source};
 
+mod folder;
+mod test_log;
+
 /// The tree's files: the name a game asks, its sector, its length, its
 /// bytes' seed.
 const FILES: [(&str, u32, usize, u8); 3] = [
