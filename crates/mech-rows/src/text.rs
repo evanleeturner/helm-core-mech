@@ -80,4 +80,19 @@ mod tests {
         assert_eq!(shell.ansi_code_page(), 1252);
         assert!(shell.code_page_info(1252).is_some());
     }
+
+    /// `x1`'s game-file `CompareStringA` lines, logged through the layer's
+    /// rows, beyond the census's: the 11 bytes each call compared, Wine's
+    /// answer. The four naming the box's own tools stay in the private
+    /// record.
+    #[test]
+    fn the_flown_sort_rows_replay() {
+        let game = Front::new(&SERVED, Portable::new(|_| {}));
+        assert_eq!(game.compare(0, 1, b"LOGONSERVER", b"MECHWARRIOR"), 1);
+        assert_eq!(game.compare(0, 1, b"USERPROFILE", b"MECHWARRIOR"), 3);
+        assert_eq!(game.compare(0, 1, b"ProgramData", b"MECHWARRIOR"), 3);
+        assert_eq!(game.compare(0, 1, b"WINEDATADIR", b"MECHWARRIOR"), 3);
+        assert_eq!(game.compare(0, 1, b"WINEHOMEDIR", b"MECHWARRIOR"), 3);
+        assert_eq!(game.compare(0, 1, b"WINEDLLDIR0", b"MECHWARRIOR"), 3);
+    }
 }
