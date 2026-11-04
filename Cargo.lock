@@ -25,6 +25,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "kernel_threads"
+version = "0.1.0"
+dependencies = [
+ "log",
+ "mech_trace",
+]
+
+[[package]]
 name = "kernel_time"
 version = "0.1.0"
 dependencies = [
