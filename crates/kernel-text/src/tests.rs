@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-//! The fronts on a row of no game: the table's own round trip and the
-//! refusals. The harvested census rows replay in the game's rows crate;
-//! Wine's 256-byte answers check the table once the probe's fixture lands.
+//! The fronts on a row of no game: the table's own round trip, Wine's
+//! answers for code page 1252 (`fixtures/cp1252-wine.txt`) and the
+//! refusals. The harvested census rows replay in the game's rows crate.
 
 use super::*;
 use core::cell::Cell;
@@ -68,10 +68,82 @@ fn every_byte_goes_there_and_back() {
 fn a_unit_the_page_lacks_answers_the_default() {
     let mut out = [0; 2];
     assert_eq!(
-        front().to_bytes(1252, 0, &[0x0100, 0x41], Some(&mut out), None),
+        front().to_bytes(1252, 0, &[0x0394, 0x41], Some(&mut out), None),
         (2, true)
     );
     assert_eq!(out, [b'?', b'A']);
+}
+
+/// The probe's answers under Wine (falsifier 4): a `#` header, then one
+/// line a call.
+const WINE_1252: &str = include_str!("../fixtures/cp1252-wine.txt");
+
+fn hex(word: &str) -> u32 {
+    u32::from_str_radix(word, 16).expect("a fixture word is hexadecimal")
+}
+
+fn number(word: &str) -> i32 {
+    word.parse().expect("a fixture word is a number")
+}
+
+#[test]
+fn every_answer_equals_wines() {
+    let (mut infos, mut bytes, mut units) = (0, 0, 0);
+    let mut best_fit = Vec::new();
+    for line in WINE_1252.lines().filter(|line| !line.starts_with('#')) {
+        let words: Vec<&str> = line.split(' ').collect();
+        match words[0] {
+            "info" => {
+                let page = u32::try_from(number(words[2])).expect("a page");
+                let info = front().code_page_info(page);
+                let lead: Vec<u8> = (0..12)
+                    .map(|at| u8::try_from(hex(&words[10][at * 2..at * 2 + 2])).expect("a byte"))
+                    .collect();
+                let default = hex(words[8]).to_be_bytes();
+                let expected = Info {
+                    max_char_size: hex(words[6]),
+                    default: [default[2], default[3]],
+                    lead_bytes: lead.try_into().expect("12 lead bytes"),
+                };
+                assert_eq!((number(words[4]), info), (1, Some(expected)), "{line}");
+                infos += 1;
+            }
+            "byte" => {
+                let byte = u8::try_from(hex(words[1])).expect("a byte");
+                let unit = u16::try_from(hex(words[7])).expect("a unit");
+                let mut wide = [0; 1];
+                let to_wide = front().to_wide(1252, 0, &[byte], Some(&mut wide));
+                assert_eq!((to_wide, wide[0]), (number(words[3]), unit), "{line}");
+                let mut back = [0; 1];
+                let to_bytes = front().to_bytes(1252, 0, &[unit], Some(&mut back), None);
+                let used = number(words[14]) != 0;
+                let again = u8::try_from(hex(words[12])).expect("a byte");
+                assert_eq!(
+                    (to_bytes, back[0]),
+                    ((number(words[10]), used), again),
+                    "{line}"
+                );
+                bytes += 1;
+            }
+            "unit" => {
+                let unit = u16::try_from(hex(words[1])).expect("a unit");
+                if number(words[7]) == 0 {
+                    // Wine's best-fit byte, the crate's named wall: the
+                    // back answers the default.
+                    best_fit.push(unit);
+                } else {
+                    let mut out = [0; 1];
+                    let answer = front().to_bytes(1252, 0, &[unit], Some(&mut out), None);
+                    let byte = u8::try_from(hex(words[5])).expect("a byte");
+                    assert_eq!((answer, out[0]), ((number(words[3]), true), byte), "{line}");
+                }
+                units += 1;
+            }
+            other => panic!("an unknown line kind {other}: {line}"),
+        }
+    }
+    assert_eq!((infos, bytes, units), (1, 256, 5));
+    assert_eq!(best_fit, [0x0100]);
 }
 
 #[test]

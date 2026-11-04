@@ -8,8 +8,8 @@ use crate::table::CodePage;
 /// Windows-1252's bytes `0x80` to `0x9F`, from Microsoft's Windows-1252
 /// chart, cross-read against Unicode's `MICSFT/WINDOWS/CP1252.TXT`
 /// (version 2.01, 1998-04-15). The chart leaves `0x81`, `0x8D`, `0x8F`,
-/// `0x90` and `0x9D` unassigned; each is written as the unit of its own
-/// number, as Windows answers them, unmeasured until the probe's fixture.
+/// `0x90` and `0x9D` unassigned; each is the unit of its own number, as
+/// Wine answers them (`fixtures/cp1252-wine.txt`, all 256 bytes).
 const CP1252_C1: [u16; 32] = [
     0x20AC, 0x0081, 0x201A, 0x0192, 0x201E, 0x2026, 0x2020, 0x2021, //
     0x02C6, 0x2030, 0x0160, 0x2039, 0x0152, 0x008D, 0x017D, 0x008F, //
@@ -34,8 +34,8 @@ const fn cp1252_high() -> [u16; 128] {
     high
 }
 
-/// Windows-1252; its default character `?`, unmeasured until the probe
-/// reads `GetCPInfo`'s record.
+/// Windows-1252; its default character `?`, `GetCPInfo`'s record under
+/// Wine (`fixtures/cp1252-wine.txt`).
 pub const CP1252: CodePage = CodePage {
     number: 1252,
     high: cp1252_high(),

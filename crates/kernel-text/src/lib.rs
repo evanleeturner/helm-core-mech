@@ -18,7 +18,8 @@
 //! measured caller.
 //!
 //! The walls, named: a code page with lead bytes; `WideCharToMultiByte`'s
-//! best-fit answers (a unit the page lacks answers the default character);
+//! best-fit answers (a unit the page lacks answers the default character,
+//! where Wine answers U+0100 with `A`);
 //! Windows' sort weights past the first letter, so the sort is the units'
 //! order, case folded for `NORM_IGNORECASE`; `LCMapString`'s sort key;
 //! `GetStringType`'s second and third classes. Each answers a logged fail.
