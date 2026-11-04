@@ -5,19 +5,25 @@
 //! counts in `s8-census.txt`), played on the rows. The command line is
 //! `p0`'s process trace (`wine-p0.err.gz`, `winedbg`'s `CreateProcessA`).
 //! A number here no `p0` line holds is a bug; where the row answers
-//! otherwise than Wine, the test names the choice.
-use crate::process::{LAUNCHER, SHELL};
+//! otherwise than Wine, the test names the choice. The tests after
+//! `p0`'s take `p10`'s logbook (`logbook-p10.log`, the swap's `imp.call`
+//! lines from the launcher to the game's end, counted in `s23-count.txt`
+//! and split by file in `s23-split.txt`) the same way.
+use crate::process::{GAME, LAUNCHER, SHELL};
 use crate::test_log::debug_lines;
 use kernel_process::page::Page;
 use kernel_process::table::{Module, Row};
 use kernel_process::{Access, Front};
 
-/// The two entries the launcher asks of the shell, Wine's answers
-/// (`0040158f`, `004015a6`), standing for the swap's table.
+/// The four entries the launcher asks, Wine's answers standing for the
+/// swap's table: the shell's (`p0`, `0040158f`, `004015a6`), the game
+/// file's (`p10`, `from=4014db`, `from=4014f2`).
 fn wine_entries(module: &Module, name: &str) -> u32 {
     match (module.name, name) {
         ("MW2SHELL.DLL", "ShellMain") => 0x1001_5aa0,
         ("MW2SHELL.DLL", "ShellWindowProc") => 0x1001_4570,
+        ("MERCSW.DLL", "SimMain") => 0x1003_6b60,
+        ("MERCSW.DLL", "SimWindowProc") => 0x1003_7859,
         _ => 0,
     }
 }
@@ -121,5 +127,68 @@ fn each_last_error_the_shell_read_is_kept() {
     for code in [3, 0x12, 2, 0xb7, 0, 0x57] {
         front.set_last_error(code);
         assert_eq!(front.last_error(), code);
+    }
+}
+
+#[test]
+fn the_shell_is_freed_and_the_game_loads_its_two_entries_found() {
+    let front = front(&LAUNCHER);
+    // `from=4015f0`: `a=10000000 v=1 e=0`, the shell freed.
+    let shell = front.load_library(b"MW2SHELL.DLL");
+    assert_eq!(front.free_library(shell), 1);
+    // Wine's error after the load, `e=57`, is set inside it and the
+    // launcher never reads it: the row keeps the program's own.
+    front.set_last_error(0x57);
+    // `from=4014be`: `m=MERCSW.DLL v=10000000`. The row's handle is
+    // `0x1100_0000`, a choice: the launcher compares it with 0 alone.
+    let lines = debug_lines(|| assert_eq!(front.load_library(b"MERCSW.DLL"), 0x1100_0000));
+    assert_eq!(lines.len(), 1);
+    assert!(lines[0].contains(" m=MERCSW.DLL "), "{}", lines[0]);
+    // `from=4014db` `q=SimMain v=10036b60`, `from=4014f2`
+    // `q=SimWindowProc v=10037859`.
+    let game = front.load_library(b"MERCSW.DLL");
+    assert_eq!(front.proc_address(game, b"SimMain"), 0x1003_6b60);
+    assert_eq!(front.proc_address(game, b"SimWindowProc"), 0x1003_7859);
+    assert_eq!(front.last_error(), 0x57);
+}
+
+#[test]
+fn the_shells_filter_is_put_back() {
+    let front = front(&SHELL);
+    // `p0`'s `ret=10078188` sets it; `p10`'s `from=100781fc`, the shell's
+    // end before the game loads: `a=0 v=10078190`.
+    assert_eq!(front.set_filter(0x1007_8190), 0);
+    assert_eq!(front.set_filter(0), 0x1007_8190);
+}
+
+/// The one block the game file's C library asked of the map in `p10`.
+fn p10_block(address: u32, size: u32, _: Access) -> bool {
+    address >= 0x0171_1720 && address + size <= 0x0171_1740
+}
+
+#[test]
+fn the_game_files_pointer_test_finds_its_block_sound() {
+    // `from=1008e2ae` and `from=1008e2ce`, `__CrtIsValidPointer`, twice
+    // each: `a=1711720,20 v=0`.
+    let front = Front::new(&GAME, Page::new(wine_entries, p10_block));
+    for _ in 0..2 {
+        assert_eq!(front.bad_read(0x0171_1720, 0x20), 0);
+        assert_eq!(front.bad_write(0x0171_1720, 0x20), 0);
+    }
+}
+
+#[test]
+fn each_last_error_saved_is_put_back() {
+    // `__getptd`'s pair in the game file, `from=1009381f` `v=0` then
+    // `from=100938b2` `a=0`, 3941 each; the shell's rebuilt callers' 31
+    // and 20, `v=2`, 3 and 0x12, `a=2`, 3 and 0x12.
+    for row in [&GAME, &SHELL] {
+        let front = front(row);
+        for code in [0, 2, 3, 0x12] {
+            front.set_last_error(code);
+            let saved = front.last_error();
+            front.set_last_error(saved);
+            assert_eq!(front.last_error(), code);
+        }
     }
 }
