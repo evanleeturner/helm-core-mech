@@ -11,7 +11,8 @@
 //! `page::Page`; a host's, `host::Host`; the original's calls under
 //! Wine. [`ThreadCalls`] answers in the file's numbers and writes one
 //! `imp.call` line a call: `c` the row's name, `a` the call's numbers, `v`
-//! its answer.
+//! its answer, `from` the address the call returns to in the file that
+//! made it (each front's first argument; 0 where a target has none).
 //!
 //! The fronts carry only what the callers read back (wall 3, `RESULT.md`):
 //! a lock is the record's address alone, no reader reads its fields; a
@@ -89,62 +90,80 @@ impl<T: Threads> ThreadCalls<T> {
         &self.threads
     }
 
-    fn line<const N: usize>(&self, name: &str, arguments: [mech_trace::Shown<'_>; N], value: u32) {
+    fn line<const N: usize>(
+        &self,
+        from: u32,
+        name: &str,
+        arguments: [mech_trace::Shown<'_>; N],
+        value: u32,
+    ) {
         self.threads.quiet(|| {
             log::debug!(
-                c = name, a:% = Args(arguments), v:% = mech_trace::__shown!(value); "imp.call"
+                c = name, a:% = Args(arguments), v:% = mech_trace::__shown!(value),
+                from:% = mech_trace::__shown!(from); "imp.call"
             );
         });
     }
 
     /// `GetCurrentThreadId`.
     #[must_use]
-    pub fn current_thread_id(&self) -> u32 {
+    pub fn current_thread_id(&self, from: u32) -> u32 {
         let id = self.threads.id();
-        self.line(self.file.calls.current_thread_id, [], id);
+        self.line(from, self.file.calls.current_thread_id, [], id);
         id
     }
 
     /// `InitializeCriticalSection` on the record at `lock`.
-    pub fn initialize(&self, lock: u32) {
+    pub fn initialize(&self, from: u32, lock: u32) {
         self.threads.initialize(lock);
-        self.line(self.file.calls.initialize, [mech_trace::__shown!(lock)], 0);
+        self.line(
+            from,
+            self.file.calls.initialize,
+            [mech_trace::__shown!(lock)],
+            0,
+        );
     }
 
     /// `EnterCriticalSection`.
-    pub fn enter(&self, lock: u32) {
+    pub fn enter(&self, from: u32, lock: u32) {
         self.threads.enter(lock);
-        self.line(self.file.calls.enter, [mech_trace::__shown!(lock)], 0);
+        self.line(from, self.file.calls.enter, [mech_trace::__shown!(lock)], 0);
     }
 
     /// `LeaveCriticalSection`.
-    pub fn leave(&self, lock: u32) {
+    pub fn leave(&self, from: u32, lock: u32) {
         self.threads.leave(lock);
-        self.line(self.file.calls.leave, [mech_trace::__shown!(lock)], 0);
+        self.line(from, self.file.calls.leave, [mech_trace::__shown!(lock)], 0);
     }
 
     /// `DeleteCriticalSection`.
-    pub fn delete(&self, lock: u32) {
+    pub fn delete(&self, from: u32, lock: u32) {
         self.threads.delete(lock);
-        self.line(self.file.calls.delete, [mech_trace::__shown!(lock)], 0);
+        self.line(
+            from,
+            self.file.calls.delete,
+            [mech_trace::__shown!(lock)],
+            0,
+        );
     }
 
     /// `TlsAlloc`: a slot's index, or [`NO_SLOT`].
     #[must_use]
-    pub fn slot_alloc(&self) -> u32 {
+    pub fn slot_alloc(&self, from: u32) -> u32 {
         let slot = self.threads.slot_alloc().unwrap_or(NO_SLOT);
-        self.line(self.file.calls.slot_alloc, [], slot);
+        self.line(from, self.file.calls.slot_alloc, [], slot);
         slot
     }
 
     /// `TlsFree`: 1, or 0 with the row's bad argument left.
     #[must_use]
-    pub fn slot_free(&self, slot: u32) -> u32 {
+    pub fn slot_free(&self, from: u32, slot: u32) -> u32 {
         let freed = self.threads.slot_free(slot);
         if !freed {
             self.threads.set_last_error(self.file.bad_argument);
         }
         self.line(
+            from,
             self.file.calls.slot_free,
             [mech_trace::__shown!(slot)],
             u32::from(freed),
@@ -155,13 +174,14 @@ impl<T: Threads> ThreadCalls<T> {
     /// `TlsGetValue`: the value, the last error 0 even on success (Windows
     /// clears it); 0 with the row's bad argument for a slot not taken.
     #[must_use]
-    pub fn slot_get(&self, slot: u32) -> u32 {
+    pub fn slot_get(&self, from: u32, slot: u32) -> u32 {
         let (value, error) = self
             .threads
             .slot_get(slot)
             .map_or((0, self.file.bad_argument), |value| (value, 0));
         self.threads.set_last_error(error);
         self.line(
+            from,
             self.file.calls.slot_get,
             [mech_trace::__shown!(slot)],
             value,
@@ -171,13 +191,13 @@ impl<T: Threads> ThreadCalls<T> {
 
     /// `TlsSetValue`: 1, or 0 with the row's bad argument left.
     #[must_use]
-    pub fn slot_set(&self, slot: u32, value: u32) -> u32 {
+    pub fn slot_set(&self, from: u32, slot: u32, value: u32) -> u32 {
         let set = self.threads.slot_set(slot, value);
         if !set {
             self.threads.set_last_error(self.file.bad_argument);
         }
         let arguments = [mech_trace::__shown!(slot), mech_trace::__shown!(value)];
-        self.line(self.file.calls.slot_set, arguments, u32::from(set));
+        self.line(from, self.file.calls.slot_set, arguments, u32::from(set));
         u32::from(set)
     }
 
@@ -185,17 +205,17 @@ impl<T: Threads> ThreadCalls<T> {
     /// only its sign, which the new value keeps. A plain add where the
     /// target has one thread.
     #[must_use]
-    pub fn increment(&self, counter: &AtomicI32) -> i32 {
+    pub fn increment(&self, from: u32, counter: &AtomicI32) -> i32 {
         let value = counter.fetch_add(1, Ordering::SeqCst).wrapping_add(1);
-        self.counted(self.file.calls.increment, value);
+        self.counted(from, self.file.calls.increment, value);
         value
     }
 
     /// `InterlockedDecrement`: the new value.
     #[must_use]
-    pub fn decrement(&self, counter: &AtomicI32) -> i32 {
+    pub fn decrement(&self, from: u32, counter: &AtomicI32) -> i32 {
         let value = counter.fetch_sub(1, Ordering::SeqCst).wrapping_sub(1);
-        self.counted(self.file.calls.decrement, value);
+        self.counted(from, self.file.calls.decrement, value);
         value
     }
 
@@ -203,7 +223,7 @@ impl<T: Threads> ThreadCalls<T> {
         clippy::cast_sign_loss,
         reason = "the line shows the 32 bits as Windows returns them"
     )]
-    fn counted(&self, name: Option<&'static str>, value: i32) {
-        self.line(name.unwrap_or("unimported"), [], value as u32);
+    fn counted(&self, from: u32, name: Option<&'static str>, value: i32) {
+        self.line(from, name.unwrap_or("unimported"), [], value as u32);
     }
 }

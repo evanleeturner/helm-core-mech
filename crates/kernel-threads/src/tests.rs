@@ -31,49 +31,49 @@ const ROW: Row = Row {
 #[test]
 fn a_page_lock_counts_its_takes() {
     let calls = ThreadCalls::new(&ROW, Page::new());
-    calls.initialize(0x100);
-    calls.enter(0x100);
-    calls.enter(0x100);
+    calls.initialize(0, 0x100);
+    calls.enter(0, 0x100);
+    calls.enter(0, 0x100);
     assert_eq!(calls.threads().takes(0x100), 2);
-    calls.leave(0x100);
-    calls.leave(0x100);
-    calls.leave(0x100);
+    calls.leave(0, 0x100);
+    calls.leave(0, 0x100);
+    calls.leave(0, 0x100);
     assert_eq!(calls.threads().takes(0x100), 0);
-    assert_eq!(calls.current_thread_id(), PAGE_THREAD);
+    assert_eq!(calls.current_thread_id(0), PAGE_THREAD);
 }
 
 #[test]
 fn a_page_slot_keeps_its_value_until_freed() {
     let calls = ThreadCalls::new(&ROW, Page::new());
-    let slot = calls.slot_alloc();
-    assert_eq!(calls.slot_get(slot), 0);
-    assert_eq!(calls.slot_set(slot, 7), 1);
-    assert_eq!(calls.slot_get(slot), 7);
+    let slot = calls.slot_alloc(0);
+    assert_eq!(calls.slot_get(0, slot), 0);
+    assert_eq!(calls.slot_set(0, slot, 7), 1);
+    assert_eq!(calls.slot_get(0, slot), 7);
     assert_eq!(calls.threads().last_error(), 0);
-    assert_eq!(calls.slot_free(slot), 1);
-    assert_eq!(calls.slot_get(slot), 0);
+    assert_eq!(calls.slot_free(0, slot), 1);
+    assert_eq!(calls.slot_get(0, slot), 0);
     assert_eq!(calls.threads().last_error(), 0x57);
-    assert_eq!(calls.slot_set(slot, 7), 0);
+    assert_eq!(calls.slot_set(0, slot, 7), 0);
 }
 
 #[test]
 fn every_slot_taken_answers_no_slot() {
     let calls = ThreadCalls::new(&ROW, Page::new());
     for slot in 0..SLOTS {
-        assert_eq!(calls.slot_alloc(), slot);
+        assert_eq!(calls.slot_alloc(0), slot);
     }
-    assert_eq!(calls.slot_alloc(), NO_SLOT);
+    assert_eq!(calls.slot_alloc(0), NO_SLOT);
 }
 
 #[test]
 fn a_counter_answers_its_new_value() {
     let calls = ThreadCalls::new(&ROW, Page::new());
     let counter = AtomicI32::new(0);
-    assert_eq!(calls.increment(&counter), 1);
-    assert_eq!(calls.increment(&counter), 2);
-    assert_eq!(calls.decrement(&counter), 1);
+    assert_eq!(calls.increment(0, &counter), 1);
+    assert_eq!(calls.increment(0, &counter), 2);
+    assert_eq!(calls.decrement(0, &counter), 1);
     let low = AtomicI32::new(i32::MIN);
-    assert_eq!(calls.decrement(&low), i32::MAX);
+    assert_eq!(calls.decrement(0, &low), i32::MAX);
 }
 
 #[test]

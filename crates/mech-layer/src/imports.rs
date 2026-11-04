@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-//! The 32 imports the shell's screens call past its file and time calls
+//! The 28 imports the shell's screens call past its file, time and thread calls
 //! (HC6 session 21's 42, less the 11 file calls the seam now answers,
 //! [`crate::files`], and the 2 time calls KT1's answers, [`crate::time`]), one row each: the name the counter labels it by, the import, its
 //! arguments, its return. Each row makes a module of the import's name
@@ -69,15 +69,11 @@ layer!("KERNEL32!HeapAlloc", HeapAlloc(heap: Handle, flags: u32, bytes: usize) -
 layer!("KERNEL32!HeapReAlloc", HeapReAlloc(heap: Handle, flags: u32, block: Pointer, bytes: usize) -> Pointer);
 layer!("KERNEL32!HeapFree", HeapFree(heap: Handle, flags: u32, block: Pointer) -> i32);
 layer!("KERNEL32!GetLastError", GetLastError() -> u32);
-layer!("KERNEL32!TlsGetValue", TlsGetValue(index: u32) -> Pointer);
 layer!("KERNEL32!SetLastError", SetLastError(code: u32));
-layer!("KERNEL32!InitializeCriticalSection", InitializeCriticalSection(section: Pointer));
-layer!("KERNEL32!DeleteCriticalSection", DeleteCriticalSection(section: Pointer));
 layer!(
     "KERNEL32!CompareStringA",
     CompareStringA(locale: u32, flags: u32, first: Text, first_count: i32, second: Text, second_count: i32) -> i32
 );
-layer!("KERNEL32!GetCurrentThreadId", GetCurrentThreadId() -> u32);
 
 layer!(
     "GDI32!BitBlt",

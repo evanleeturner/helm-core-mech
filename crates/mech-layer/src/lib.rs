@@ -6,9 +6,11 @@
 //! arguments in order, the value it returned. Nothing is reimplemented:
 //! the real function answers every call, through Wine.
 //!
-//! The 32 imports ([`imports`]), the 11 file calls ([`files`], HC9:
+//! The 28 imports ([`imports`]), the 11 file calls ([`files`], HC9:
 //! `kernel_files`' seam over the Windows folder) and the 5 time calls
-//! ([`time`], KT1: `kernel_time`'s seam over Windows' clocks), 48 in all,
+//! ([`time`], KT1: `kernel_time`'s seam over Windows' clocks) and the 9
+//! thread calls ([`threads`], KH1: `kernel_threads`' seam over Windows'
+//! threads), 53 in all,
 //! are exported `HC6_<name>`: with
 //! `HC6_LAYER=all` the swap's loader points the shell's own import slot at
 //! each, and each calls the real import through the swap DLL's own import
@@ -82,5 +84,7 @@ pub mod heap;
 pub mod imports;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
 pub mod smack;
+#[cfg(all(target_arch = "x86", target_os = "windows"))]
+pub mod threads;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
 pub mod time;
