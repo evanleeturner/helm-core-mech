@@ -68,13 +68,13 @@ unsafe extern "system" {
     fn UnhandledExceptionFilter(pointers: u32) -> i32;
 }
 
-/// One `imp.call` line with the caller's address, the thread's last error
-/// kept around it.
-macro_rules! logged {
-    ($from:expr; $($field:tt)+) => {{
+/// One `imp.call` line, the thread's last error kept around it. Each row
+/// writes its `log::debug!` whole, so the logline fence reads its fields.
+macro_rules! kept {
+    ($line:expr) => {{
         // SAFETY: reads the thread's own last error.
         let kept = unsafe { crate::GetLastError() };
-        log::debug!($($field)+, from:% = mech_trace::__shown!($from); "imp.call");
+        $line;
         // SAFETY: sets back the value read above.
         unsafe { crate::SetLastError(kept) };
     }};
@@ -186,21 +186,28 @@ extern "system" fn command_line<F: File>(from: u32) -> u32 {
     let value = unsafe { GetCommandLineA() };
     // SAFETY: Win32's NUL-ended command line.
     let line = unsafe { text(value) };
-    logged!(from; c = F::ROW.calls.command_line, v:% = Text(line));
+    kept!(log::debug!(c = F::ROW.calls.command_line, v:% = Text(line),
+        from:% = mech_trace::__shown!(from); "imp.call"));
     value
 }
 
 extern "system" fn version<F: File>(from: u32) -> u32 {
     // SAFETY: takes no argument.
     let value = unsafe { GetVersion() };
-    logged!(from; c = F::ROW.calls.version, v:% = mech_trace::__shown!(value));
+    kept!(
+        log::debug!(c = F::ROW.calls.version, v:% = mech_trace::__shown!(value),
+        from:% = mech_trace::__shown!(from); "imp.call")
+    );
     value
 }
 
 extern "system" fn current_process<F: File>(from: u32) -> u32 {
     // SAFETY: takes no argument.
     let value = unsafe { GetCurrentProcess() };
-    logged!(from; c = F::ROW.calls.current_process, v:% = mech_trace::__shown!(value));
+    kept!(
+        log::debug!(c = F::ROW.calls.current_process, v:% = mech_trace::__shown!(value),
+        from:% = mech_trace::__shown!(from); "imp.call")
+    );
     value
 }
 
@@ -210,8 +217,11 @@ extern "system" fn module_handle<F: File>(from: u32, name: u32) -> u32 {
     let error = left();
     // SAFETY: the caller's name or null.
     let asked = unsafe { text(name) };
-    logged!(from; c = F::ROW.calls.module_handle, m:% = Text(asked),
-        v:% = mech_trace::__shown!(value), e:% = mech_trace::__shown!(error));
+    kept!(
+        log::debug!(c = F::ROW.calls.module_handle, m:% = Text(asked),
+        v:% = mech_trace::__shown!(value), e:% = mech_trace::__shown!(error),
+        from:% = mech_trace::__shown!(from); "imp.call")
+    );
     value
 }
 
@@ -221,8 +231,11 @@ extern "system" fn load_library<F: File>(from: u32, name: u32) -> u32 {
     let error = left();
     // SAFETY: the caller's name.
     let asked = unsafe { text(name) };
-    logged!(from; c = F::ROW.calls.load_library, m:% = Text(asked),
-        v:% = mech_trace::__shown!(value), e:% = mech_trace::__shown!(error));
+    kept!(
+        log::debug!(c = F::ROW.calls.load_library, m:% = Text(asked),
+        v:% = mech_trace::__shown!(value), e:% = mech_trace::__shown!(error),
+        from:% = mech_trace::__shown!(from); "imp.call")
+    );
     value
 }
 
@@ -230,8 +243,11 @@ extern "system" fn proc_address<F: File>(from: u32, module: u32, name: u32) -> u
     // SAFETY: as `module_handle`.
     let value = unsafe { GetProcAddress(module, name) };
     let error = left();
-    logged!(from; c = F::ROW.calls.proc_address, a:% = Args([mech_trace::__shown!(module)]),
-        q:% = Asked(name), v:% = mech_trace::__shown!(value), e:% = mech_trace::__shown!(error));
+    kept!(
+        log::debug!(c = F::ROW.calls.proc_address, a:% = Args([mech_trace::__shown!(module)]),
+        q:% = Asked(name), v:% = mech_trace::__shown!(value), e:% = mech_trace::__shown!(error),
+        from:% = mech_trace::__shown!(from); "imp.call")
+    );
     value
 }
 
@@ -239,8 +255,11 @@ extern "system" fn free_library<F: File>(from: u32, module: u32) -> i32 {
     // SAFETY: as `module_handle`.
     let value = unsafe { FreeLibrary(module) };
     let error = left();
-    logged!(from; c = F::ROW.calls.free_library, a:% = Args([mech_trace::__shown!(module)]),
-        v:% = mech_trace::__shown!(value), e:% = mech_trace::__shown!(error));
+    kept!(
+        log::debug!(c = F::ROW.calls.free_library, a:% = Args([mech_trace::__shown!(module)]),
+        v:% = mech_trace::__shown!(value), e:% = mech_trace::__shown!(error),
+        from:% = mech_trace::__shown!(from); "imp.call")
+    );
     value
 }
 
@@ -255,33 +274,44 @@ extern "system" fn module_file_name<F: File>(from: u32, module: u32, into: u32, 
         // SAFETY: the `count` bytes Win32 wrote into the caller's buffer.
         unsafe { core::slice::from_raw_parts(with_exposed_provenance(into as usize), count) }
     };
-    logged!(from; c = F::ROW.calls.module_file_name,
+    kept!(log::debug!(c = F::ROW.calls.module_file_name,
         a:% = Args([mech_trace::__shown!(module), mech_trace::__shown!(size)]),
-        m:% = Text(written), v:% = mech_trace::__shown!(value), e:% = mech_trace::__shown!(error));
+        m:% = Text(written), v:% = mech_trace::__shown!(value), e:% = mech_trace::__shown!(error),
+        from:% = mech_trace::__shown!(from); "imp.call"));
     value
 }
 
 extern "system" fn last_error<F: File>(from: u32) -> u32 {
     let value = left();
-    logged!(from; c = F::ROW.calls.last_error, v:% = mech_trace::__shown!(value));
+    kept!(
+        log::debug!(c = F::ROW.calls.last_error, v:% = mech_trace::__shown!(value),
+        from:% = mech_trace::__shown!(from); "imp.call")
+    );
     value
 }
 
 extern "system" fn set_last_error<F: File>(from: u32, code: u32) {
     // SAFETY: sets the thread's own last error.
     unsafe { crate::SetLastError(code) };
-    logged!(from; c = F::ROW.calls.set_last_error, a:% = Args([mech_trace::__shown!(code)]));
+    kept!(
+        log::debug!(c = F::ROW.calls.set_last_error, a:% = Args([mech_trace::__shown!(code)]),
+        from:% = mech_trace::__shown!(from); "imp.call")
+    );
 }
 
 extern "system" fn exit<F: File>(from: u32, code: u32) -> ! {
-    logged!(from; c = F::ROW.calls.exit, a:% = Args([mech_trace::__shown!(code)]));
+    kept!(
+        log::debug!(c = F::ROW.calls.exit, a:% = Args([mech_trace::__shown!(code)]),
+        from:% = mech_trace::__shown!(from); "imp.call")
+    );
     // SAFETY: the caller's code, passed on.
     unsafe { ExitProcess(code) }
 }
 
 extern "system" fn terminate<F: File>(from: u32, process: u32, code: u32) -> i32 {
-    logged!(from; c = F::ROW.calls.terminate,
-        a:% = Args([mech_trace::__shown!(process), mech_trace::__shown!(code)]));
+    kept!(log::debug!(c = F::ROW.calls.terminate,
+        a:% = Args([mech_trace::__shown!(process), mech_trace::__shown!(code)]),
+        from:% = mech_trace::__shown!(from); "imp.call"));
     // SAFETY: as `module_handle`.
     unsafe { TerminateProcess(process, code) }
 }
@@ -291,7 +321,8 @@ extern "system" fn environment<F: File>(from: u32) -> u32 {
     let value = unsafe { GetEnvironmentStrings() };
     // SAFETY: Win32's block.
     let bytes = unsafe { block::<u8>(value) };
-    logged!(from; c = F::ROW.calls.environment, s:% = Text(bytes));
+    kept!(log::debug!(c = F::ROW.calls.environment, s:% = Text(bytes),
+        from:% = mech_trace::__shown!(from); "imp.call"));
     value
 }
 
@@ -300,23 +331,31 @@ extern "system" fn environment_w<F: File>(from: u32) -> u32 {
     let value = unsafe { GetEnvironmentStringsW() };
     // SAFETY: Win32's wide block.
     let units = unsafe { block::<u16>(value) };
-    logged!(from; c = F::ROW.calls.environment_w, s:% = Wide(units));
+    kept!(
+        log::debug!(c = F::ROW.calls.environment_w, s:% = Wide(units),
+        from:% = mech_trace::__shown!(from); "imp.call")
+    );
     value
 }
 
 extern "system" fn free_environment<F: File>(from: u32, block: u32) -> i32 {
     // SAFETY: as `module_handle`.
     let value = unsafe { FreeEnvironmentStringsA(block) };
-    logged!(from; c = F::ROW.calls.free_environment, a:% = Args([mech_trace::__shown!(block)]),
-        v:% = mech_trace::__shown!(value));
+    kept!(
+        log::debug!(c = F::ROW.calls.free_environment, a:% = Args([mech_trace::__shown!(block)]),
+        v:% = mech_trace::__shown!(value),
+        from:% = mech_trace::__shown!(from); "imp.call")
+    );
     value
 }
 
 extern "system" fn free_environment_w<F: File>(from: u32, block: u32) -> i32 {
     // SAFETY: as `module_handle`.
     let value = unsafe { FreeEnvironmentStringsW(block) };
-    logged!(from; c = F::ROW.calls.free_environment_w, a:% = Args([mech_trace::__shown!(block)]),
-        v:% = mech_trace::__shown!(value));
+    kept!(log::debug!(c = F::ROW.calls.free_environment_w,
+        a:% = Args([mech_trace::__shown!(block)]),
+        v:% = mech_trace::__shown!(value),
+        from:% = mech_trace::__shown!(from); "imp.call"));
     value
 }
 
@@ -334,12 +373,13 @@ extern "system" fn startup_info<F: File>(from: u32, record: u32) {
             at(52).cast::<u32>().read_unaligned(),
         )
     };
-    logged!(from; c = F::ROW.calls.startup_info, r:% = Args([
+    kept!(log::debug!(c = F::ROW.calls.startup_info, r:% = Args([
         mech_trace::__shown!(flags),
         mech_trace::__shown!(show_window),
         mech_trace::__shown!(reserved_count),
         mech_trace::__shown!(reserved),
-    ]));
+    ]),
+        from:% = mech_trace::__shown!(from); "imp.call"));
 }
 
 extern "system" fn set_environment<F: File>(from: u32, name: u32, value: u32) -> i32 {
@@ -347,8 +387,11 @@ extern "system" fn set_environment<F: File>(from: u32, name: u32, value: u32) ->
     let answer = unsafe { SetEnvironmentVariableA(name, value) };
     // SAFETY: the caller's name, and its value or null.
     let (name, value) = unsafe { (text(name), (value != 0).then(|| text(value))) };
-    logged!(from; c = F::ROW.calls.set_environment, s:% = Variable(name, value),
-        v:% = mech_trace::__shown!(answer));
+    kept!(
+        log::debug!(c = F::ROW.calls.set_environment, s:% = Variable(name, value),
+        v:% = mech_trace::__shown!(answer),
+        from:% = mech_trace::__shown!(from); "imp.call")
+    );
     answer
 }
 
@@ -358,8 +401,11 @@ extern "system" fn load_module<F: File>(from: u32, name: u32, parameters: u32) -
     let error = left();
     // SAFETY: the caller's name.
     let asked = unsafe { text(name) };
-    logged!(from; c = F::ROW.calls.load_module, a:% = Args([mech_trace::__shown!(parameters)]),
-        m:% = Text(asked), v:% = mech_trace::__shown!(value), e:% = mech_trace::__shown!(error));
+    kept!(
+        log::debug!(c = F::ROW.calls.load_module, a:% = Args([mech_trace::__shown!(parameters)]),
+        m:% = Text(asked), v:% = mech_trace::__shown!(value), e:% = mech_trace::__shown!(error),
+        from:% = mech_trace::__shown!(from); "imp.call")
+    );
     value
 }
 
@@ -398,8 +444,11 @@ extern "system" fn create_process<F: File>(
     let error = left();
     // SAFETY: the caller's two texts, each or null.
     let (application, command) = unsafe { (text(application), text(command)) };
-    logged!(from; c = F::ROW.calls.create_process, m:% = Text(application), s:% = Text(command),
-        v:% = mech_trace::__shown!(value), e:% = mech_trace::__shown!(error));
+    kept!(
+        log::debug!(c = F::ROW.calls.create_process, m:% = Text(application), s:% = Text(command),
+        v:% = mech_trace::__shown!(value), e:% = mech_trace::__shown!(error),
+        from:% = mech_trace::__shown!(from); "imp.call")
+    );
     value
 }
 
@@ -408,22 +457,27 @@ extern "system" fn debug_string<F: File>(from: u32, text_at: u32) {
     unsafe { OutputDebugStringA(text_at) };
     // SAFETY: the caller's text.
     let shown = unsafe { text(text_at) };
-    logged!(from; c = F::ROW.calls.debug_string, s:% = Text(shown));
+    kept!(
+        log::debug!(c = F::ROW.calls.debug_string, s:% = Text(shown),
+        from:% = mech_trace::__shown!(from); "imp.call")
+    );
 }
 
 extern "system" fn debug_break<F: File>(from: u32) {
-    logged!(from; c = F::ROW.calls.debug_break);
+    kept!(log::debug!(c = F::ROW.calls.debug_break,
+        from:% = mech_trace::__shown!(from); "imp.call"));
     // SAFETY: takes no argument.
     unsafe { DebugBreak() };
 }
 
 extern "system" fn raise<F: File>(from: u32, code: u32, flags: u32, count: u32, arguments: u32) {
-    logged!(from; c = F::ROW.calls.raise, a:% = Args([
+    kept!(log::debug!(c = F::ROW.calls.raise, a:% = Args([
         mech_trace::__shown!(code),
         mech_trace::__shown!(flags),
         mech_trace::__shown!(count),
         mech_trace::__shown!(arguments),
-    ]));
+    ]),
+        from:% = mech_trace::__shown!(from); "imp.call"));
     // SAFETY: as `module_handle`.
     unsafe { RaiseException(code, flags, count, arguments) };
 }
@@ -431,52 +485,63 @@ extern "system" fn raise<F: File>(from: u32, code: u32, flags: u32, count: u32, 
 extern "system" fn set_filter<F: File>(from: u32, filter: u32) -> u32 {
     // SAFETY: as `module_handle`.
     let value = unsafe { SetUnhandledExceptionFilter(filter) };
-    logged!(from; c = F::ROW.calls.set_filter, a:% = Args([mech_trace::__shown!(filter)]),
-        v:% = mech_trace::__shown!(value));
+    kept!(
+        log::debug!(c = F::ROW.calls.set_filter, a:% = Args([mech_trace::__shown!(filter)]),
+        v:% = mech_trace::__shown!(value),
+        from:% = mech_trace::__shown!(from); "imp.call")
+    );
     value
 }
 
 extern "system" fn unhandled_filter<F: File>(from: u32, pointers: u32) -> i32 {
     // SAFETY: as `module_handle`.
     let value = unsafe { UnhandledExceptionFilter(pointers) };
-    logged!(from; c = F::ROW.calls.unhandled_filter, a:% = Args([mech_trace::__shown!(pointers)]),
-        v:% = mech_trace::__shown!(value));
+    kept!(log::debug!(c = F::ROW.calls.unhandled_filter,
+        a:% = Args([mech_trace::__shown!(pointers)]),
+        v:% = mech_trace::__shown!(value),
+        from:% = mech_trace::__shown!(from); "imp.call"));
     value
 }
 
 extern "system" fn bad_read<F: File>(from: u32, address: u32, size: u32) -> i32 {
     // SAFETY: as `module_handle`.
     let value = unsafe { IsBadReadPtr(address, size) };
-    logged!(from; c = F::ROW.calls.bad_read,
+    kept!(log::debug!(c = F::ROW.calls.bad_read,
         a:% = Args([mech_trace::__shown!(address), mech_trace::__shown!(size)]),
-        v:% = mech_trace::__shown!(value));
+        v:% = mech_trace::__shown!(value),
+        from:% = mech_trace::__shown!(from); "imp.call"));
     value
 }
 
 extern "system" fn bad_write<F: File>(from: u32, address: u32, size: u32) -> i32 {
     // SAFETY: as `module_handle`.
     let value = unsafe { IsBadWritePtr(address, size) };
-    logged!(from; c = F::ROW.calls.bad_write,
+    kept!(log::debug!(c = F::ROW.calls.bad_write,
         a:% = Args([mech_trace::__shown!(address), mech_trace::__shown!(size)]),
-        v:% = mech_trace::__shown!(value));
+        v:% = mech_trace::__shown!(value),
+        from:% = mech_trace::__shown!(from); "imp.call"));
     value
 }
 
 extern "system" fn bad_code<F: File>(from: u32, address: u32) -> i32 {
     // SAFETY: as `module_handle`.
     let value = unsafe { IsBadCodePtr(address) };
-    logged!(from; c = F::ROW.calls.bad_code, a:% = Args([mech_trace::__shown!(address)]),
-        v:% = mech_trace::__shown!(value));
+    kept!(
+        log::debug!(c = F::ROW.calls.bad_code, a:% = Args([mech_trace::__shown!(address)]),
+        v:% = mech_trace::__shown!(value),
+        from:% = mech_trace::__shown!(from); "imp.call")
+    );
     value
 }
 
 extern "system" fn unwind<F: File>(from: u32, frame: u32, target: u32, record: u32, value: u32) {
-    logged!(from; c = F::ROW.calls.unwind, a:% = Args([
+    kept!(log::debug!(c = F::ROW.calls.unwind, a:% = Args([
         mech_trace::__shown!(frame),
         mech_trace::__shown!(target),
         mech_trace::__shown!(record),
         mech_trace::__shown!(value),
-    ]));
+    ]),
+        from:% = mech_trace::__shown!(from); "imp.call"));
     // SAFETY: as `module_handle`.
     unsafe { RtlUnwind(frame, target, record, value) };
 }
