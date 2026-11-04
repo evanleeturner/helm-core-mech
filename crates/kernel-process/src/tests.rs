@@ -44,7 +44,7 @@ const ROW: Row = Row {
     file: "test",
     calls: CALLS,
     command_line: "PROG.EXE -x",
-    own: 0x0040_0000,
+    own: 0x0200_0000,
     path: "C:\\DIR\\PROG.EXE",
     version: 0xc000_0a04,
     current_process: 0xffff_ffff,
@@ -58,7 +58,7 @@ const ROW: Row = Row {
     modules: &[
         Module {
             name: "LIB.DLL",
-            handle: 0x1000_0000,
+            handle: 0x2000_0000,
             entries: &["Main"],
         },
         Module {
@@ -108,7 +108,7 @@ fn a_module_name_matches_as_windows_does() {
 fn a_name_in_the_table_is_found() {
     let front = front();
     let handle = front.load_library(b"lib.dll");
-    assert_eq!(handle, 0x1000_0000);
+    assert_eq!(handle, 0x2000_0000);
     assert_eq!(front.proc_address(handle, b"Main"), 7);
     assert_eq!(front.free_library(handle), 1);
     assert_eq!(front.process().last_error(), 0);
@@ -133,11 +133,11 @@ fn the_start_up_answers_are_the_row() {
     let front = front();
     assert_eq!(front.command_line(), "PROG.EXE -x");
     assert_eq!(front.version(), 0xc000_0a04);
-    assert_eq!(front.module_handle(None), 0x0040_0000);
+    assert_eq!(front.module_handle(None), 0x0200_0000);
     let mut path = [0xff; 8];
     assert_eq!(front.module_file_name(0, &mut path), 7);
     assert_eq!(&path, b"C:\\DIR\\\0");
-    assert_eq!(front.module_file_name(0x1000_0000, &mut path), 0);
+    assert_eq!(front.module_file_name(0x2000_0000, &mut path), 0);
     assert_eq!(front.last_error(), 6);
 }
 
@@ -171,7 +171,7 @@ fn the_text_shows_every_byte_on_one_line() {
 #[test]
 fn another_program_is_refused_as_not_found() {
     let front = front();
-    assert_eq!(front.load_module(b"JOY.CPL", 0), 2);
+    assert_eq!(front.load_module(b"OTHER.EXE", 0), 2);
     assert_eq!(front.last_error(), 2);
     front.set_last_error(0);
     assert_eq!(front.create_process(None, Some(b"x.exe")), 0);
@@ -203,8 +203,8 @@ fn only_the_own_process_is_terminated() {
 #[test]
 fn the_filter_set_answers_the_one_replaced() {
     let front = front();
-    assert_eq!(front.set_filter(0x1007_8190), 0);
-    assert_eq!(front.set_filter(0), 0x1007_8190);
+    assert_eq!(front.set_filter(0x2007_8190), 0);
+    assert_eq!(front.set_filter(0), 0x2007_8190);
     assert_eq!(front.unhandled_filter(0x0012_f000), 1);
 }
 

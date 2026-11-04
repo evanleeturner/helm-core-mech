@@ -16,8 +16,13 @@
 //!
 //! The crate names no game and nothing of any one target, so it builds
 //! for `wasm32-unknown-unknown`; a game's facts live in its rows crate.
-#![cfg_attr(not(test), no_std)]
+//! `FatalAppExitA`, `FindResourceA`, `LoadResource`, `LockResource`,
+//! imported by a game no row serves yet, have no front: each comes with
+//! its first measured caller.
+#![cfg_attr(not(any(test, feature = "std")), no_std)]
 
+#[cfg(any(test, feature = "std"))]
+pub mod host;
 pub mod page;
 pub mod table;
 #[cfg(test)]
@@ -56,6 +61,34 @@ pub trait Process {
     /// Writes one line around whatever the target must keep across it.
     fn quiet(&self, line: impl FnOnce()) {
         line();
+    }
+}
+
+/// A borrowed back: each of a program's files keeps its own [`Front`] and
+/// all share the one process, its last error included.
+impl<P: Process> Process for &P {
+    fn entry(&self, module: &Module, name: &str) -> u32 {
+        (**self).entry(module, name)
+    }
+
+    fn end(&self, code: u32) {
+        (**self).end(code);
+    }
+
+    fn fail(&self, code: u32) {
+        (**self).fail(code);
+    }
+
+    fn last_error(&self) -> u32 {
+        (**self).last_error()
+    }
+
+    fn reaches(&self, address: u32, size: u32, access: Access) -> bool {
+        (**self).reaches(address, size, access)
+    }
+
+    fn quiet(&self, line: impl FnOnce()) {
+        (**self).quiet(line);
     }
 }
 
