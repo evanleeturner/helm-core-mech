@@ -11,7 +11,8 @@
 //! original's calls under Wine in `mech-layer`. [`Front`] answers in the
 //! file's numbers and writes one `imp.call` line a call: `c` the row's
 //! name, `a` the call's numbers, `m` the module name it was given, `q`
-//! the entry name it was asked, `v` its answer, `e` the error left.
+//! the entry name it was asked, `s` any other text it was given, `r` the
+//! start-up record it wrote, `v` its answer, `e` the error left.
 //!
 //! The crate names no game and nothing of any one target, so it builds
 //! for `wasm32-unknown-unknown`; a game's facts live in its rows crate.
@@ -22,9 +23,19 @@ pub mod table;
 #[cfg(test)]
 mod tests;
 
+use core::cell::Cell;
 use core::fmt;
 use mech_trace::Args;
-use table::{Module, Row};
+use table::{Module, Row, Startup};
+
+/// What a call asks of the memory it names: `IsBadReadPtr`,
+/// `IsBadWritePtr` or `IsBadCodePtr`.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Access {
+    Read,
+    Write,
+    Run,
+}
 
 /// Where one file's process state lives: the seam between the calls and
 /// a target.
@@ -39,20 +50,36 @@ pub trait Process {
     fn fail(&self, code: u32);
     /// The last error kept.
     fn last_error(&self) -> u32;
+    /// Whether all `size` bytes at `address` allow `access`: the memory
+    /// map's answer, never a read that could fault.
+    fn reaches(&self, address: u32, size: u32, access: Access) -> bool;
     /// Writes one line around whatever the target must keep across it.
     fn quiet(&self, line: impl FnOnce()) {
         line();
     }
 }
 
-/// A name as the line shows it: each byte one character.
+/// Text as the line shows it: a printable byte as its character, any
+/// other `\xNN`, so an environment block's NULs stay on one line.
 pub struct Text<'a>(pub &'a [u8]);
 
 impl fmt::Display for Text<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        self.0
-            .iter()
-            .try_for_each(|byte| fmt::Write::write_char(f, char::from(*byte)))
+        self.0.iter().try_for_each(|byte| match byte {
+            b' '..=b'~' => fmt::Write::write_char(f, char::from(*byte)),
+            _ => write!(f, "\\x{byte:02x}"),
+        })
+    }
+}
+
+/// An environment variable as `SetEnvironmentVariableA` was given it:
+/// `NAME=VALUE`, or the name alone for a variable taken away.
+struct Variable<'a>(&'a [u8], Option<&'a [u8]>);
+
+impl fmt::Display for Variable<'_> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        Text(self.0).fmt(f)?;
+        self.1.map_or(Ok(()), |value| write!(f, "={}", Text(value)))
     }
 }
 
@@ -77,11 +104,17 @@ fn names(asked: &[u8], module: &str) -> bool {
 pub struct Front<P> {
     file: &'static Row,
     process: P,
+    /// The filter `SetUnhandledExceptionFilter` was last given, 0 for none.
+    filter: Cell<u32>,
 }
 
 impl<P: Process> Front<P> {
     pub const fn new(file: &'static Row, process: P) -> Self {
-        Self { file, process }
+        Self {
+            file,
+            process,
+            filter: Cell::new(0),
+        }
     }
 
     /// The process the calls ask.
@@ -248,6 +281,226 @@ impl<P: Process> Front<P> {
             log::debug!(c = self.file.calls.exit, a:% = Args(arguments); "imp.call");
         });
         self.process.end(code);
+    }
+
+    /// `GetEnvironmentStrings`: the row's block, whole.
+    #[must_use]
+    pub fn environment(&self) -> &'static [u8] {
+        let value = self.file.environment;
+        self.process.quiet(|| {
+            log::debug!(c = self.file.calls.environment, s:% = Text(value); "imp.call");
+        });
+        value
+    }
+
+    /// `GetEnvironmentStringsW`: the row's block, each byte one UTF-16
+    /// unit. The start-up asks for it first, the narrow block only when
+    /// this answers none.
+    pub fn environment_w(&self) -> impl Iterator<Item = u16> + 'static {
+        let value = self.file.environment;
+        self.process.quiet(|| {
+            log::debug!(c = self.file.calls.environment_w, s:% = Text(value); "imp.call");
+        });
+        value.iter().map(|byte| u16::from(*byte))
+    }
+
+    /// `FreeEnvironmentStringsA`: 1; the block is the row's, never freed.
+    pub fn free_environment(&self, block: u32) -> i32 {
+        self.freed(self.file.calls.free_environment, block)
+    }
+
+    /// `FreeEnvironmentStringsW`: 1, as the narrow one.
+    pub fn free_environment_w(&self, block: u32) -> i32 {
+        self.freed(self.file.calls.free_environment_w, block)
+    }
+
+    /// `GetStartupInfoA`: the row's record.
+    #[must_use]
+    pub fn startup_info(&self) -> Startup {
+        let value = self.file.startup;
+        let fields = [
+            mech_trace::__shown!(value.flags),
+            mech_trace::__shown!(value.show_window),
+            mech_trace::__shown!(value.reserved_count),
+            mech_trace::__shown!(value.reserved),
+        ];
+        self.process.quiet(|| {
+            log::debug!(c = self.file.calls.startup_info, r:% = Args(fields); "imp.call");
+        });
+        value
+    }
+
+    /// `SetEnvironmentVariableA`: 1, nothing kept. The C library's own
+    /// copy of the block is the one its readers read, and the row's block
+    /// is read once, at the start-up, before any call sets one.
+    pub fn set_environment(&self, name: &[u8], value: Option<&[u8]>) -> i32 {
+        let answer: i32 = 1;
+        self.process.quiet(|| {
+            log::debug!(
+                c = self.file.calls.set_environment, s:% = Variable(name, value),
+                v:% = mech_trace::__shown!(answer); "imp.call"
+            );
+        });
+        answer
+    }
+
+    /// `TerminateProcess`: for the row's own process the line, then the
+    /// back ends the run with `code`; 0 and the row's error for another.
+    pub fn terminate(&self, process: u32, code: u32) -> i32 {
+        let own = process == self.file.current_process;
+        let value = i32::from(own);
+        let error = self.refused(u32::from(own), self.file.errors.bad_handle);
+        let arguments = [mech_trace::__shown!(process), mech_trace::__shown!(code)];
+        self.process.quiet(|| {
+            log::debug!(
+                c = self.file.calls.terminate, a:% = Args(arguments),
+                v:% = mech_trace::__shown!(value), e:% = mech_trace::__shown!(error); "imp.call"
+            );
+        });
+        if own {
+            self.process.end(code);
+        }
+        value
+    }
+
+    /// `LoadModule`: another program is never run; the row's file-not-found
+    /// error, answered and kept, as Windows answers a name it cannot find.
+    pub fn load_module(&self, name: &[u8], parameters: u32) -> u32 {
+        let value = self.file.errors.file_not_found;
+        self.process.fail(value);
+        let arguments = [mech_trace::__shown!(parameters)];
+        self.process.quiet(|| {
+            log::debug!(
+                c = self.file.calls.load_module, a:% = Args(arguments), m:% = Text(name),
+                v:% = mech_trace::__shown!(value), e:% = mech_trace::__shown!(value); "imp.call"
+            );
+        });
+        value
+    }
+
+    /// `CreateProcessA`: another program is never run; 0 and the row's
+    /// file-not-found error.
+    pub fn create_process(&self, application: Option<&[u8]>, command: Option<&[u8]>) -> i32 {
+        let value: i32 = 0;
+        let error = self.refused(0, self.file.errors.file_not_found);
+        let (application, command) = (application.unwrap_or_default(), command.unwrap_or_default());
+        self.process.quiet(|| {
+            log::debug!(
+                c = self.file.calls.create_process, m:% = Text(application), s:% = Text(command),
+                v:% = mech_trace::__shown!(value), e:% = mech_trace::__shown!(error); "imp.call"
+            );
+        });
+        value
+    }
+
+    /// `OutputDebugStringA`: the game's text, its line at DEBUG.
+    pub fn debug_string(&self, text: &[u8]) {
+        self.process.quiet(|| {
+            log::debug!(c = self.file.calls.debug_string, s:% = Text(text); "imp.call");
+        });
+    }
+
+    /// `DebugBreak`: the line; no trap, as no debugger holds the run.
+    pub fn debug_break(&self) {
+        self.process.quiet(|| {
+            log::debug!(c = self.file.calls.debug_break; "imp.call");
+        });
+    }
+
+    /// `RaiseException`: the line, then the end the C library's start-up
+    /// gives an exception nothing catches: its filter answers the handler,
+    /// which ends the run with the exception's code. On the page the call
+    /// returns and the frame loop stops.
+    pub fn raise(&self, code: u32, flags: u32, count: u32, arguments: u32) {
+        let numbers = [
+            mech_trace::__shown!(code),
+            mech_trace::__shown!(flags),
+            mech_trace::__shown!(count),
+            mech_trace::__shown!(arguments),
+        ];
+        self.process.quiet(|| {
+            log::debug!(c = self.file.calls.raise, a:% = Args(numbers); "imp.call");
+        });
+        self.process.end(code);
+    }
+
+    /// `SetUnhandledExceptionFilter`: keeps `filter`, answers the one it
+    /// replaces.
+    pub fn set_filter(&self, filter: u32) -> u32 {
+        let value = self.filter.replace(filter);
+        let arguments = [mech_trace::__shown!(filter)];
+        self.process.quiet(|| {
+            log::debug!(
+                c = self.file.calls.set_filter, a:% = Args(arguments),
+                v:% = mech_trace::__shown!(value); "imp.call"
+            );
+        });
+        value
+    }
+
+    /// `UnhandledExceptionFilter`: 1, run the handler, as Windows answers
+    /// with no debugger. The filter kept is never called: no rebuilt code
+    /// stands at its address.
+    pub fn unhandled_filter(&self, pointers: u32) -> i32 {
+        let value: i32 = 1;
+        let arguments = [mech_trace::__shown!(pointers)];
+        self.process.quiet(|| {
+            log::debug!(
+                c = self.file.calls.unhandled_filter, a:% = Args(arguments),
+                v:% = mech_trace::__shown!(value); "imp.call"
+            );
+        });
+        value
+    }
+
+    /// `IsBadReadPtr`: 0 when the back's memory map lets all `size` bytes
+    /// be read, else 1.
+    pub fn bad_read(&self, address: u32, size: u32) -> i32 {
+        self.bad(self.file.calls.bad_read, address, size, Access::Read)
+    }
+
+    /// `IsBadWritePtr`: 0 when the map lets all `size` bytes be written.
+    pub fn bad_write(&self, address: u32, size: u32) -> i32 {
+        self.bad(self.file.calls.bad_write, address, size, Access::Write)
+    }
+
+    /// `IsBadCodePtr`: 0 when the map lets the byte at `address` run.
+    pub fn bad_code(&self, address: u32) -> i32 {
+        self.bad(self.file.calls.bad_code, address, 1, Access::Run)
+    }
+
+    /// `RtlUnwind`: the line alone. No rebuilt code sets up a frame it
+    /// could unwind; its one caller is the C library's.
+    pub fn unwind(&self, frame: u32, target: u32, record: u32, value: u32) {
+        let arguments = [
+            mech_trace::__shown!(frame),
+            mech_trace::__shown!(target),
+            mech_trace::__shown!(record),
+            mech_trace::__shown!(value),
+        ];
+        self.process.quiet(|| {
+            log::debug!(c = self.file.calls.unwind, a:% = Args(arguments); "imp.call");
+        });
+    }
+
+    /// A free of the row's environment block: 1, its line.
+    fn freed(&self, call: &'static str, block: u32) -> i32 {
+        let value: i32 = 1;
+        let arguments = [mech_trace::__shown!(block)];
+        self.process.quiet(|| {
+            log::debug!(c = call, a:% = Args(arguments), v:% = mech_trace::__shown!(value); "imp.call");
+        });
+        value
+    }
+
+    /// One of the `IsBad*Ptr` three: the map's answer, turned.
+    fn bad(&self, call: &'static str, address: u32, size: u32, access: Access) -> i32 {
+        let value = i32::from(!self.process.reaches(address, size, access));
+        let arguments = [mech_trace::__shown!(address), mech_trace::__shown!(size)];
+        self.process.quiet(|| {
+            log::debug!(c = call, a:% = Args(arguments), v:% = mech_trace::__shown!(value); "imp.call");
+        });
+        value
     }
 
     /// The table's row a module name names.

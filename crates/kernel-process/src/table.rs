@@ -18,6 +18,24 @@ pub struct Calls {
     pub last_error: &'static str,
     pub set_last_error: &'static str,
     pub exit: &'static str,
+    pub environment: &'static str,
+    pub environment_w: &'static str,
+    pub free_environment: &'static str,
+    pub free_environment_w: &'static str,
+    pub startup_info: &'static str,
+    pub set_environment: &'static str,
+    pub terminate: &'static str,
+    pub load_module: &'static str,
+    pub create_process: &'static str,
+    pub debug_string: &'static str,
+    pub debug_break: &'static str,
+    pub raise: &'static str,
+    pub set_filter: &'static str,
+    pub unhandled_filter: &'static str,
+    pub bad_read: &'static str,
+    pub bad_write: &'static str,
+    pub bad_code: &'static str,
+    pub unwind: &'static str,
 }
 
 /// A module the name table holds: its name as the program asks for it,
@@ -39,6 +57,22 @@ pub struct Errors {
     pub name_not_found: u32,
     /// A handle the table never gave.
     pub bad_handle: u32,
+    /// Another program's file, never run.
+    pub file_not_found: u32,
+}
+
+/// `GetStartupInfoA`'s fields the start-up reads; the record's others
+/// are written 0.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Startup {
+    /// `dwFlags`: bit 0 says [`Startup::show_window`] holds.
+    pub flags: u32,
+    /// `wShowWindow`: `WinMain`'s fourth argument when bit 0 is set.
+    pub show_window: u16,
+    /// `cbReserved2`: the inherited handles' block's length, 0 for none.
+    pub reserved_count: u16,
+    /// `lpReserved2`: that block's address, 0 for none.
+    pub reserved: u32,
 }
 
 /// One file's process calls.
@@ -56,6 +90,11 @@ pub struct Row {
     pub version: u32,
     /// `GetCurrentProcess`'s answer.
     pub current_process: u32,
+    /// The environment block: each `NAME=VALUE` NUL-ended, a second NUL
+    /// after the last. `GetEnvironmentStringsW` widens each byte.
+    pub environment: &'static [u8],
+    /// `GetStartupInfoA`'s record.
+    pub startup: Startup,
     /// The program's name table: every module a file of it may ask for.
     pub modules: &'static [Module],
     pub errors: Errors,

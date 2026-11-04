@@ -3,23 +3,29 @@
 //! entries' numbers (each a function's place in the module's table) and
 //! reads the end after the call returns; nothing here blocks or exits.
 //! The host tests use it as their fixed process.
-use crate::Process;
 use crate::table::Module;
+use crate::{Access, Process};
 use core::cell::Cell;
 
 /// The process a page's owner feeds.
 pub struct Page {
     entries: fn(&Module, &str) -> u32,
+    memory: fn(u32, u32, Access) -> bool,
     error: Cell<u32>,
     ended: Cell<Option<u32>>,
 }
 
 impl Page {
-    /// The entries' numbers from `entries`, 0 for a name it has none for.
+    /// The entries' numbers from `entries`, 0 for a name it has none for;
+    /// the memory map's answers from `memory`.
     #[must_use]
-    pub const fn new(entries: fn(&Module, &str) -> u32) -> Self {
+    pub const fn new(
+        entries: fn(&Module, &str) -> u32,
+        memory: fn(u32, u32, Access) -> bool,
+    ) -> Self {
         Self {
             entries,
+            memory,
             error: Cell::new(0),
             ended: Cell::new(None),
         }
@@ -47,5 +53,9 @@ impl Process for Page {
 
     fn last_error(&self) -> u32 {
         self.error.get()
+    }
+
+    fn reaches(&self, address: u32, size: u32, access: Access) -> bool {
+        (self.memory)(address, size, access)
     }
 }
