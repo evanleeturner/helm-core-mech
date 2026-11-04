@@ -58,6 +58,7 @@ version = "0.1.0"
 dependencies = [
  "kernel_files",
  "kernel_memory",
+ "kernel_time",
  "log",
  "mech_rows",
  "mech_trace",

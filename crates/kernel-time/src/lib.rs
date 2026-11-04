@@ -27,6 +27,8 @@
 
 pub mod clock;
 pub mod date;
+#[cfg(all(any(test, feature = "std"), unix, target_pointer_width = "64"))]
+pub mod host;
 pub mod page;
 pub mod table;
 #[cfg(test)]
