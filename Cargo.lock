@@ -93,6 +93,7 @@ dependencies = [
  "kernel_files",
  "kernel_memory",
  "kernel_process",
+ "kernel_text",
  "kernel_threads",
  "kernel_time",
  "log",

@@ -28,6 +28,7 @@ undocumented_unsafe_blocks = "deny"
 kernel_files = { path = "../kernel-files" }
 kernel_memory = { path = "../kernel-memory" }
 kernel_process = { path = "../kernel-process" }
+kernel_text = { path = "../kernel-text" }
 kernel_threads = { path = "../kernel-threads" }
 kernel_time = { path = "../kernel-time" }
 mech_rows = { path = "../mech-rows" }

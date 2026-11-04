@@ -27,6 +27,8 @@ use kernel_process::table::Row;
 use mech_rows::process::{GAME, LAUNCHER, SHELL};
 use mech_trace::Args;
 
+use crate::left;
+
 unsafe extern "system" {
     fn CreateProcessA(
         application: u32,
@@ -66,24 +68,6 @@ unsafe extern "system" {
     fn SetUnhandledExceptionFilter(filter: u32) -> u32;
     fn TerminateProcess(process: u32, code: u32) -> i32;
     fn UnhandledExceptionFilter(pointers: u32) -> i32;
-}
-
-/// One `imp.call` line, the thread's last error kept around it. Each row
-/// writes its `log::debug!` whole, so the logline fence reads its fields.
-macro_rules! kept {
-    ($line:expr) => {{
-        // SAFETY: reads the thread's own last error.
-        let kept = unsafe { crate::GetLastError() };
-        $line;
-        // SAFETY: sets back the value read above.
-        unsafe { crate::SetLastError(kept) };
-    }};
-}
-
-/// The thread's last error as the call left it, read before any line.
-fn left() -> u32 {
-    // SAFETY: reads the thread's own last error.
-    unsafe { crate::GetLastError() }
 }
 
 /// A file the rows serve, by its row in `mech_rows::process`.
