@@ -176,53 +176,6 @@ unsafe extern "system" fn game_decrement(from: u32, counter: *const AtomicI32) -
     GAME_THREADS.decrement(from, unsafe { &*counter })
 }
 
-/// A naked entry `export` for a stdcall of `count` arguments: pushes the
-/// caller's arguments again, then the address the call returns to, so
-/// `inner` takes the caller first and pops what it was pushed; the entry
-/// returns past the caller's arguments, `inner`'s answer still in `eax`.
-/// Each push reads `[esp + 4 * count]`: every push moves the next one
-/// down there. `extern "C"` names the symbol plainly, with no `@` count;
-/// the code keeps stdcall's contract.
-macro_rules! entry {
-    ($export:ident, $inner:path, 0) => {
-        #[unsafe(naked)]
-        #[unsafe(no_mangle)]
-        #[allow(non_snake_case)]
-        unsafe extern "C" fn $export() {
-            core::arch::naked_asm!("push dword ptr [esp]", "call {inner}", "ret", inner = sym $inner)
-        }
-    };
-    ($export:ident, $inner:path, 1) => {
-        #[unsafe(naked)]
-        #[unsafe(no_mangle)]
-        #[allow(non_snake_case)]
-        unsafe extern "C" fn $export() {
-            core::arch::naked_asm!(
-                "push dword ptr [esp + 4]",
-                "push dword ptr [esp + 4]",
-                "call {inner}",
-                "ret 4",
-                inner = sym $inner
-            )
-        }
-    };
-    ($export:ident, $inner:path, 2) => {
-        #[unsafe(naked)]
-        #[unsafe(no_mangle)]
-        #[allow(non_snake_case)]
-        unsafe extern "C" fn $export() {
-            core::arch::naked_asm!(
-                "push dword ptr [esp + 8]",
-                "push dword ptr [esp + 8]",
-                "push dword ptr [esp + 8]",
-                "call {inner}",
-                "ret 8",
-                inner = sym $inner
-            )
-        }
-    };
-}
-
 entry!(HC6_GetCurrentThreadId, shell::current_thread_id, 0);
 entry!(HC6_InitializeCriticalSection, shell::initialize, 1);
 entry!(HC6_EnterCriticalSection, shell::enter, 1);

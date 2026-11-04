@@ -10,7 +10,8 @@
 //! `kernel_files`' seam over the Windows folder) and the 5 time calls
 //! ([`time`], KT1: `kernel_time`'s seam over Windows' clocks) and the 9
 //! thread calls ([`threads`], KH1: `kernel_threads`' seam over Windows'
-//! threads), 53 in all,
+//! threads) and the 24 process calls ([`process`], KP1: the original's,
+//! logged as `kernel_process`' front logs them), 77 in all,
 //! are exported `HC6_<name>`: with
 //! `HC6_LAYER=all` the swap's loader points the shell's own import slot at
 //! each, and each calls the real import through the swap DLL's own import
@@ -74,6 +75,72 @@ macro_rules! imp_call {
     }};
 }
 
+/// A naked entry `export` for a stdcall of `count` arguments: pushes the
+/// caller's arguments again, then the address the call returns to, so
+/// `inner` takes the caller first and pops what it was pushed; the entry
+/// returns past the caller's arguments, `inner`'s answer still in `eax`.
+/// Each push reads `[esp + 4 * count]`: every push moves the next one
+/// down there. `extern "C"` names the symbol plainly, with no `@` count;
+/// the code keeps stdcall's contract. Past 2 arguments, `.rept` writes the
+/// `count + 1` pushes.
+#[cfg(all(target_arch = "x86", target_os = "windows"))]
+macro_rules! entry {
+    ($export:ident, $inner:path, 0) => {
+        #[unsafe(naked)]
+        #[unsafe(no_mangle)]
+        #[allow(non_snake_case)]
+        unsafe extern "C" fn $export() {
+            core::arch::naked_asm!("push dword ptr [esp]", "call {inner}", "ret", inner = sym $inner)
+        }
+    };
+    ($export:ident, $inner:path, 1) => {
+        #[unsafe(naked)]
+        #[unsafe(no_mangle)]
+        #[allow(non_snake_case)]
+        unsafe extern "C" fn $export() {
+            core::arch::naked_asm!(
+                "push dword ptr [esp + 4]",
+                "push dword ptr [esp + 4]",
+                "call {inner}",
+                "ret 4",
+                inner = sym $inner
+            )
+        }
+    };
+    ($export:ident, $inner:path, 2) => {
+        #[unsafe(naked)]
+        #[unsafe(no_mangle)]
+        #[allow(non_snake_case)]
+        unsafe extern "C" fn $export() {
+            core::arch::naked_asm!(
+                "push dword ptr [esp + 8]",
+                "push dword ptr [esp + 8]",
+                "push dword ptr [esp + 8]",
+                "call {inner}",
+                "ret 8",
+                inner = sym $inner
+            )
+        }
+    };
+    ($export:ident, $inner:path, $count:literal) => {
+        #[unsafe(naked)]
+        #[unsafe(no_mangle)]
+        #[allow(non_snake_case)]
+        unsafe extern "C" fn $export() {
+            core::arch::naked_asm!(
+                ".rept {pushes}",
+                "push dword ptr [esp + {bytes}]",
+                ".endr",
+                "call {inner}",
+                "ret {bytes}",
+                pushes = const $count + 1,
+                bytes = const 4 * $count,
+                inner = sym $inner
+            )
+        }
+    };
+}
+
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
 pub mod crt;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
@@ -82,6 +149,8 @@ pub mod files;
 pub mod heap;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
 pub mod imports;
+#[cfg(all(target_arch = "x86", target_os = "windows"))]
+pub mod process;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
 pub mod smack;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
