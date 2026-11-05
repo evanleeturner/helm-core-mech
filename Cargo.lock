@@ -133,6 +133,7 @@ dependencies = [
  "log",
  "logical_disc",
  "mech_logline",
+ "window",
 ]
 
 [[package]]

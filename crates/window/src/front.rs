@@ -75,13 +75,23 @@ impl<'d, S: Screen> Front<'d, S> {
         Self { file, desk }
     }
 
-    /// Writes the call's one line.
+    /// Writes the call's one line: `a`, `s` and `o` only when the call
+    /// has them, as the layer's lines show them.
     fn line(&self, call: &str, arguments: &[u32], given: &[u8], wrote: &[u32], answer: u32) {
+        let (a, s, o) = (Numbers(arguments), Bytes(given), Numbers(wrote));
+        let v = mech_trace::__shown!(answer);
         self.desk.screen().quiet(|| {
-            log::debug!(
-                c = call, a:% = Numbers(arguments), s:% = Bytes(given),
-                o:% = Numbers(wrote), v:% = mech_trace::__shown!(answer); "imp.call"
-            );
+            match (arguments.is_empty(), given.is_empty(), wrote.is_empty()) {
+                (true, true, true) => log::debug!(c = call, v:% = v; "imp.call"),
+                (false, true, true) => log::debug!(c = call, a:% = a, v:% = v; "imp.call"),
+                (false, false, true) => {
+                    log::debug!(c = call, a:% = a, s:% = s, v:% = v; "imp.call");
+                }
+                (false, true, false) => {
+                    log::debug!(c = call, a:% = a, o:% = o, v:% = v; "imp.call");
+                }
+                _ => log::debug!(c = call, a:% = a, s:% = s, o:% = o, v:% = v; "imp.call"),
+            }
         });
     }
 
