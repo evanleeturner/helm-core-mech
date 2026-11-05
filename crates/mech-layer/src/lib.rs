@@ -15,7 +15,8 @@
 //! the original's, logged as `kernel_text`'s front logs them) and the 5 registry calls
 //! ([`registry`], KR1: the original's, logged as `kernel_registry`'s front
 //! logs them) and the 19 window calls ([`window`], WN1: the original's,
-//! logged with their callers for `window`'s fronts), 108 in all,
+//! logged with their callers for `window`'s fronts) and the 7 input calls
+//! ([`input`], WI1: the same, for `window-input`'s fronts), 115 in all,
 //! are exported `HC6_<name>`: with
 //! `HC6_LAYER=all` the swap's loader points the shell's own import slot at
 //! each, and each calls the real import through the swap DLL's own import
@@ -173,6 +174,8 @@ pub mod files;
 pub mod heap;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
 pub mod imports;
+#[cfg(all(target_arch = "x86", target_os = "windows"))]
+pub mod input;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
 pub mod process;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
