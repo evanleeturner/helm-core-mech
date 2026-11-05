@@ -33,10 +33,21 @@ desk = []
 # The page's back, `page::Page`: the canvas's events and time handed in by
 # the page's script, each window's place read back.
 page = ["desk"]
+# A host's back, `native::Native`, through winit: Linux's X11 and Wayland,
+# and Windows. No target but a host's takes winit, and no crate but this.
+native = ["desk", "dep:winit"]
 
 [dependencies]
 mech_trace = { path = "../mech-trace" }
 log = { version = "0.4", features = ["kv"] }
 
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+winit = { version = "=0.30.13", optional = true }
+
 [dev-dependencies]
 mech_logline = { path = "../mech-logline" }
+
+# One host window opened, pumped and let go: run under a time limit.
+[[example]]
+name = "native_window"
+required-features = ["native"]

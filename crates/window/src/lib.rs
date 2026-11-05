@@ -8,8 +8,9 @@
 //! target's, in [`desk::Desk`]. What a host's window does is the back's,
 //! behind [`Screen`]: the screen's size, a window shown or placed, and the
 //! events the host's window raised, handed in as [`Event`]s, never a
-//! Windows type. Under Wine the original's calls stay Wine's, logged in
-//! the layer.
+//! Windows type. The backs: a page's, `page::Page`; a host's, through
+//! winit, `native::Native`. Under Wine the original's calls stay Wine's,
+//! logged in the layer.
 //!
 //! The 24 fronts, in [`front::Front`]: windows `RegisterClassA`,
 //! `CreateWindowExA`, `DestroyWindow`, `FindWindowA`, `LoadIconA`,
@@ -42,7 +43,7 @@
 //!
 //! The crate names no game and nothing of any one target, so it builds for
 //! `wasm32-unknown-unknown`; a game's facts live in its rows crate.
-#![cfg_attr(not(test), no_std)]
+#![cfg_attr(not(any(test, feature = "native")), no_std)]
 
 #[cfg(any(test, feature = "desk"))]
 extern crate alloc;
@@ -51,6 +52,8 @@ extern crate alloc;
 pub mod desk;
 #[cfg(any(test, feature = "desk"))]
 pub mod front;
+#[cfg(all(feature = "native", not(target_arch = "wasm32")))]
+pub mod native;
 #[cfg(any(test, feature = "page"))]
 pub mod page;
 pub mod table;
