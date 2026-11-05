@@ -646,6 +646,7 @@ dependencies = [
  "logical_disc",
  "mech_logline",
  "window",
+ "window-input",
 ]
 
 [[package]]

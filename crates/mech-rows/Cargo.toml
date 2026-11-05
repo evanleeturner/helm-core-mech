@@ -1,7 +1,8 @@
 # mercs's rows (ruling 1389): the game's facts the Kernel stand-in reads, a
 # module a step, constants only: `memory` for kernel_memory's helpers, `files`
 # for kernel_files' seam, `disc` for logical_disc, `time` for kernel_time's,
-# `threads` for kernel_threads', `process` for kernel_process's, `registry` for kernel_registry's, `window` for window's. Its
+# `threads` for kernel_threads', `process` for kernel_process's, `registry` for kernel_registry's, `window` for window's, `input` for
+# window-input's. Its
 # harvested logs and the tests that replay them
 # test the stand-in on this game. No target's own names: it builds for any
 # target, the browser's included.
@@ -43,5 +44,7 @@ kernel_registry = { path = "../kernel-registry", features = ["page", "std"] }
 kernel_threads = { path = "../kernel-threads", features = ["page", "std"] }
 logical_disc = { path = "../logical-disc", features = ["disc"] }
 window = { path = "../window", features = ["desk"] }
+# A test's alone: window-input takes window's `desk`, which allocates.
+window-input = { path = "../window-input" }
 mech_logline = { path = "../mech-logline" }
 log = { version = "0.4", features = ["kv"] }
