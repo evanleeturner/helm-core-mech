@@ -10,6 +10,7 @@ use alloc::collections::BTreeMap;
 use alloc::vec;
 use alloc::vec::Vec;
 use core::cell::RefCell;
+use core::ops::Range;
 
 /// `DEFAULT_PALETTE`, a context's palette before any is selected.
 const STOCK_PALETTE: u32 = 15;
@@ -24,6 +25,8 @@ const STOCK_BRUSH: u32 = 4;
 const STOCK_BASE: u32 = 0x80;
 /// The first handle made.
 const FIRST: u32 = 0x100;
+/// The most bytes a picture holds: a wild header is refused, never allocated.
+const MOST_BYTES: u64 = 1 << 30;
 
 /// The handle of the stock object at `index`.
 const fn stock(index: u32) -> u32 {
@@ -101,18 +104,36 @@ pub struct Buffer {
 }
 
 impl Buffer {
-    /// All index 0; each row rounded up to 4 bytes, as a DIB's.
+    /// All index 0; each row rounded up to 4 bytes, as a DIB's; `None` past
+    /// `MOST_BYTES`.
     #[must_use]
-    pub fn new(width: u32, height: u32, bottom_up: bool) -> Self {
-        let pitch = (width + 3) & !3;
-        Self {
+    pub fn sized(width: u32, height: u32, bottom_up: bool) -> Option<Self> {
+        let pitch = (u64::from(width) + 3) & !3;
+        let bytes = pitch * u64::from(height);
+        if bytes > MOST_BYTES {
+            return None;
+        }
+        Some(Self {
             width,
             height,
-            pitch,
+            pitch: u32::try_from(pitch).ok()?,
             bottom_up,
-            pixels: vec![0; (pitch * height) as usize],
+            pixels: vec![0; usize::try_from(bytes).ok()?],
             table: None,
-        }
+        })
+    }
+
+    /// [`Self::sized`], or a picture of no pixels past `MOST_BYTES`.
+    #[must_use]
+    pub fn new(width: u32, height: u32, bottom_up: bool) -> Self {
+        Self::sized(width, height, bottom_up).unwrap_or(Self {
+            width: 0,
+            height: 0,
+            pitch: 0,
+            bottom_up,
+            pixels: Vec::new(),
+            table: None,
+        })
     }
 
     /// Where the picture's row `y` starts in `pixels`.
@@ -150,8 +171,13 @@ impl Buffer {
 
 /// A number's bits as a signed number, two's complement: `cast_signed` is
 /// newer than the crate's Rust.
-const fn signed(value: u32) -> i32 {
+pub(crate) const fn signed(value: u32) -> i32 {
     i32::from_ne_bytes(value.to_ne_bytes())
+}
+
+/// A signed number's bits as a number, the file's way of reading an answer.
+pub(crate) const fn unsigned(value: i32) -> u32 {
+    u32::from_ne_bytes(value.to_ne_bytes())
 }
 
 /// A rectangle in a picture's pixels, its corner and its size.
@@ -295,16 +321,28 @@ impl State {
     }
 }
 
+/// The columns and rows of `to`, counted from its corner, that land on a
+/// picture `width` by `height`: a wild rectangle costs what lands and no more,
+/// and a negative size, a mirror, lands nothing.
+fn landing(to: Area, width: u32, height: u32) -> (Range<i64>, Range<i64>) {
+    let cut = |at: i32, size: i32, whole: u32| {
+        let (at, size) = (i64::from(at), i64::from(size));
+        (-at).max(0)..size.min(i64::from(whole) - at)
+    };
+    (cut(to.x, to.width, width), cut(to.y, to.height, height))
+}
+
 /// The source pixels `from` of `source`, scaled by nearest pixel to `to`'s
-/// size, each held in `source`; a pixel outside reads `None`.
-fn scaled(source: &Buffer, from: Area, to: Area) -> Vec<Option<u8>> {
+/// size, for what lands on a picture of `size`; a pixel outside reads `None`.
+fn scaled(source: &Buffer, from: Area, to: Area, size: (u32, u32)) -> Vec<Option<u8>> {
     let inside = |x: i64, y: i64| {
         (0..i64::from(source.width)).contains(&x) && (0..i64::from(source.height)).contains(&y)
     };
-    let mut taken = Vec::with_capacity((to.width.max(0) * to.height.max(0)) as usize);
-    for row in 0..i64::from(to.height) {
+    let (columns, rows) = landing(to, size.0, size.1);
+    let mut taken = Vec::new();
+    for row in rows {
         let y = i64::from(from.y) + row * i64::from(from.height) / i64::from(to.height);
-        for column in 0..i64::from(to.width) {
+        for column in columns.clone() {
             let x = i64::from(from.x) + column * i64::from(from.width) / i64::from(to.width);
             taken.push(inside(x, y).then(|| {
                 let (x, y) = (u32::try_from(x).unwrap_or(0), u32::try_from(y).unwrap_or(0));
@@ -315,17 +353,15 @@ fn scaled(source: &Buffer, from: Area, to: Area) -> Vec<Option<u8>> {
     taken
 }
 
-/// `taken`, `to`'s size row by row, onto `target`, clipped to it.
+/// `taken`, what lands of `to` row by row, onto `target`.
 fn paste(target: &mut Buffer, to: Area, taken: &[Option<u8>]) {
+    let (columns, rows) = landing(to, target.width, target.height);
     let mut pixels = taken.iter();
-    for row in 0..i64::from(to.height) {
-        for column in 0..i64::from(to.width) {
+    for row in rows {
+        for column in columns.clone() {
             let index = pixels.next().copied().flatten();
             let (x, y) = (i64::from(to.x) + column, i64::from(to.y) + row);
-            if let (Some(index), Ok(x), Ok(y)) = (index, u32::try_from(x), u32::try_from(y))
-                && x < target.width
-                && y < target.height
-            {
+            if let (Some(index), Ok(x), Ok(y)) = (index, u32::try_from(x), u32::try_from(y)) {
                 target.put(x, y, index);
             }
         }
@@ -462,9 +498,13 @@ impl<B: Back> Easel<B> {
     }
 
     /// `quads` set in the table of the buffer `dc` holds, from `start`; the
-    /// count set, 0 for a context holding none.
+    /// count set, 0 for a context holding none or a window's, as Windows
+    /// answers one with no section selected.
     pub fn set_table(&self, dc: u32, start: u32, quads: &[u32]) -> u32 {
         let mut state = self.state.borrow_mut();
+        if state.is_window(dc) {
+            return 0;
+        }
         state.pixels_mut(dc).map_or(0, |buffer| {
             buffer
                 .table
@@ -535,8 +575,9 @@ impl<B: Back> Easel<B> {
         let (taken, table) = {
             let state = self.state.borrow();
             let buffer = state.pixels(source)?;
-            state.pixels(target)?;
-            (scaled(buffer, from, to), buffer.table.clone())
+            let onto = state.pixels(target)?;
+            let size = (onto.width, onto.height);
+            (scaled(buffer, from, to, size), buffer.table.clone())
         };
         self.land(target, to, &taken, table)
     }
@@ -551,11 +592,15 @@ impl<B: Back> Easel<B> {
         bits: &[u8],
         from: Area,
     ) -> Option<()> {
-        let mut source = Buffer::new(width, height, bottom_up);
+        let mut source = Buffer::sized(width, height, bottom_up)?;
         let length = source.pixels.len().min(bits.len());
         source.pixels[..length].copy_from_slice(&bits[..length]);
-        self.state.borrow().pixels(target)?;
-        self.land(target, to, &scaled(&source, from, to), None)
+        let size = {
+            let state = self.state.borrow();
+            let onto = state.pixels(target)?;
+            (onto.width, onto.height)
+        };
+        self.land(target, to, &scaled(&source, from, to, size), None)
     }
 
     fn land(

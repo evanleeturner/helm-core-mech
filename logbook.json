@@ -92,6 +92,12 @@
       "level": "D",
       "fields": { "n": "the BitBlt's number in the run, the dump files' name", "a": "the source's width, height, pitch, planes and depth word, bits pointer, colour count", "v": "the picture's 32-bit FNV-1a sum, telling it from the last", "from": "the address the BitBlt returns to" },
       "template": "dump {n} of the source at {from}: {a}, sum {v}"
+    },
+    {
+      "id": "draw.drop",
+      "level": "D",
+      "fields": { "n": "how many presents the page has dropped so far, this one counted" },
+      "template": "the page replaced a present it had not read, {n} so far"
     }
   ]
 }
