@@ -352,3 +352,45 @@ fn page_read_once_last_wins_drop_logged() {
     assert!(!page.read(&mut into));
     assert_eq!(into, [9; 4]);
 }
+
+/// A 2 by 2 picture, its rows 3 bytes apart: a row's last byte is padding, so
+/// a read that keeps it shears the row after.
+fn two_by_two() -> Shown {
+    let mut palette = Palette::black();
+    palette.0[1] = 0x11_0000;
+    palette.0[2] = 0x22_0000;
+    palette.0[3] = 0x33_0000;
+    palette.0[4] = 0x44_0000;
+    Shown {
+        width: 2,
+        height: 2,
+        pitch: 3,
+        pixels: vec![1, 2, 9, 3, 4, 9],
+        palette,
+    }
+}
+
+#[test]
+fn a_wider_taller_window_shows_the_picture_at_its_corner_the_rest_black() {
+    let mut into = [0xdead_beef_u32; 12];
+    two_by_two().to_zero_rgb(&mut into, 4);
+    assert_eq!(
+        into,
+        [
+            0x11_0000, 0x22_0000, 0, 0, //
+            0x33_0000, 0x44_0000, 0, 0, //
+            0, 0, 0, 0,
+        ]
+    );
+}
+
+#[test]
+fn a_narrower_shorter_window_cuts_the_picture_never_shears_it() {
+    let mut into = [0xdead_beef_u32; 1];
+    two_by_two().to_zero_rgb(&mut into, 1);
+    assert_eq!(into, [0x11_0000]);
+
+    let mut narrow = [0xdead_beef_u32; 2];
+    two_by_two().to_zero_rgb(&mut narrow, 1);
+    assert_eq!(narrow, [0x11_0000, 0x33_0000]);
+}

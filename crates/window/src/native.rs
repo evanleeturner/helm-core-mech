@@ -29,8 +29,12 @@
 //! grab hands each relative move on twice, the copy dropped here
 //! (`Twins`).
 use std::cell::RefCell;
+use std::rc::Rc;
 use std::time::{Duration, Instant};
 
+use raw_window_handle::{
+    DisplayHandle, HandleError, HasDisplayHandle, HasWindowHandle, WindowHandle,
+};
 use winit::application::ApplicationHandler;
 use winit::dpi::{PhysicalPosition, PhysicalSize};
 use winit::error::{EventLoopError, OsError};
@@ -46,7 +50,9 @@ use crate::{Event, Rect, Screen};
 enum Made {
     /// Placed, not yet made: the loop's next turn makes it.
     Waiting,
-    Window(Window),
+    /// Shared with each [`Lent`]: a window let go lives until the last is
+    /// dropped.
+    Window(Rc<Window>),
     /// The host would not make it: its reason kept, never asked again.
     Refused(OsError),
 }
@@ -57,6 +63,40 @@ struct Placed {
     rect: Rect,
     shown: bool,
     made: Made,
+}
+
+/// A program window lent to another crate's drawing: its host handles, its
+/// inside's size and its scale, and no winit type named. A window let go lives
+/// until its last `Lent` is dropped, so a surface over it is never left over a
+/// closed window.
+#[derive(Clone)]
+pub struct Lent(Rc<Window>);
+
+impl Lent {
+    /// The window's inside, width and height in the host's pixels.
+    #[must_use]
+    pub fn inner_size(&self) -> (u32, u32) {
+        let size = self.0.inner_size();
+        (size.width, size.height)
+    }
+
+    /// The host's pixels to one of the program's, as the host last said.
+    #[must_use]
+    pub fn scale_factor(&self) -> f64 {
+        self.0.scale_factor()
+    }
+}
+
+impl HasWindowHandle for Lent {
+    fn window_handle(&self) -> Result<WindowHandle<'_>, HandleError> {
+        self.0.window_handle()
+    }
+}
+
+impl HasDisplayHandle for Lent {
+    fn display_handle(&self) -> Result<DisplayHandle<'_>, HandleError> {
+        self.0.display_handle()
+    }
 }
 
 /// How the host holds the pointer.
@@ -143,7 +183,7 @@ impl Desktop {
                     .with_position(corner(placed.rect))
                     .with_visible(placed.shown);
                 placed.made = match event_loop.create_window(attributes) {
-                    Ok(host) => Made::Window(host),
+                    Ok(host) => Made::Window(Rc::new(host)),
                     Err(refusal) => Made::Refused(refusal),
                 };
             }
@@ -442,6 +482,19 @@ impl Native {
                 made: Made::Window(host),
                 ..
             }) => Ok(ask(host)),
+            _ => Err(format!("window {window} not made")),
+        }
+    }
+
+    /// Lends `window`'s host window; `Err` for one not made, so a caller
+    /// lends after [`Self::made`] says so.
+    pub fn lend(&self, window: u32) -> Result<Lent, String> {
+        let desktop = self.desktop.borrow();
+        match desktop.placed.iter().find(|placed| placed.window == window) {
+            Some(Placed {
+                made: Made::Window(host),
+                ..
+            }) => Ok(Lent(Rc::clone(host))),
             _ => Err(format!("window {window} not made")),
         }
     }

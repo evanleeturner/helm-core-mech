@@ -8,8 +8,9 @@
 //! The portable part every target shares is [`easel::Easel`]: the buffers, the
 //! palettes, the contexts and the objects they hold, the blits and the screen.
 //! A [`easel::Back`] sees [`easel::Shown`] alone, once a present: [`page::Page`]
-//! keeps it for the page's script. Under Wine there is no back: the original's
-//! calls stay Wine's, logged in the layer.
+//! keeps it for the page's script, [`native::Native`] paints it on a host's
+//! window. Under Wine there is no back: the original's calls stay Wine's, logged
+//! in the layer.
 //!
 //! The 23 fronts, in [`front::Front`]: `CreatePalette`, `SelectPalette`,
 //! `SetPaletteEntries`, `RealizePalette`, `SetDIBColorTable`,
@@ -27,7 +28,7 @@
 //!
 //! Each call writes one `imp.call` line, as the layer's without the caller;
 //! a table's entries follow on `draw.table` lines; a present the page never
-//! read is a `draw.drop` line.
+//! read is a `draw.drop` line, a host's paint a `draw.present` line.
 //!
 //! The walls, named: every picture is 8 bits; a raster operation not `SRCCOPY`
 //! draws nothing; a usage 1 table reads as the identity, the one measured; a
@@ -46,6 +47,8 @@ extern crate alloc;
 pub mod easel;
 #[cfg(any(test, feature = "desk"))]
 pub mod front;
+#[cfg(all(feature = "native", not(target_arch = "wasm32")))]
+pub mod native;
 #[cfg(any(test, feature = "page"))]
 pub mod page;
 pub mod table;

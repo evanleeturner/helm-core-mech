@@ -33,12 +33,25 @@ desk = ["window/desk"]
 # The page's back, `page::Page`: the page's script reads the buffer last shown
 # once an animation frame.
 page = ["desk"]
+# A host's back, `native::Native`, through softbuffer: a window `window` lends
+# by its handle traits, so no crate but `window` takes winit.
+native = ["desk", "window/native", "dep:softbuffer", "dep:raw-window-handle"]
 
 [dependencies]
 window = { path = "../window" }
 mech_trace = { path = "../mech-trace" }
 log = { version = "0.4", features = ["kv"] }
 
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+# `kms` off: winit hands softbuffer no DRM window.
+softbuffer = { version = "=0.4.8", default-features = false, features = ["x11", "x11-dlopen", "wayland", "wayland-dlopen"], optional = true }
+raw-window-handle = { version = "=0.6.2", optional = true }
+
 [dev-dependencies]
 window = { path = "../window", features = ["desk", "page"] }
 mech_logline = { path = "../mech-logline" }
+
+# One host window painted through softbuffer: run under a time limit.
+[[example]]
+name = "native_draw"
+required-features = ["native"]

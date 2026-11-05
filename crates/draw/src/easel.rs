@@ -213,17 +213,21 @@ pub struct Shown {
 }
 
 impl Shown {
-    /// The picture as `0RGB`, row by row with no gap, into `into`; a smaller
-    /// `into` takes what fits, a larger keeps its rest.
-    pub fn to_zero_rgb(&self, into: &mut [u32]) {
+    /// The picture as `0RGB` into rows `width` words wide, what fits from the
+    /// top left corner, the rest of `into` 0: a window sized other than the
+    /// picture, never scaled and never sheared.
+    pub fn to_zero_rgb(&self, into: &mut [u32], width: u32) {
+        into.fill(0);
         let rows = self.pixels.chunks_exact(self.pitch.max(1) as usize);
-        let indexes = rows.flat_map(|row| &row[..self.width as usize]);
-        for (slot, index) in into.iter_mut().zip(indexes) {
-            *slot = self.palette.zero_rgb(*index);
+        for (slots, row) in into.chunks_exact_mut(width.max(1) as usize).zip(rows) {
+            for (slot, index) in slots.iter_mut().zip(&row[..self.width as usize]) {
+                *slot = self.palette.zero_rgb(*index);
+            }
         }
     }
 
-    /// The picture as RGBA, 4 bytes a pixel, into `into`, as [`Self::to_zero_rgb`].
+    /// The picture as RGBA, 4 bytes a pixel, row by row with no gap, into `into`;
+    /// a smaller `into` takes what fits, a larger keeps its rest.
     pub fn to_rgba(&self, into: &mut [u8]) {
         let rows = self.pixels.chunks_exact(self.pitch.max(1) as usize);
         let indexes = rows.flat_map(|row| &row[..self.width as usize]);
