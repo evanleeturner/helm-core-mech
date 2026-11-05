@@ -2,7 +2,7 @@
 //! The portable part every target shares: the class table, the window
 //! table and the message queue, kept for one program and read by each of
 //! its files' fronts. A back raises events; the desk queues them as the
-//! program's messages.
+//! program's messages, a key as its key message.
 
 use alloc::collections::VecDeque;
 use alloc::vec::Vec;
@@ -10,9 +10,16 @@ use core::cell::{RefCell, RefMut};
 
 use crate::{Event, Message, Rect, Screen};
 
-/// `WM_CLOSE` and `WM_ACTIVATEAPP`, the messages an [`Event`] queues.
+/// `WM_CLOSE`, `WM_ACTIVATEAPP` and the 4 key messages, the messages an
+/// [`Event`] queues.
 const WM_CLOSE: u32 = 0x10;
 const WM_ACTIVATEAPP: u32 = 0x1c;
+const WM_KEYDOWN: u32 = 0x100;
+const WM_KEYUP: u32 = 0x101;
+const WM_SYSKEYDOWN: u32 = 0x104;
+const WM_SYSKEYUP: u32 = 0x105;
+/// `VK_MENU`, Alt: while it is down a key's message is its `WM_SYS` form.
+const VK_MENU: u8 = 0x12;
 /// The first window handle: never 0, which every call reads as none.
 const FIRST_HANDLE: u32 = 0x0001_0020;
 /// The first class atom, where Windows numbers a program's own classes.
@@ -62,6 +69,9 @@ pub struct State {
     pub focus: u32,
     /// The time of the last message `PeekMessageA` took.
     pub time: u32,
+    /// The keys down as the queued key messages left them, oldest first:
+    /// all let go when the host's window loses the user's attention.
+    pub held: Vec<u8>,
 }
 
 impl State {
@@ -101,6 +111,28 @@ impl State {
     pub fn atom(&self) -> u32 {
         FIRST_ATOM + u32::try_from(self.classes.len()).unwrap_or(u32::MAX - FIRST_ATOM)
     }
+
+    /// The message and its `l` for `key` going down or up, the held keys
+    /// changed after: `l` the repeat 1, bit 29 Alt down (or the key Alt),
+    /// bit 30 the key down before (every up), bit 31 an up.
+    fn key(&mut self, key: u8, down: bool) -> (u32, u32) {
+        let before = self.held.contains(&key);
+        let alt = key == VK_MENU || self.held.contains(&VK_MENU);
+        let message = match (alt, down) {
+            (false, true) => WM_KEYDOWN,
+            (false, false) => WM_KEYUP,
+            (true, true) => WM_SYSKEYDOWN,
+            (true, false) => WM_SYSKEYUP,
+        };
+        if !down {
+            self.held.retain(|held| *held != key);
+        } else if !before {
+            self.held.push(key);
+        }
+        let l =
+            1 | u32::from(alt) << 29 | u32::from(before || !down) << 30 | u32::from(!down) << 31;
+        (message, l)
+    }
 }
 
 /// One program's windows: the tables and the queue, and the back that
@@ -129,21 +161,33 @@ impl<S: Screen> Desk<S> {
     }
 
     /// Queues each event the back raised since the last pump as the
-    /// program's message, stamped with the back's time.
+    /// program's message, stamped with the back's time. A button, the
+    /// pointer and its motion queue nothing: the program polls them.
     pub fn pump(&self) {
         let mut events = Vec::new();
         self.screen.pump(&mut |event| events.push(event));
         let time = self.screen.now();
         let mut state = self.state();
         for event in events {
-            let (window, message, w) = match event {
-                Event::Close { window } => (window, WM_CLOSE, 0),
-                Event::Active { window, active } => (window, WM_ACTIVATEAPP, u32::from(active)),
+            let (window, message, w, l) = match event {
+                Event::Close { window } => (window, WM_CLOSE, 0, 0),
+                Event::Active { window, active } => {
+                    if !active {
+                        state.held.clear();
+                    }
+                    (window, WM_ACTIVATEAPP, u32::from(active), 0)
+                }
+                Event::Key { window, key, down } => {
+                    let (message, l) = state.key(key, down);
+                    (window, message, u32::from(key), l)
+                }
+                Event::Button { .. } | Event::Pointer { .. } | Event::Motion { .. } => continue,
             };
             state.queue.push_back(Message {
                 window,
                 message,
                 w,
+                l,
                 time,
                 ..Message::default()
             });

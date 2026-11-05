@@ -15,6 +15,13 @@ const WM_CLOSE: u32 = 0x10;
 const WM_QUIT: u32 = 0x12;
 const WM_NCHITTEST: u32 = 0x84;
 const WM_NCACTIVATE: u32 = 0x86;
+/// The key messages `TranslateMessage` reads, and the characters it posts.
+const WM_KEYDOWN: u32 = 0x100;
+const WM_KEYUP: u32 = 0x101;
+const WM_CHAR: u32 = 0x102;
+const WM_SYSKEYDOWN: u32 = 0x104;
+const WM_SYSKEYUP: u32 = 0x105;
+const WM_SYSCHAR: u32 = 0x106;
 /// `HTCLIENT`: every point is the client area's, the stand-in drawing no
 /// frame.
 const HTCLIENT: u32 = 1;
@@ -625,18 +632,39 @@ impl<'d, S: Screen> Front<'d, S> {
         1
     }
 
-    /// `TranslateMessage`: 0, nothing posted; the key-to-character map is
-    /// `window-input`'s (step 2). Callers: the shell, the game file.
+    /// `TranslateMessage`: a key down's character, the back's
+    /// [`Screen::character`], posted as `WM_CHAR` (`WM_SYSCHAR` from a
+    /// `WM_SYSKEYDOWN`) to be taken next, as Windows reads its posted
+    /// messages before its input; none for a key typing none. 1 for any of
+    /// the 4 key messages, else 0, as Windows answers. Callers: the shell,
+    /// the game file.
     #[must_use]
     pub fn translate_message(&self, message: &Message) -> u32 {
+        let typed = match message.message {
+            WM_KEYDOWN => Some(WM_CHAR),
+            WM_SYSKEYDOWN => Some(WM_SYSCHAR),
+            _ => None,
+        };
+        let character = typed.map_or(0, |_| self.desk.screen().character(message.w));
+        if let (Some(posted), true) = (typed, character != 0) {
+            self.desk.state().queue.push_front(Message {
+                message: posted,
+                w: character,
+                ..*message
+            });
+        }
+        let answer = u32::from(matches!(
+            message.message,
+            WM_KEYDOWN | WM_KEYUP | WM_SYSKEYDOWN | WM_SYSKEYUP
+        ));
         self.line(
             self.file.calls.translate_message,
             &message.fields(),
             &[],
             &[],
-            0,
+            answer,
         );
-        0
+        answer
     }
 
     /// The procedure of `window`, read before any call: the call may

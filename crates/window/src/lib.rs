@@ -38,8 +38,10 @@
 //! area is its whole rectangle; no message is sent while a window is made,
 //! placed or destroyed, the program reading none back; z-order and the
 //! owner chain are not kept; the key-to-character map is `window-input`'s
-//! (step 2), so `TranslateMessage` posts nothing; icons and painting are
-//! chunk 3's, so an icon is a handle and nothing more.
+//! (step 2), handed to `TranslateMessage` by [`Screen::character`], so a
+//! back with none posts no character; a key message's scan code is 0, no
+//! back handing one in; icons and painting are chunk 3's, so an icon is a
+//! handle and nothing more.
 //!
 //! The crate names no game and nothing of any one target, so it builds for
 //! `wasm32-unknown-unknown`; a game's facts live in its rows crate.
@@ -118,7 +120,8 @@ impl Message {
 }
 
 /// What a host's window did, as a back hands it in: the seam's own words,
-/// never a host's or Windows' type. Input is step 2's (`window-input`).
+/// never a host's or Windows' type. A key is its virtual key number; what
+/// the input events leave readable is step 2's (`window-input`).
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Event {
     /// The host asked `window` closed: the program's `WM_CLOSE`.
@@ -126,6 +129,20 @@ pub enum Event {
     /// The host's window took or lost the user's attention: the program's
     /// `WM_ACTIVATEAPP`.
     Active { window: u32, active: bool },
+    /// A key went down or up in `window`, `key` its virtual key number: the
+    /// program's `WM_KEYDOWN` or `WM_KEYUP`, or their `WM_SYS` forms while
+    /// Alt is down. A held key's repeat is another down.
+    Key { window: u32, key: u8, down: bool },
+    /// A pointer button went down or up in `window`, `key` its virtual key
+    /// number (1 left, 2 right, 4 middle). It queues nothing: the
+    /// program's pumps ask for key messages alone, and poll the buttons.
+    Button { window: u32, key: u8, down: bool },
+    /// The pointer stands at `x`, `y` on the screen, over `window`. It
+    /// queues nothing.
+    Pointer { window: u32, x: i32, y: i32 },
+    /// The pointer moved by `dx`, `dy`, wherever it stands: what a locked
+    /// pointer raises. It queues nothing.
+    Motion { dx: i32, dy: i32 },
 }
 
 /// Where one program's windows are shown: the seam between the calls and
@@ -145,6 +162,12 @@ pub trait Screen {
     /// Writes one line around whatever the target must keep across it.
     fn quiet(&self, line: impl FnOnce()) {
         line();
+    }
+    /// The character the key `key` types as the keys stand now,
+    /// `TranslateMessage`'s; 0 for none. A back with no key map types none.
+    fn character(&self, key: u32) -> u32 {
+        let _ = key;
+        0
     }
 }
 
@@ -173,6 +196,10 @@ impl<S: Screen> Screen for &S {
 
     fn quiet(&self, line: impl FnOnce()) {
         (**self).quiet(line);
+    }
+
+    fn character(&self, key: u32) -> u32 {
+        (**self).character(key)
     }
 }
 

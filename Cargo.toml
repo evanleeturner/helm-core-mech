@@ -1,6 +1,6 @@
 # The public tree's Rust: one workspace, a crate a game file.
 [workspace]
-members = ["crates/kernel-files", "crates/kernel-memory", "crates/kernel-process", "crates/kernel-registry", "crates/kernel-text", "crates/kernel-time", "crates/kernel-threads", "crates/logical-disc", "crates/mech-game", "crates/mech-launcher", "crates/mech-layer", "crates/mech-logline", "crates/mech-rows", "crates/mech-shell", "crates/mech-swap", "crates/mech-trace", "crates/window"]
+members = ["crates/kernel-files", "crates/kernel-memory", "crates/kernel-process", "crates/kernel-registry", "crates/kernel-text", "crates/kernel-time", "crates/kernel-threads", "crates/logical-disc", "crates/mech-game", "crates/mech-launcher", "crates/mech-layer", "crates/mech-logline", "crates/mech-rows", "crates/mech-shell", "crates/mech-swap", "crates/mech-trace", "crates/window", "crates/window-input"]
 resolver = "3"
 
 # The swap's library (crates/mech-swap): no unwinding, and one object of the
