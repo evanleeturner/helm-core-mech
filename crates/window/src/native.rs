@@ -25,7 +25,9 @@
 //! of the program's has the focus alone, winit's default; X11 takes
 //! `Confined` alone, `Locked` not implemented there (winit's
 //! `CursorGrabMode` notes), so a confined pointer still moves the host's
-//! cursor inside the window while the program reads its motion.
+//! cursor inside the window while the program reads its motion; and X11's
+//! grab hands each relative move on twice, the copy dropped here
+//! (`Twins`).
 use std::cell::RefCell;
 use std::time::{Duration, Instant};
 
@@ -69,13 +71,66 @@ pub enum Hold {
     Confined,
 }
 
-/// The windows, the events raised since the last pump, and the pointer's
-/// motion not yet a whole pixel: winit's handler.
+/// Relative motion an X11 grab hands on twice, each pair kept once.
+///
+/// The rule, xorg-server's `dix/events.c` (tag 21.1.12, this box's
+/// server, and `master` alike): `DeliverRawEvent` gives a grabbed
+/// pointer's raw event to `DeliverGrabbedEvent`, whose owner-events walk
+/// ends at the root's raw selection, then to every client selecting raw
+/// events on the root; `FilterRawEvents` skips the grabbing client there
+/// only when the grab's window is the root. winit grabs on its own
+/// window and selects raw motion on the root, so each move comes twice,
+/// side by side, one `DeliverRawEvent` writing both. Flown on Xvfb (WI1
+/// session 20): 3 moves read 6 `MouseMotion`s grabbed, 3 free. Keys come
+/// once: the keyboard is not grabbed. A pair never overlaps another, so
+/// a copy is known by its bits alone, never by `==` on floats.
+#[derive(Default)]
+struct Twins {
+    /// The window whose X11 grab is held: `None`, every motion kept.
+    doubled: Option<u32>,
+    /// The bits of a first motion whose copy has not yet come.
+    first: Option<(u64, u64)>,
+}
+
+impl Twins {
+    /// Whether `delta` is a move to hand on: armed, a first is kept and
+    /// its copy dropped; unarmed, every one kept.
+    fn keep(&mut self, delta: (f64, f64)) -> bool {
+        if self.doubled.is_none() {
+            return true;
+        }
+        let bits = (delta.0.to_bits(), delta.1.to_bits());
+        if self.first.take() == Some(bits) {
+            return false;
+        }
+        self.first = Some(bits);
+        true
+    }
+
+    /// `window`'s X11 grab is held; one held before is the server's to
+    /// end, a client holding a single grab.
+    const fn arm(&mut self, window: u32) {
+        self.doubled = Some(window);
+    }
+
+    /// `window`'s grab is let go, ended by the server or the window gone:
+    /// every motion kept again; another window's grab stays armed.
+    fn release(&mut self, window: u32) {
+        if self.doubled == Some(window) {
+            *self = Self::default();
+        }
+    }
+}
+
+/// The windows, the events raised since the last pump, the pointer's
+/// motion not yet a whole pixel, and the grab's doubled motion: winit's
+/// handler.
 #[derive(Default)]
 struct Desktop {
     placed: Vec<Placed>,
     events: Vec<Event>,
     motion: (f64, f64),
+    twins: Twins,
 }
 
 impl Desktop {
@@ -159,11 +214,14 @@ impl ApplicationHandler for Desktop {
     }
 
     /// The pointer's relative motion, its whole pixels handed on and the
-    /// rest kept for the next.
+    /// rest kept for the next; an X11 grab's copy dropped first.
     fn device_event(&mut self, _: &ActiveEventLoop, _: DeviceId, event: DeviceEvent) {
         let DeviceEvent::MouseMotion { delta } = event else {
             return;
         };
+        if !self.twins.keep(delta) {
+            return;
+        }
         let (x, y) = (self.motion.0 + delta.0, self.motion.1 + delta.1);
         let (dx, dy) = (x.trunc(), y.trunc());
         self.motion = (x - dx, y - dy);
@@ -309,10 +367,37 @@ fn inside(rect: Rect) -> PhysicalSize<u32> {
     )
 }
 
+/// Whether the loop's host is an X11 server, whose grab doubles relative
+/// motion ([`Twins`]); the cfg is winit's `x11_platform`.
+#[cfg(all(
+    unix,
+    not(any(target_os = "ios", target_os = "macos")),
+    not(target_os = "android"),
+    not(target_os = "emscripten"),
+    not(target_os = "redox")
+))]
+fn on_x11(event_loop: &EventLoop<()>) -> bool {
+    use winit::platform::x11::EventLoopExtX11;
+    event_loop.is_x11()
+}
+
+/// No X11 server off winit's X11 targets.
+#[cfg(not(all(
+    unix,
+    not(any(target_os = "ios", target_os = "macos")),
+    not(target_os = "android"),
+    not(target_os = "emscripten"),
+    not(target_os = "redox")
+)))]
+const fn on_x11(_: &EventLoop<()>) -> bool {
+    false
+}
+
 /// The back on a host's desktop.
 pub struct Native {
     size: (i32, i32),
     began: Instant,
+    x11: bool,
     event_loop: RefCell<EventLoop<()>>,
     desktop: RefCell<Desktop>,
 }
@@ -321,10 +406,12 @@ impl Native {
     /// A back answering a `width` by `height` screen, its loop made now.
     /// Linux refuses a loop off the main thread, or a second one.
     pub fn new(width: i32, height: i32) -> Result<Self, EventLoopError> {
+        let event_loop = EventLoop::new()?;
         Ok(Self {
             size: (width, height),
             began: Instant::now(),
-            event_loop: RefCell::new(EventLoop::new()?),
+            x11: on_x11(&event_loop),
+            event_loop: RefCell::new(event_loop),
             desktop: RefCell::new(Desktop::default()),
         })
     }
@@ -360,7 +447,8 @@ impl Native {
     }
 
     /// Asks the host to hold the pointer over `window` as `hold`; `Err`
-    /// the host's refusal, or a window not made.
+    /// the host's refusal, or a window not made. A hold taken on X11
+    /// arms [`Twins`]; `Free` releases it.
     pub fn hold(&self, window: u32, hold: Hold) -> Result<(), String> {
         let mode = match hold {
             Hold::Free => CursorGrabMode::None,
@@ -368,7 +456,14 @@ impl Native {
             Hold::Confined => CursorGrabMode::Confined,
         };
         self.host(window, |host| host.set_cursor_grab(mode))?
-            .map_err(|refusal| refusal.to_string())
+            .map_err(|refusal| refusal.to_string())?;
+        let twins = &mut self.desktop.borrow_mut().twins;
+        if hold == Hold::Free {
+            twins.release(window);
+        } else if self.x11 {
+            twins.arm(window);
+        }
+        Ok(())
     }
 
     /// The program's lock as the host can hold it: when `locked`,
@@ -401,7 +496,9 @@ impl Screen for Native {
 
     /// A window the host has made is placed at once, its new inside asked
     /// of the host, the host's answer never read back: the program keeps
-    /// its own rectangle. Any other is made at the next pump.
+    /// its own rectangle. Any other is made at the next pump. A hidden
+    /// window's grab is released: X11 ends a grab whose window is not
+    /// viewable.
     fn place(&self, window: u32, rect: Rect, shown: bool) {
         let mut desktop = self.desktop.borrow_mut();
         match desktop.placed.iter_mut().find(|was| was.window == window) {
@@ -421,14 +518,16 @@ impl Screen for Native {
                 made: Made::Waiting,
             }),
         }
+        if !shown {
+            desktop.twins.release(window);
+        }
     }
 
-    /// The host's window closes as it is let go.
+    /// The host's window closes as it is let go, its grab with it.
     fn gone(&self, window: u32) {
-        self.desktop
-            .borrow_mut()
-            .placed
-            .retain(|placed| placed.window != window);
+        let mut desktop = self.desktop.borrow_mut();
+        desktop.placed.retain(|placed| placed.window != window);
+        desktop.twins.release(window);
     }
 
     /// One turn of winit's loop, waiting for nothing; the events it raised
@@ -446,5 +545,87 @@ impl Screen for Native {
 
     fn now(&self) -> u32 {
         u32::try_from(self.began.elapsed().as_millis()).unwrap_or(u32::MAX)
+    }
+}
+
+/// The grab's double, replayed from WI1's Xvfb flights (`records/
+/// 2026-11-05-lane-a/helm-window-input-wi1/` in the integrator's tree):
+/// xdotool's 3 relative moves, (7, 3), (7, 3) and (-4, 9).
+#[cfg(test)]
+mod tests {
+    use super::Twins;
+
+    /// The moves `twins` hands on of `deltas`, in order.
+    fn kept(twins: &mut Twins, deltas: &[(f64, f64)]) -> Vec<(f64, f64)> {
+        deltas
+            .iter()
+            .copied()
+            .filter(|&delta| twins.keep(delta))
+            .collect()
+    }
+
+    /// Session 20's grabbed run (`s20-xvfb-when-run.txt`, lines 16 to
+    /// 37): 6 `MouseMotion`s, each pair kept once. Moves 1 and 2 are
+    /// equal, so 4 equal deltas in a row keep 2.
+    #[test]
+    fn grabbed_pairs_keep_one_each() {
+        let mut twins = Twins::default();
+        twins.arm(1);
+        let read = [
+            (7.0, 3.0),
+            (7.0, 3.0),
+            (7.0, 3.0),
+            (7.0, 3.0),
+            (-4.0, 9.0),
+            (-4.0, 9.0),
+        ];
+        assert_eq!(
+            kept(&mut twins, &read),
+            [(7.0, 3.0), (7.0, 3.0), (-4.0, 9.0)]
+        );
+    }
+
+    /// Session 19's free run (`s19-xvfb-free-run.txt`, lines 15 to 25):
+    /// 3 `MouseMotion`s, unarmed, all kept; released, the same.
+    #[test]
+    fn free_moves_all_kept() {
+        let read = [(7.0, 3.0), (7.0, 3.0), (-4.0, 9.0)];
+        assert_eq!(kept(&mut Twins::default(), &read), read);
+        let mut twins = Twins::default();
+        twins.arm(1);
+        twins.keep((7.0, 3.0));
+        twins.release(1);
+        assert_eq!(kept(&mut twins, &read), read);
+    }
+
+    /// The rule's case, unmeasured: a move read before the grab took
+    /// comes once, its copy never coming, and the next move is a first.
+    /// The deltas are the flights', the lone one placed by hand.
+    #[test]
+    fn a_lone_first_leaves_the_next_a_first() {
+        let mut twins = Twins::default();
+        twins.arm(1);
+        let read = [
+            (-4.0, 9.0),
+            (7.0, 3.0),
+            (7.0, 3.0),
+            (7.0, 3.0),
+            (7.0, 3.0),
+            (-4.0, 9.0),
+            (-4.0, 9.0),
+        ];
+        assert_eq!(
+            kept(&mut twins, &read),
+            [(-4.0, 9.0), (7.0, 3.0), (7.0, 3.0), (-4.0, 9.0)]
+        );
+    }
+
+    /// Another window's release leaves the grab armed.
+    #[test]
+    fn release_is_the_grabbing_windows() {
+        let mut twins = Twins::default();
+        twins.arm(1);
+        twins.release(2);
+        assert_eq!(kept(&mut twins, &[(7.0, 3.0), (7.0, 3.0)]), [(7.0, 3.0)]);
     }
 }
