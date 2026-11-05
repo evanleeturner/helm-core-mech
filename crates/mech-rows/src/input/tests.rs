@@ -14,6 +14,10 @@
 //! Falsifier 5, the remap rows: each chord a browser keeps has one row, its
 //! key bound in both tables (`s1-tables.txt`: `57`, `54`, `4e` and `74`),
 //! and no row is pressed with a chord a browser keeps.
+//!
+//! The held bit: each file's test of a held Ctrl, Alt or Shift reads
+//! `GetKeyState`'s `0x1000`, each button's `GetAsyncKeyState`'s `0x8000`
+//! (`s24-held-bit.txt`).
 use core::cell::RefCell;
 
 use window::desk::Desk;
@@ -22,7 +26,7 @@ use window_input::front::Front;
 use window_input::remap::{BROWSER_KEPT, Chord, read};
 use window_input::{Input, Keys};
 
-use crate::input::{REMAP, SHELL, stick};
+use crate::input::{GAME, REMAP, SHELL, stick};
 use crate::test_log::debug_lines;
 
 /// The game's client, 640 by 480.
@@ -188,6 +192,59 @@ fn the_shells_row_answers_k3s_polls() {
             "imp.call c=USER32!GetKeyState a=10 v=0",
         ]
     );
+}
+
+/// The mask `fun_1005b830` and `fun_10070381` OR into a queued key: Ctrl
+/// `0x100`, Alt `0x400` and Shift `0x200`, each on its `GetKeyState`
+/// answer's `0x1000`, the machine code's `test ah,0x10`.
+fn held<S: Screen>(front: &Front<'_, S>) -> u16 {
+    [(0x11, 0x100), (0x12, 0x400), (0x10, 0x200)]
+        .into_iter()
+        .filter(|&(key, _)| front.get_key_state(key) & 0x1000 != 0)
+        .fold(0, |mask, (_, bit)| mask | bit)
+}
+
+/// The held bit: the shell and the game file test a held Ctrl, Alt or
+/// Shift by bit `0x1000` of `GetKeyState` (`1005b86a`, `1005b878` and
+/// `1005b886` in the shell), which the front's `0xff80` holds and its
+/// toggle bit never sets; the 3 buttons' polls (`fun_10055bf0`,
+/// `fun_1005ed99`) test `GetAsyncKeyState`'s `0x8000` alone. 6 calls of
+/// each in the two files, every key's `0x1000` test on `GetKeyState`
+/// (`s24-held-bit.txt`). The presses are the test's: play is unreached
+/// (wall 1), and `k3` logged the shell's Alt alone, `ff81` and `ff80`.
+#[test]
+fn a_held_key_reads_the_bit_each_test_reads() {
+    for row in [&SHELL, &GAME] {
+        let desk = Desk::new(Input::new(Board::default()));
+        let front = Front::new(row, &desk);
+        let hand = |events: &[Event]| {
+            desk.screen().back().events.borrow_mut().extend(events);
+            desk.pump();
+        };
+        let key = |key, down| Event::Key {
+            window: 0,
+            key,
+            down,
+        };
+        hand(&[key(0x11, true)]);
+        assert_eq!(held(&front), 0x100, "{}", row.file);
+        hand(&[key(0x12, true), key(0x10, true)]);
+        assert_eq!(held(&front), 0x700, "{}", row.file);
+        hand(&[key(0x11, false), key(0x12, false), key(0x10, false)]);
+        assert_eq!(held(&front), 0, "{}", row.file);
+        hand(&[Event::Button {
+            window: 0,
+            key: 1,
+            down: true,
+        }]);
+        assert_eq!(
+            front.get_async_key_state(1) & 0x8000,
+            0x8000,
+            "{}",
+            row.file
+        );
+        assert_eq!(front.get_async_key_state(2) & 0x8000, 0, "{}", row.file);
+    }
 }
 
 #[test]
