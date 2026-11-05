@@ -121,4 +121,63 @@ mod tests {
             ]
         );
     }
+
+    /// `r1`'s 5 lines, the layer's rows under Wine at the INSTANT ACTION
+    /// click, less their `from` and `tid`: what the census could not read,
+    /// the create's disposition 2 and each value 1 written, measured.
+    /// Wine's handle `e0` is the store's own here.
+    #[test]
+    fn the_flown_writes_replay() {
+        const FLOWN: [&str; 5] = [
+            "imp.call c=ADVAPI32!RegCreateKeyExA a=80000002,0,f003f s=Software\\Activision\\Mercenaries\\1.0 o=e0,2 v=0",
+            "imp.call c=ADVAPI32!RegSetValueExA a=e0,4,4 s=QuickTips o=1 v=0",
+            "imp.call c=ADVAPI32!RegSetValueExA a=e0,4,4 s=ShowDialog o=1 v=0",
+            "imp.call c=ADVAPI32!RegSetValueExA a=e0,4,4 s=LittleMovies o=1 v=0",
+            "imp.call c=ADVAPI32!RegCloseKey a=e0 v=0",
+        ];
+        let page = Page::new(&SHELL_ROW, b"", |_| {}).expect("an empty save");
+        let shell = Front::new(&SHELL_ROW, &page);
+        let settings: [&[u8]; 3] = [b"QuickTips", b"ShowDialog", b"LittleMovies"];
+        let mut held = 0;
+        let lines = debug_lines(|| {
+            let (key, disposition) = shell
+                .create_key(LOCAL_MACHINE, KEY, 0, 0xf_003f)
+                .expect("the key opens");
+            assert_eq!(disposition, 2);
+            for name in settings {
+                assert_eq!(shell.set_value(key, name, 4, &1_u32.to_le_bytes()), 0);
+            }
+            assert_eq!(shell.close_key(key), 0);
+            held = key;
+        });
+        let own = format!("={held:x}");
+        let flown: Vec<String> = FLOWN.iter().map(|line| line.replace("=e0", &own)).collect();
+        assert_eq!(lines, flown);
+    }
+
+    /// The joystick reads, the shell's `FUN_1003fbf0` and the game file's
+    /// `FUN_10038f3a`, each opening Windows' key for the joystick driver's
+    /// name as `r0`'s open did the game's key: no run reached either, so
+    /// the store alone answers. It holds nothing under `System`, so the
+    /// first open answers 2 and each file stops there, as under Wine,
+    /// whose prefix has no joystick key. The `%s` is kept as both files
+    /// hold it: the driver's key name, which no run measured; any name
+    /// answers the same.
+    #[test]
+    fn the_joystick_reads_answer_2() {
+        const JOYSTICK: &[u8] = b"System\\CurrentControlSet\\Control\\MediaResources\\Joystick\\%s\\CurrentJoystickSettings";
+        for row in ROWS {
+            let page = Page::new(row, b"", |_| {}).expect("an empty save");
+            let file = Front::new(*row, &page);
+            let lines = debug_lines(|| {
+                assert_eq!(file.open_key(LOCAL_MACHINE, JOYSTICK, 0, 1), Err(2));
+            });
+            assert_eq!(
+                lines,
+                [
+                    "imp.call c=ADVAPI32!RegOpenKeyExA a=80000002,0,1 s=System\\CurrentControlSet\\Control\\MediaResources\\Joystick\\%s\\CurrentJoystickSettings o=\"\" v=2"
+                ]
+            );
+        }
+    }
 }
