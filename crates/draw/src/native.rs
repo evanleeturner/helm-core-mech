@@ -8,8 +8,8 @@
 //! asks the host. The walls, named: a window sized other than the picture
 //! shows what fits from its top left corner, the rest black, never scaled
 //! ([`Shown::to_zero_rgb`]); a window of no size paints nothing. Each
-//! present writes one `draw.present` line, a refusal its reason; the program
-//! goes on, as it does when a host drops a frame.
+//! present writes one `draw.present` line, a refusal one `draw.refused` line;
+//! the program goes on, as it does when a host drops a frame.
 
 use core::cell::{Cell, RefCell};
 use core::num::NonZeroU32;
@@ -72,7 +72,7 @@ impl<H: HasDisplayHandle + HasWindowHandle + Clone> Back for Native<H> {
                 h:% = mech_trace::__shown!(height);
                 "draw.present"
             ),
-            Err(refusal) => log::warn!(refused:% = refusal; "draw.present"),
+            Err(refusal) => log::warn!(refused:% = refusal; "draw.refused"),
         }
     }
 }

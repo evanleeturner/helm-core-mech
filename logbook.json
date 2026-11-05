@@ -102,8 +102,14 @@
     {
       "id": "draw.present",
       "level": "D",
-      "fields": { "w": "the window's width the picture was painted into", "h": "its height", "refused": "softbuffer's refusal, a WARN line in place of w and h" },
-      "template": "a host's paint at {w} by {h}, refused: {refused}"
+      "fields": { "w": "the window's width the picture was painted into", "h": "its height" },
+      "template": "a host's paint at {w} by {h}"
+    },
+    {
+      "id": "draw.refused",
+      "level": "W",
+      "fields": { "refused": "softbuffer's refusal, in place of a paint" },
+      "template": "a host's paint refused: {refused}"
     }
   ]
 }

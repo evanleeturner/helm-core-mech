@@ -6,8 +6,9 @@
 //!
 //! `timeout 30 cargo run -p draw --features native --example native_draw`
 //!
-//! It prints each step and each `draw.present` line; it exits 0 once the host
-//! made the window and took the surface, 1 when it refused either.
+//! It prints each step and each `draw.present` or `draw.refused` line; it
+//! exits 0 once the host made the window and took the surface, 1 when it
+//! refused either.
 use std::process::ExitCode;
 use std::thread;
 use std::time::Duration;
