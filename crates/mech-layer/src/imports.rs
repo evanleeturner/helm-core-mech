@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
-//! The 27 imports the shell's screens call past its file, time, thread and text calls
+//! The 22 imports the shell's screens call past its file, time, thread, text and window calls
 //! (HC6 session 21's 42, less the 11 file calls the seam now answers,
-//! [`crate::files`], and the 2 time calls KT1's answers, [`crate::time`], and `CompareStringA`, KX1's, [`crate::text`]), one row each: the name the counter labels it by, the import, its
+//! [`crate::files`], and the 2 time calls KT1's answers, [`crate::time`], and `CompareStringA`, KX1's, [`crate::text`],
+//! and the 5 window calls WN1 logs with their callers, [`crate::window`]), one row each: the name the counter labels it by, the import, its
 //! arguments, its return. Each row makes a module of the import's name
 //! holding the real import, from the swap DLL's own import table, and its
 //! layer function, exported `HC6_<name>`; stdcall, as the shell calls
@@ -58,12 +59,6 @@ macro_rules! layer {
         }
     };
 }
-
-layer!("USER32!DefWindowProcA", DefWindowProcA(window: Handle, message: u32, w: usize, l: isize) -> isize);
-layer!("USER32!TranslateMessage", TranslateMessage(message: Pointer) -> i32);
-layer!("USER32!DispatchMessageA", DispatchMessageA(message: Pointer) -> isize);
-layer!("USER32!GetSystemMetrics", GetSystemMetrics(index: i32) -> i32);
-layer!("USER32!PostMessageA", PostMessageA(window: Handle, message: u32, w: usize, l: isize) -> i32);
 
 layer!("KERNEL32!HeapAlloc", HeapAlloc(heap: Handle, flags: u32, bytes: usize) -> Pointer);
 layer!("KERNEL32!HeapReAlloc", HeapReAlloc(heap: Handle, flags: u32, block: Pointer, bytes: usize) -> Pointer);
