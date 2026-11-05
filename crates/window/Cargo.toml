@@ -51,3 +51,9 @@ mech_logline = { path = "../mech-logline" }
 [[example]]
 name = "native_window"
 required-features = ["native"]
+
+# The back's keys, buttons, pointer, motion and grab, once on a host's
+# desktop: run under a time limit.
+[[example]]
+name = "native_input"
+required-features = ["native"]
