@@ -55,3 +55,8 @@ mech_logline = { path = "../mech-logline" }
 [[example]]
 name = "native_draw"
 required-features = ["native"]
+
+# A dump's screen back through the fronts, for its sums against the dump's own.
+[[example]]
+name = "front_dump"
+required-features = ["page"]

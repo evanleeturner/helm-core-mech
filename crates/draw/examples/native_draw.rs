@@ -22,6 +22,8 @@ use window::{Rect, Screen};
 const WINDOW: u32 = 1;
 const WIDTH: u32 = 320;
 const HEIGHT: u32 = 200;
+/// The same two sides as a host's rectangle takes them, signed.
+const SIDES: (i32, i32) = (320, 200);
 /// Its corner on the host's desktop, for a screen grab to find it.
 const CORNER: (i32, i32) = (40, 40);
 /// Turns of the loop, 20 ms apart, the bands up: about 3 s.
@@ -87,7 +89,7 @@ fn main() -> ExitCode {
             return ExitCode::FAILURE;
         }
     };
-    let rect = Rect::sized(CORNER.0, CORNER.1, WIDTH as i32, HEIGHT as i32);
+    let rect = Rect::sized(CORNER.0, CORNER.1, SIDES.0, SIDES.1);
     host.place(WINDOW, rect, true);
     for _ in 0..25 {
         host.pump(&mut |_| {});
