@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
-//! The 22 imports the shell's screens call past its file, time, thread, text and window calls
+//! The 18 imports the shell's screens call past its file, time, thread, text, window and drawing calls
 //! (HC6 session 21's 42, less the 11 file calls the seam now answers,
 //! [`crate::files`], and the 2 time calls KT1's answers, [`crate::time`], and `CompareStringA`, KX1's, [`crate::text`],
-//! and the 5 window calls WN1 logs with their callers, [`crate::window`]), one row each: the name the counter labels it by, the import, its
+//! and the 5 window calls WN1 logs with their callers, [`crate::window`], and the 4 drawing calls
+//! DB1 logs with theirs, [`crate::draw`]), one row each: the name the counter labels it by, the import, its
 //! arguments, its return. Each row makes a module of the import's name
 //! holding the real import, from the swap DLL's own import table, and its
 //! layer function, exported `HC6_<name>`; stdcall, as the shell calls
@@ -65,14 +66,6 @@ layer!("KERNEL32!HeapReAlloc", HeapReAlloc(heap: Handle, flags: u32, block: Poin
 layer!("KERNEL32!HeapFree", HeapFree(heap: Handle, flags: u32, block: Pointer) -> i32);
 layer!("KERNEL32!GetLastError", GetLastError() -> u32);
 layer!("KERNEL32!SetLastError", SetLastError(code: u32));
-
-layer!(
-    "GDI32!BitBlt",
-    BitBlt(dc: Handle, x: i32, y: i32, width: i32, height: i32, source: Handle, sx: i32, sy: i32, rop: u32) -> i32
-);
-layer!("GDI32!SetPaletteEntries", SetPaletteEntries(palette: Handle, start: u32, count: u32, entries: Pointer) -> u32);
-layer!("GDI32!RealizePalette", RealizePalette(dc: Handle) -> u32);
-layer!("GDI32!SetDIBColorTable", SetDIBColorTable(dc: Handle, start: u32, count: u32, colors: Pointer) -> u32);
 
 layer!("WINMM!timeGetTime", timeGetTime() -> u32);
 

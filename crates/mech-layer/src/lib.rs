@@ -6,7 +6,7 @@
 //! arguments in order, the value it returned. Nothing is reimplemented:
 //! the real function answers every call, through Wine.
 //!
-//! The 22 imports ([`imports`]), the 11 file calls ([`files`], HC9:
+//! The 18 imports ([`imports`]), the 11 file calls ([`files`], HC9:
 //! `kernel_files`' seam over the Windows folder) and the 5 time calls
 //! ([`time`], KT1: `kernel_time`'s seam over Windows' clocks) and the 9
 //! thread calls ([`threads`], KH1: `kernel_threads`' seam over Windows'
@@ -16,7 +16,8 @@
 //! ([`registry`], KR1: the original's, logged as `kernel_registry`'s front
 //! logs them) and the 19 window calls ([`window`], WN1: the original's,
 //! logged with their callers for `window`'s fronts) and the 7 input calls
-//! ([`input`], WI1: the same, for `window-input`'s fronts), 115 in all,
+//! ([`input`], WI1: the same, for `window-input`'s fronts) and the 19
+//! drawing calls ([`draw`], DB1: the same, for `draw`'s fronts), 130 in all,
 //! are exported `HC6_<name>`: with
 //! `HC6_LAYER=all` the swap's loader points the shell's own import slot at
 //! each, and each calls the real import through the swap DLL's own import
@@ -168,6 +169,8 @@ fn left() -> u32 {
 
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
 pub mod crt;
+#[cfg(all(target_arch = "x86", target_os = "windows"))]
+pub mod draw;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
 pub mod files;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
