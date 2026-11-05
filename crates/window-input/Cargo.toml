@@ -27,8 +27,8 @@ undocumented_unsafe_blocks = "deny"
 [features]
 # The fronts, `front::Front`: they answer over step 1's `window::desk::Desk`,
 # which allocates, so they stay off where no allocator is: the swap under Wine
-# is `no_std` with none, and links `window-input` through `mech_rows` for the
-# keys and the rows alone.
+# is `no_std` with none, and links `window-input` through a game's rows crate
+# for the keys and the rows alone.
 desk = ["window/desk"]
 
 [dependencies]

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-//! A test-only log sink, as `mech_rows`' and the registry's: it keeps each
+//! A test-only log sink, as the rows crates' and the registry's: it keeps each
 //! DEBUG line on the thread that logged it, rendered `event k=v` by the
 //! logline adapter, so a test reads
 //! the lines its own call wrote while other tests run beside it.
