@@ -37,6 +37,7 @@ kernel_threads = { path = "../kernel-threads" }
 kernel_time = { path = "../kernel-time" }
 logical_disc = { path = "../logical-disc" }
 window = { path = "../window" }
+window-input = { path = "../window-input" }
 
 [dev-dependencies]
 kernel_files = { path = "../kernel-files", features = ["memory"] }
@@ -44,7 +45,6 @@ kernel_registry = { path = "../kernel-registry", features = ["page", "std"] }
 kernel_threads = { path = "../kernel-threads", features = ["page", "std"] }
 logical_disc = { path = "../logical-disc", features = ["disc"] }
 window = { path = "../window", features = ["desk"] }
-# A test's alone: window-input takes window's `desk`, which allocates.
-window-input = { path = "../window-input" }
+window-input = { path = "../window-input", features = ["desk"] }
 mech_logline = { path = "../mech-logline" }
 log = { version = "0.4", features = ["kv"] }

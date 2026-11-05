@@ -6,10 +6,19 @@
 //! drawn), so a client point is its screen point. No run has reached play
 //! (wall 1): each expected stick is worked from the machine code's `shl
 //! 0x10; cdq; idiv` (`s15-stick-idiv.txt`), never harvested.
-use window::{Event, Rect};
-use window_input::Keys;
+//!
+//! Falsifier 7, the rows: the shell's row answers `k3`'s polls in the
+//! layer's own words (`records/2026-11-05-lane-a/helm-window-input-wi1/`,
+//! `s11-counts-k3.txt`), played less their `from` and `tid`.
+use core::cell::RefCell;
 
-use crate::input::stick;
+use window::desk::Desk;
+use window::{Event, Rect, Screen};
+use window_input::front::Front;
+use window_input::{Input, Keys};
+
+use crate::input::{SHELL, stick};
+use crate::test_log::debug_lines;
 
 /// The game's client, 640 by 480.
 const CLIENT: (i32, i32) = (0x280, 0x1e0);
@@ -100,4 +109,78 @@ fn an_unlocked_point_follows_the_pointer() {
     keys.apply(Event::Motion { dx: 5, dy: 5 });
     assert_eq!(keys.point, (100, 50));
     assert_eq!(stick(keys.point, CLIENT), Some([-51882, -45056]));
+}
+
+/// The shell's screen as `k3` drew it, the game's 640 by 480; its pump
+/// hands the events a test queued.
+#[derive(Default)]
+struct Board {
+    events: RefCell<Vec<Event>>,
+}
+
+impl Screen for Board {
+    fn size(&self) -> (i32, i32) {
+        CLIENT
+    }
+
+    fn place(&self, _: u32, _: Rect, _: bool) {}
+
+    fn gone(&self, _: u32) {}
+
+    fn pump(&self, into: &mut dyn FnMut(Event)) {
+        for event in self.events.take() {
+            into(event);
+        }
+    }
+
+    fn now(&self) -> u32 {
+        0
+    }
+}
+
+/// The shell's polls at the main menu, each a line `k3` logged: the
+/// pointer at the screen's centre (`GetCursorPos` from `10055c38`), the 3
+/// buttons up (`10055ca1`, `10055cb4`, `10055cc7`), Alt's character none
+/// (`MapVirtualKeyA` from `1005b84c`), and Ctrl, Alt and Shift as Alt's
+/// first press left them (`1005b86a`, `1005b878`, `1005b886`).
+#[test]
+fn the_shells_row_answers_k3s_polls() {
+    let desk = Desk::new(Input::new(Board::default()));
+    let shell = Front::new(&SHELL, &desk);
+    desk.screen().back().events.borrow_mut().extend([
+        Event::Pointer {
+            window: 0,
+            x: 0x140,
+            y: 0xf0,
+        },
+        Event::Key {
+            window: 0,
+            key: 0x12,
+            down: true,
+        },
+    ]);
+    desk.pump();
+    let lines = debug_lines(|| {
+        assert_eq!(shell.get_cursor_pos(), (0x140, 0xf0));
+        for button in [1, 2, 4] {
+            assert_eq!(shell.get_async_key_state(button), 0);
+        }
+        assert_eq!(shell.map_virtual_key(0x12, 2), 0);
+        assert_eq!(shell.get_key_state(0x11), 0);
+        assert_eq!(shell.get_key_state(0x12), 0xff81);
+        assert_eq!(shell.get_key_state(0x10), 0);
+    });
+    assert_eq!(
+        lines,
+        [
+            "imp.call c=USER32!GetCursorPos o=140,f0 v=1",
+            "imp.call c=USER32!GetAsyncKeyState a=1 v=0",
+            "imp.call c=USER32!GetAsyncKeyState a=2 v=0",
+            "imp.call c=USER32!GetAsyncKeyState a=4 v=0",
+            "imp.call c=USER32!MapVirtualKeyA a=12,2 v=0",
+            "imp.call c=USER32!GetKeyState a=11 v=0",
+            "imp.call c=USER32!GetKeyState a=12 v=ff81",
+            "imp.call c=USER32!GetKeyState a=10 v=0",
+        ]
+    );
 }

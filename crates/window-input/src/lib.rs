@@ -41,6 +41,7 @@
 //! `wasm32-unknown-unknown`; a game's facts live in its rows crate.
 #![cfg_attr(not(test), no_std)]
 
+#[cfg(any(test, feature = "desk"))]
 pub mod front;
 pub mod map;
 pub mod table;
