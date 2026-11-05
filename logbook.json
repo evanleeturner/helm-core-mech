@@ -98,6 +98,12 @@
       "level": "D",
       "fields": { "n": "how many presents the page has dropped so far, this one counted" },
       "template": "the page replaced a present it had not read, {n} so far"
+    },
+    {
+      "id": "draw.present",
+      "level": "D",
+      "fields": { "w": "the window's width the picture was painted into", "h": "its height", "refused": "softbuffer's refusal, a WARN line in place of w and h" },
+      "template": "a host's paint at {w} by {h}, refused: {refused}"
     }
   ]
 }
