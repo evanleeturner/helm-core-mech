@@ -33,6 +33,8 @@
 //! | `StretchDIBits` | mercsw |
 //! | `UpdateWindow` | all three |
 //! | `ValidateRect` | mercsw |
+//!
+//! `tests` replays `d1`'s lines on these rows.
 use draw::table::{Calls, Route, Row};
 
 /// Each call's name, the layer's spelling.
@@ -110,3 +112,6 @@ pub const GAME: Row = Row {
 
 /// Every file the drawing seam serves.
 pub const ROWS: &[&Row] = &[&LAUNCHER, &SHELL, &GAME];
+
+#[cfg(test)]
+mod tests;
