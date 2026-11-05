@@ -645,6 +645,7 @@ dependencies = [
 name = "mech_rows"
 version = "0.1.0"
 dependencies = [
+ "draw",
  "kernel_files",
  "kernel_memory",
  "kernel_process",

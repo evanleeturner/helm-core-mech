@@ -2,7 +2,7 @@
 # module a step, constants only: `memory` for kernel_memory's helpers, `files`
 # for kernel_files' seam, `disc` for logical_disc, `time` for kernel_time's,
 # `threads` for kernel_threads', `process` for kernel_process's, `registry` for kernel_registry's, `window` for window's, `input` for
-# window-input's. Its
+# window-input's, `draw` for draw's. Its
 # harvested logs and the tests that replay them
 # test the stand-in on this game. No target's own names: it builds for any
 # target, the browser's included.
@@ -28,6 +28,7 @@ unwrap_used = "deny"
 undocumented_unsafe_blocks = "deny"
 
 [dependencies]
+draw = { path = "../draw" }
 kernel_files = { path = "../kernel-files" }
 kernel_memory = { path = "../kernel-memory" }
 kernel_process = { path = "../kernel-process" }
@@ -40,6 +41,7 @@ window = { path = "../window" }
 window-input = { path = "../window-input" }
 
 [dev-dependencies]
+draw = { path = "../draw", features = ["desk"] }
 kernel_files = { path = "../kernel-files", features = ["memory"] }
 kernel_registry = { path = "../kernel-registry", features = ["page", "std"] }
 kernel_threads = { path = "../kernel-threads", features = ["page", "std"] }
