@@ -34,6 +34,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "kernel_registry"
+version = "0.1.0"
+dependencies = [
+ "log",
+ "mech_logline",
+ "mech_trace",
+]
+
+[[package]]
 name = "kernel_text"
 version = "0.1.0"
 dependencies = [
@@ -116,6 +125,7 @@ dependencies = [
  "kernel_files",
  "kernel_memory",
  "kernel_process",
+ "kernel_registry",
  "kernel_text",
  "kernel_threads",
  "kernel_time",

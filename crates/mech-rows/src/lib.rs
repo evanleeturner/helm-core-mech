@@ -4,7 +4,7 @@
 //! helpers, [`files`] for `kernel_files`' seam, [`disc`] for
 //! `logical_disc`, [`time`] for `kernel_time`'s, [`threads`] for
 //! `kernel_threads`', [`process`] for `kernel_process`'s, [`text`] for
-//! `kernel_text`'s. The harvested
+//! `kernel_text`'s, [`registry`] for `kernel_registry`'s. The harvested
 //! logs (c35, c36, c37) and the tests that replay them live here: they
 //! test the stand-in on this game. It builds for any target, the
 //! browser's included.
@@ -14,6 +14,7 @@ pub mod disc;
 pub mod files;
 pub mod memory;
 pub mod process;
+pub mod registry;
 #[cfg(test)]
 mod test_log;
 pub mod text;
