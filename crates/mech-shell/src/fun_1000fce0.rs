@@ -3,8 +3,8 @@ use core::ffi::c_void;
 
 #[allow(non_upper_case_globals)]
 unsafe extern "C" {
-    static mut DAT_1008e760: *mut c_void;
-    static mut DAT_1008e764: *mut c_void;
+    static DAT_1008e760: [i8; 0];
+    static DAT_1008e764: [i8; 0];
     static mut DAT_1008e460: i32;
     static mut DAT_100c42c0: i32;
     static mut DAT_100c42c4: [i8; 0];
@@ -29,15 +29,16 @@ unsafe extern "C" {
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_1000fce0() {
     mech_trace::enter!("1000fce0");
-    // SAFETY: all globals and callees are the game's own; the table copy
+    // SAFETY: all globals and callees are the game's own; the name and the
+    // mode are the strings' addresses, as the original passes them; the table copy
     // reads and writes the same 0x45-byte entries the original does.
     unsafe {
         let high_cfg_file = mech_trace::cr!(
             "1000fce0",
             "__wfopen",
             __wfopen(
-                mech_trace::gr!("1000fce0", "1008e764", DAT_1008e764) as *const c_void,
-                mech_trace::gr!("1000fce0", "1008e760", DAT_1008e760) as *const c_void
+                (&raw const DAT_1008e764).cast::<c_void>(),
+                (&raw const DAT_1008e760).cast::<c_void>(),
             )
         );
         let mut entries_copied: i32 = 0;
