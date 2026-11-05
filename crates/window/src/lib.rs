@@ -51,7 +51,13 @@ extern crate alloc;
 pub mod desk;
 #[cfg(any(test, feature = "desk"))]
 pub mod front;
+#[cfg(any(test, feature = "page"))]
+pub mod page;
 pub mod table;
+#[cfg(test)]
+mod test_log;
+#[cfg(test)]
+mod tests;
 
 use core::fmt;
 

@@ -30,6 +30,9 @@ undocumented_unsafe_blocks = "deny"
 # swap under Wine is `no_std` with none, and links `window` through
 # `mech_rows`.
 desk = []
+# The page's back, `page::Page`: the canvas's events and time handed in by
+# the page's script, each window's place read back.
+page = ["desk"]
 
 [dependencies]
 mech_trace = { path = "../mech-trace" }
