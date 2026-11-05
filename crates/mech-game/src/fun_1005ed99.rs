@@ -96,16 +96,13 @@ pub unsafe extern "C" fn FUN_1005ed99(param_1: u32, param_2: *mut i32, param_3: 
                     if ok {
                         let h = mech_trace::gr!("1005ed99", "100adf7c", DAT_100adf7c);
                         let w = mech_trace::gr!("1005ed99", "100adf78", DAT_100adf78);
-                        let a = (y.wrapping_mul(2) as u32)
-                            .wrapping_sub(h)
-                            .wrapping_mul(0x10000)
-                            / h;
-                        mech_trace::wr!("1005ed99", param_2, write_unaligned, a as i32);
-                        let b = (x.wrapping_mul(2) as u32)
-                            .wrapping_sub(w)
-                            .wrapping_mul(0x10000)
-                            / w;
-                        mech_trace::wr!("1005ed99", param_2.byte_add(4), write_unaligned, b as i32);
+                        // cdq; idiv: a signed divide, the top and left halves negative.
+                        let a =
+                            y.wrapping_mul(2).wrapping_sub(h as i32).wrapping_shl(16) / h as i32;
+                        mech_trace::wr!("1005ed99", param_2, write_unaligned, a);
+                        let b =
+                            x.wrapping_mul(2).wrapping_sub(w as i32).wrapping_shl(16) / w as i32;
+                        mech_trace::wr!("1005ed99", param_2.byte_add(4), write_unaligned, b);
                     }
                 }
             }
