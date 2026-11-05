@@ -17,6 +17,8 @@
 //! by file: the shell, the game file, the launcher; a game's rows crate
 //! names the files. The key map, [`map`], answers `MapVirtualKeyA`'s
 //! character, and `TranslateMessage`'s through [`Screen::character`].
+//! The remap rows, [`remap`], name each chord a browser keeps from a page
+//! and the chord the page reads in its place.
 //!
 //! Names a game imports that no row serves yet have no front, as step 1's
 //! 6: each comes with its first measured caller. USER32's
@@ -44,6 +46,7 @@
 #[cfg(any(test, feature = "desk"))]
 pub mod front;
 pub mod map;
+pub mod remap;
 pub mod table;
 #[cfg(test)]
 mod test_log;

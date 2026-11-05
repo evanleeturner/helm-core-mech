@@ -27,6 +27,7 @@
 //! is the machine code's, `MERCSW.DLL` `1005ef3a` to `1005ef6c`; no run has
 //! reached play (wall 1), so no number of it is harvested. The tests
 //! replaying `k3` and the stick's live in `tests`.
+use window_input::remap::{Chord, Remap};
 use window_input::table::{Calls, Row};
 
 #[cfg(test)]
@@ -64,6 +65,32 @@ pub const GAME: Row = Row {
 
 /// Every file the input seam serves.
 pub const ROWS: &[&Row] = &[&LAUNCHER, &SHELL, &GAME];
+
+/// The remap rows (falsifier 5): each chord a browser keeps that the key
+/// tables bind, the shell's `DAT_100a55d8` and the game's `DAT_100b4438`
+/// alike (`s1-tables.txt`). W, T and N read `77`, `74` and `6e`, and
+/// `fun_1005b830` queues each with `0x100` while `GetKeyState(0x11)` reads
+/// Ctrl down; F5 reads `b5`. Alt with the same key stands in for each. The
+/// named gap: on the page the game never reads its own Alt chord on these
+/// four keys, `0x400` with the key; no binding of one is read.
+pub const REMAP: &[Remap] = &[
+    Remap {
+        kept: Chord::ctrl(b'W'),
+        pressed: Chord::alt(b'W'),
+    },
+    Remap {
+        kept: Chord::ctrl(b'T'),
+        pressed: Chord::alt(b'T'),
+    },
+    Remap {
+        kept: Chord::ctrl(b'N'),
+        pressed: Chord::alt(b'N'),
+    },
+    Remap {
+        kept: Chord::key(0x74),
+        pressed: Chord::alt(0x74),
+    },
+];
 
 /// The stick the game file reads at the client point `point` on a client
 /// `size` wide and high: `[y, x]`, the order `fun_1005ed99` writes them,

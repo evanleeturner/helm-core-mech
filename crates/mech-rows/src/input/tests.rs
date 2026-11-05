@@ -10,14 +10,19 @@
 //! Falsifier 7, the rows: the shell's row answers `k3`'s polls in the
 //! layer's own words (`records/2026-11-05-lane-a/helm-window-input-wi1/`,
 //! `s11-counts-k3.txt`), played less their `from` and `tid`.
+//!
+//! Falsifier 5, the remap rows: each chord a browser keeps has one row, its
+//! key bound in both tables (`s1-tables.txt`: `57`, `54`, `4e` and `74`),
+//! and no row is pressed with a chord a browser keeps.
 use core::cell::RefCell;
 
 use window::desk::Desk;
 use window::{Event, Rect, Screen};
 use window_input::front::Front;
+use window_input::remap::{BROWSER_KEPT, Chord, read};
 use window_input::{Input, Keys};
 
-use crate::input::{SHELL, stick};
+use crate::input::{REMAP, SHELL, stick};
 use crate::test_log::debug_lines;
 
 /// The game's client, 640 by 480.
@@ -183,4 +188,35 @@ fn the_shells_row_answers_k3s_polls() {
             "imp.call c=USER32!GetKeyState a=10 v=0",
         ]
     );
+}
+
+#[test]
+fn each_browser_kept_chord_has_one_row() {
+    for chord in BROWSER_KEPT {
+        let rows = REMAP.iter().filter(|row| row.kept == *chord).count();
+        assert_eq!(rows, 1, "{chord:?}");
+    }
+    assert_eq!(REMAP.len(), BROWSER_KEPT.len());
+}
+
+#[test]
+fn no_row_is_pressed_with_a_browser_kept_chord() {
+    for (n, row) in REMAP.iter().enumerate() {
+        assert!(!BROWSER_KEPT.contains(&row.pressed), "{row:?}");
+        assert!(
+            REMAP[n + 1..]
+                .iter()
+                .all(|other| other.pressed != row.pressed),
+            "{row:?}"
+        );
+    }
+}
+
+#[test]
+fn the_page_reads_the_kept_chord_in_the_pressed_ones_place() {
+    assert_eq!(read(REMAP, Chord::alt(b'W')), Chord::ctrl(b'W'));
+    assert_eq!(read(REMAP, Chord::alt(b'N')), Chord::ctrl(b'N'));
+    assert_eq!(read(REMAP, Chord::alt(0x74)), Chord::key(0x74));
+    assert_eq!(read(REMAP, Chord::key(b'W')), Chord::key(b'W'));
+    assert_eq!(read(REMAP, Chord::alt(b'A')), Chord::alt(b'A'));
 }
