@@ -1,12 +1,11 @@
 // SPDX-License-Identifier: MIT
 //! The fronts on the page's clocks. The dates are harvested from
-//! `date -u -d @N '+%s %Y %m %w %d %H %M %S'` (and Chicago's from
-//! `TZ=America/Chicago date`), never worked by hand.
+//! `date -u -d @N '+%s %Y %m %w %d %H %M %S'`, never worked by hand.
+use super::Times;
 use super::clock::Clock;
 use super::date::{Date, UNIX_EPOCH};
 use super::page::Page;
-use super::table::{Calls, Row, ZONE_BYTES};
-use super::{InForce, Times, Zone};
+use super::table::{Calls, Row};
 
 const ROW: Row = Row {
     file: "test",
@@ -21,7 +20,7 @@ const ROW: Row = Row {
         to_system_time: "KERNEL32!FileTimeToSystemTime",
         time: "_time",
     },
-    ids: [0, 1, 2],
+    zone_unknown: 0,
     bad_argument: 0x57,
 };
 
@@ -36,22 +35,8 @@ const HARVESTED: [(u64, [u16; 7]); 4] = [
 
 const NOW: u64 = UNIX_EPOCH + 1_793_752_674 * 10_000_000;
 
-/// Chicago's zone, standard time in force: 360 minutes west.
-fn chicago() -> Zone {
-    let mut zone = Zone::UTC;
-    zone.bias = 360;
-    zone.daylight_bias = -60;
-    zone.standard_date = Date([0, 11, 0, 1, 2, 0, 0, 0]);
-    zone.daylight_date = Date([0, 3, 0, 2, 2, 0, 0, 0]);
-    zone.standard_name[..3].copy_from_slice(&[u16::from(b'C'), u16::from(b'S'), u16::from(b'T')]);
-    zone
-}
-
 fn times(wall: u64) -> Times<Page> {
-    Times::new(
-        &ROW,
-        Page::new(Clock::new(250_000, 0), wall, chicago(), InForce::Standard),
-    )
+    Times::new(&ROW, Page::new(Clock::new(250_000, 0), wall))
 }
 
 fn words(date: [u16; 7]) -> [u16; 8] {
@@ -65,44 +50,8 @@ fn system_time_is_dates_harvested() {
     for (seconds, date) in HARVESTED {
         let mut into = [0; 16];
         times(UNIX_EPOCH + seconds * 10_000_000).system_time(&mut into);
-        assert_eq!(Date::from_bytes(&into).0, words(date), "@{seconds}");
+        assert_eq!(into, Date(words(date)).to_bytes(), "@{seconds}");
     }
-}
-
-#[test]
-fn a_date_counts_back_to_its_days() {
-    for (seconds, date) in HARVESTED {
-        let days = Date::days(i64::from(date[0]), i64::from(date[1]), i64::from(date[3]));
-        let ticks = UNIX_EPOCH + seconds * 10_000_000;
-        assert_eq!(
-            days,
-            i64::try_from(ticks / 864_000_000_000).unwrap_or(-1),
-            "@{seconds}"
-        );
-    }
-}
-
-#[test]
-fn local_time_takes_the_bias_in_force() {
-    let mut into = [0; 16];
-    times(NOW).local_time(&mut into);
-    assert_eq!(Date::from_bytes(&into).0, [2026, 11, 2, 3, 18, 37, 54, 0]);
-    let mut local = 0;
-    assert_eq!(times(NOW).to_local_file_time(NOW, &mut local), 1);
-    assert_eq!(NOW - local, 360 * 600_000_000);
-}
-
-#[test]
-fn the_zone_record_is_written_and_read_whole() {
-    let times = times(NOW);
-    let mut into = [0; ZONE_BYTES];
-    assert_eq!(times.zone(&mut into), 1);
-    assert_eq!(Zone::read(&into), chicago());
-    assert_eq!(&into[0..4], &360i32.to_le_bytes());
-    assert_eq!(&into[0x4..0xa], &[b'C', 0, b'S', 0, b'T', 0]);
-    assert_eq!(&into[0xa8..0xac], &(-60i32).to_le_bytes());
-    times.clocks().set_zone(chicago(), InForce::Daylight);
-    assert_eq!(times.zone(&mut into), 2);
 }
 
 #[test]

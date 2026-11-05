@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 //! The wall clock's dates: 100 ns ticks since 1601-01-01 UTC, Windows'
-//! file time, to the 8 words of a `SYSTEMTIME` and back. The civil date
-//! is counted by 400-year eras, each 146,097 days, the year starting in
-//! March so a leap day is the era year's last.
+//! file time, to the 8 words of a `SYSTEMTIME`. The civil date is counted
+//! by 400-year eras, each 146,097 days, the year starting in March so a
+//! leap day is the era year's last.
 
 use crate::table::DATE_BYTES;
 
@@ -15,7 +15,7 @@ const TICKS_PER_DAY: u64 = 864_000_000_000;
 const DAYS_TO_1601: i64 = 584_694;
 
 /// A `SYSTEMTIME`: year, month, weekday (0 Sunday), day, hour, minute,
-/// second, millisecond. A zone's rule dates use the same words.
+/// second, millisecond.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub struct Date(pub [u16; 8]);
 
@@ -58,18 +58,6 @@ impl Date {
         ])
     }
 
-    /// The days since 1601-01-01 of `year`, `month`, `day`, a civil date.
-    #[must_use]
-    pub const fn days(year: i64, month: i64, day: i64) -> i64 {
-        let year = if month <= 2 { year - 1 } else { year };
-        let era = year.div_euclid(400);
-        let year_of_era = year - era * 400;
-        let march_month = if month > 2 { month - 3 } else { month + 9 };
-        let day_of_year = (153 * march_month + 2) / 5 + day - 1;
-        let of_era = year_of_era * 365 + year_of_era / 4 - year_of_era / 100 + day_of_year;
-        era * 146_097 + of_era - DAYS_TO_1601
-    }
-
     /// The 8 words, little-endian, as Windows lays them.
     #[must_use]
     pub fn to_bytes(&self) -> [u8; DATE_BYTES] {
@@ -78,14 +66,5 @@ impl Date {
             into.copy_from_slice(&word.to_le_bytes());
         }
         bytes
-    }
-
-    #[must_use]
-    pub fn from_bytes(bytes: &[u8; DATE_BYTES]) -> Self {
-        let mut words = [0; 8];
-        for (word, from) in words.iter_mut().zip(bytes.chunks_exact(2)) {
-            *word = u16::from_le_bytes([from[0], from[1]]);
-        }
-        Self(words)
     }
 }

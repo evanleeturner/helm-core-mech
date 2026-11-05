@@ -31,8 +31,9 @@ pub struct Calls {
 pub struct Row {
     pub file: &'static str,
     pub calls: Calls,
-    /// The zone call's answer for each [`crate::InForce`], in its order.
-    pub ids: [u32; 3],
+    /// The zone call's one answer, `TIME_ZONE_ID_UNKNOWN` in the file's
+    /// spelling: no zone in force, on every target (1410).
+    pub zone_unknown: u32,
     /// The last error a refused argument leaves.
     pub bad_argument: u32,
 }

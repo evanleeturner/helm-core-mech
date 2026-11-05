@@ -10,8 +10,8 @@ use kernel_time::table::{Calls, Row};
 mod tests;
 
 /// The shell, `mw2shell`: its imports' names, its C library's `time` by the
-/// name `ORDER.tsv` gives its stand-in, and the zone call's answers
-/// (unknown 0, standard 1, daylight 2), as its C library reads them.
+/// name `ORDER.tsv` gives its stand-in, and the zone call's one answer,
+/// unknown 0, as its C library reads it (1410).
 pub const SHELL: Row = Row {
     file: "mw2shell",
     calls: Calls {
@@ -25,7 +25,7 @@ pub const SHELL: Row = Row {
         to_system_time: "KERNEL32!FileTimeToSystemTime",
         time: "_time",
     },
-    ids: [0, 1, 2],
+    zone_unknown: 0,
     bad_argument: 0x57,
 };
 

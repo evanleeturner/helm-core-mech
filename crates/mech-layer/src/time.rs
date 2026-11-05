@@ -6,38 +6,30 @@
 //!
 //! The Windows clocks answer from the real imports, from the swap DLL's own
 //! import table: the game clock the counter over its own rate, the wall
-//! clock `GetSystemTimeAsFileTime`, the zone the real record read back
-//! whole, so the front writes the shell the bytes Windows wrote. The zone
-//! is now's, whatever the instant asked, as Windows' is; a refused zone
-//! call reads as no zone in force. The thread's last error is kept around
-//! each line, as `imp_call!` keeps it.
+//! clock `GetSystemTimeAsFileTime`. No zone is read (1410): the shell is
+//! answered UTC whatever zone the box keeps. The thread's last error is
+//! kept around each line, as `imp_call!` keeps it.
 //!
 //! Not moved: the game's rebuilt `Sleep` and `QueryPerformanceCounter`
 //! call sites (`mech-game`'s own `extern`s) and `mech-swap`'s own
 //! `GetSystemTime`.
 use core::ffi::c_void;
 use core::sync::atomic::{AtomicU64, Ordering};
-use kernel_time::table::{Row, ZONE_BYTES};
-use kernel_time::{Clocks, InForce, Times, Zone};
+use kernel_time::{Clocks, Times};
 use mech_rows::time::SHELL;
 
 unsafe extern "system" {
     fn QueryPerformanceCounter(count: *mut i64) -> i32;
     fn QueryPerformanceFrequency(rate: *mut i64) -> i32;
     fn GetSystemTimeAsFileTime(time: *mut u64);
-    fn GetTimeZoneInformation(zone: *mut c_void) -> u32;
     fn Sleep(millis: u32);
 }
-
-/// The zone record a Windows zone call fills.
-#[repr(C, align(4))]
-struct ZoneRecord([u8; ZONE_BYTES]);
 
 /// The counter's rate, its ticks a second, read once; 0 unread.
 static RATE: AtomicU64 = AtomicU64::new(0);
 
-/// One file's clocks on Windows, through its row.
-pub struct Win32(&'static Row);
+/// Windows' clocks, every file's.
+pub struct Win32;
 
 impl Win32 {
     fn rate() -> u64 {
@@ -72,18 +64,6 @@ impl Clocks for Win32 {
         ticks
     }
 
-    fn zone(&self, _at: u64) -> (Zone, InForce) {
-        let mut record = ZoneRecord([0; ZONE_BYTES]);
-        // SAFETY: Windows fills the one record it is handed.
-        let id = unsafe { GetTimeZoneInformation((&raw mut record).cast()) };
-        let in_force = match self.0.ids.iter().position(|&answer| answer == id) {
-            Some(1) => InForce::Standard,
-            Some(2) => InForce::Daylight,
-            _ => InForce::Unknown,
-        };
-        (Zone::read(&record.0), in_force)
-    }
-
     fn sleep(&self, millis: u32) {
         // SAFETY: waits; touches no memory.
         unsafe { Sleep(millis) };
@@ -104,7 +84,7 @@ impl Clocks for Win32 {
 }
 
 /// The shell's time calls.
-pub(crate) static SHELL_TIMES: Times<Win32> = Times::new(&SHELL, Win32(&SHELL));
+pub(crate) static SHELL_TIMES: Times<Win32> = Times::new(&SHELL, Win32);
 
 #[unsafe(export_name = "HC6_GetSystemTime")]
 unsafe extern "system" fn get_system_time(time: *mut c_void) {
