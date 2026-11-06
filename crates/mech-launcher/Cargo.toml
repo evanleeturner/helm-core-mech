@@ -22,4 +22,4 @@ unwrap_used = "deny"
 undocumented_unsafe_blocks = "deny"
 
 [dependencies]
-mech_trace = { path = "../mech-trace" }
+mech_trace = { workspace = true }

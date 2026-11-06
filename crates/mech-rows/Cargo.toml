@@ -28,25 +28,25 @@ unwrap_used = "deny"
 undocumented_unsafe_blocks = "deny"
 
 [dependencies]
-draw = { path = "../draw" }
-kernel_files = { path = "../kernel-files" }
-kernel_memory = { path = "../kernel-memory" }
-kernel_process = { path = "../kernel-process" }
-kernel_registry = { path = "../kernel-registry" }
-kernel_text = { path = "../kernel-text" }
-kernel_threads = { path = "../kernel-threads" }
-kernel_time = { path = "../kernel-time" }
-logical_disc = { path = "../logical-disc" }
-window = { path = "../window" }
-window-input = { path = "../window-input" }
+draw = { workspace = true }
+kernel_files = { workspace = true }
+kernel_memory = { workspace = true }
+kernel_process = { workspace = true }
+kernel_registry = { workspace = true }
+kernel_text = { workspace = true }
+kernel_threads = { workspace = true }
+kernel_time = { workspace = true }
+logical_disc = { workspace = true }
+window = { workspace = true }
+window-input = { workspace = true }
 
 [dev-dependencies]
-draw = { path = "../draw", features = ["desk"] }
-kernel_files = { path = "../kernel-files", features = ["memory"] }
-kernel_registry = { path = "../kernel-registry", features = ["page", "std"] }
-kernel_threads = { path = "../kernel-threads", features = ["page", "std"] }
-logical_disc = { path = "../logical-disc", features = ["disc"] }
-window = { path = "../window", features = ["desk"] }
-window-input = { path = "../window-input", features = ["desk"] }
-mech_logline = { path = "../mech-logline" }
+draw = { workspace = true, features = ["desk"] }
+kernel_files = { workspace = true, features = ["memory"] }
+kernel_registry = { workspace = true, features = ["page", "std"] }
+kernel_threads = { workspace = true, features = ["page", "std"] }
+logical_disc = { workspace = true, features = ["disc"] }
+window = { workspace = true, features = ["desk"] }
+window-input = { workspace = true, features = ["desk"] }
+mech_logline = { workspace = true, features = ["fence"] }
 log = { version = "0.4", features = ["kv"] }

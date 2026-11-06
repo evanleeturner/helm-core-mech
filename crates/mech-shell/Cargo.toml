@@ -25,8 +25,8 @@ unwrap_used = "deny"
 undocumented_unsafe_blocks = "deny"
 
 [dependencies]
-mech_trace = { path = "../mech-trace" }
+mech_trace = { workspace = true }
 log = "0.4"
 
 [dev-dependencies]
-mech_logline = { path = "../mech-logline" }
+mech_logline = { workspace = true }

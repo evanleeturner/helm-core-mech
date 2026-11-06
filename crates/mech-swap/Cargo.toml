@@ -28,8 +28,8 @@ undocumented_unsafe_blocks = "deny"
 
 [dependencies]
 mech_layer = { path = "../mech-layer" }
-mech_trace = { path = "../mech-trace" }
+mech_trace = { workspace = true }
 log = { version = "0.4", features = ["kv"] }
 
 [dev-dependencies]
-mech_logline = { path = "../mech-logline" }
+mech_logline = { workspace = true }
