@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
 //! The swap's Windows side: `DllMain`, which opens the trace file and
-//! installs the sink; the sink, one `WriteFile` a line; and the panic
-//! handler, which traps (`ud2`) as the checker's builds do, so a port's
-//! panic shows as an illegal instruction in Wine's `seh` trace.
+//! installs the sink; the sink, one `WriteFile` a line; the panic handler,
+//! which traps (`ud2`) as the checker's builds do, so a port's panic shows
+//! as an illegal instruction in Wine's `seh` trace; and the allocator, over
+//! the process heap, which `sound-mix` is the first crate here to need.
 //!
 //! Each line ends `tid=<hex>`, the writing thread's id (KH1, wall 4): the
 //! Miles timer calls in from a thread of its own, and the line says whose
@@ -11,9 +12,9 @@
 //! lines cannot tear each other: the file is opened for appending and a
 //! line is one `WriteFile`, so each lands whole at the end.
 //!
-//! The panic handler and the personality are the swap profile's alone
-//! (`panic = "abort"`, the crate built by itself, no `std`): in the
-//! workspace's own builds `mech_logline` turns on `log`'s `std`, which
+//! The panic handler, the personality and the allocator are the swap
+//! profile's alone (`panic = "abort"`, the crate built by itself, no `std`):
+//! in the workspace's own builds `mech_logline` turns on `log`'s `std`, which
 //! brings `std`'s handler, and a second one is a duplicate lang item.
 use core::ffi::c_void;
 use core::fmt::Write as _;
@@ -186,4 +187,48 @@ fn panic(_: &core::panic::PanicInfo<'_>) -> ! {
 pub extern "C" fn rust_eh_personality() {
     // SAFETY: as the panic handler's.
     unsafe { core::arch::asm!("ud2", options(noreturn)) }
+}
+
+/// The swap's `alloc`, the Windows process heap. Its own block of imports, so
+/// the workspace's builds, which take `std`'s, do not see them unused.
+#[cfg(panic = "abort")]
+mod process_heap {
+    use core::alloc::{GlobalAlloc, Layout};
+    use core::ffi::c_void;
+
+    /// What `HeapAlloc` promises on 32-bit Windows, `MEMORY_ALLOCATION_ALIGNMENT`.
+    const HEAP_ALIGN: usize = 8;
+
+    unsafe extern "system" {
+        fn GetProcessHeap() -> *mut c_void;
+        fn HeapAlloc(heap: *mut c_void, flags: u32, bytes: usize) -> *mut c_void;
+        fn HeapFree(heap: *mut c_void, flags: u32, block: *mut c_void) -> i32;
+    }
+
+    struct ProcessHeap;
+
+    // SAFETY: a block comes whole from `HeapAlloc`, at the alignment asked for
+    // or not at all, and goes back whole to `HeapFree`; flags 0 keeps the heap's
+    // own lock, so any thread may call.
+    unsafe impl GlobalAlloc for ProcessHeap {
+        /// Answers null past 8-byte alignment or when the heap is out, which
+        /// `alloc` turns into a panic, and so a `ud2`. Does not zero; growing
+        /// copies into a new block, as `GlobalAlloc`'s defaults do.
+        unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
+            if layout.align() > HEAP_ALIGN {
+                return core::ptr::null_mut();
+            }
+            // SAFETY: the process heap is always valid; flags 0 asks nothing more.
+            unsafe { HeapAlloc(GetProcessHeap(), 0, layout.size()).cast() }
+        }
+
+        /// A failed `HeapFree` is not reported: `GlobalAlloc` has no way to.
+        unsafe fn dealloc(&self, block: *mut u8, _: Layout) {
+            // SAFETY: the caller hands back a block `alloc` above gave out.
+            unsafe { HeapFree(GetProcessHeap(), 0, block.cast()) };
+        }
+    }
+
+    #[global_allocator]
+    static PROCESS_HEAP: ProcessHeap = ProcessHeap;
 }

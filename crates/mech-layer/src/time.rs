@@ -2,7 +2,10 @@
 //! The shell's time calls through the seam (KT1, ruling 1398): `kernel_time`'s
 //! front over Windows' own clocks, the shell's 5 date imports exported
 //! `HC6_<name>` as the layer's other rows are, so the swap's loader points
-//! the shell's own slots at them unchanged.
+//! the shell's own slots at them unchanged. `timeGetTime` joins them: the
+//! shell's as `HC6_timeGetTime`, the game file's as `GAME_timeGetTime`, a name
+//! the loader's `HC6_` match cannot take. Both answer off the counter, never
+//! WINMM's own clock, and each line says so with `by`.
 //!
 //! The Windows clocks answer from the real imports, from the swap DLL's own
 //! import table: the game clock the counter over its own rate, the wall
@@ -12,11 +15,13 @@
 //!
 //! Not moved: the game's rebuilt `Sleep` and `QueryPerformanceCounter`
 //! call sites (`mech-game`'s own `extern`s) and `mech-swap`'s own
-//! `GetSystemTime`.
+//! `GetSystemTime`; and the 6 `timeGetTime` calls in 5 port files' own
+//! `extern`s, 4 in `mech-shell`, 1 in `mech-game`: a port that runs in place of
+//! the original reads WINMM's clock, past this front and its line.
 use core::ffi::c_void;
 use core::sync::atomic::{AtomicU64, Ordering};
 use kernel_time::{Clocks, Times};
-use mech_rows::time::SHELL;
+use mech_rows::time::{GAME, SHELL};
 
 unsafe extern "system" {
     fn QueryPerformanceCounter(count: *mut i64) -> i32;
@@ -85,6 +90,19 @@ impl Clocks for Win32 {
 
 /// The shell's time calls.
 pub(crate) static SHELL_TIMES: Times<Win32> = Times::new(&SHELL, Win32);
+
+/// The game file's time call.
+static GAME_TIMES: Times<Win32> = Times::new(&GAME, Win32);
+
+#[unsafe(export_name = "HC6_timeGetTime")]
+unsafe extern "system" fn time_get_time() -> u32 {
+    SHELL_TIMES.time_get_time()
+}
+
+#[unsafe(export_name = "GAME_timeGetTime")]
+unsafe extern "system" fn game_time_get_time() -> u32 {
+    GAME_TIMES.time_get_time()
+}
 
 #[unsafe(export_name = "HC6_GetSystemTime")]
 unsafe extern "system" fn get_system_time(time: *mut c_void) {

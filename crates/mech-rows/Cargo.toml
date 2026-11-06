@@ -2,7 +2,8 @@
 # module a step, constants only: `memory` for kernel_memory's helpers, `files`
 # for kernel_files' seam, `disc` for logical_disc, `time` for kernel_time's,
 # `threads` for kernel_threads', `process` for kernel_process's, `registry` for kernel_registry's, `window` for window's, `dialogs` for window-dialogs', `input` for
-# window-input's, `draw` for draw's, `surfaces` for draw-surfaces'. Its
+# window-input's, `draw` for draw's, `surfaces` for draw-surfaces', `cd_audio` for
+# cd-audio's. Its
 # harvested logs and the tests that replay them
 # test the stand-in on this game. No target's own names: it builds for any
 # target, the browser's included.
@@ -28,6 +29,8 @@ unwrap_used = "deny"
 undocumented_unsafe_blocks = "deny"
 
 [dependencies]
+cd-audio = { workspace = true }
+sound-mix = { workspace = true }
 draw = { workspace = true }
 draw-surfaces = { workspace = true }
 kernel_files = { workspace = true }

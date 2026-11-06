@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
-//! mercs's time rows (KT1, ruling 1398): the shell's time calls, as
-//! `kernel_time`'s seam serves them. Wall 5 read mercs's clock: whole
+//! mercs's time rows (KT1, ruling 1398): the shell's time calls and the game
+//! file's `timeGetTime`, as `kernel_time`'s seam serves them. Wall 5 read mercs's clock: whole
 //! milliseconds everywhere, no tick cut, the counter compared only with
 //! itself. The game's step and network play's step are unread: no
 //! constant here stands for them.
@@ -16,6 +16,7 @@ pub const SHELL: Row = Row {
     file: "mw2shell",
     calls: Calls {
         tick_count: "KERNEL32!GetTickCount",
+        time_get_time: "WINMM!timeGetTime",
         sleep: "KERNEL32!Sleep",
         counter: "KERNEL32!QueryPerformanceCounter",
         system_time: "KERNEL32!GetSystemTime",
@@ -27,6 +28,16 @@ pub const SHELL: Row = Row {
     },
     zone_unknown: 0,
     bad_argument: 0x57,
+};
+
+/// The game file, `mercsw`: the layer answers its `timeGetTime` alone through
+/// this row, so the other names are the same spellings, unread, and the two
+/// numbers the shell's.
+pub const GAME: Row = Row {
+    file: "mercsw",
+    calls: SHELL.calls,
+    zone_unknown: SHELL.zone_unknown,
+    bad_argument: SHELL.bad_argument,
 };
 
 /// The most one frame moves the game clock. mercs's own clamp is unread

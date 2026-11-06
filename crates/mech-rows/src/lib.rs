@@ -5,12 +5,15 @@
 //! `logical_disc`, [`time`] for `kernel_time`'s, [`threads`] for
 //! `kernel_threads`', [`process`] for `kernel_process`'s, [`text`] for
 //! `kernel_text`'s, [`registry`] for `kernel_registry`'s, [`window`] for `window`'s, [`dialogs`] for `window_dialogs`', [`input`] for
-//! `window_input`'s, [`draw`] for `draw`'s, [`surfaces`] for `draw_surfaces`'. The harvested
+//! `window_input`'s, [`draw`] for `draw`'s, [`surfaces`] for `draw_surfaces`', [`cd_audio`] for
+//! `cd_audio`'s. The harvested
 //! logs (c35, c36, c37) and the tests that replay them live here: they
 //! test the stand-in on this game. It builds for any target, the
 //! browser's included.
 #![cfg_attr(not(test), no_std)]
 
+pub mod cd_audio;
+pub mod sound_mix;
 pub mod dialogs;
 pub mod disc;
 pub mod draw;

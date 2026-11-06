@@ -11,7 +11,7 @@
 //! (`kz1-july.txt`). No run reaches them (wall 1), so their answer is
 //! 1410's, fixed, not harvested: UTC, whatever the wall.
 use crate::test_log::debug_lines;
-use crate::time::{CLAMP_MICROS, SHELL};
+use crate::time::{CLAMP_MICROS, GAME, SHELL};
 use kernel_time::Times;
 use kernel_time::clock::Clock;
 use kernel_time::date::UNIX_EPOCH;
@@ -90,5 +90,21 @@ fn the_zone_is_none_and_its_record_all_0() {
         assert_eq!(record, [0; ZONE_BYTES], "{wall:x}");
         let name = SHELL.calls.zone;
         assert_eq!(lines, [format!("imp.call c={name} v=0")], "{wall:x}");
+    }
+}
+
+/// The shell's and the game file's `timeGetTime` lines name the front
+/// that computed the answer. The flight owes the same line on the real sites.
+#[test]
+fn time_get_time_says_who_answered() {
+    for row in [&SHELL, &GAME] {
+        let times = Times::new(row, Page::new(Clock::new(CLAMP_MICROS, 123_456), 0));
+        let mut value = 0;
+        let lines = debug_lines(|| value = times.time_get_time());
+        assert_eq!(value, 123);
+        assert_eq!(
+            lines,
+            ["imp.call c=WINMM!timeGetTime v=7b t=1e240 by=kernel-time"]
+        );
     }
 }

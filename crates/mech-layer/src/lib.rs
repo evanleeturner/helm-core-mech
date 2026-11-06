@@ -6,9 +6,10 @@
 //! arguments in order, the value it returned. Nothing is reimplemented:
 //! the real function answers every call, through Wine.
 //!
-//! The 18 imports ([`imports`]), the 11 file calls ([`files`], HC9:
-//! `kernel_files`' seam over the Windows folder) and the 5 time calls
-//! ([`time`], KT1: `kernel_time`'s seam over Windows' clocks) and the 9
+//! The 17 imports ([`imports`]), the 11 file calls ([`files`], HC9:
+//! `kernel_files`' seam over the Windows folder) and the 6 time calls
+//! ([`time`], KT1: `kernel_time`'s seam over Windows' clocks) and the 6
+//! CD-audio calls ([`cd_audio`]: `cd_audio`'s front, which reads no disc) and the 9
 //! thread calls ([`threads`], KH1: `kernel_threads`' seam over Windows'
 //! threads) and the 24 process calls ([`process`], KP1: the original's,
 //! logged as `kernel_process`' front logs them) and the 13 text calls ([`text`], KX1:
@@ -170,6 +171,10 @@ fn left() -> u32 {
     unsafe { crate::GetLastError() }
 }
 
+#[cfg(all(target_arch = "x86", target_os = "windows"))]
+pub mod cd_audio;
+#[cfg(all(target_arch = "x86", target_os = "windows"))]
+pub mod sound_mix;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
 pub mod crt;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
