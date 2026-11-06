@@ -154,7 +154,7 @@ const TABLE_LINE: u32 = 16;
 ///
 /// # Safety
 /// `address` is 0 or the caller's table of `count` entries.
-unsafe fn table(c: &'static str, start: u32, count: u32, address: u32) {
+pub(crate) unsafe fn table(c: &'static str, start: u32, count: u32, address: u32) {
     if address == 0 {
         return;
     }

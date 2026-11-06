@@ -8,19 +8,21 @@ resolver = "3"
 # and `mech_logline` are the ports' own words for its `oxide_trace` and
 # `oxide_logline`, so the ports' sources need no change at all.
 [workspace.dependencies]
-draw = { git = "https://github.com/evanleeturner/oxide95", rev = "5be3d2e124d1a5dd228f5dbc443e093b78f4122e" }
-kernel_files = { git = "https://github.com/evanleeturner/oxide95", rev = "5be3d2e124d1a5dd228f5dbc443e093b78f4122e" }
-kernel_memory = { git = "https://github.com/evanleeturner/oxide95", rev = "5be3d2e124d1a5dd228f5dbc443e093b78f4122e" }
-kernel_process = { git = "https://github.com/evanleeturner/oxide95", rev = "5be3d2e124d1a5dd228f5dbc443e093b78f4122e" }
-kernel_registry = { git = "https://github.com/evanleeturner/oxide95", rev = "5be3d2e124d1a5dd228f5dbc443e093b78f4122e" }
-kernel_text = { git = "https://github.com/evanleeturner/oxide95", rev = "5be3d2e124d1a5dd228f5dbc443e093b78f4122e" }
-kernel_threads = { git = "https://github.com/evanleeturner/oxide95", rev = "5be3d2e124d1a5dd228f5dbc443e093b78f4122e" }
-kernel_time = { git = "https://github.com/evanleeturner/oxide95", rev = "5be3d2e124d1a5dd228f5dbc443e093b78f4122e" }
-logical_disc = { git = "https://github.com/evanleeturner/oxide95", rev = "5be3d2e124d1a5dd228f5dbc443e093b78f4122e" }
-mech_logline = { package = "oxide_logline", git = "https://github.com/evanleeturner/oxide95", rev = "5be3d2e124d1a5dd228f5dbc443e093b78f4122e" }
-mech_trace = { package = "oxide_trace", git = "https://github.com/evanleeturner/oxide95", rev = "5be3d2e124d1a5dd228f5dbc443e093b78f4122e" }
-window = { git = "https://github.com/evanleeturner/oxide95", rev = "5be3d2e124d1a5dd228f5dbc443e093b78f4122e" }
-window-input = { git = "https://github.com/evanleeturner/oxide95", rev = "5be3d2e124d1a5dd228f5dbc443e093b78f4122e" }
+draw = { git = "https://github.com/evanleeturner/oxide95", rev = "e1e33ff89725b5a12ca06b36489723e1e8311999" }
+draw-surfaces = { git = "https://github.com/evanleeturner/oxide95", rev = "e1e33ff89725b5a12ca06b36489723e1e8311999" }
+kernel_files = { git = "https://github.com/evanleeturner/oxide95", rev = "e1e33ff89725b5a12ca06b36489723e1e8311999" }
+kernel_memory = { git = "https://github.com/evanleeturner/oxide95", rev = "e1e33ff89725b5a12ca06b36489723e1e8311999" }
+kernel_process = { git = "https://github.com/evanleeturner/oxide95", rev = "e1e33ff89725b5a12ca06b36489723e1e8311999" }
+kernel_registry = { git = "https://github.com/evanleeturner/oxide95", rev = "e1e33ff89725b5a12ca06b36489723e1e8311999" }
+kernel_text = { git = "https://github.com/evanleeturner/oxide95", rev = "e1e33ff89725b5a12ca06b36489723e1e8311999" }
+kernel_threads = { git = "https://github.com/evanleeturner/oxide95", rev = "e1e33ff89725b5a12ca06b36489723e1e8311999" }
+kernel_time = { git = "https://github.com/evanleeturner/oxide95", rev = "e1e33ff89725b5a12ca06b36489723e1e8311999" }
+logical_disc = { git = "https://github.com/evanleeturner/oxide95", rev = "e1e33ff89725b5a12ca06b36489723e1e8311999" }
+mech_logline = { package = "oxide_logline", git = "https://github.com/evanleeturner/oxide95", rev = "e1e33ff89725b5a12ca06b36489723e1e8311999" }
+mech_trace = { package = "oxide_trace", git = "https://github.com/evanleeturner/oxide95", rev = "e1e33ff89725b5a12ca06b36489723e1e8311999" }
+window = { git = "https://github.com/evanleeturner/oxide95", rev = "e1e33ff89725b5a12ca06b36489723e1e8311999" }
+window-dialogs = { git = "https://github.com/evanleeturner/oxide95", rev = "e1e33ff89725b5a12ca06b36489723e1e8311999" }
+window-input = { git = "https://github.com/evanleeturner/oxide95", rev = "e1e33ff89725b5a12ca06b36489723e1e8311999" }
 
 # The swap's library (crates/mech-swap): no unwinding, and one object of the
 # crate's own, as the checker builds its Rust arm; the other crates' profiles

@@ -1,0 +1,89 @@
+04:27:28.066 D surfaces.wrap c=IDirectDraw t=772eb080 a=772b6980,772b2ce0,772b2470,772b48a0,772b54c0,772b9620,772b58f0 v=1 tid=154
+04:27:28.066 D imp.call c=DDRAW!DirectDrawCreate a=0,0 v=0 o=14227ec from=10084326 tid=154
+04:27:28.070 D imp.call c=IDirectDraw::SetCooperativeLevel a=14227ec,2005e,51 v=0 o="" from=10084372 tid=154
+04:27:28.081 D imp.call c=IDirectDraw::SetDisplayMode a=14227ec,140,c8,8 v=0 o="" from=100843c5 tid=154
+04:27:28.081 D imp.call c=IDirectDraw::GetCaps a=14227ec v=0 o=ac,f5408660,a1801,201,3fec1,0,14,0,0,0,0,0,0,0,0,7ff0600,7ff0600,0,0,0,0,0,0,0,8,0,0,0,0,0,0,0,0,421350,0,0,0,0,0,0,0,0,0 from=10084430 tid=154
+04:27:28.083 D surfaces.wrap c=IDirectDrawSurface t=772eb440 a=772dd920,772e0bc0,772e02d0,772e0480,772dcde0,772d5540,772d9890,772de8f0,772d4240,772dda90,772dc340 v=1 tid=154
+04:27:28.083 D imp.call c=IDirectDraw::CreateSurface a=14227ec,0,6c,20,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,218 v=0 o=1422958 from=10083f6c tid=154
+04:27:28.083 D imp.call c=IDirectDrawSurface::GetAttachedSurface a=1422958,4 v=0 o=1422fb8 from=10083fc4 tid=154
+04:27:28.083 D imp.call c=IDirectDrawSurface::GetAttachedSurface a=1422958,10 v=0 o=1422fb8 from=10084026 tid=154
+04:27:28.083 D imp.call c=IDirectDrawSurface::IsLost a=1422958 v=0 o="" from=10085279 tid=154
+04:27:28.083 D imp.call c=IDirectDrawSurface::Blt a=1422fb8,0,1000400,0,1,0,0,13f,c7,0,0,0,0,0 v=0 o="" from=10085349 tid=154
+04:27:28.083 D imp.call c=IDirectDrawSurface::IsLost a=1422958 v=0 o="" from=1008479c tid=154
+04:27:28.083 D imp.call c=IDirectDrawSurface::Flip a=1422958,0,1 v=0 o="" from=1008483e tid=154
+04:27:28.083 D imp.call c=IDirectDrawSurface::GetSurfaceDesc a=1422958 v=0 o=6c,102f,c8,140,140,2,0,0,0,0,0,0,0,0,0,0,0,0,20,60,0,8,0,0,0,0,8a38 from=10084524 tid=154
+04:27:28.083 D imp.call c=IDirectDrawSurface::GetSurfaceDesc a=1422fb8 v=0 o=6c,102f,c8,140,140,0,0,0,0,0,0,0,0,0,0,0,0,0,20,60,0,8,0,0,0,0,81c from=10084556 tid=154
+04:27:28.083 D imp.call c=IDirectDrawSurface::GetSurfaceDesc a=1422fb8 v=0 o=6c,102f,c8,140,140,0,0,0,0,0,0,0,0,0,0,0,0,0,20,60,0,8,0,0,0,0,81c from=10084595 tid=154
+04:27:28.083 D surfaces.wrap c=IDirectDrawPalette t=772eb3f0 a=772d12f0,772d15b0 v=1 tid=154
+04:27:28.083 D imp.call c=IDirectDraw::CreatePalette a=14227ec,44,0 v=0 o=141cb38 from=10084644 tid=154
+04:27:28.083 D draw.table c=IDirectDraw::CreatePalette i=0 a=0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 tid=154
+04:27:28.083 D draw.table c=IDirectDraw::CreatePalette i=10 a=0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 tid=154
+04:27:28.083 D draw.table c=IDirectDraw::CreatePalette i=20 a=0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 tid=154
+04:27:28.083 D draw.table c=IDirectDraw::CreatePalette i=30 a=0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 tid=154
+04:27:28.083 D draw.table c=IDirectDraw::CreatePalette i=40 a=0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 tid=154
+04:27:28.083 D draw.table c=IDirectDraw::CreatePalette i=50 a=0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 tid=154
+04:27:28.083 D draw.table c=IDirectDraw::CreatePalette i=60 a=0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 tid=154
+04:27:28.083 D draw.table c=IDirectDraw::CreatePalette i=70 a=0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 tid=154
+04:27:28.083 D draw.table c=IDirectDraw::CreatePalette i=80 a=0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 tid=154
+04:27:28.083 D draw.table c=IDirectDraw::CreatePalette i=90 a=0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 tid=154
+04:27:28.083 D draw.table c=IDirectDraw::CreatePalette i=a0 a=0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 tid=154
+04:27:28.083 D draw.table c=IDirectDraw::CreatePalette i=b0 a=0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 tid=154
+04:27:28.083 D draw.table c=IDirectDraw::CreatePalette i=c0 a=0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 tid=154
+04:27:28.083 D draw.table c=IDirectDraw::CreatePalette i=d0 a=0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 tid=154
+04:27:28.083 D draw.table c=IDirectDraw::CreatePalette i=e0 a=0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 tid=154
+04:27:28.083 D draw.table c=IDirectDraw::CreatePalette i=f0 a=0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 tid=154
+04:27:28.084 D imp.call c=IDirectDrawSurface::SetPalette a=1422958,141cb38 v=0 o="" from=100846a2 tid=154
+04:27:28.090 D imp.call c=IDirectDrawSurface::IsLost a=1422958 v=0 o="" from=10085279 tid=154
+04:27:28.091 D imp.call c=IDirectDrawSurface::Blt a=1422fb8,0,1000400,d0,1,0,0,140,c8,0,0,0,0,0 v=0 o="" from=10085349 tid=154
+04:27:28.091 D imp.call c=IDirectDrawSurface::IsLost a=1422958 v=0 o="" from=10085e20 tid=154
+04:27:28.091 D imp.call c=IDirectDrawSurface::Lock a=1422fb8,1,0 v=0 o=6c,102f,c8,140,140,0,0,0,0,2ea0030,0,0,0,0,0,0,0,0,20,60,0,8,0,0,0,0,81c from=10085ed3 tid=154
+04:27:28.093 D imp.call c=IDirectDrawSurface::Unlock a=1422fb8,2ea0030 v=0 o="" from=10085211 tid=154
+04:27:28.093 D imp.call c=IDirectDrawSurface::IsLost a=1422958 v=0 o="" from=10085279 tid=154
+04:27:28.093 D imp.call c=IDirectDrawSurface::Blt a=1422fb8,0,1000400,0,1,0,0,140,c8,0,0,0,0,0 v=0 o="" from=10085349 tid=154
+04:27:28.093 D imp.call c=IDirectDrawSurface::IsLost a=1422958 v=0 o="" from=1008479c tid=154
+04:27:28.093 D imp.call c=IDirectDrawSurface::Flip a=1422958,0,1 v=0 o="" from=1008483e tid=154
+04:27:28.093 D imp.call c=IDirectDrawSurface::IsLost a=1422958 v=0 o="" from=10085279 tid=154
+04:27:28.093 D imp.call c=IDirectDrawSurface::Blt a=1422fb8,0,1000400,d0,1,0,0,140,c8,0,0,0,0,0 v=0 o="" from=10085349 tid=154
+04:27:28.093 D imp.call c=IDirectDrawSurface::IsLost a=1422958 v=0 o="" from=10085e20 tid=154
+04:27:28.094 D imp.call c=IDirectDrawSurface::Lock a=1422fb8,1,0 v=0 o=6c,102f,c8,140,140,0,0,0,0,30a0030,0,0,0,0,0,0,0,0,20,60,0,8,0,0,0,0,81c from=10085ed3 tid=154
+04:27:28.094 D imp.call c=IDirectDrawSurface::Unlock a=1422fb8,30a0030 v=0 o="" from=10085211 tid=154
+04:27:28.094 D imp.call c=IDirectDrawSurface::IsLost a=1422958 v=0 o="" from=10085279 tid=154
+04:27:28.094 D imp.call c=IDirectDrawSurface::Blt a=1422fb8,0,1000400,0,1,0,0,140,c8,0,0,0,0,0 v=0 o="" from=10085349 tid=154
+04:27:28.094 D imp.call c=IDirectDrawSurface::IsLost a=1422958 v=0 o="" from=1008479c tid=154
+04:27:28.094 D imp.call c=IDirectDrawSurface::Flip a=1422958,0,1 v=0 o="" from=1008483e tid=154
+04:27:28.094 D imp.call c=IDirectDrawSurface::IsLost a=1422958 v=0 o="" from=10085279 tid=154
+04:27:28.094 D imp.call c=IDirectDrawSurface::Blt a=1422fb8,0,1000400,d0,1,0,0,140,c8,0,0,0,0,0 v=0 o="" from=10085349 tid=154
+04:27:28.094 D imp.call c=IDirectDrawSurface::IsLost a=1422958 v=0 o="" from=10085e20 tid=154
+04:27:28.094 D imp.call c=IDirectDrawSurface::Lock a=1422fb8,1,0 v=0 o=6c,102f,c8,140,140,0,0,0,0,90bfb0,0,0,0,0,0,0,0,0,20,60,0,8,0,0,0,0,81c from=10085ed3 tid=154
+04:27:28.094 D imp.call c=IDirectDrawSurface::Unlock a=1422fb8,90bfb0 v=0 o="" from=10085211 tid=154
+04:27:28.094 D imp.call c=IDirectDrawSurface::IsLost a=1422958 v=0 o="" from=10085279 tid=154
+04:27:28.094 D imp.call c=IDirectDrawSurface::Blt a=1422fb8,0,1000400,0,1,0,0,140,c8,0,0,0,0,0 v=0 o="" from=10085349 tid=154
+04:27:28.094 D imp.call c=IDirectDrawSurface::IsLost a=1422958 v=0 o="" from=1008479c tid=154
+04:27:28.095 D imp.call c=IDirectDrawSurface::Flip a=1422958,0,1 v=0 o="" from=1008483e tid=154
+04:27:28.095 D imp.call c=IDirectDrawSurface::IsLost a=1422958 v=0 o="" from=10085279 tid=154
+04:27:28.095 D imp.call c=IDirectDrawSurface::Blt a=1422fb8,0,1000400,d0,1,0,0,140,c8,0,0,0,0,0 v=0 o="" from=10085349 tid=154
+04:27:28.095 D imp.call c=IDirectDrawSurface::IsLost a=1422958 v=0 o="" from=10085e20 tid=154
+04:27:28.095 D imp.call c=IDirectDrawSurface::Lock a=1422fb8,1,0 v=0 o=6c,102f,c8,140,140,0,0,0,0,2ea0030,0,0,0,0,0,0,0,0,20,60,0,8,0,0,0,0,81c from=10085ed3 tid=154
+04:27:28.095 D imp.call c=IDirectDrawSurface::Unlock a=1422fb8,2ea0030 v=0 o="" from=10085211 tid=154
+04:27:28.095 D imp.call c=IDirectDrawSurface::IsLost a=1422958 v=0 o="" from=10085279 tid=154
+04:27:28.095 D imp.call c=IDirectDrawSurface::Blt a=1422fb8,0,1000400,0,1,0,0,140,c8,0,0,0,0,0 v=0 o="" from=10085349 tid=154
+04:27:28.095 D imp.call c=IDirectDrawSurface::IsLost a=1422958 v=0 o="" from=1008479c tid=154
+04:27:28.095 D imp.call c=IDirectDrawSurface::Flip a=1422958,0,1 v=0 o="" from=1008483e tid=154
+04:27:28.095 D imp.call c=IDirectDrawSurface::IsLost a=1422958 v=0 o="" from=10085279 tid=154
+04:27:28.095 D imp.call c=IDirectDrawSurface::Blt a=1422fb8,0,1000400,d0,1,0,0,140,c8,0,0,0,0,0 v=0 o="" from=10085349 tid=154
+04:27:28.095 D imp.call c=IDirectDrawSurface::IsLost a=1422958 v=0 o="" from=10085e20 tid=154
+04:27:28.095 D imp.call c=IDirectDrawSurface::Lock a=1422fb8,1,0 v=0 o=6c,102f,c8,140,140,0,0,0,0,30a0030,0,0,0,0,0,0,0,0,20,60,0,8,0,0,0,0,81c from=10085ed3 tid=154
+04:27:28.095 D imp.call c=IDirectDrawSurface::Unlock a=1422fb8,30a0030 v=0 o="" from=10085211 tid=154
+04:27:28.095 D imp.call c=IDirectDrawSurface::IsLost a=1422958 v=0 o="" from=10085279 tid=154
+04:27:28.095 D imp.call c=IDirectDrawSurface::Blt a=1422fb8,0,1000400,0,1,0,0,140,c8,0,0,0,0,0 v=0 o="" from=10085349 tid=154
+04:27:28.096 D imp.call c=IDirectDrawSurface::IsLost a=1422958 v=0 o="" from=1008479c tid=154
+04:27:28.096 D imp.call c=IDirectDrawSurface::Flip a=1422958,0,1 v=0 o="" from=1008483e tid=154
+04:27:28.096 D imp.call c=IDirectDrawSurface::IsLost a=1422958 v=0 o="" from=10085279 tid=154
+04:27:28.096 D imp.call c=IDirectDrawSurface::Blt a=1422fb8,0,1000400,d0,1,0,0,140,c8,0,0,0,0,0 v=0 o="" from=10085349 tid=154
+04:27:28.096 D imp.call c=IDirectDrawSurface::IsLost a=1422958 v=0 o="" from=10085e20 tid=154
+04:27:28.096 D imp.call c=IDirectDrawSurface::Lock a=1422fb8,1,0 v=0 o=6c,102f,c8,140,140,0,0,0,0,90bfb0,0,0,0,0,0,0,0,0,20,60,0,8,0,0,0,0,81c from=10085ed3 tid=154
+04:27:28.096 D imp.call c=IDirectDrawSurface::Unlock a=1422fb8,90bfb0 v=0 o="" from=10085211 tid=154
+04:27:28.096 D imp.call c=IDirectDrawSurface::IsLost a=1422958 v=0 o="" from=10085279 tid=154
+04:27:28.096 D imp.call c=IDirectDrawSurface::Blt a=1422fb8,0,1000400,0,1,0,0,140,c8,0,0,0,0,0 v=0 o="" from=10085349 tid=154
+04:27:28.096 D imp.call c=IDirectDrawSurface::IsLost a=1422958 v=0 o="" from=1008479c tid=154
+04:27:28.096 D imp.call c=IDirectDrawSurface::Flip a=1422958,0,1 v=0 o="" from=1008483e tid=154

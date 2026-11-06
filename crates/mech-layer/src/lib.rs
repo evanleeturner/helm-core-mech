@@ -27,6 +27,9 @@
 //! Ghidra index names, and each calls the real function through the
 //! shell's slot, which the loader never writes.
 //!
+//! `DirectDraw`'s 21 names ([`surfaces`], SF1) are one export and 20 methods
+//! wrapped in their real tables, for a flight's returns alone.
+//!
 //! The C library inside the DLL is not an import: its functions the
 //! screens call get stand-ins ([`crt`], ruling 1381), exported
 //! `HC5_<address>` and swapped as the ports are, which do the job with
@@ -185,6 +188,8 @@ pub mod process;
 pub mod registry;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
 pub mod smack;
+#[cfg(all(target_arch = "x86", target_os = "windows"))]
+pub mod surfaces;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
 pub mod text;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]

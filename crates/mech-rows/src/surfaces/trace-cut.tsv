@@ -1,0 +1,264 @@
+127859	0174	DirectDrawCreate	driver_guid (null), ddraw 100B9F70, outer 00000000.
+129237	0174	ddraw1_SetCooperativeLevel	iface 014217FC, window 0002005E, flags 0x51.
+129284	0174	ddraw1_SetDisplayMode	iface 014217FC, width 320, height 200, bpp 8.
+129777	0174	ddraw1_GetCaps	iface 014217FC, driver_caps 0031F8FC, hel_caps 00000000.
+129807	0174	ddraw1_CreateSurface	iface 014217FC, surface_desc 100C90F0, surface 100B9F74, outer_unknown 00000000.
+129840	0174	ddraw_surface1_GetAttachedSurface	iface 01421968, caps 100C91CC, attachment 100B9F78.
+129850	0174	ddraw_surface1_GetAttachedSurface	iface 01421968, caps 100C91CC, attachment 100B9F80.
+129860	0174	ddraw_surface1_IsLost	iface 01421968.
+129861	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(319,199), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+129862	0174	ddraw_surface1_IsLost	iface 01421968.
+129863	0174	ddraw_surface1_Flip	iface 01421968, src 00000000, flags 0x1.
+129874	0174	ddraw_surface1_Release	iface 01421FC8 decreasing refcount to 3.
+129885	0174	ddraw_surface1_Release	iface 01422190 decreasing refcount to 1.
+129904	0174	ddraw_surface1_Release	iface 01421968 decreasing refcount to 1.
+129907	0174	ddraw_surface1_GetSurfaceDesc	iface 01421968, surface_desc 100C90F0.
+129916	0174	ddraw_surface1_GetSurfaceDesc	iface 01421FC8, surface_desc 100C91D0.
+129925	0174	ddraw_surface1_GetSurfaceDesc	iface 01421FC8, surface_desc 100C9160.
+129934	0174	ddraw1_CreatePalette	iface 014217FC, flags 0x44, entries 0265FD00, palette 100B9F88, outer_unknown 00000000.
+129939	0174	ddraw_surface1_SetPalette	iface 01421968, palette 0141D430.
+129979	0174	ddraw_surface1_IsLost	iface 01421968.
+129980	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(320,200), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+129981	0174	ddraw_surface1_IsLost	iface 01421968.
+129982	0174	ddraw_surface1_Lock	iface 01421FC8, rect (null), surface_desc 100C91D0, flags 0x1, h 00000000.
+130003	0174	ddraw_surface1_Unlock	iface 01421FC8, data 0054B5A0.
+130004	0174	ddraw_surface1_IsLost	iface 01421968.
+130005	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(320,200), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+130006	0174	ddraw_surface1_IsLost	iface 01421968.
+130007	0174	ddraw_surface1_Flip	iface 01421968, src 00000000, flags 0x1.
+130018	0174	ddraw_surface1_Release	iface 01421FC8 decreasing refcount to 3.
+130029	0174	ddraw_surface1_Release	iface 01422190 decreasing refcount to 1.
+130040	0174	ddraw_surface1_Release	iface 01421968 decreasing refcount to 1.
+130043	0174	ddraw_surface1_IsLost	iface 01421968.
+130044	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(320,200), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+130045	0174	ddraw_surface1_IsLost	iface 01421968.
+130046	0174	ddraw_surface1_Lock	iface 01421FC8, rect (null), surface_desc 100C91D0, flags 0x1, h 00000000.
+130055	0174	ddraw_surface1_Unlock	iface 01421FC8, data 0056A9D0.
+130056	0174	ddraw_surface1_IsLost	iface 01421968.
+130057	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(320,200), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+130058	0174	ddraw_surface1_IsLost	iface 01421968.
+130059	0174	ddraw_surface1_Flip	iface 01421968, src 00000000, flags 0x1.
+130070	0174	ddraw_surface1_Release	iface 01421FC8 decreasing refcount to 3.
+130081	0174	ddraw_surface1_Release	iface 01422190 decreasing refcount to 1.
+130092	0174	ddraw_surface1_Release	iface 01421968 decreasing refcount to 1.
+130095	0174	ddraw_surface1_IsLost	iface 01421968.
+130096	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(320,200), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+130097	0174	ddraw_surface1_IsLost	iface 01421968.
+130098	0174	ddraw_surface1_Lock	iface 01421FC8, rect (null), surface_desc 100C91D0, flags 0x1, h 00000000.
+130107	0174	ddraw_surface1_Unlock	iface 01421FC8, data 0055AFC0.
+130108	0174	ddraw_surface1_IsLost	iface 01421968.
+130109	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(320,200), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+130110	0174	ddraw_surface1_IsLost	iface 01421968.
+130111	0174	ddraw_surface1_Flip	iface 01421968, src 00000000, flags 0x1.
+130122	0174	ddraw_surface1_Release	iface 01421FC8 decreasing refcount to 3.
+130141	0174	ddraw_surface1_Release	iface 01422190 decreasing refcount to 1.
+130152	0174	ddraw_surface1_Release	iface 01421968 decreasing refcount to 1.
+130155	0174	ddraw_surface1_IsLost	iface 01421968.
+130156	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(320,200), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+130157	0174	ddraw_surface1_IsLost	iface 01421968.
+130158	0174	ddraw_surface1_Lock	iface 01421FC8, rect (null), surface_desc 100C91D0, flags 0x1, h 00000000.
+130168	0174	ddraw_surface1_Unlock	iface 01421FC8, data 0054B5A0.
+130169	0174	ddraw_surface1_IsLost	iface 01421968.
+130170	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(320,200), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+130171	0174	ddraw_surface1_IsLost	iface 01421968.
+130172	0174	ddraw_surface1_Flip	iface 01421968, src 00000000, flags 0x1.
+130183	0174	ddraw_surface1_Release	iface 01421FC8 decreasing refcount to 3.
+130194	0174	ddraw_surface1_Release	iface 01422190 decreasing refcount to 1.
+130205	0174	ddraw_surface1_Release	iface 01421968 decreasing refcount to 1.
+130208	0174	ddraw_surface1_IsLost	iface 01421968.
+130209	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(320,200), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+130210	0174	ddraw_surface1_IsLost	iface 01421968.
+130211	0174	ddraw_surface1_Lock	iface 01421FC8, rect (null), surface_desc 100C91D0, flags 0x1, h 00000000.
+130220	0174	ddraw_surface1_Unlock	iface 01421FC8, data 0056A9D0.
+130221	0174	ddraw_surface1_IsLost	iface 01421968.
+130222	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(320,200), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+130223	0174	ddraw_surface1_IsLost	iface 01421968.
+130224	0174	ddraw_surface1_Flip	iface 01421968, src 00000000, flags 0x1.
+130235	0174	ddraw_surface1_Release	iface 01421FC8 decreasing refcount to 3.
+130246	0174	ddraw_surface1_Release	iface 01422190 decreasing refcount to 1.
+130257	0174	ddraw_surface1_Release	iface 01421968 decreasing refcount to 1.
+130260	0174	ddraw_surface1_IsLost	iface 01421968.
+130261	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(320,200), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+130262	0174	ddraw_surface1_IsLost	iface 01421968.
+130263	0174	ddraw_surface1_Lock	iface 01421FC8, rect (null), surface_desc 100C91D0, flags 0x1, h 00000000.
+130272	0174	ddraw_surface1_Unlock	iface 01421FC8, data 0055AFC0.
+130273	0174	ddraw_surface1_IsLost	iface 01421968.
+130274	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(320,200), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+130275	0174	ddraw_surface1_IsLost	iface 01421968.
+130276	0174	ddraw_surface1_Flip	iface 01421968, src 00000000, flags 0x1.
+130287	0174	ddraw_surface1_Release	iface 01421FC8 decreasing refcount to 3.
+130298	0174	ddraw_surface1_Release	iface 01422190 decreasing refcount to 1.
+130309	0174	ddraw_surface1_Release	iface 01421968 decreasing refcount to 1.
+130312	0174	ddraw_surface1_Release	iface 01421968 decreasing refcount to 0.
+130317	0174	ddraw_palette_Release	0141D430 decreasing refcount to 1.
+130328	0174	ddraw1_GetCaps	iface 014217FC, driver_caps 0031F930, hel_caps 00000000.
+130365	0174	ddraw1_CreateSurface	iface 014217FC, surface_desc 100C90F0, surface 100B9F74, outer_unknown 00000000.
+130405	0174	ddraw_surface1_GetAttachedSurface	iface 01421968, caps 100C91CC, attachment 100B9F78.
+130415	0174	ddraw_surface1_GetAttachedSurface	iface 01421968, caps 100C91CC, attachment 100B9F80.
+130425	0174	ddraw_surface1_IsLost	iface 01421968.
+130426	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(319,199), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+130427	0174	ddraw_surface1_IsLost	iface 01421968.
+130428	0174	ddraw_surface1_BltFast	iface 01421FC8, dst_x 0, dst_y 0, src_surface 01421FC8, src_rect (null), flags 0x10.
+130430	0174	ddraw_surface1_Flip	iface 01421968, src 00000000, flags 0x1.
+130441	0174	ddraw_surface1_Release	iface 01421FC8 decreasing refcount to 3.
+130452	0174	ddraw_surface1_Release	iface 01422190 decreasing refcount to 1.
+130463	0174	ddraw_surface1_Release	iface 01421968 decreasing refcount to 1.
+130466	0174	ddraw_surface1_GetSurfaceDesc	iface 01421968, surface_desc 100C90F0.
+130475	0174	ddraw_surface1_GetSurfaceDesc	iface 01421FC8, surface_desc 100C91D0.
+130484	0174	ddraw_surface1_GetSurfaceDesc	iface 01421FC8, surface_desc 100C9160.
+130493	0174	ddraw_surface1_SetPalette	iface 01421968, palette 0141D430.
+130497	0174	ddraw_surface1_IsLost	iface 01421968.
+130498	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(320,200), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+130499	0174	ddraw_surface1_IsLost	iface 01421968.
+130500	0174	ddraw_surface1_Lock	iface 01421FC8, rect (null), surface_desc 100C91D0, flags 0x1, h 00000000.
+130509	0174	ddraw_surface1_Unlock	iface 01421FC8, data 0054B5A0.
+130510	0174	ddraw_surface1_IsLost	iface 01421968.
+130511	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(320,200), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+130512	0174	ddraw_surface1_IsLost	iface 01421968.
+130513	0174	ddraw_surface1_BltFast	iface 01421FC8, dst_x 0, dst_y 0, src_surface 01421FC8, src_rect (null), flags 0x10.
+130515	0174	ddraw_surface1_Flip	iface 01421968, src 00000000, flags 0x1.
+130526	0174	ddraw_surface1_Release	iface 01421FC8 decreasing refcount to 3.
+130537	0174	ddraw_surface1_Release	iface 01422190 decreasing refcount to 1.
+130548	0174	ddraw_surface1_Release	iface 01421968 decreasing refcount to 1.
+130551	0174	ddraw_surface1_IsLost	iface 01421968.
+130552	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(320,200), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+130553	0174	ddraw_surface1_IsLost	iface 01421968.
+130554	0174	ddraw_surface1_Lock	iface 01421FC8, rect (null), surface_desc 100C91D0, flags 0x1, h 00000000.
+130563	0174	ddraw_surface1_Unlock	iface 01421FC8, data 0056A9D0.
+130564	0174	ddraw_surface1_IsLost	iface 01421968.
+130565	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(320,200), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+130566	0174	ddraw_surface1_IsLost	iface 01421968.
+130567	0174	ddraw_surface1_BltFast	iface 01421FC8, dst_x 0, dst_y 0, src_surface 01421FC8, src_rect (null), flags 0x10.
+130569	0174	ddraw_surface1_Flip	iface 01421968, src 00000000, flags 0x1.
+130580	0174	ddraw_surface1_Release	iface 01421FC8 decreasing refcount to 3.
+130591	0174	ddraw_surface1_Release	iface 01422190 decreasing refcount to 1.
+130610	0174	ddraw_surface1_Release	iface 01421968 decreasing refcount to 1.
+130613	0174	ddraw_surface1_IsLost	iface 01421968.
+130614	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(320,200), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+130615	0174	ddraw_surface1_IsLost	iface 01421968.
+130616	0174	ddraw_surface1_Lock	iface 01421FC8, rect (null), surface_desc 100C91D0, flags 0x1, h 00000000.
+130625	0174	ddraw_surface1_Unlock	iface 01421FC8, data 0055AFC0.
+130626	0174	ddraw_surface1_IsLost	iface 01421968.
+130627	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(320,200), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+130628	0174	ddraw_surface1_IsLost	iface 01421968.
+130629	0174	ddraw_surface1_BltFast	iface 01421FC8, dst_x 0, dst_y 0, src_surface 01421FC8, src_rect (null), flags 0x10.
+130631	0174	ddraw_surface1_Flip	iface 01421968, src 00000000, flags 0x1.
+130642	0174	ddraw_surface1_Release	iface 01421FC8 decreasing refcount to 3.
+130653	0174	ddraw_surface1_Release	iface 01422190 decreasing refcount to 1.
+130664	0174	ddraw_surface1_Release	iface 01421968 decreasing refcount to 1.
+130667	0174	ddraw_surface1_IsLost	iface 01421968.
+130668	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(320,200), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+130669	0174	ddraw_surface1_IsLost	iface 01421968.
+130670	0174	ddraw_surface1_Lock	iface 01421FC8, rect (null), surface_desc 100C91D0, flags 0x1, h 00000000.
+130680	0174	ddraw_surface1_Unlock	iface 01421FC8, data 0054B5A0.
+130681	0174	ddraw_surface1_IsLost	iface 01421968.
+130682	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(320,200), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+130683	0174	ddraw_surface1_IsLost	iface 01421968.
+130684	0174	ddraw_surface1_BltFast	iface 01421FC8, dst_x 0, dst_y 0, src_surface 01421FC8, src_rect (null), flags 0x10.
+130686	0174	ddraw_surface1_Flip	iface 01421968, src 00000000, flags 0x1.
+130697	0174	ddraw_surface1_Release	iface 01421FC8 decreasing refcount to 3.
+130708	0174	ddraw_surface1_Release	iface 01422190 decreasing refcount to 1.
+130719	0174	ddraw_surface1_Release	iface 01421968 decreasing refcount to 1.
+130722	0174	ddraw_surface1_IsLost	iface 01421968.
+130723	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(320,200), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+130724	0174	ddraw_surface1_IsLost	iface 01421968.
+130725	0174	ddraw_surface1_Lock	iface 01421FC8, rect (null), surface_desc 100C91D0, flags 0x1, h 00000000.
+130734	0174	ddraw_surface1_Unlock	iface 01421FC8, data 0056A9D0.
+130735	0174	ddraw_surface1_IsLost	iface 01421968.
+130736	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(320,200), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+130737	0174	ddraw_surface1_IsLost	iface 01421968.
+130738	0174	ddraw_surface1_BltFast	iface 01421FC8, dst_x 0, dst_y 0, src_surface 01421FC8, src_rect (null), flags 0x10.
+130740	0174	ddraw_surface1_Flip	iface 01421968, src 00000000, flags 0x1.
+130751	0174	ddraw_surface1_Release	iface 01421FC8 decreasing refcount to 3.
+130762	0174	ddraw_surface1_Release	iface 01422190 decreasing refcount to 1.
+130773	0174	ddraw_surface1_Release	iface 01421968 decreasing refcount to 1.
+130776	0174	ddraw_surface1_IsLost	iface 01421968.
+130777	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(320,200), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+130778	0174	ddraw_surface1_IsLost	iface 01421968.
+130779	0174	ddraw_surface1_Lock	iface 01421FC8, rect (null), surface_desc 100C91D0, flags 0x1, h 00000000.
+130788	0174	ddraw_surface1_Unlock	iface 01421FC8, data 0055AFC0.
+130789	0174	ddraw_surface1_IsLost	iface 01421968.
+130790	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(320,200), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+130791	0174	ddraw_surface1_IsLost	iface 01421968.
+130792	0174	ddraw_surface1_BltFast	iface 01421FC8, dst_x 0, dst_y 0, src_surface 01421FC8, src_rect (null), flags 0x10.
+130794	0174	ddraw_surface1_Flip	iface 01421968, src 00000000, flags 0x1.
+130805	0174	ddraw_surface1_Release	iface 01421FC8 decreasing refcount to 3.
+130816	0174	ddraw_surface1_Release	iface 01422190 decreasing refcount to 1.
+130827	0174	ddraw_surface1_Release	iface 01421968 decreasing refcount to 1.
+130830	0174	ddraw_surface1_Release	iface 01421968 decreasing refcount to 0.
+130835	0174	ddraw_palette_Release	0141D430 decreasing refcount to 1.
+130846	0174	ddraw1_GetCaps	iface 014217FC, driver_caps 0031F930, hel_caps 00000000.
+130876	0174	ddraw1_GetCaps	iface 014217FC, driver_caps 0031F930, hel_caps 00000000.
+130914	0174	ddraw1_GetCaps	iface 014217FC, driver_caps 0031F914, hel_caps 00000000.
+130944	0174	ddraw1_CreateSurface	iface 014217FC, surface_desc 100C90F0, surface 100B9F74, outer_unknown 00000000.
+130984	0174	ddraw_surface1_GetAttachedSurface	iface 01421968, caps 100C91CC, attachment 100B9F78.
+130994	0174	ddraw_surface1_GetAttachedSurface	iface 01421968, caps 100C91CC, attachment 100B9F80.
+131004	0174	ddraw_surface1_IsLost	iface 01421968.
+131005	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(319,199), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+131006	0174	ddraw_surface1_IsLost	iface 01421968.
+131007	0174	ddraw_surface1_BltFast	iface 01421FC8, dst_x 0, dst_y 0, src_surface 01421FC8, src_rect (null), flags 0x10.
+131009	0174	ddraw_surface1_Flip	iface 01421968, src 00000000, flags 0x1.
+131020	0174	ddraw_surface1_Release	iface 01421FC8 decreasing refcount to 3.
+131031	0174	ddraw_surface1_Release	iface 01422190 decreasing refcount to 1.
+131042	0174	ddraw_surface1_Release	iface 01421968 decreasing refcount to 1.
+131046	0174	ddraw_surface1_GetSurfaceDesc	iface 01421968, surface_desc 100C90F0.
+131048	0174	ddraw_surface1_GetSurfaceDesc	iface 01421968, surface_desc 100C90F0.
+131062	0174	ddraw_surface1_GetSurfaceDesc	iface 01421FC8, surface_desc 100C91D0.
+131071	0174	ddraw_surface1_GetSurfaceDesc	iface 01421FC8, surface_desc 100C9160.
+131080	0174	ddraw_surface1_SetPalette	iface 01421968, palette 0141D430.
+131084	0174	ddraw_surface1_IsLost	iface 01421968.
+131085	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(320,200), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+131086	0174	ddraw_surface1_IsLost	iface 01421968.
+131087	0174	ddraw_surface1_Lock	iface 01421FC8, rect (null), surface_desc 100C91D0, flags 0x1, h 00000000.
+131097	0174	ddraw_surface1_Unlock	iface 01421FC8, data 0054B5A0.
+131098	0174	ddraw_surface1_IsLost	iface 01421968.
+131099	0174	ddraw_surface1_BltFast	iface 01421FC8, dst_x 0, dst_y 0, src_surface 01421FC8, src_rect (null), flags 0x10.
+131101	0174	ddraw_surface1_Flip	iface 01421968, src 00000000, flags 0x1.
+131112	0174	ddraw_surface1_Release	iface 01421FC8 decreasing refcount to 3.
+131123	0174	ddraw_surface1_Release	iface 01422190 decreasing refcount to 1.
+131134	0174	ddraw_surface1_Release	iface 01421968 decreasing refcount to 1.
+131174	0174	ddraw_surface1_IsLost	iface 01421968.
+131175	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(320,200), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+131176	0174	ddraw_surface1_IsLost	iface 01421968.
+131177	0174	ddraw_surface1_Lock	iface 01421FC8, rect (null), surface_desc 100C91D0, flags 0x1, h 00000000.
+131190	0174	ddraw_surface1_Unlock	iface 01421FC8, data 0056A9D0.
+131191	0174	ddraw_surface1_IsLost	iface 01421968.
+131192	0174	ddraw_surface1_BltFast	iface 01421FC8, dst_x 0, dst_y 0, src_surface 01421FC8, src_rect (null), flags 0x10.
+131194	0174	ddraw_surface1_Flip	iface 01421968, src 00000000, flags 0x1.
+131205	0174	ddraw_surface1_Release	iface 01421FC8 decreasing refcount to 3.
+131216	0174	ddraw_surface1_Release	iface 01422190 decreasing refcount to 1.
+131227	0174	ddraw_surface1_Release	iface 01421968 decreasing refcount to 1.
+131359	0174	ddraw_surface1_IsLost	iface 01421968.
+131360	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(320,200), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+131361	0174	ddraw_surface1_IsLost	iface 01421968.
+131362	0174	ddraw_surface1_Lock	iface 01421FC8, rect (null), surface_desc 100C91D0, flags 0x1, h 00000000.
+131371	0174	ddraw_surface1_Unlock	iface 01421FC8, data 0055AFC0.
+131372	0174	ddraw_surface1_IsLost	iface 01421968.
+131373	0174	ddraw_surface1_BltFast	iface 01421FC8, dst_x 0, dst_y 0, src_surface 01421FC8, src_rect (null), flags 0x10.
+131375	0174	ddraw_surface1_Flip	iface 01421968, src 00000000, flags 0x1.
+131386	0174	ddraw_surface1_Release	iface 01421FC8 decreasing refcount to 3.
+131397	0174	ddraw_surface1_Release	iface 01422190 decreasing refcount to 1.
+131408	0174	ddraw_surface1_Release	iface 01421968 decreasing refcount to 1.
+131411	0174	ddraw_surface1_IsLost	iface 01421968.
+131412	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(320,200), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+131413	0174	ddraw_surface1_IsLost	iface 01421968.
+131414	0174	ddraw_surface1_Lock	iface 01421FC8, rect (null), surface_desc 100C91D0, flags 0x1, h 00000000.
+131427	0174	ddraw_surface1_Unlock	iface 01421FC8, data 0054B5A0.
+131428	0174	ddraw_surface1_IsLost	iface 01421968.
+131429	0174	ddraw_palette_SetEntries	iface 0141D430, flags 0, start 0, count 256, entries 0031F5A8.
+131431	0174	ddraw_surface1_IsLost	iface 01421968.
+131432	0174	ddraw_surface1_Lock	iface 01421FC8, rect (null), surface_desc 100C91D0, flags 0x1, h 00000000.
+131441	0174	ddraw_surface1_Unlock	iface 01421FC8, data 0054B5A0.
+131442	0174	ddraw_surface1_IsLost	iface 01421968.
+131443	0174	ddraw_surface1_BltFast	iface 01421FC8, dst_x 0, dst_y 0, src_surface 01421FC8, src_rect (null), flags 0x10.
+131445	0174	ddraw_surface1_Flip	iface 01421968, src 00000000, flags 0x1.
+131456	0174	ddraw_surface1_Release	iface 01421FC8 decreasing refcount to 3.
+131467	0174	ddraw_surface1_Release	iface 01422190 decreasing refcount to 1.
+131478	0174	ddraw_surface1_Release	iface 01421968 decreasing refcount to 1.
+131481	0174	ddraw_surface1_IsLost	iface 01421968.
+131482	0174	ddraw_surface1_Blt	iface 01421FC8, dst_rect (0,0)-(320,200), src_surface 00000000, src_rect (null), flags 0x1000400, fx 100C9080.
+131483	0174	ddraw_surface1_IsLost	iface 01421968.
+131484	0174	ddraw_surface1_Lock	iface 01421FC8, rect (null), surface_desc 100C91D0, flags 0x1, h 00000000.
+131493	0174	ddraw_surface1_Unlock	iface 01421FC8, data 0056A9D0.
+131494	0174	ddraw_surface1_IsLost	iface 01421968.
+131495	0174	ddraw_palette_SetEntries	iface 0141D430, flags 0, start 0, count 256, entries 0031F5A8.
