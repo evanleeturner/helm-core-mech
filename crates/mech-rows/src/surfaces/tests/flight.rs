@@ -93,7 +93,7 @@ fn area(numbers: &[u32]) -> [i32; 4] {
 
 /// One run of the lines on a live object, each real pointer tied to the stand-in's number.
 struct Flight<'r> {
-    surfaces: Surfaces<'r, &'r Tally, Board>,
+    surfaces: Surfaces<'r, &'r Tally, Desk<Board>>,
     kept: BTreeMap<u32, u32>,
     primary: u32,
     /// The real `Lock`'s answer until its `Unlock`.

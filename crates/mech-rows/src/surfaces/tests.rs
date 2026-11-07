@@ -109,7 +109,7 @@ fn rect(value: &str) -> Option<[i32; 4]> {
 
 /// One run of the trace's lines on a live object.
 struct Replay<'r> {
-    surfaces: Surfaces<'r, &'r Tally, Board>,
+    surfaces: Surfaces<'r, &'r Tally, Desk<Board>>,
     primary: u32,
     back: u32,
     palette: u32,

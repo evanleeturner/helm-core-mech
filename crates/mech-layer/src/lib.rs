@@ -3,33 +3,39 @@
 //! Miles import the shell's screens call, and one for each Smacker thunk.
 //! Each calls the real function, then writes one DEBUG line, `imp.call`:
 //! the import as the counter spells it (`KERNEL32!HeapAlloc`), its
-//! arguments in order, the value it returned. Nothing is reimplemented:
-//! the real function answers every call, through Wine.
+//! arguments in order, the value it returned. Unless a row below says a front
+//! answers it, the real function answers, through Wine.
 //!
-//! The 17 imports ([`imports`]), the 11 file calls ([`files`], HC9:
+//! The 15 imports ([`imports`]), the 11 file calls ([`files`]:
 //! `kernel_files`' seam over the Windows folder) and the 6 time calls
-//! ([`time`], KT1: `kernel_time`'s seam over Windows' clocks) and the 6
-//! CD-audio calls ([`cd_audio`]: `cd_audio`'s front, which reads no disc) and the 9
-//! thread calls ([`threads`], KH1: `kernel_threads`' seam over Windows'
-//! threads) and the 24 process calls ([`process`], KP1: the original's,
-//! logged as `kernel_process`' front logs them) and the 13 text calls ([`text`], KX1:
-//! the original's, logged as `kernel_text`'s front logs them) and the 5 registry calls
-//! ([`registry`], KR1: the original's, logged as `kernel_registry`'s front
-//! logs them) and the 19 window calls ([`window`], WN1: the original's,
-//! logged with their callers for `window`'s fronts) and the 7 input calls
-//! ([`input`], WI1: the same, for `window-input`'s fronts) and the 19
-//! drawing calls ([`draw`], DB1: the same, for `draw`'s fronts), 130 in all,
-//! are exported `HC6_<name>`: with
+//! ([`time`]: `kernel_time`'s seam over Windows' clocks) and the 9
+//! thread calls ([`threads`]: `kernel_threads`' seam over Windows'
+//! threads) and the 26 process calls ([`process`]: `kernel_process`' front answers
+//! 15 names; the other 14 the original's,
+//! logged as that front logs them) and the 13 text calls ([`text`]:
+//! `kernel_text`'s front answers) and the 5 registry calls
+//! ([`registry`]: `kernel_registry`'s front
+//! answers, over Wine's own registry) and the 19 window calls ([`window`]: `window`'s
+//! direct back answers) and the 7 input calls
+//! ([`input`]: `window-input`'s direct back answers) and the 19
+//! drawing calls ([`draw`]: `draw`'s front answers) and the 10
+//! Smacker slots ([`smack`]: the shell's by number, so the rig's build script
+//! names them), 140 in all,
+//! are exported `HC6_<name>`. The 6 CD-audio calls ([`cd_audio`]: `cd_audio`'s
+//! front, which reads no disc) go by `GAME_<name>` instead. With
 //! `HC6_LAYER=all` the swap's loader points the shell's own import slot at
 //! each, and each calls the real import through the swap DLL's own import
-//! table, so no call loops back through the shell's slot. The six Smacker
+//! table, so no call loops back through the shell's slot. The six older Smacker
 //! thunks ([`smack`]) are exported `HC5_<address>` and swapped as the
-//! ports are: the shell imports smackw32 by ordinal, through thunks the
-//! Ghidra index names, and each calls the real function through the
-//! shell's slot, which the loader never writes.
+//! ports are, `E9`s on: the shell imports smackw32 by ordinal, through thunks
+//! the Ghidra index names, and each calls the real function through the
+//! shell's slot.
 //!
-//! `DirectDraw`'s 21 names ([`surfaces`], SF1) are one export and 20 methods
-//! wrapped in their real tables, for a flight's returns alone.
+//! The 157 other slots of the 3 files ([`slots`]) are the original's, logged, under
+//! `HC6_`, `GAME_` and `LAUNCHER_`, so no import of the 3 goes unseen.
+//!
+//! `DirectDraw`'s 21 names ([`surfaces`]) are one export and 20 methods a file
+//! reaches through `draw_surfaces`' tables, which answer them.
 //!
 //! The C library inside the DLL is not an import: its functions the
 //! screens call get stand-ins ([`crt`], ruling 1381), exported
@@ -51,33 +57,37 @@ unsafe extern "system" {
 
 /// `imp.call`: an import's call, logged after it returns; the value comes
 /// back as the call gave it, the thread's last error as the call left it.
+/// `$by` is who computed that value, written at the call because this one
+/// macro serves both: `orig` where a row called the original, `mech-layer`
+/// where the row's own code answered, as `crt`'s do.
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
 macro_rules! imp_call {
-    ($c:literal, [], $value:expr) => {{
+    ($by:literal, $c:literal, [], $value:expr) => {{
         let value = $value;
         // SAFETY: reads the thread's own last error.
         let error = unsafe { $crate::GetLastError() };
-        log::debug!(c = $c, v:% = mech_trace::__shown!(value); "imp.call");
+        log::debug!(c = $c, v:% = mech_trace::__shown!(value), by = $by; "imp.call");
         // SAFETY: sets back the value read above.
         unsafe { $crate::SetLastError(error) };
         value
     }};
-    ($c:literal, [$($argument:expr),+]) => {{
+    ($by:literal, $c:literal, [$($argument:expr),+]) => {{
         // SAFETY: reads the thread's own last error.
         let error = unsafe { $crate::GetLastError() };
         log::debug!(
-            c = $c, a:% = mech_trace::Args([$(mech_trace::__shown!($argument)),+]); "imp.call"
+            c = $c, a:% = mech_trace::Args([$(mech_trace::__shown!($argument)),+]),
+            by = $by; "imp.call"
         );
         // SAFETY: sets back the value read above.
         unsafe { $crate::SetLastError(error) };
     }};
-    ($c:literal, [$($argument:expr),+], $value:expr) => {{
+    ($by:literal, $c:literal, [$($argument:expr),+], $value:expr) => {{
         let value = $value;
         // SAFETY: reads the thread's own last error.
         let error = unsafe { $crate::GetLastError() };
         log::debug!(
             c = $c, a:% = mech_trace::Args([$(mech_trace::__shown!($argument)),+]),
-            v:% = mech_trace::__shown!(value); "imp.call"
+            v:% = mech_trace::__shown!(value), by = $by; "imp.call"
         );
         // SAFETY: sets back the value read above.
         unsafe { $crate::SetLastError(error) };
@@ -171,6 +181,8 @@ fn left() -> u32 {
     unsafe { crate::GetLastError() }
 }
 
+#[cfg(all(target_arch = "x86", target_os = "windows", not(test)))]
+mod allocator;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
 pub mod cd_audio;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
@@ -191,6 +203,8 @@ pub mod input;
 pub mod process;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
 pub mod registry;
+#[cfg(all(target_arch = "x86", target_os = "windows"))]
+pub mod slots;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
 pub mod smack;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]

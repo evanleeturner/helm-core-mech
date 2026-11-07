@@ -34,6 +34,7 @@
 //! | `IDirectDrawSurface::Release` | mw2shell, mercsw |
 //!
 //! `tests` replays the kept trace and the flight's lines on these rows.
+use draw_surfaces::sdk::{DDERR_INVALIDMODE, DDERR_UNSUPPORTED};
 use draw_surfaces::table::Row;
 
 /// The mode the trace ran: 320 by 200, 8 bits.
@@ -48,6 +49,7 @@ pub static SHELL: Row = Row {
     file: "mw2shell",
     levels: &[0x51, 8],
     modes: MODES,
+    refused: DDERR_INVALIDMODE,
     chain: CHAIN,
     palette_flags: PALETTE_FLAGS,
 };
@@ -57,6 +59,27 @@ pub static GAME: Row = Row {
     file: "mercsw",
     levels: &[0x51],
     modes: MODES,
+    refused: DDERR_INVALIDMODE,
+    chain: CHAIN,
+    palette_flags: PALETTE_FLAGS,
+};
+
+/// The shell with `HC5_MODE_REFUSED` set: no mode, the number Wine gave on a flight.
+pub static SHELL_MODE_REFUSED: Row = Row {
+    file: "mw2shell",
+    levels: &[0x51, 8],
+    modes: &[],
+    refused: DDERR_UNSUPPORTED,
+    chain: CHAIN,
+    palette_flags: PALETTE_FLAGS,
+};
+
+/// The game file with `HC5_MODE_REFUSED` set.
+pub static GAME_MODE_REFUSED: Row = Row {
+    file: "mercsw",
+    levels: &[0x51],
+    modes: &[],
+    refused: DDERR_UNSUPPORTED,
     chain: CHAIN,
     palette_flags: PALETTE_FLAGS,
 };

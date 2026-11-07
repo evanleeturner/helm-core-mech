@@ -1,6 +1,6 @@
 # The public tree's Rust: one workspace, a crate a game file.
 [workspace]
-members = ["crates/mech-game", "crates/mech-launcher", "crates/mech-layer", "crates/mech-rows", "crates/mech-shell", "crates/mech-swap"]
+members = ["crates/mech-game", "crates/mech-launcher", "crates/mech-layer", "crates/mech-rows", "crates/mech-shell", "crates/mech-start", "crates/mech-swap"]
 resolver = "3"
 
 # The Windows 95 stand-ins and the trace they report through live in their own
@@ -8,23 +8,23 @@ resolver = "3"
 # and `mech_logline` are the ports' own words for its `oxide_trace` and
 # `oxide_logline`, so the ports' sources need no change at all.
 [workspace.dependencies]
-draw = { git = "https://github.com/evanleeturner/oxide95", rev = "7129979ae986cd05520f7dd61f7ecafa10ed27c4" }
-cd-audio = { git = "https://github.com/evanleeturner/oxide95", rev = "7129979ae986cd05520f7dd61f7ecafa10ed27c4" }
-sound-mix = { git = "https://github.com/evanleeturner/oxide95", rev = "7129979ae986cd05520f7dd61f7ecafa10ed27c4" }
-draw-surfaces = { git = "https://github.com/evanleeturner/oxide95", rev = "7129979ae986cd05520f7dd61f7ecafa10ed27c4" }
-kernel_files = { git = "https://github.com/evanleeturner/oxide95", rev = "7129979ae986cd05520f7dd61f7ecafa10ed27c4" }
-kernel_memory = { git = "https://github.com/evanleeturner/oxide95", rev = "7129979ae986cd05520f7dd61f7ecafa10ed27c4" }
-kernel_process = { git = "https://github.com/evanleeturner/oxide95", rev = "7129979ae986cd05520f7dd61f7ecafa10ed27c4" }
-kernel_registry = { git = "https://github.com/evanleeturner/oxide95", rev = "7129979ae986cd05520f7dd61f7ecafa10ed27c4" }
-kernel_text = { git = "https://github.com/evanleeturner/oxide95", rev = "7129979ae986cd05520f7dd61f7ecafa10ed27c4" }
-kernel_threads = { git = "https://github.com/evanleeturner/oxide95", rev = "7129979ae986cd05520f7dd61f7ecafa10ed27c4" }
-kernel_time = { git = "https://github.com/evanleeturner/oxide95", rev = "7129979ae986cd05520f7dd61f7ecafa10ed27c4" }
-logical_disc = { git = "https://github.com/evanleeturner/oxide95", rev = "7129979ae986cd05520f7dd61f7ecafa10ed27c4" }
-mech_logline = { package = "oxide_logline", git = "https://github.com/evanleeturner/oxide95", rev = "7129979ae986cd05520f7dd61f7ecafa10ed27c4" }
-mech_trace = { package = "oxide_trace", git = "https://github.com/evanleeturner/oxide95", rev = "7129979ae986cd05520f7dd61f7ecafa10ed27c4" }
-window = { git = "https://github.com/evanleeturner/oxide95", rev = "7129979ae986cd05520f7dd61f7ecafa10ed27c4" }
-window-dialogs = { git = "https://github.com/evanleeturner/oxide95", rev = "7129979ae986cd05520f7dd61f7ecafa10ed27c4" }
-window-input = { git = "https://github.com/evanleeturner/oxide95", rev = "7129979ae986cd05520f7dd61f7ecafa10ed27c4" }
+draw = { git = "https://github.com/evanleeturner/oxide95", rev = "ec1936c5ac2172ef3b472f53dccebb6c7c1b8ce1" }
+cd-audio = { git = "https://github.com/evanleeturner/oxide95", rev = "ec1936c5ac2172ef3b472f53dccebb6c7c1b8ce1" }
+sound-mix = { git = "https://github.com/evanleeturner/oxide95", rev = "ec1936c5ac2172ef3b472f53dccebb6c7c1b8ce1" }
+draw-surfaces = { git = "https://github.com/evanleeturner/oxide95", rev = "ec1936c5ac2172ef3b472f53dccebb6c7c1b8ce1" }
+kernel_files = { git = "https://github.com/evanleeturner/oxide95", rev = "ec1936c5ac2172ef3b472f53dccebb6c7c1b8ce1" }
+kernel_memory = { git = "https://github.com/evanleeturner/oxide95", rev = "ec1936c5ac2172ef3b472f53dccebb6c7c1b8ce1" }
+kernel_process = { git = "https://github.com/evanleeturner/oxide95", rev = "ec1936c5ac2172ef3b472f53dccebb6c7c1b8ce1" }
+kernel_registry = { git = "https://github.com/evanleeturner/oxide95", rev = "ec1936c5ac2172ef3b472f53dccebb6c7c1b8ce1" }
+kernel_text = { git = "https://github.com/evanleeturner/oxide95", rev = "ec1936c5ac2172ef3b472f53dccebb6c7c1b8ce1" }
+kernel_threads = { git = "https://github.com/evanleeturner/oxide95", rev = "ec1936c5ac2172ef3b472f53dccebb6c7c1b8ce1" }
+kernel_time = { git = "https://github.com/evanleeturner/oxide95", rev = "ec1936c5ac2172ef3b472f53dccebb6c7c1b8ce1" }
+logical_disc = { git = "https://github.com/evanleeturner/oxide95", rev = "ec1936c5ac2172ef3b472f53dccebb6c7c1b8ce1" }
+mech_logline = { package = "oxide_logline", git = "https://github.com/evanleeturner/oxide95", rev = "ec1936c5ac2172ef3b472f53dccebb6c7c1b8ce1" }
+mech_trace = { package = "oxide_trace", git = "https://github.com/evanleeturner/oxide95", rev = "ec1936c5ac2172ef3b472f53dccebb6c7c1b8ce1" }
+window = { git = "https://github.com/evanleeturner/oxide95", rev = "ec1936c5ac2172ef3b472f53dccebb6c7c1b8ce1" }
+window-dialogs = { git = "https://github.com/evanleeturner/oxide95", rev = "ec1936c5ac2172ef3b472f53dccebb6c7c1b8ce1" }
+window-input = { git = "https://github.com/evanleeturner/oxide95", rev = "ec1936c5ac2172ef3b472f53dccebb6c7c1b8ce1" }
 
 # The swap's library (crates/mech-swap): no unwinding, and one object of the
 # crate's own, as the checker builds its Rust arm; the other crates' profiles

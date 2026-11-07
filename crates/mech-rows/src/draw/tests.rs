@@ -93,7 +93,8 @@ fn flown(line: &str, handles: &[(&str, u32)]) -> String {
         .split(' ')
         .filter(|word| !word.starts_with("from=") && !word.starts_with("tid="))
         .collect();
-    let mut line = kept.join(" ");
+    // Recorded before the lines said who answered; the row that flies them is `draw`'s.
+    let mut line = format!("{} by=draw", kept.join(" "));
     for (wine, ours) in handles {
         line = line.replace(wine, &format!("{ours:x}"));
     }

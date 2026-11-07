@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
-//! The window calls (WN1, `JOB.md` step 2): mercs's 24 USER32 names of
-//! the window stand-in's step 1, each the original's, logged with `from`,
-//! the caller, so `window`'s fronts are checked against what the files
-//! asked and read back.
+//! The window calls: mercs's 24 USER32 names, each answered
+//! by `window`'s direct back, [`user32`], from call 1. Each row is a thin call;
+//! the line it writes, `by=window`, is the crate's. The rows before it logged these with
+//! `from`, the caller, and the crate's lines keep that form, so a reader of an
+//! older log reads this one.
 //!
 //! 46 exports, one a name a file imports: the shell's 19 `HC6_`, the game
 //! file's 18 `GAME_`, the launcher's 9 `LAUNCHER_`. Each is a naked entry
@@ -20,58 +21,14 @@
 //! shows `#` and the number, a null one nothing. A message's `l` and
 //! `CreateWindowExA`'s last argument are the numbers handed, a pointer for
 //! some messages (`WM_COPYDATA`'s record): what lies behind is not read.
+//!
+//! The readers below stay for this crate's other rows, which still write
+//! their own lines.
+use ::window::user32;
 use core::ffi::CStr;
 use core::fmt;
 use core::ptr::with_exposed_provenance;
 use kernel_process::Text;
-
-unsafe extern "system" {
-    fn CreateWindowExA(
-        extended: u32,
-        class: u32,
-        title: u32,
-        style: u32,
-        x: u32,
-        y: u32,
-        width: u32,
-        height: u32,
-        parent: u32,
-        menu: u32,
-        instance: u32,
-        parameter: u32,
-    ) -> u32;
-    fn GetWindowLongA(window: u32, index: u32) -> u32;
-    fn SetWindowLongA(window: u32, index: u32, value: u32) -> u32;
-    fn DestroyWindow(window: u32) -> u32;
-    fn LoadIconA(instance: u32, name: u32) -> u32;
-    fn RegisterClassA(class: u32) -> u32;
-    fn DefWindowProcA(window: u32, message: u32, w: u32, l: u32) -> u32;
-    fn TranslateMessage(message: u32) -> u32;
-    fn DispatchMessageA(message: u32) -> u32;
-    fn PeekMessageA(message: u32, window: u32, low: u32, high: u32, remove: u32) -> u32;
-    fn PostQuitMessage(code: u32);
-    fn WaitMessage() -> u32;
-    fn GetMessageTime() -> u32;
-    fn SendMessageA(window: u32, message: u32, w: u32, l: u32) -> u32;
-    fn PostMessageA(window: u32, message: u32, w: u32, l: u32) -> u32;
-    fn ShowWindow(window: u32, command: u32) -> u32;
-    fn AdjustWindowRect(rectangle: u32, style: u32, menu: u32) -> u32;
-    fn SetWindowPos(
-        window: u32,
-        after: u32,
-        x: u32,
-        y: u32,
-        width: u32,
-        height: u32,
-        flags: u32,
-    ) -> u32;
-    fn GetWindowRect(window: u32, rectangle: u32) -> u32;
-    fn ClientToScreen(window: u32, point: u32) -> u32;
-    fn ScreenToClient(window: u32, point: u32) -> u32;
-    fn SetFocus(window: u32) -> u32;
-    fn FindWindowA(class: u32, title: u32) -> u32;
-    fn GetSystemMetrics(index: u32) -> u32;
-}
 
 /// A name a call is handed, as `s` and `with` show it.
 pub(crate) enum Name<'a> {
@@ -156,325 +113,70 @@ pub(crate) unsafe fn wrote<const N: usize>(value: u32, address: u32) -> Wrote<N>
     Wrote((value != 0).then(|| unsafe { record(address) }))
 }
 
-#[allow(
-    clippy::too_many_arguments,
-    reason = "CreateWindowExA's own 12, and the caller first"
-)]
-extern "system" fn create_window(
-    from: u32,
-    extended: u32,
-    class: u32,
-    title: u32,
-    style: u32,
-    x: u32,
-    y: u32,
-    width: u32,
-    height: u32,
-    parent: u32,
-    menu: u32,
-    instance: u32,
-    parameter: u32,
-) -> u32 {
-    // SAFETY: the caller's arguments, passed on whole.
-    let value = unsafe {
-        CreateWindowExA(
-            extended, class, title, style, x, y, width, height, parent, menu, instance, parameter,
-        )
+/// A row: the file's call, passed to `window`'s front whole.
+macro_rules! row {
+    ($name:ident, $($argument:ident),*) => {
+        #[allow(clippy::too_many_arguments, reason = "the import's own, and the caller first")]
+        extern "system" fn $name(from: u32, $($argument: u32),*) -> u32 {
+            // SAFETY: the file's arguments as its import takes them, passed on whole.
+            unsafe { user32::$name(from, $($argument),*) }
+        }
     };
-    // SAFETY: the caller's class and title, each a number or a text.
-    let (class, title) = unsafe { (name(class), name(title)) };
-    kept!(log::debug!(c = "USER32!CreateWindowExA",
-        a:% = Numbers(&[extended, style, x, y, width, height, parent, menu, instance, parameter]),
-        s:% = class, with:% = title, v:% = mech_trace::__shown!(value),
-        from:% = mech_trace::__shown!(from); "imp.call"));
-    value
+}
+
+row!(
+    create_window,
+    extended,
+    class,
+    title,
+    style,
+    x,
+    y,
+    width,
+    height,
+    parent,
+    menu,
+    instance,
+    parameter
+);
+row!(set_window_long, window, index, long);
+row!(destroy_window, window);
+row!(load_icon, instance, icon);
+row!(register_class, class);
+row!(def_window_proc, window, message, w, l);
+row!(translate_message, message);
+row!(dispatch_message, message);
+row!(peek_message, message, window, low, high, remove);
+row!(send_message, window, message, w, l);
+row!(post_message, window, message, w, l);
+row!(show_window, window, command);
+row!(adjust_window_rect, rectangle, style, menu);
+row!(set_window_pos, window, after, x, y, width, height, flags);
+row!(get_window_rect, window, rectangle);
+row!(client_to_screen, window, point);
+row!(screen_to_client, window, point);
+row!(set_focus, window);
+row!(find_window, class, title);
+
+extern "system" fn wait_message(from: u32) -> u32 {
+    // SAFETY: the file's own wait, in the loop that holds nothing across it.
+    unsafe { user32::wait_message(from) }
 }
 
 extern "system" fn get_window_long(from: u32, window: u32, index: u32) -> u32 {
-    // SAFETY: the caller's arguments, passed on whole.
-    let value = unsafe { GetWindowLongA(window, index) };
-    kept!(
-        log::debug!(c = "USER32!GetWindowLongA", a:% = Numbers(&[window, index]),
-        v:% = mech_trace::__shown!(value), from:% = mech_trace::__shown!(from); "imp.call")
-    );
-    value
-}
-
-extern "system" fn set_window_long(from: u32, window: u32, index: u32, long: u32) -> u32 {
-    // SAFETY: the caller's arguments, passed on whole.
-    let value = unsafe { SetWindowLongA(window, index, long) };
-    kept!(
-        log::debug!(c = "USER32!SetWindowLongA", a:% = Numbers(&[window, index, long]),
-        v:% = mech_trace::__shown!(value), from:% = mech_trace::__shown!(from); "imp.call")
-    );
-    value
-}
-
-extern "system" fn destroy_window(from: u32, window: u32) -> u32 {
-    // SAFETY: the caller's argument, passed on whole.
-    let value = unsafe { DestroyWindow(window) };
-    kept!(
-        log::debug!(c = "USER32!DestroyWindow", a:% = Numbers(&[window]),
-        v:% = mech_trace::__shown!(value), from:% = mech_trace::__shown!(from); "imp.call")
-    );
-    value
-}
-
-extern "system" fn load_icon(from: u32, instance: u32, icon: u32) -> u32 {
-    // SAFETY: the caller's arguments, passed on whole.
-    let value = unsafe { LoadIconA(instance, icon) };
-    // SAFETY: the caller's icon name, a resource id or a text.
-    let icon = unsafe { name(icon) };
-    kept!(
-        log::debug!(c = "USER32!LoadIconA", a:% = Numbers(&[instance]), s:% = icon,
-        v:% = mech_trace::__shown!(value), from:% = mech_trace::__shown!(from); "imp.call")
-    );
-    value
-}
-
-/// `RegisterClassA`: `a` the class record's first 8 fields (style,
-/// procedure, the two extra counts, instance, icon, cursor, brush), `s`
-/// its class name, `with` its menu name.
-extern "system" fn register_class(from: u32, class: u32) -> u32 {
-    // SAFETY: the caller's class record, 10 fields, read before the call.
-    let fields = unsafe { record::<10>(class) };
-    // SAFETY: the caller's argument, passed on whole.
-    let value = unsafe { RegisterClassA(class) };
-    // SAFETY: the record's class and menu names, each a number or a text.
-    let (named, menu) = unsafe { (name(fields[9]), name(fields[8])) };
-    kept!(
-        log::debug!(c = "USER32!RegisterClassA", a:% = Numbers(&fields[..8]),
-        s:% = named, with:% = menu, v:% = mech_trace::__shown!(value),
-        from:% = mech_trace::__shown!(from); "imp.call")
-    );
-    value
-}
-
-extern "system" fn def_window_proc(from: u32, window: u32, message: u32, w: u32, l: u32) -> u32 {
-    // SAFETY: the caller's arguments, passed on whole.
-    let value = unsafe { DefWindowProcA(window, message, w, l) };
-    kept!(
-        log::debug!(c = "USER32!DefWindowProcA", a:% = Numbers(&[window, message, w, l]),
-        v:% = mech_trace::__shown!(value), from:% = mech_trace::__shown!(from); "imp.call")
-    );
-    value
-}
-
-/// `TranslateMessage`: `a` the message record's 7 fields (window,
-/// message, `w`, `l`, time, x, y), read before the call.
-extern "system" fn translate_message(from: u32, message: u32) -> u32 {
-    // SAFETY: the caller's message record, read before the call.
-    let fields = unsafe { record::<7>(message) };
-    // SAFETY: the caller's argument, passed on whole.
-    let value = unsafe { TranslateMessage(message) };
-    kept!(
-        log::debug!(c = "USER32!TranslateMessage", a:% = Numbers(&fields),
-        v:% = mech_trace::__shown!(value), from:% = mech_trace::__shown!(from); "imp.call")
-    );
-    value
-}
-
-/// `DispatchMessageA`: `a` the message record's 7 fields, read before the
-/// call, as the procedure it calls may reuse the record.
-extern "system" fn dispatch_message(from: u32, message: u32) -> u32 {
-    // SAFETY: the caller's message record, read before the call.
-    let fields = unsafe { record::<7>(message) };
-    // SAFETY: the caller's argument, passed on whole.
-    let value = unsafe { DispatchMessageA(message) };
-    kept!(
-        log::debug!(c = "USER32!DispatchMessageA", a:% = Numbers(&fields),
-        v:% = mech_trace::__shown!(value), from:% = mech_trace::__shown!(from); "imp.call")
-    );
-    value
-}
-
-/// `PeekMessageA`: `a` the window, the range and the flag; `o` the 7
-/// fields of the message it wrote, none when it answered 0.
-extern "system" fn peek_message(
-    from: u32,
-    message: u32,
-    window: u32,
-    low: u32,
-    high: u32,
-    remove: u32,
-) -> u32 {
-    // SAFETY: the caller's arguments, passed on whole.
-    let value = unsafe { PeekMessageA(message, window, low, high, remove) };
-    // SAFETY: the caller's message record.
-    let got = unsafe { wrote::<7>(value, message) };
-    kept!(
-        log::debug!(c = "USER32!PeekMessageA", a:% = Numbers(&[window, low, high, remove]),
-        o:% = got, v:% = mech_trace::__shown!(value), from:% = mech_trace::__shown!(from);
-        "imp.call")
-    );
-    value
+    user32::get_window_long(from, window, index)
 }
 
 extern "system" fn post_quit_message(from: u32, code: u32) {
-    // SAFETY: the caller's argument, passed on whole.
-    unsafe { PostQuitMessage(code) };
-    kept!(
-        log::debug!(c = "USER32!PostQuitMessage", a:% = Numbers(&[code]),
-        from:% = mech_trace::__shown!(from); "imp.call")
-    );
-}
-
-extern "system" fn wait_message(from: u32) -> u32 {
-    // SAFETY: takes no arguments.
-    let value = unsafe { WaitMessage() };
-    kept!(
-        log::debug!(c = "USER32!WaitMessage", v:% = mech_trace::__shown!(value),
-        from:% = mech_trace::__shown!(from); "imp.call")
-    );
-    value
+    user32::post_quit_message(from, code);
 }
 
 extern "system" fn get_message_time(from: u32) -> u32 {
-    // SAFETY: takes no arguments.
-    let value = unsafe { GetMessageTime() };
-    kept!(
-        log::debug!(c = "USER32!GetMessageTime", v:% = mech_trace::__shown!(value),
-        from:% = mech_trace::__shown!(from); "imp.call")
-    );
-    value
-}
-
-extern "system" fn send_message(from: u32, window: u32, message: u32, w: u32, l: u32) -> u32 {
-    // SAFETY: the caller's arguments, passed on whole.
-    let value = unsafe { SendMessageA(window, message, w, l) };
-    kept!(
-        log::debug!(c = "USER32!SendMessageA", a:% = Numbers(&[window, message, w, l]),
-        v:% = mech_trace::__shown!(value), from:% = mech_trace::__shown!(from); "imp.call")
-    );
-    value
-}
-
-extern "system" fn post_message(from: u32, window: u32, message: u32, w: u32, l: u32) -> u32 {
-    // SAFETY: the caller's arguments, passed on whole.
-    let value = unsafe { PostMessageA(window, message, w, l) };
-    kept!(
-        log::debug!(c = "USER32!PostMessageA", a:% = Numbers(&[window, message, w, l]),
-        v:% = mech_trace::__shown!(value), from:% = mech_trace::__shown!(from); "imp.call")
-    );
-    value
-}
-
-extern "system" fn show_window(from: u32, window: u32, command: u32) -> u32 {
-    // SAFETY: the caller's arguments, passed on whole.
-    let value = unsafe { ShowWindow(window, command) };
-    kept!(
-        log::debug!(c = "USER32!ShowWindow", a:% = Numbers(&[window, command]),
-        v:% = mech_trace::__shown!(value), from:% = mech_trace::__shown!(from); "imp.call")
-    );
-    value
-}
-
-/// `AdjustWindowRect`: `a` the rectangle's 4 fields as handed, the style
-/// and the menu flag; `o` the 4 it wrote, none when it answered 0.
-extern "system" fn adjust_window_rect(from: u32, rectangle: u32, style: u32, menu: u32) -> u32 {
-    // SAFETY: the caller's rectangle, read before the call.
-    let [left, top, right, bottom] = unsafe { record::<4>(rectangle) };
-    // SAFETY: the caller's arguments, passed on whole.
-    let value = unsafe { AdjustWindowRect(rectangle, style, menu) };
-    // SAFETY: the caller's rectangle.
-    let got = unsafe { wrote::<4>(value, rectangle) };
-    kept!(log::debug!(c = "USER32!AdjustWindowRect",
-        a:% = Numbers(&[left, top, right, bottom, style, menu]), o:% = got,
-        v:% = mech_trace::__shown!(value), from:% = mech_trace::__shown!(from); "imp.call"));
-    value
-}
-
-extern "system" fn set_window_pos(
-    from: u32,
-    window: u32,
-    after: u32,
-    x: u32,
-    y: u32,
-    width: u32,
-    height: u32,
-    flags: u32,
-) -> u32 {
-    // SAFETY: the caller's arguments, passed on whole.
-    let value = unsafe { SetWindowPos(window, after, x, y, width, height, flags) };
-    kept!(log::debug!(c = "USER32!SetWindowPos",
-        a:% = Numbers(&[window, after, x, y, width, height, flags]),
-        v:% = mech_trace::__shown!(value), from:% = mech_trace::__shown!(from); "imp.call"));
-    value
-}
-
-/// `GetWindowRect`: `a` the window; `o` the rectangle's 4 fields it
-/// wrote, none when it answered 0.
-extern "system" fn get_window_rect(from: u32, window: u32, rectangle: u32) -> u32 {
-    // SAFETY: the caller's arguments, passed on whole.
-    let value = unsafe { GetWindowRect(window, rectangle) };
-    // SAFETY: the caller's rectangle.
-    let got = unsafe { wrote::<4>(value, rectangle) };
-    kept!(
-        log::debug!(c = "USER32!GetWindowRect", a:% = Numbers(&[window]), o:% = got,
-        v:% = mech_trace::__shown!(value), from:% = mech_trace::__shown!(from); "imp.call")
-    );
-    value
-}
-
-/// `ClientToScreen`: `a` the window and the point as handed; `o` the
-/// point it wrote, none when it answered 0.
-extern "system" fn client_to_screen(from: u32, window: u32, point: u32) -> u32 {
-    // SAFETY: the caller's point, read before the call.
-    let [x, y] = unsafe { record::<2>(point) };
-    // SAFETY: the caller's arguments, passed on whole.
-    let value = unsafe { ClientToScreen(window, point) };
-    // SAFETY: the caller's point.
-    let got = unsafe { wrote::<2>(value, point) };
-    kept!(
-        log::debug!(c = "USER32!ClientToScreen", a:% = Numbers(&[window, x, y]), o:% = got,
-        v:% = mech_trace::__shown!(value), from:% = mech_trace::__shown!(from); "imp.call")
-    );
-    value
-}
-
-/// `ScreenToClient`: as [`client_to_screen`], the other way.
-extern "system" fn screen_to_client(from: u32, window: u32, point: u32) -> u32 {
-    // SAFETY: the caller's point, read before the call.
-    let [x, y] = unsafe { record::<2>(point) };
-    // SAFETY: the caller's arguments, passed on whole.
-    let value = unsafe { ScreenToClient(window, point) };
-    // SAFETY: the caller's point.
-    let got = unsafe { wrote::<2>(value, point) };
-    kept!(
-        log::debug!(c = "USER32!ScreenToClient", a:% = Numbers(&[window, x, y]), o:% = got,
-        v:% = mech_trace::__shown!(value), from:% = mech_trace::__shown!(from); "imp.call")
-    );
-    value
-}
-
-extern "system" fn set_focus(from: u32, window: u32) -> u32 {
-    // SAFETY: the caller's argument, passed on whole.
-    let value = unsafe { SetFocus(window) };
-    kept!(log::debug!(c = "USER32!SetFocus", a:% = Numbers(&[window]),
-        v:% = mech_trace::__shown!(value), from:% = mech_trace::__shown!(from); "imp.call"));
-    value
-}
-
-extern "system" fn find_window(from: u32, class: u32, title: u32) -> u32 {
-    // SAFETY: the caller's arguments, passed on whole.
-    let value = unsafe { FindWindowA(class, title) };
-    // SAFETY: the caller's class and title, each a number or a text.
-    let (class, title) = unsafe { (name(class), name(title)) };
-    kept!(
-        log::debug!(c = "USER32!FindWindowA", s:% = class, with:% = title,
-        v:% = mech_trace::__shown!(value), from:% = mech_trace::__shown!(from); "imp.call")
-    );
-    value
+    user32::get_message_time(from)
 }
 
 extern "system" fn get_system_metrics(from: u32, index: u32) -> u32 {
-    // SAFETY: the caller's argument, passed on whole.
-    let value = unsafe { GetSystemMetrics(index) };
-    kept!(
-        log::debug!(c = "USER32!GetSystemMetrics", a:% = Numbers(&[index]),
-        v:% = mech_trace::__shown!(value), from:% = mech_trace::__shown!(from); "imp.call")
-    );
-    value
+    user32::get_system_metrics(from, index)
 }
 
 entry!(HC6_CreateWindowExA, create_window, 12);

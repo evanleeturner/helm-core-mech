@@ -36,4 +36,8 @@ kernel_threads = { workspace = true }
 kernel_time = { workspace = true }
 mech_rows = { path = "../mech-rows" }
 mech_trace = { workspace = true }
+draw = { workspace = true, features = ["user32"] }
+draw-surfaces = { workspace = true, features = ["desk"] }
+window = { workspace = true, features = ["user32"] }
+window-input = { workspace = true, features = ["user32"] }
 log = { version = "0.4", features = ["kv"] }

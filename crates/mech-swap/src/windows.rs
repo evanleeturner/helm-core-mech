@@ -140,10 +140,12 @@ fn letter(level: Level) -> char {
 
 /// At the process's attach, opens the file `HC5_LOG` names for appending
 /// and routes every record at DEBUG or above to it; without `HC5_LOG`, or
-/// when the file will not open, the sink stays off. Always returns TRUE:
-/// the swap loads whether or not it traces.
+/// when the file will not open, the sink stays off. Then the bind, which
+/// `HC5_BIND` turns on and which traces through that sink. Returns TRUE,
+/// the swap loading whether or not it traces; a refused bind ends the
+/// process by name instead.
 #[unsafe(no_mangle)]
-pub extern "system" fn DllMain(_module: *mut c_void, reason: u32, _reserved: *mut c_void) -> i32 {
+pub extern "system" fn DllMain(module: *mut c_void, reason: u32, _reserved: *mut c_void) -> i32 {
     if reason == DLL_PROCESS_ATTACH {
         let mut path = [0u8; PATH_BYTES];
         // SAFETY: the name is NUL-terminated; the buffer is PATH_BYTES long
@@ -169,6 +171,7 @@ pub extern "system" fn DllMain(_module: *mut c_void, reason: u32, _reserved: *mu
                 log::set_max_level(LevelFilter::Debug);
             }
         }
+        crate::live::attach(module.expose_provenance() as u32);
     }
     1
 }

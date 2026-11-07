@@ -1,76 +1,52 @@
 // SPDX-License-Identifier: MIT
-//! The text calls (KX1, `JOB.md` step 4): the 13 KERNEL32 code page,
-//! conversion, character and locale names, each the original's, logged as
-//! `kernel_text`'s front logs them, its fields in the front's order, then
-//! `o`, what the call wrote into its buffer, and `from`, the caller.
+//! The text calls: the 13 KERNEL32 code page,
+//! conversion, character and locale names, each answered by `kernel_text`'s
+//! front in the file's row, Wine not asked. A row turns Win32's addresses and
+//! counts into the front's slices and writes nothing of its own: the front
+//! writes the call's one `imp.call` line, `by=kernel-text`, as the file rows'
+//! front does. So `o`, what the original wrote, and `from`, the caller, left
+//! the line with the original.
 //!
 //! 35 exports, one a name a file imports: the launcher's 9 `LAUNCHER_`
 //! (no `CompareString`, no `GetLocaleInfo`), the shell's 13 `HC6_`, the
-//! game file's 13 `GAME_`. Each is a naked entry that reads the address
-//! the call returns to first, as [`crate::process`]' entries do.
+//! game file's 13 `GAME_`. Each is a naked entry that hands the row the
+//! address the call returns to first, as [`crate::process`]' entries do; no
+//! row here reads it.
 //!
-//! A count below 0 is the NUL-ended text, the NUL shown for the
-//! conversions, `GetStringType` and `LCMapString`, which take it, and left
-//! out for `CompareString`, which stops at it. A null text shows empty.
-use core::fmt;
-use core::ptr::with_exposed_provenance;
+//! A count below 0 is the NUL-ended text, the NUL kept for the conversions,
+//! `GetStringType` and `LCMapString`, which take it, and left out for
+//! `CompareString`, which stops at it. A null text reads as empty. A null
+//! buffer or a size of 0 or below only counts, where Win32 refuses a null
+//! buffer with a size; no measured call passes one.
+use core::ptr::{with_exposed_provenance, with_exposed_provenance_mut};
 use core::slice;
-use kernel_text::table::Row;
-use kernel_text::{Bytes, Units};
+use kernel_text::table::CodePage;
+use kernel_text::{Front, Locale, pages};
 use mech_rows::text::{GAME, LAUNCHER, SHELL};
-use mech_trace::Args;
 
-use crate::left;
+/// The tables are the portable back's; a refusal's error and the line go
+/// around the thread's own last error, which the sink's `WriteFile` would
+/// otherwise change under the caller.
+struct Kept;
 
-unsafe extern "system" {
-    fn GetACP() -> u32;
-    fn GetOEMCP() -> u32;
-    fn GetCPInfo(code_page: u32, info: u32) -> i32;
-    fn MultiByteToWideChar(
-        code_page: u32,
-        flags: u32,
-        bytes: u32,
-        count: i32,
-        units: u32,
-        size: i32,
-    ) -> i32;
-    fn WideCharToMultiByte(
-        code_page: u32,
-        flags: u32,
-        units: u32,
-        count: i32,
-        bytes: u32,
-        size: i32,
-        fallback: u32,
-        used: u32,
-    ) -> i32;
-    fn GetStringTypeA(locale: u32, kind: u32, bytes: u32, count: i32, classes: u32) -> i32;
-    fn GetStringTypeW(kind: u32, units: u32, count: i32, classes: u32) -> i32;
-    fn LCMapStringA(locale: u32, flags: u32, bytes: u32, count: i32, out: u32, size: i32) -> i32;
-    fn LCMapStringW(locale: u32, flags: u32, units: u32, count: i32, out: u32, size: i32) -> i32;
-    fn CompareStringA(
-        locale: u32,
-        flags: u32,
-        first: u32,
-        first_count: i32,
-        second: u32,
-        second_count: i32,
-    ) -> i32;
-    fn CompareStringW(
-        locale: u32,
-        flags: u32,
-        first: u32,
-        first_count: i32,
-        second: u32,
-        second_count: i32,
-    ) -> i32;
-    fn GetLocaleInfoA(locale: u32, kind: u32, out: u32, size: i32) -> i32;
-    fn GetLocaleInfoW(locale: u32, kind: u32, out: u32, size: i32) -> i32;
+impl Locale for Kept {
+    fn code_page(&self, number: u32) -> Option<&CodePage> {
+        pages::ALL.iter().find(|page| page.number == number)
+    }
+
+    fn fail(&self, code: u32) {
+        // SAFETY: sets the thread's own last error.
+        unsafe { crate::SetLastError(code) };
+    }
+
+    fn quiet(&self, line: impl FnOnce()) {
+        kept!(line());
+    }
 }
 
 /// A file the rows serve, by its row in `mech_rows::text`.
 trait File {
-    const ROW: &'static Row;
+    const FRONT: Front<Kept>;
 }
 
 /// `mercswin`, the launcher.
@@ -81,15 +57,15 @@ enum Shell {}
 enum Game {}
 
 impl File for Launcher {
-    const ROW: &'static Row = &LAUNCHER;
+    const FRONT: Front<Kept> = Front::new(&LAUNCHER, Kept);
 }
 
 impl File for Shell {
-    const ROW: &'static Row = &SHELL;
+    const FRONT: Front<Kept> = Front::new(&SHELL, Kept);
 }
 
 impl File for Game {
-    const ROW: &'static Row = &GAME;
+    const FRONT: Front<Kept> = Front::new(&GAME, Kept);
 }
 
 /// The text at `address`: `count` units, or for a count below 0 the units
@@ -115,87 +91,58 @@ unsafe fn given<'a, T: Copy + Default + PartialEq>(address: u32, count: i32, nul
     unsafe { slice::from_raw_parts(start, length) }
 }
 
-/// What a call wrote at `address`: `length` units, empty for no buffer.
+/// The caller's buffer of `size` units, `None` where the call only counts.
 ///
 /// # Safety
-/// `address` is 0 or a buffer Win32 wrote `length` units into.
-unsafe fn wrote<'a, T>(address: u32, length: usize) -> &'a [T] {
+/// `address` is 0 or a buffer of `size` units the caller gave to be written.
+unsafe fn buffer<'a, T>(address: u32, size: i32) -> Option<&'a mut [T]> {
+    let length = usize::try_from(size).ok().filter(|length| *length > 0)?;
     if address == 0 {
-        return &[];
+        return None;
     }
-    // SAFETY: the units Win32 wrote, as the caller counts them.
-    unsafe { slice::from_raw_parts(with_exposed_provenance(address as usize), length) }
+    // SAFETY: the caller's `length` units at `address`.
+    Some(unsafe {
+        slice::from_raw_parts_mut(with_exposed_provenance_mut(address as usize), length)
+    })
 }
 
-/// The units a call wrote by its answer: the smaller of `value` and the
-/// buffer's `size`, 0 for a 0 answer or no buffer.
-fn written(value: i32, size: i32) -> usize {
-    usize::try_from(value.min(size)).unwrap_or(0)
+/// A class word's room for each of `count` units, empty for a null buffer.
+///
+/// # Safety
+/// `address` is 0 or a buffer of `count` words, as `GetStringType` takes it.
+unsafe fn class_words<'a>(address: u32, count: usize) -> &'a mut [u16] {
+    let size = i32::try_from(count).unwrap_or(i32::MAX);
+    // SAFETY: as this function's own contract.
+    unsafe { buffer(address, size) }.unwrap_or_default()
 }
 
-/// Character classes as the line shows them: hex words, comma-joined.
-struct Classes<'a>(&'a [u16]);
+extern "system" fn ansi_code_page<F: File>(_from: u32) -> u32 {
+    F::FRONT.ansi_code_page()
+}
 
-impl fmt::Display for Classes<'_> {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        self.0.iter().enumerate().try_for_each(|(index, class)| {
-            if index > 0 {
-                f.write_str(",")?;
-            }
-            write!(f, "{class:04x}")
-        })
+extern "system" fn oem_code_page<F: File>(_from: u32) -> u32 {
+    F::FRONT.oem_code_page()
+}
+
+extern "system" fn code_page_info<F: File>(_from: u32, code_page: u32, info: u32) -> i32 {
+    let Some(record) = F::FRONT.code_page_info(code_page) else {
+        return 0;
+    };
+    let out = with_exposed_provenance_mut::<u8>(info as usize);
+    // SAFETY: the caller's `CPINFO`, 18 bytes: the size, 2 default bytes, 12
+    // lead bytes.
+    unsafe {
+        out.cast::<u32>().write_unaligned(record.max_char_size);
+        out.add(4)
+            .copy_from_nonoverlapping(record.default.as_ptr(), 2);
+        out.add(6)
+            .copy_from_nonoverlapping(record.lead_bytes.as_ptr(), 12);
     }
-}
-
-/// The flag `WideCharToMultiByte` wrote at its used-default pointer,
-/// empty for a null one.
-struct Used(Option<i32>);
-
-impl fmt::Display for Used {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self.0 {
-            Some(flag) => mech_trace::__shown!(flag).fmt(f),
-            None => Ok(()),
-        }
-    }
-}
-
-extern "system" fn ansi_code_page<F: File>(from: u32) -> u32 {
-    // SAFETY: takes no arguments.
-    let value = unsafe { GetACP() };
-    kept!(
-        log::debug!(c = F::ROW.calls.ansi_code_page, v:% = mech_trace::__shown!(value),
-        from:% = mech_trace::__shown!(from); "imp.call")
-    );
-    value
-}
-
-extern "system" fn oem_code_page<F: File>(from: u32) -> u32 {
-    // SAFETY: takes no arguments.
-    let value = unsafe { GetOEMCP() };
-    kept!(
-        log::debug!(c = F::ROW.calls.oem_code_page, v:% = mech_trace::__shown!(value),
-        from:% = mech_trace::__shown!(from); "imp.call")
-    );
-    value
-}
-
-extern "system" fn code_page_info<F: File>(from: u32, code_page: u32, info: u32) -> i32 {
-    // SAFETY: the caller's arguments, passed on whole.
-    let value = unsafe { GetCPInfo(code_page, info) };
-    let error = left();
-    // SAFETY: the 18-byte record Win32 wrote, nothing on a 0 answer.
-    let record: &[u8] = unsafe { wrote(info, if value == 0 { 0 } else { 18 }) };
-    kept!(
-        log::debug!(c = F::ROW.calls.code_page_info, a:% = Args([mech_trace::__shown!(code_page)]),
-        o:% = Bytes(record), v:% = mech_trace::__shown!(value), e:% = mech_trace::__shown!(error),
-        from:% = mech_trace::__shown!(from); "imp.call")
-    );
-    value
+    1
 }
 
 extern "system" fn to_wide<F: File>(
-    from: u32,
+    _from: u32,
     code_page: u32,
     flags: u32,
     bytes: u32,
@@ -203,21 +150,9 @@ extern "system" fn to_wide<F: File>(
     units: u32,
     size: i32,
 ) -> i32 {
-    // SAFETY: the caller's arguments, passed on whole.
-    let value = unsafe { MultiByteToWideChar(code_page, flags, bytes, count, units, size) };
-    let error = left();
-    // SAFETY: the caller's text, as the call took it.
-    let text: &[u8] = unsafe { given(bytes, count, true) };
-    // SAFETY: the units the call wrote by its answer.
-    let out: &[u16] = unsafe { wrote(units, written(value, size)) };
-    kept!(log::debug!(c = F::ROW.calls.to_wide, a:% = Args([
-            mech_trace::__shown!(code_page),
-            mech_trace::__shown!(flags),
-            mech_trace::__shown!(size),
-        ]), s:% = Bytes(text), o:% = Units(out),
-        v:% = mech_trace::__shown!(value), e:% = mech_trace::__shown!(error),
-        from:% = mech_trace::__shown!(from); "imp.call"));
-    value
+    // SAFETY: the caller's text and buffer, as Win32 takes them.
+    let (text, out) = unsafe { (given(bytes, count, true), buffer(units, size)) };
+    F::FRONT.to_wide(code_page, flags, text, out)
 }
 
 #[allow(
@@ -225,7 +160,7 @@ extern "system" fn to_wide<F: File>(
     reason = "WideCharToMultiByte's own 8, and the caller first"
 )]
 extern "system" fn to_bytes<F: File>(
-    from: u32,
+    _from: u32,
     code_page: u32,
     flags: u32,
     units: u32,
@@ -235,80 +170,53 @@ extern "system" fn to_bytes<F: File>(
     fallback: u32,
     used: u32,
 ) -> i32 {
-    // SAFETY: the caller's arguments, passed on whole.
-    let value =
-        unsafe { WideCharToMultiByte(code_page, flags, units, count, bytes, size, fallback, used) };
-    let error = left();
-    // SAFETY: the caller's text, as the call took it.
-    let text: &[u16] = unsafe { given(units, count, true) };
-    // SAFETY: the bytes the call wrote by its answer.
-    let out: &[u8] = unsafe { wrote(bytes, written(value, size)) };
-    // SAFETY: the caller's default character, one byte as a single-byte
-    // code page reads it, or null.
-    let character: &[u8] = unsafe { given(fallback, 1, false) };
-    // SAFETY: the caller's flag, which the call wrote, or null.
-    let flag = (used != 0).then(|| unsafe { with_exposed_provenance::<i32>(used as usize).read() });
-    kept!(log::debug!(c = F::ROW.calls.to_bytes, a:% = Args([
-            mech_trace::__shown!(code_page),
-            mech_trace::__shown!(flags),
-            mech_trace::__shown!(size),
-        ]), s:% = Units(text), with:% = Bytes(character), o:% = Bytes(out), r:% = Used(flag),
-        v:% = mech_trace::__shown!(value), e:% = mech_trace::__shown!(error),
-        from:% = mech_trace::__shown!(from); "imp.call"));
+    // SAFETY: the caller's text and buffer, as Win32 takes them.
+    let (text, out) = unsafe { (given(units, count, true), buffer(bytes, size)) };
+    // SAFETY: the caller's default character, one byte as a single-byte code
+    // page reads it, or null.
+    let default =
+        (fallback != 0).then(|| unsafe { with_exposed_provenance::<u8>(fallback as usize).read() });
+    let (value, defaulted) = F::FRONT.to_bytes(code_page, flags, text, out, default);
+    if used != 0 {
+        // SAFETY: the caller's flag, given to be written.
+        unsafe { with_exposed_provenance_mut::<i32>(used as usize).write(i32::from(defaulted)) };
+    }
     value
 }
 
 extern "system" fn string_type<F: File>(
-    from: u32,
+    _from: u32,
     locale: u32,
     kind: u32,
     bytes: u32,
     count: i32,
     classes: u32,
 ) -> i32 {
-    // SAFETY: the caller's arguments, passed on whole.
-    let value = unsafe { GetStringTypeA(locale, kind, bytes, count, classes) };
-    let error = left();
-    // SAFETY: the caller's text, as the call took it.
-    let text: &[u8] = unsafe { given(bytes, count, true) };
-    // SAFETY: a class word for each byte the call read, nothing on a 0
-    // answer.
-    let out: &[u16] = unsafe { wrote(classes, if value == 0 { 0 } else { text.len() }) };
-    kept!(log::debug!(c = F::ROW.calls.string_type, a:% = Args([
-            mech_trace::__shown!(locale),
-            mech_trace::__shown!(kind),
-        ]), s:% = Bytes(text), o:% = Classes(out),
-        v:% = mech_trace::__shown!(value), e:% = mech_trace::__shown!(error),
-        from:% = mech_trace::__shown!(from); "imp.call"));
-    value
+    // SAFETY: the caller's text and a class word for each byte of it.
+    let (text, out) = unsafe {
+        let text: &[u8] = given(bytes, count, true);
+        (text, class_words(classes, text.len()))
+    };
+    F::FRONT.string_type(locale, kind, text, out)
 }
 
 extern "system" fn string_type_w<F: File>(
-    from: u32,
+    _from: u32,
     kind: u32,
     units: u32,
     count: i32,
     classes: u32,
 ) -> i32 {
-    // SAFETY: the caller's arguments, passed on whole.
-    let value = unsafe { GetStringTypeW(kind, units, count, classes) };
-    let error = left();
-    // SAFETY: the caller's text, as the call took it.
-    let text: &[u16] = unsafe { given(units, count, true) };
-    // SAFETY: a class word for each unit the call read, nothing on a 0
-    // answer.
-    let out: &[u16] = unsafe { wrote(classes, if value == 0 { 0 } else { text.len() }) };
-    kept!(log::debug!(c = F::ROW.calls.string_type_w, a:% = Args([
-            mech_trace::__shown!(0_u32),
-            mech_trace::__shown!(kind),
-        ]), s:% = Units(text), o:% = Classes(out),
-        v:% = mech_trace::__shown!(value), e:% = mech_trace::__shown!(error),
-        from:% = mech_trace::__shown!(from); "imp.call"));
-    value
+    // SAFETY: the caller's text and a class word for each unit of it.
+    let (text, out) = unsafe {
+        let text: &[u16] = given(units, count, true);
+        (text, class_words(classes, text.len()))
+    };
+    F::FRONT.string_type_w(kind, text, out)
 }
 
 extern "system" fn map_string<F: File>(
-    from: u32,
+    _from: u32,
     locale: u32,
     flags: u32,
     bytes: u32,
@@ -316,25 +224,13 @@ extern "system" fn map_string<F: File>(
     out: u32,
     size: i32,
 ) -> i32 {
-    // SAFETY: the caller's arguments, passed on whole.
-    let value = unsafe { LCMapStringA(locale, flags, bytes, count, out, size) };
-    let error = left();
-    // SAFETY: the caller's text, as the call took it.
-    let text: &[u8] = unsafe { given(bytes, count, true) };
-    // SAFETY: the bytes the call wrote by its answer.
-    let mapped: &[u8] = unsafe { wrote(out, written(value, size)) };
-    kept!(log::debug!(c = F::ROW.calls.map_string, a:% = Args([
-            mech_trace::__shown!(locale),
-            mech_trace::__shown!(flags),
-            mech_trace::__shown!(size),
-        ]), s:% = Bytes(text), o:% = Bytes(mapped),
-        v:% = mech_trace::__shown!(value), e:% = mech_trace::__shown!(error),
-        from:% = mech_trace::__shown!(from); "imp.call"));
-    value
+    // SAFETY: the caller's text and buffer, as Win32 takes them.
+    let (text, out) = unsafe { (given(bytes, count, true), buffer(out, size)) };
+    F::FRONT.map_string(locale, flags, text, out)
 }
 
 extern "system" fn map_string_w<F: File>(
-    from: u32,
+    _from: u32,
     locale: u32,
     flags: u32,
     units: u32,
@@ -342,25 +238,13 @@ extern "system" fn map_string_w<F: File>(
     out: u32,
     size: i32,
 ) -> i32 {
-    // SAFETY: the caller's arguments, passed on whole.
-    let value = unsafe { LCMapStringW(locale, flags, units, count, out, size) };
-    let error = left();
-    // SAFETY: the caller's text, as the call took it.
-    let text: &[u16] = unsafe { given(units, count, true) };
-    // SAFETY: the units the call wrote by its answer.
-    let mapped: &[u16] = unsafe { wrote(out, written(value, size)) };
-    kept!(log::debug!(c = F::ROW.calls.map_string_w, a:% = Args([
-            mech_trace::__shown!(locale),
-            mech_trace::__shown!(flags),
-            mech_trace::__shown!(size),
-        ]), s:% = Units(text), o:% = Units(mapped),
-        v:% = mech_trace::__shown!(value), e:% = mech_trace::__shown!(error),
-        from:% = mech_trace::__shown!(from); "imp.call"));
-    value
+    // SAFETY: the caller's text and buffer, as Win32 takes them.
+    let (text, out) = unsafe { (given(units, count, true), buffer(out, size)) };
+    F::FRONT.map_string_w(locale, flags, text, out)
 }
 
 extern "system" fn compare<F: File>(
-    from: u32,
+    _from: u32,
     locale: u32,
     flags: u32,
     first: u32,
@@ -368,27 +252,18 @@ extern "system" fn compare<F: File>(
     second: u32,
     second_count: i32,
 ) -> i32 {
-    // SAFETY: the caller's arguments, passed on whole.
-    let value = unsafe { CompareStringA(locale, flags, first, first_count, second, second_count) };
-    let error = left();
-    // SAFETY: the caller's two texts, as the call took them.
-    let (one, two): (&[u8], &[u8]) = unsafe {
+    // SAFETY: the caller's two texts, as Win32 takes them.
+    let (one, two) = unsafe {
         (
             given(first, first_count, false),
             given(second, second_count, false),
         )
     };
-    kept!(log::debug!(c = F::ROW.calls.compare, a:% = Args([
-            mech_trace::__shown!(locale),
-            mech_trace::__shown!(flags),
-        ]), s:% = Bytes(one), with:% = Bytes(two),
-        v:% = mech_trace::__shown!(value), e:% = mech_trace::__shown!(error),
-        from:% = mech_trace::__shown!(from); "imp.call"));
-    value
+    F::FRONT.compare(locale, flags, one, two)
 }
 
 extern "system" fn compare_w<F: File>(
-    from: u32,
+    _from: u32,
     locale: u32,
     flags: u32,
     first: u32,
@@ -396,65 +271,38 @@ extern "system" fn compare_w<F: File>(
     second: u32,
     second_count: i32,
 ) -> i32 {
-    // SAFETY: the caller's arguments, passed on whole.
-    let value = unsafe { CompareStringW(locale, flags, first, first_count, second, second_count) };
-    let error = left();
-    // SAFETY: the caller's two texts, as the call took them.
-    let (one, two): (&[u16], &[u16]) = unsafe {
+    // SAFETY: the caller's two texts, as Win32 takes them.
+    let (one, two) = unsafe {
         (
             given(first, first_count, false),
             given(second, second_count, false),
         )
     };
-    kept!(log::debug!(c = F::ROW.calls.compare_w, a:% = Args([
-            mech_trace::__shown!(locale),
-            mech_trace::__shown!(flags),
-        ]), s:% = Units(one), with:% = Units(two),
-        v:% = mech_trace::__shown!(value), e:% = mech_trace::__shown!(error),
-        from:% = mech_trace::__shown!(from); "imp.call"));
-    value
+    F::FRONT.compare_w(locale, flags, one, two)
 }
 
 extern "system" fn locale_info<F: File>(
-    from: u32,
+    _from: u32,
     locale: u32,
     kind: u32,
     out: u32,
     size: i32,
 ) -> i32 {
-    // SAFETY: the caller's arguments, passed on whole.
-    let value = unsafe { GetLocaleInfoA(locale, kind, out, size) };
-    let error = left();
-    // SAFETY: the bytes the call wrote by its answer.
-    let info: &[u8] = unsafe { wrote(out, written(value, size)) };
-    kept!(log::debug!(c = F::ROW.calls.locale_info, a:% = Args([
-            mech_trace::__shown!(locale),
-            mech_trace::__shown!(kind),
-        ]), o:% = Bytes(info),
-        v:% = mech_trace::__shown!(value), e:% = mech_trace::__shown!(error),
-        from:% = mech_trace::__shown!(from); "imp.call"));
-    value
+    // SAFETY: the caller's buffer, as Win32 takes it.
+    let out = unsafe { buffer(out, size) };
+    F::FRONT.locale_info(locale, kind, out)
 }
 
 extern "system" fn locale_info_w<F: File>(
-    from: u32,
+    _from: u32,
     locale: u32,
     kind: u32,
     out: u32,
     size: i32,
 ) -> i32 {
-    // SAFETY: the caller's arguments, passed on whole.
-    let value = unsafe { GetLocaleInfoW(locale, kind, out, size) };
-    let error = left();
-    // SAFETY: the units the call wrote by its answer.
-    let info: &[u16] = unsafe { wrote(out, written(value, size)) };
-    kept!(log::debug!(c = F::ROW.calls.locale_info_w, a:% = Args([
-            mech_trace::__shown!(locale),
-            mech_trace::__shown!(kind),
-        ]), o:% = Units(info),
-        v:% = mech_trace::__shown!(value), e:% = mech_trace::__shown!(error),
-        from:% = mech_trace::__shown!(from); "imp.call"));
-    value
+    // SAFETY: the caller's buffer, as Win32 takes it.
+    let out = unsafe { buffer(out, size) };
+    F::FRONT.locale_info_w(locale, kind, out)
 }
 
 entry!(LAUNCHER_GetACP, ansi_code_page::<Launcher>, 0);

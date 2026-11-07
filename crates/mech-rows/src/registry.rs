@@ -108,16 +108,16 @@ mod tests {
         assert_eq!(
             lines,
             [
-                "imp.call c=ADVAPI32!RegOpenKeyExA a=80000002,0,1 s=Software\\Activision\\Mercenaries\\1.0 o=100 v=0",
-                "imp.call c=ADVAPI32!RegQueryValueExA a=100,0,4 s=QuickTips o=4,4,1 v=0",
-                "imp.call c=ADVAPI32!RegQueryValueExA a=100,0,4 s=ShowDialog o=4,4,1 v=0",
-                "imp.call c=ADVAPI32!RegQueryValueExA a=100,0,4 s=LittleMovies o=4,4,1 v=0",
-                "imp.call c=ADVAPI32!RegCloseKey a=100 v=0",
-                "imp.call c=ADVAPI32!RegCreateKeyExA a=80000002,0,f003f s=Software\\Activision\\Mercenaries\\1.0 o=104,2 v=0",
-                "imp.call c=ADVAPI32!RegSetValueExA a=104,4,4 s=QuickTips o=1 v=0",
-                "imp.call c=ADVAPI32!RegSetValueExA a=104,4,4 s=ShowDialog o=1 v=0",
-                "imp.call c=ADVAPI32!RegSetValueExA a=104,4,4 s=LittleMovies o=1 v=0",
-                "imp.call c=ADVAPI32!RegCloseKey a=104 v=0",
+                "imp.call c=ADVAPI32!RegOpenKeyExA a=80000002,0,1 s=Software\\Activision\\Mercenaries\\1.0 o=100 v=0 by=kernel-registry",
+                "imp.call c=ADVAPI32!RegQueryValueExA a=100,0,4 s=QuickTips o=4,4,1 v=0 by=kernel-registry",
+                "imp.call c=ADVAPI32!RegQueryValueExA a=100,0,4 s=ShowDialog o=4,4,1 v=0 by=kernel-registry",
+                "imp.call c=ADVAPI32!RegQueryValueExA a=100,0,4 s=LittleMovies o=4,4,1 v=0 by=kernel-registry",
+                "imp.call c=ADVAPI32!RegCloseKey a=100 v=0 by=kernel-registry",
+                "imp.call c=ADVAPI32!RegCreateKeyExA a=80000002,0,f003f s=Software\\Activision\\Mercenaries\\1.0 o=104,2 v=0 by=kernel-registry",
+                "imp.call c=ADVAPI32!RegSetValueExA a=104,4,4 s=QuickTips o=1 v=0 by=kernel-registry",
+                "imp.call c=ADVAPI32!RegSetValueExA a=104,4,4 s=ShowDialog o=1 v=0 by=kernel-registry",
+                "imp.call c=ADVAPI32!RegSetValueExA a=104,4,4 s=LittleMovies o=1 v=0 by=kernel-registry",
+                "imp.call c=ADVAPI32!RegCloseKey a=104 v=0 by=kernel-registry",
             ]
         );
     }
@@ -129,11 +129,11 @@ mod tests {
     #[test]
     fn the_flown_writes_replay() {
         const FLOWN: [&str; 5] = [
-            "imp.call c=ADVAPI32!RegCreateKeyExA a=80000002,0,f003f s=Software\\Activision\\Mercenaries\\1.0 o=e0,2 v=0",
-            "imp.call c=ADVAPI32!RegSetValueExA a=e0,4,4 s=QuickTips o=1 v=0",
-            "imp.call c=ADVAPI32!RegSetValueExA a=e0,4,4 s=ShowDialog o=1 v=0",
-            "imp.call c=ADVAPI32!RegSetValueExA a=e0,4,4 s=LittleMovies o=1 v=0",
-            "imp.call c=ADVAPI32!RegCloseKey a=e0 v=0",
+            "imp.call c=ADVAPI32!RegCreateKeyExA a=80000002,0,f003f s=Software\\Activision\\Mercenaries\\1.0 o=e0,2 v=0 by=kernel-registry",
+            "imp.call c=ADVAPI32!RegSetValueExA a=e0,4,4 s=QuickTips o=1 v=0 by=kernel-registry",
+            "imp.call c=ADVAPI32!RegSetValueExA a=e0,4,4 s=ShowDialog o=1 v=0 by=kernel-registry",
+            "imp.call c=ADVAPI32!RegSetValueExA a=e0,4,4 s=LittleMovies o=1 v=0 by=kernel-registry",
+            "imp.call c=ADVAPI32!RegCloseKey a=e0 v=0 by=kernel-registry",
         ];
         let page = Page::new(&SHELL_ROW, b"", |_| {}).expect("an empty save");
         let shell = Front::new(&SHELL_ROW, &page);
@@ -175,7 +175,7 @@ mod tests {
             assert_eq!(
                 lines,
                 [
-                    "imp.call c=ADVAPI32!RegOpenKeyExA a=80000002,0,1 s=System\\CurrentControlSet\\Control\\MediaResources\\Joystick\\%s\\CurrentJoystickSettings o=\"\" v=2"
+                    "imp.call c=ADVAPI32!RegOpenKeyExA a=80000002,0,1 s=System\\CurrentControlSet\\Control\\MediaResources\\Joystick\\%s\\CurrentJoystickSettings o=\"\" v=2 by=kernel-registry"
                 ]
             );
         }

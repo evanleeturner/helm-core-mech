@@ -182,14 +182,14 @@ fn the_shells_row_answers_k3s_polls() {
     assert_eq!(
         lines,
         [
-            "imp.call c=USER32!GetCursorPos o=140,f0 v=1",
-            "imp.call c=USER32!GetAsyncKeyState a=1 v=0",
-            "imp.call c=USER32!GetAsyncKeyState a=2 v=0",
-            "imp.call c=USER32!GetAsyncKeyState a=4 v=0",
-            "imp.call c=USER32!MapVirtualKeyA a=12,2 v=0",
-            "imp.call c=USER32!GetKeyState a=11 v=0",
-            "imp.call c=USER32!GetKeyState a=12 v=ff81",
-            "imp.call c=USER32!GetKeyState a=10 v=0",
+            "imp.call c=USER32!GetCursorPos o=140,f0 v=1 by=window-input",
+            "imp.call c=USER32!GetAsyncKeyState a=1 v=0 by=window-input",
+            "imp.call c=USER32!GetAsyncKeyState a=2 v=0 by=window-input",
+            "imp.call c=USER32!GetAsyncKeyState a=4 v=0 by=window-input",
+            "imp.call c=USER32!MapVirtualKeyA a=12,2 v=0 by=window-input",
+            "imp.call c=USER32!GetKeyState a=11 v=0 by=window-input",
+            "imp.call c=USER32!GetKeyState a=12 v=ff81 by=window-input",
+            "imp.call c=USER32!GetKeyState a=10 v=0 by=window-input",
         ]
     );
 }

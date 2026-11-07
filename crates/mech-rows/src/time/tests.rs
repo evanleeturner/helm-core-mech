@@ -19,7 +19,7 @@ use kernel_time::page::Page;
 use kernel_time::table::ZONE_BYTES;
 
 /// `t1`'s `_time` line, whole.
-const T1_TIME: &str = "imp.call c=_time a=0 v=6aea8734 t=1dd6bf9fd2c271d";
+const T1_TIME: &str = "imp.call c=_time a=0 v=6aea8734 t=1dd6bf9fd2c271d by=kernel-time";
 
 /// `t1`'s wall at that call: the line's `t`.
 const T1_WALL: u64 = 0x1dd_6bf9_fd2c_271d;
@@ -73,7 +73,9 @@ fn a_file_time_is_its_own_local_time() {
         let name = SHELL.calls.to_local_file_time;
         assert_eq!(
             lines,
-            [format!("imp.call c={name} a={wall:x} v=1 f={wall:x}")]
+            [format!(
+                "imp.call c={name} a={wall:x} v=1 f={wall:x} by=kernel-time"
+            )]
         );
     }
 }
@@ -89,7 +91,11 @@ fn the_zone_is_none_and_its_record_all_0() {
         assert_eq!(value, 0, "{wall:x}");
         assert_eq!(record, [0; ZONE_BYTES], "{wall:x}");
         let name = SHELL.calls.zone;
-        assert_eq!(lines, [format!("imp.call c={name} v=0")], "{wall:x}");
+        assert_eq!(
+            lines,
+            [format!("imp.call c={name} v=0 by=kernel-time")],
+            "{wall:x}"
+        );
     }
 }
 

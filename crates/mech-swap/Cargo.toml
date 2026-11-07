@@ -28,6 +28,7 @@ undocumented_unsafe_blocks = "deny"
 
 [dependencies]
 mech_layer = { path = "../mech-layer" }
+mech_rows = { path = "../mech-rows" }
 mech_trace = { workspace = true }
 log = { version = "0.4", features = ["kv"] }
 

@@ -65,7 +65,9 @@ fn play<T: Threads>(calls: &ThreadCalls<T>, number: usize, line: &str) {
         "KERNEL32!TlsSetValue" => _ = calls.slot_set(from, a[0], a[1]),
         other => panic!("h2 harvested no {other}"),
     });
-    assert_eq!(lines, [line], "harvest/h2-threads.log:{number}");
+    // Recorded before the lines said who answered.
+    let want = format!("{line} by=kernel-threads");
+    assert_eq!(lines, [want], "harvest/h2-threads.log:{number}");
 }
 
 /// Plays a lock's lines on the page, checking its takes after each.

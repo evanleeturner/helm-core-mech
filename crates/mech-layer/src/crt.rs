@@ -60,7 +60,7 @@ pub unsafe extern "C" fn strncpy(dest: *mut u8, source: *const u8, count: u32) -
             *dest.add(i) = byte;
         }
     }
-    imp_call!("_strncpy", [dest, source, count], dest)
+    imp_call!("mech-layer", "_strncpy", [dest, source, count], dest)
 }
 
 /// strncmp: the first `count` bytes compared.
@@ -68,7 +68,7 @@ pub unsafe extern "C" fn strncpy(dest: *mut u8, source: *const u8, count: u32) -
 pub unsafe extern "C" fn strncmp(first: *const u8, last: *const u8, count: u32) -> i32 {
     // SAFETY: the caller's two strings, as the C library's contract.
     let value = unsafe { compare(first, last, count as usize, exact) };
-    imp_call!("_strncmp", [first, last, count], value)
+    imp_call!("mech-layer", "_strncmp", [first, last, count], value)
 }
 
 /// _strcmpi: compared with case folded.
@@ -76,7 +76,7 @@ pub unsafe extern "C" fn strncmp(first: *const u8, last: *const u8, count: u32) 
 pub unsafe extern "C" fn strcmpi(first: *const u8, last: *const u8) -> i32 {
     // SAFETY: the caller's two NUL-ended strings.
     let value = unsafe { compare(first, last, usize::MAX, lowered) };
-    imp_call!("__strcmpi", [first, last], value)
+    imp_call!("mech-layer", "__strcmpi", [first, last], value)
 }
 
 /// _strnicmp: the first `count` bytes compared with case folded.
@@ -84,7 +84,7 @@ pub unsafe extern "C" fn strcmpi(first: *const u8, last: *const u8) -> i32 {
 pub unsafe extern "C" fn strnicmp(first: *const u8, last: *const u8, count: u32) -> i32 {
     // SAFETY: the caller's two strings, as the C library's contract.
     let value = unsafe { compare(first, last, count as usize, lowered) };
-    imp_call!("__strnicmp", [first, last, count], value)
+    imp_call!("mech-layer", "__strnicmp", [first, last, count], value)
 }
 
 /// strstr: where `wanted` first starts in `string`; `string` itself for
@@ -107,7 +107,7 @@ pub unsafe extern "C" fn strstr(string: *const u8, wanted: *const u8) -> *mut u8
     };
     // SAFETY: `at` lies inside `string`.
     let value = at.map_or(null_mut(), |at| unsafe { string.add(at) }.cast_mut());
-    imp_call!("_strstr", [string, wanted], value)
+    imp_call!("mech-layer", "_strstr", [string, wanted], value)
 }
 
 /// strchr: where the byte `wanted` first sits in `string`, its NUL
@@ -128,7 +128,7 @@ pub unsafe extern "C" fn strchr(string: *const u8, wanted: i32) -> *mut u8 {
         // SAFETY: `at` is still before the NUL.
         at = unsafe { at.add(1) };
     };
-    imp_call!("_strchr", [string, wanted], value)
+    imp_call!("mech-layer", "_strchr", [string, wanted], value)
 }
 
 /// toupper: a lower-case ASCII letter raised; any other value unchanged.
@@ -139,7 +139,7 @@ pub extern "C" fn toupper(c: i32) -> i32 {
     } else {
         c
     };
-    imp_call!("_toupper", [c], value)
+    imp_call!("mech-layer", "_toupper", [c], value)
 }
 
 /// atoi: the decimal number after any whitespace and one sign; the digits
@@ -164,14 +164,14 @@ pub unsafe extern "C" fn atoi(string: *const u8) -> i32 {
     } else {
         total
     };
-    imp_call!("_atoi", [string], value)
+    imp_call!("mech-layer", "_atoi", [string], value)
 }
 
 /// srand: the seed `rand` draws from next.
 #[unsafe(export_name = "HC5_100706c0")]
 pub extern "C" fn srand(seed: u32) {
     SEED.store(seed, Ordering::Relaxed);
-    imp_call!("FUN_100706c0", [seed]);
+    imp_call!("mech-layer", "FUN_100706c0", [seed]);
 }
 
 /// rand: MSVC's sequence, 0 to 32767.
@@ -183,7 +183,7 @@ pub extern "C" fn rand() -> i32 {
         .wrapping_add(2_531_011);
     SEED.store(seed, Ordering::Relaxed);
     let value = i32::from(u16::try_from((seed >> 16) & 0x7fff).unwrap_or_default());
-    imp_call!("_rand", [], value)
+    imp_call!("mech-layer", "_rand", [], value)
 }
 
 /// time: the whole seconds since 1970 UTC by the shell's wall clock, the

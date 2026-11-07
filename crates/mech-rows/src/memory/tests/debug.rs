@@ -250,12 +250,15 @@ fn writes_one_line_a_call_as_c37_called() {
         .into_iter()
         .map(|call| match call {
             Call::Make { ask, block } => format!(
-                "imp.call c=_malloc a={:x} h=15e0000 v={:x}",
+                "imp.call c=_malloc a={:x} h=15e0000 v={:x} by=kernel-memory",
                 ask - OVERHEAD,
                 block + HEADER
             ),
             Call::Free { block } => {
-                format!("imp.call c=FUN_1008d9b0 a={:x} h=15e0000", block + HEADER)
+                format!(
+                    "imp.call c=FUN_1008d9b0 a={:x} h=15e0000 by=kernel-memory",
+                    block + HEADER
+                )
             }
         })
         .collect();
@@ -375,6 +378,9 @@ fn free_of_null_releases_nothing_and_logs_once() {
     let lines = debug_lines(|| unsafe { heap.free(pointer(0)) });
     let board = heap.memory();
     assert!(board.releases.borrow().is_empty());
-    assert_eq!(lines, ["imp.call c=FUN_1008d9b0 a=0 h=15e0000"]);
+    assert_eq!(
+        lines,
+        ["imp.call c=FUN_1008d9b0 a=0 h=15e0000 by=kernel-memory"]
+    );
     assert_eq!((board.held.get(), board.deepest.get()), (0, 1));
 }

@@ -145,9 +145,15 @@ fn replay() -> (Vec<String>, Heap<Recorder>) {
 #[test]
 fn writes_each_line_c36_wrote() {
     let (lines, _) = replay();
-    let want: Vec<&str> = C36
+    // Recorded before the lines said who answered.
+    let want: Vec<String> = C36
         .lines()
-        .map(|line| line.splitn(3, ' ').nth(2).unwrap_or(""))
+        .map(|line| {
+            format!(
+                "{} by=kernel-memory",
+                line.splitn(3, ' ').nth(2).unwrap_or("")
+            )
+        })
         .collect();
     assert_eq!(lines.len(), 267, "c36 wrote 267 lines");
     for (number, (got, want)) in lines.iter().zip(&want).enumerate() {
@@ -245,8 +251,8 @@ fn free_and_delete_of_null_release_nothing_and_log_once() {
     assert_eq!(
         lines,
         [
-            "imp.call c=FUN_1006e790 a=0 h=15e0000",
-            "imp.call c=FUN_1006ec30 a=0 h=15e0000"
+            "imp.call c=FUN_1006e790 a=0 h=15e0000 by=kernel-memory",
+            "imp.call c=FUN_1006ec30 a=0 h=15e0000 by=kernel-memory"
         ]
     );
 }
@@ -317,8 +323,14 @@ fn each_file_is_a_row_and_logs_its_own_names() {
             unsafe { heap.free(made) };
         });
         let want = [
-            format!("imp.call c={} a=4 h=15e0000 v=10", file.malloc.name),
-            format!("imp.call c={} a=10 h=15e0000", file.free.name),
+            format!(
+                "imp.call c={} a=4 h=15e0000 v=10 by=kernel-memory",
+                file.malloc.name
+            ),
+            format!(
+                "imp.call c={} a=10 h=15e0000 by=kernel-memory",
+                file.free.name
+            ),
         ];
         assert_eq!(lines, want, "{}", file.file);
     }

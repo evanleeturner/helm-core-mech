@@ -145,8 +145,14 @@ fn wanted(row: &Row<'_>, map: &HashMap<u32, u32>) -> String {
         .map(|a| format!("{:x}", own(map, *a)))
         .collect();
     let (name, args) = (row.name, args.join(","));
+    // The box's focus goes through the window front, whose line it is.
+    let by = if name == "SetFocus" {
+        "window"
+    } else {
+        "window-dialogs"
+    };
     format!(
-        "imp.call c=USER32!{name} a={args} v={:x}",
+        "imp.call c=USER32!{name} a={args} v={:x} by={by}",
         own(map, row.result)
     )
 }

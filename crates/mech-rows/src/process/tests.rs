@@ -15,6 +15,19 @@ use kernel_process::page::Page;
 use kernel_process::table::{Module, Row};
 use kernel_process::{Access, Front};
 
+/// `mech_layer::process` hands all 3 files one NUL-ended command line, one wide
+/// block, and the row's narrow block by its address: a row whose text differs, or
+/// a block with no 2 NULs at its end, would hand a caller the wrong bytes.
+#[test]
+fn the_three_rows_share_the_text_the_layer_keeps_one_copy_of() {
+    for row in [&SHELL, &GAME] {
+        assert_eq!(row.command_line, LAUNCHER.command_line, "{}", row.file);
+        assert_eq!(row.environment, LAUNCHER.environment, "{}", row.file);
+    }
+    assert!(LAUNCHER.environment.ends_with(b"\0\0"));
+    assert!(!LAUNCHER.command_line.contains('\0'));
+}
+
 /// The four entries the launcher asks, Wine's answers standing for the
 /// swap's table: the shell's (`p0`, `0040158f`, `004015a6`), the game
 /// file's (`p10`, `from=4014db`, `from=4014f2`).

@@ -81,15 +81,15 @@ fn flown(lines: &[&str], window: u32) -> Vec<String> {
 #[test]
 fn the_shell_pump_replays() {
     const LINES: [&str; 9] = [
-        "imp.call c=USER32!DispatchMessageA a=2005e,200,0,1270207,20d52a7e,207,127 v=0",
-        "imp.call c=USER32!DispatchMessageA a=2005e,201,1,1270207,20d52ae2,207,127 v=0",
-        "imp.call c=USER32!PostMessageA a=2005e,c029,c02b,0 v=1",
-        "imp.call c=USER32!DispatchMessageA a=2005e,c029,c02b,0,20d52e9a,0,0 v=0",
-        "imp.call c=USER32!DispatchMessageA a=2005e,202,0,1270207,20d530be,207,127 v=0",
-        "imp.call c=USER32!DispatchMessageA a=2005e,200,0,19901f4,20d61ffb,1f4,199 v=0",
-        "imp.call c=USER32!DispatchMessageA a=2005e,201,1,19901f4,20d62060,1f4,199 v=0",
-        "imp.call c=USER32!PostMessageA a=2005e,c011,c029,0 v=1",
-        "imp.call c=USER32!DispatchMessageA a=2005e,c011,c029,0,20d624d2,0,0 v=0",
+        "imp.call c=USER32!DispatchMessageA a=2005e,200,0,1270207,20d52a7e,207,127 v=0 by=window",
+        "imp.call c=USER32!DispatchMessageA a=2005e,201,1,1270207,20d52ae2,207,127 v=0 by=window",
+        "imp.call c=USER32!PostMessageA a=2005e,c029,c02b,0 v=1 by=window",
+        "imp.call c=USER32!DispatchMessageA a=2005e,c029,c02b,0,20d52e9a,0,0 v=0 by=window",
+        "imp.call c=USER32!DispatchMessageA a=2005e,202,0,1270207,20d530be,207,127 v=0 by=window",
+        "imp.call c=USER32!DispatchMessageA a=2005e,200,0,19901f4,20d61ffb,1f4,199 v=0 by=window",
+        "imp.call c=USER32!DispatchMessageA a=2005e,201,1,19901f4,20d62060,1f4,199 v=0 by=window",
+        "imp.call c=USER32!PostMessageA a=2005e,c011,c029,0 v=1 by=window",
+        "imp.call c=USER32!DispatchMessageA a=2005e,c011,c029,0,20d624d2,0,0 v=0 by=window",
     ];
     let desk = Desk::new(Board::default());
     let window = launcher_window(&desk);
@@ -145,14 +145,14 @@ fn the_shell_pump_replays() {
 #[test]
 fn the_launcher_procedure_replays() {
     const LINES: [&str; 8] = [
-        "imp.call c=USER32!DefWindowProcA a=2005e,41e,0,0 v=0",
-        "imp.call c=USER32!SendMessageA a=2005e,41e,0,0 v=0",
-        "imp.call c=USER32!DefWindowProcA a=2005e,46,0,31fa58 v=0",
-        "imp.call c=USER32!DefWindowProcA a=2005e,83,1,31fa24 v=0",
-        "imp.call c=USER32!DefWindowProcA a=2005e,47,0,31fa58 v=0",
-        "imp.call c=USER32!DefWindowProcA a=2005e,7c,fffffff0,31f7e4 v=0",
-        "imp.call c=USER32!DefWindowProcA a=2005e,7d,fffffff0,31f7e4 v=0",
-        "imp.call c=USER32!DefWindowProcA a=2005e,46,0,31f7b4 v=0",
+        "imp.call c=USER32!DefWindowProcA a=2005e,41e,0,0 v=0 by=window",
+        "imp.call c=USER32!SendMessageA a=2005e,41e,0,0 v=0 by=window",
+        "imp.call c=USER32!DefWindowProcA a=2005e,46,0,31fa58 v=0 by=window",
+        "imp.call c=USER32!DefWindowProcA a=2005e,83,1,31fa24 v=0 by=window",
+        "imp.call c=USER32!DefWindowProcA a=2005e,47,0,31fa58 v=0 by=window",
+        "imp.call c=USER32!DefWindowProcA a=2005e,7c,fffffff0,31f7e4 v=0 by=window",
+        "imp.call c=USER32!DefWindowProcA a=2005e,7d,fffffff0,31f7e4 v=0 by=window",
+        "imp.call c=USER32!DefWindowProcA a=2005e,46,0,31f7b4 v=0 by=window",
     ];
     let desk = Desk::new(Board::default());
     let window = launcher_window(&desk);
@@ -187,21 +187,21 @@ fn the_launcher_procedure_replays() {
 #[test]
 fn the_game_takes_the_window() {
     const LINES: [&str; 15] = [
-        "imp.call c=USER32!GetSystemMetrics a=0 v=280",
-        "imp.call c=USER32!GetSystemMetrics a=1 v=1e0",
-        "imp.call c=USER32!GetSystemMetrics a=0 v=280",
-        "imp.call c=USER32!GetSystemMetrics a=1 v=1e0",
-        "imp.call c=USER32!SetWindowLongA a=2005e,fffffff0,90000000 v=94000000",
-        "imp.call c=USER32!SetWindowPos a=2005e,fffffffe,0,0,280,1e0,10 v=1",
-        "imp.call c=USER32!GetSystemMetrics a=0 v=280",
-        "imp.call c=USER32!GetSystemMetrics a=1 v=1e0",
-        "imp.call c=USER32!DefWindowProcA a=2005e,41f,0,0 v=0",
-        "imp.call c=USER32!SendMessageA a=2005e,41f,0,0 v=0",
-        "imp.call c=USER32!SendMessageA a=2005e,1c,1,0 v=0",
-        "imp.call c=USER32!DefWindowProcA a=2005e,86,0,0 v=1",
-        "imp.call c=USER32!DefWindowProcA a=2005e,6,0,0 v=0",
-        "imp.call c=USER32!DefWindowProcA a=2005e,8,0,0 v=0",
-        "imp.call c=USER32!DefWindowProcA a=2005e,281,0,c000000f v=0",
+        "imp.call c=USER32!GetSystemMetrics a=0 v=280 by=window",
+        "imp.call c=USER32!GetSystemMetrics a=1 v=1e0 by=window",
+        "imp.call c=USER32!GetSystemMetrics a=0 v=280 by=window",
+        "imp.call c=USER32!GetSystemMetrics a=1 v=1e0 by=window",
+        "imp.call c=USER32!SetWindowLongA a=2005e,fffffff0,90000000 v=94000000 by=window",
+        "imp.call c=USER32!SetWindowPos a=2005e,fffffffe,0,0,280,1e0,10 v=1 by=window",
+        "imp.call c=USER32!GetSystemMetrics a=0 v=280 by=window",
+        "imp.call c=USER32!GetSystemMetrics a=1 v=1e0 by=window",
+        "imp.call c=USER32!DefWindowProcA a=2005e,41f,0,0 v=0 by=window",
+        "imp.call c=USER32!SendMessageA a=2005e,41f,0,0 v=0 by=window",
+        "imp.call c=USER32!SendMessageA a=2005e,1c,1,0 v=0 by=window",
+        "imp.call c=USER32!DefWindowProcA a=2005e,86,0,0 v=1 by=window",
+        "imp.call c=USER32!DefWindowProcA a=2005e,6,0,0 v=0 by=window",
+        "imp.call c=USER32!DefWindowProcA a=2005e,8,0,0 v=0 by=window",
+        "imp.call c=USER32!DefWindowProcA a=2005e,281,0,c000000f v=0 by=window",
     ];
     let desk = Desk::new(Board::default());
     let window = launcher_window(&desk);
@@ -237,7 +237,10 @@ fn the_shell_menu_bar_is_19() {
     let desk = Desk::new(Board::default());
     let shell = Front::new(&SHELL, &desk);
     let lines = debug_lines(|| assert_eq!(shell.get_system_metrics(0xf), 0x13));
-    assert_eq!(lines, ["imp.call c=USER32!GetSystemMetrics a=f v=13"]);
+    assert_eq!(
+        lines,
+        ["imp.call c=USER32!GetSystemMetrics a=f v=13 by=window"]
+    );
 }
 
 /// The launcher's start, which no run reached (wall 3): the plan's

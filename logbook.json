@@ -12,7 +12,7 @@
     {
       "id": "imp.call",
       "level": "D",
-      "fields": { "c": "the import, as DLL!NAME; a DirectDraw method, reached through a table and no import, as INTERFACE::NAME", "a": "its arguments, in order (absent when it takes none); the file and registry calls' seams log their numbers alone, never a pointer; a window, input or drawing call's numbers alone too, a record it is handed (a message, a rectangle, a point, a class) as its fields comma-joined, never its address, a null rectangle none; a DirectDraw Blt's two rectangles each after a 0 or 1 saying it was handed, zeros for a null, as its fill colour is a number, 0 with no effects record", "h": "the heap the block came from or goes to: the C library's memory helpers alone", "v": "the value it returned (absent when void); a key-state input call's low 16 bits, the SHORT the caller reads", "p": "the file name the call was given, as text: the file calls' seam alone", "m": "the module name a process call was given or wrote, as text: the process calls' seam alone", "q": "the entry name GetProcAddress was asked, as text", "s": "other text a process or text call was given: an environment block or variable, a command line, a debug string, the bytes or units to convert, map or compare; the key path or value name a registry call was given; the class, icon or cursor name a window or input call was given, # and the number for an atom or a resource id below 0x10000, empty for null; a byte past printable ASCII as \\xNN, a unit as \\uNNNN", "with": "the second text a compare call was given, shown as s shows the first; the default character WideCharToMultiByte was given, empty for null; the title or menu name a window call was given, shown as s shows the class", "o": "what a drawing call wrote, as numbers (a bits pointer, a paint record), empty on a 0 answer; what a CD-audio call wrote, a number or its text; what a DirectDraw call wrote, its record or its out pointer, empty on any answer but DD_OK; what a text call wrote into its buffer, shown as s shows its text, its length the smaller of the value and the buffer: GetStringType's classes as hex words, comma-joined; GetCPInfo's 18-byte record as bytes; empty for no buffer or a 0 answer; what a registry call wrote or kept, its numbers comma-joined: the handle an open wrote, the handle and disposition a create wrote, the type, size and value a query wrote (the value only with a buffer), the value a set kept; empty for a refusal that writes nothing; the record a window or input call wrote, its numbers comma-joined (a message's 7, a rectangle's 4, a point's 2), empty on a 0 answer","r": "the start-up record GetStartupInfoA wrote: its flags, show-window, reserved count and reserved address; the used-default flag WideCharToMultiByte wrote, empty for null", "to": "the new name a move was given, as text", "n": "the bytes a read or write moved, read from its out-pointer after the call", "found": "the file name a find call found, empty when it found none", "e": "the thread's last error as the file, process or text call left it, the value the file would read", "t": "the instant a time call read: the wall clock's file-time ticks, or the game clock's microseconds", "w": "the 8 date words a time call wrote: year, month, weekday, day, hour, minute, second, millisecond", "f": "the file time a time call wrote", "from": "the address the call returns to in the file that made it: the drawing, thread, process, text, registry, window and input calls' seams alone; 0 where a target has none", "by": "who computed the answer the caller reads: the crate's name from a front, orig from the original; absent on a line that does not say yet" },
+      "fields": { "c": "the import, as DLL!NAME; a DirectDraw or DirectSound method, reached through a table and no import, as INTERFACE::NAME", "a": "its arguments, in order (absent when it takes none); the file and registry calls' seams log their numbers alone, never a pointer; a window, input or drawing call's numbers alone too, a record it is handed (a message, a rectangle, a point, a class) as its fields comma-joined, never its address, a null rectangle none; a DirectDraw Blt's two rectangles each after a 0 or 1 saying it was handed, zeros for a null, as its fill colour is a number, 0 with no effects record; a joystick position's device and its record's flags", "h": "the heap the block came from or goes to: the C library's memory helpers alone", "v": "the value it returned (absent when void); a key-state input call's low 16 bits, the SHORT the caller reads", "p": "the file name the call was given, as text: the file calls' seam alone", "m": "the module name a process call was given or wrote, as text: the process calls' seam alone", "q": "the entry name GetProcAddress was asked, as text", "s": "other text a process or text call was given: an environment block or variable, a command line, a debug string, the bytes or units to convert, map or compare; the key path or value name a registry call was given; the class, icon or cursor name a window or input call was given, # and the number for an atom or a resource id below 0x10000, empty for null; a byte past printable ASCII as \\xNN, a unit as \\uNNNN", "with": "the second text a compare call was given, shown as s shows the first; the default character WideCharToMultiByte was given, empty for null; the title or menu name a window call was given, shown as s shows the class", "o": "what a drawing call wrote, as numbers (a bits pointer, a paint record), empty on a 0 answer; what a CD-audio call wrote, a number or its text; what a joystick call wrote, its record's numbers in the record's order, empty on a refusal; what a DirectDraw call wrote, its record or its out pointer, empty on any answer but DD_OK; what a DirectSound call wrote, its numbers comma-joined (a new buffer's number, the two positions, a number read back, a Lock's offset and two lengths), zeros on any answer but DS_OK; what a text call wrote into its buffer, shown as s shows its text, its length the smaller of the value and the buffer: GetStringType's classes as hex words, comma-joined; GetCPInfo's 18-byte record as bytes; empty for no buffer or a 0 answer; what a registry call wrote or kept, its numbers comma-joined: the handle an open wrote, the handle and disposition a create wrote, the type, size and value a query wrote (the value only with a buffer), the value a set kept; empty for a refusal that writes nothing; the record a window or input call wrote, its numbers comma-joined (a message's 7, a rectangle's 4, a point's 2), empty on a 0 answer","r": "the start-up record GetStartupInfoA wrote: its flags, show-window, reserved count and reserved address; the used-default flag WideCharToMultiByte wrote, empty for null", "to": "the new name a move was given, as text", "n": "the bytes a read or write moved, read from its out-pointer after the call", "found": "the file name a find call found, empty when it found none", "e": "the thread's last error as the file, process or text call left it, the value the file would read", "t": "the instant a time call read: the wall clock's file-time ticks, or the game clock's microseconds", "w": "the 8 date words a time call wrote: year, month, weekday, day, hour, minute, second, millisecond", "f": "the file time a time call wrote", "from": "the address the call returns to in the file that made it: the drawing, thread, process, text, registry, window and input calls' seams alone; 0 where a target has none", "by": "who computed the value the line shows: the crate whose front answered, as kernel-text; a layer's own name when the layer's own code did; orig when the original did; absent on a line that does not say yet" },
       "template": "the layer's call to {c} with {a} returned {v}"
     },
     {
@@ -22,22 +22,112 @@
       "template": "the file at {at} declares {declared} bytes, {reach} in reach: the read is cut there"
     },
     {
-      "id": "draw.table",
-      "level": "D",
-      "fields": { "c": "the drawing call the entries belong to, as DLL!NAME or INTERFACE::NAME", "i": "the first entry's number", "a": "up to 16 entries, each 32 bits as the caller's memory holds them" },
-      "template": "{c}'s entries from {i}: {a}"
+      "id": "surfaces.row",
+      "level": "I",
+      "fields": { "file": "the file the row is for", "modes": "how many modes the row holds, 0 with the switch set", "from": "the address the call came from", "by": "the crate that wrote the line" },
+      "template": "{by} chose the {file} row at {from}: {modes} modes"
     },
     {
-      "id": "draw.dump",
-      "level": "D",
-      "fields": { "n": "the BitBlt's number in the run, the dump files' name", "a": "the source's width, height, pitch, planes and depth word, bits pointer, colour count", "v": "the picture's 32-bit FNV-1a sum, telling it from the last", "from": "the address the BitBlt returns to" },
-      "template": "dump {n} of the source at {from}: {a}, sum {v}"
+      "id": "draw.second.thread",
+      "level": "W",
+      "fields": { "c": "the call, as a line names it", "owner": "the thread the easel belongs to", "from": "the address the call returns to", "by": "who refused it: the layer's row" },
+      "template": "{c} at {from} on a thread that is not {owner}: {by} answered as drawn, nothing drawn"
     },
     {
-      "id": "surfaces.wrap",
+      "id": "slot.unresolved",
+      "level": "W",
+      "fields": { "c": "the import, as DLL!NAME", "from": "the address the call returns to", "by": "who answered: the layer's row" },
+      "template": "{c} at {from}: its library gave no address, so {by} answered 0"
+    },
+    {
+      "id": "draw.answer",
       "level": "D",
-      "fields": { "c": "the interface whose table was wrapped", "t": "the table's address, the first word of the interface", "a": "the real methods the wrapped slots held, in the layer's order", "v": "what VirtualProtect answered, 0 refused and nothing written" },
-      "template": "{c}'s table at {t} wrapped, the real methods {a}, protection answered {v}"
+      "fields": { "v": "what the front's BitBlt returned", "answer": "what the layer gives the game in its place: the height", "from": "the address the call returns to", "by": "who computed the answer: mech-layer" },
+      "template": "BitBlt at {from} returned {v}; {by} answered {answer}"
+    },
+    {
+      "id": "bind.table",
+      "level": "I",
+      "fields": { "file": "the file the bind recognised, by its name in the rows", "table": "the table of slots it took", "written": "the slots pointed", "failed": "the slots whose write failed" },
+      "template": "{file}'s table {table}: {written} slots pointed, {failed} failed: one line a load"
+    },
+    {
+      "id": "bind.import",
+      "level": "D",
+      "fields": { "lib": "the library, as the import table names it", "name": "the import's name", "slot": "the address of its slot in the loaded file" },
+      "template": "{lib}!{name} is at slot {slot}"
+    },
+    {
+      "id": "bind.slot.live",
+      "level": "D",
+      "fields": { "slot": "the slot's address", "label": "the row's label", "export": "the swap's export for it", "value": "what the slot holds before any write" },
+      "template": "slot {slot}, {label}, for {export}, holds {value}"
+    },
+    {
+      "id": "bind.slot.pointed",
+      "level": "D",
+      "fields": { "slot": "the slot's address", "label": "the row's label", "export": "the swap's export for it", "target": "the export's address, written" },
+      "template": "slot {slot}, {label}, pointed at {export}, {target}"
+    },
+    {
+      "id": "bind.slot.failed",
+      "level": "E",
+      "fields": { "slot": "the slot's address", "label": "the row's label" },
+      "template": "slot {slot}, {label}: its write failed"
+    },
+    {
+      "id": "bind.rebased",
+      "level": "D",
+      "fields": { "place": "which word of the site's bytes", "from": "the word as the file prefers it", "to": "the word at the base the file loaded at" },
+      "template": "word {place} of a site moved from {from} to {to}"
+    },
+    {
+      "id": "bind.sites.dll",
+      "level": "I",
+      "fields": { "dll": "the file holding patch sites", "prefers": "the base it prefers", "size": "its loaded size", "loaded": "the base it loaded at" },
+      "template": "{dll} prefers {prefers}, loaded at {loaded}, {size} bytes"
+    },
+    {
+      "id": "bind.thread",
+      "level": "D",
+      "fields": { "pc": "the address a thread stood at when the sites were judged" },
+      "template": "a thread stood at {pc} at the sites' moment"
+    },
+    {
+      "id": "bind.guard",
+      "level": "D",
+      "fields": { "low": "the start of a range no thread may stand in", "high": "its end" },
+      "template": "no thread may stand from {low} to {high}"
+    },
+    {
+      "id": "bind.site",
+      "level": "D",
+      "fields": { "site": "the site's number", "at": "its address", "old": "the bytes it must hold first", "new": "the bytes it takes", "live": "the bytes it holds now, none if unread" },
+      "template": "site {site} at {at}: old {old}, new {new}, live {live}"
+    },
+    {
+      "id": "bind.refused",
+      "level": "E",
+      "fields": { "file": "the file refused", "why": "the refusal" },
+      "template": "{file}: the bind refused, {why}; a named stop"
+    },
+    {
+      "id": "bind.sites",
+      "level": "I",
+      "fields": { "file": "the file whose sites were written", "threads": "the threads judged" },
+      "template": "{file}'s sites written, {threads} threads judged"
+    },
+    {
+      "id": "bind.unread",
+      "level": "D",
+      "fields": { "module": "the module's base" },
+      "template": "the module at {module}: its headers could not be read, left alone"
+    },
+    {
+      "id": "bind.other",
+      "level": "D",
+      "fields": { "module": "the module's base", "stamp": "its header's time stamp" },
+      "template": "the module at {module}, stamp {stamp}: no row names it, left alone"
     }
   ]
 }
