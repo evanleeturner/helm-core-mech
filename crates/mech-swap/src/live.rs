@@ -29,10 +29,10 @@ const SWAP_BASE: u32 = 0x6000_0000;
 const BIND_REFUSED: u32 = 0xB1D0;
 /// A PE's headers fit its first page, and a mapped image always holds that page.
 const HEADER_BYTES: usize = 0x1000;
-const PATH_BYTES: usize = 260;
+pub(crate) const PATH_BYTES: usize = 260;
 const NAME_BYTES: usize = 64;
 /// A flight measured 2 threads at this moment; the room is for what it did not.
-const MOST_THREADS: usize = 64;
+pub(crate) const MOST_THREADS: usize = 64;
 
 const GENERIC_READ: u32 = 0x8000_0000;
 const FILE_SHARE_READ: u32 = 1;
@@ -173,20 +173,34 @@ fn loaded(dll: &str) -> Option<Loaded<'static>> {
     })
 }
 
-/// `HC5_BIND`'s `name`, its bytes kept to the process's end: nothing frees it, because the
-/// refusals' words borrow it and each load's table is a small block.
-fn read_table(name: &str) -> Option<&'static str> {
-    let mut path = [0; PATH_BYTES];
+/// `name` in the folder the variable `env` names, NUL-terminated `env` asked of the process,
+/// into the zeroed `path`; false if the variable is unset or the whole would not fit.
+pub(crate) fn path_in(env: &[u8], name: &str, path: &mut [u8; PATH_BYTES]) -> bool {
     // SAFETY: the name is NUL-terminated; the buffer's size is passed, so it writes inside.
     let folder = unsafe {
-        GetEnvironmentVariableA(b"HC5_BIND\0".as_ptr(), path.as_mut_ptr(), PATH_BYTES as u32)
+        GetEnvironmentVariableA(env.as_ptr(), path.as_mut_ptr(), PATH_BYTES as u32)
     } as usize;
     if folder == 0 || folder + 1 + name.len() >= PATH_BYTES {
-        return None;
+        return false;
     }
     path[folder] = b'\\';
     path[folder + 1..folder + 1 + name.len()].copy_from_slice(name.as_bytes());
-    // SAFETY: the check above leaves the byte after the name inside the zeroed buffer.
+    true
+}
+
+/// `HC5_BIND`'s `name`, as [`read_table_in`].
+fn read_table(name: &str) -> Option<&'static str> {
+    read_table_in(b"HC5_BIND\0", name)
+}
+
+/// `name` in the folder `env` names, its bytes kept to the process's end: nothing frees it,
+/// because the refusals' words borrow it and each load's table is a small block.
+pub(crate) fn read_table_in(env: &[u8], name: &str) -> Option<&'static str> {
+    let mut path = [0; PATH_BYTES];
+    if !path_in(env, name, &mut path) {
+        return None;
+    }
+    // SAFETY: `path_in` leaves the byte after the name inside the zeroed buffer.
     let file = unsafe {
         CreateFileA(
             path.as_ptr(),
@@ -223,7 +237,7 @@ fn read_table(name: &str) -> Option<&'static str> {
 }
 
 /// The named stop.
-fn refused(file: &str, why: &dyn fmt::Display) -> ! {
+pub(crate) fn refused(file: &str, why: &dyn fmt::Display) -> ! {
     log::error!(file = file, why:% = why; "bind.refused");
     // SAFETY: ends this process, which is the point: see the module's words on half a bind.
     unsafe { ExitProcess(BIND_REFUSED) }
@@ -236,7 +250,7 @@ fn refused(file: &str, why: &dyn fmt::Display) -> ! {
 /// This is the script's "every thread stopped", so `Eip` can be judged: `GetThreadContext`
 /// waits for a suspend to land. **A thread born after the snapshot goes unjudged, and runs
 /// through the write:** whether one can be born at this moment is unmeasured.
-fn with_others_stopped<R>(
+pub(crate) fn with_others_stopped<R>(
     pcs: &mut [u32; MOST_THREADS],
     work: impl FnOnce(&[u32]) -> R,
 ) -> Result<(usize, R), Refusal<'static>> {
@@ -349,11 +363,12 @@ fn bind_module(module: u32) {
     let row = FILES
         .iter()
         .find(|row| (row.pe, row.stamp, row.size) == (key.pe, key.stamp, key.size));
-    let Some(row) = row else {
+    if let Some(row) = row {
+        bind_file(row, module);
+    } else {
         log::debug!(module:% = Hex(module), stamp:% = Hex(key.stamp); "bind.other");
-        return;
-    };
-    bind_file(row, module);
+    }
+    crate::listen_live::after_bind(module, &key);
 }
 
 fn bind_file(row: &'static BoundFile, module: u32) {

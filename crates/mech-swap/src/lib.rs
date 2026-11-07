@@ -29,6 +29,10 @@ use log::kv::{Error, Key, Value, VisitSource};
 include!(concat!(env!("OUT_DIR"), "/ports.rs"));
 
 pub mod bind;
+pub mod listen;
+
+#[cfg(all(target_arch = "x86", target_os = "windows", not(test)))]
+mod listen_live;
 
 #[cfg(all(target_arch = "x86", target_os = "windows", not(test)))]
 mod live;

@@ -140,6 +140,33 @@
       "level": "D",
       "fields": { "f": "the function's address", "b": "the block's label, as in asm.in", "r": "the register", "v": "the value it left" },
       "template": "{f}'s {b} block left {v} in {r}"
+    },
+    {
+      "id": "listen.map",
+      "level": "I",
+      "fields": {
+        "at": "the address its view stands at",
+        "bytes": "its size"
+      },
+      "template": "the listener's file stands at {at}, {bytes} bytes"
+    },
+    {
+      "id": "listen.rows",
+      "level": "I",
+      "fields": {
+        "file": "the file's table, by stamp and size",
+        "module": "the file's base",
+        "first": "its first row's number",
+        "rows": "its rows",
+        "written": "jumps written",
+        "held": "a jump already there: loaded again, unmapped",
+        "moved": "bytes neither its saved head nor its jump, so left alone",
+        "parked": "a stopped thread stands in the head, so left alone",
+        "threads": "the threads stopped",
+        "pages": "the pages opened",
+        "stuck": "the pages that would not close"
+      },
+      "template": "{file} at {module}: {rows} rows from {first}, {written} written, {held} held, {moved} moved, {parked} parked; {threads} threads stopped, {pages} pages, {stuck} stuck: one line a load"
     }
   ]
 }
