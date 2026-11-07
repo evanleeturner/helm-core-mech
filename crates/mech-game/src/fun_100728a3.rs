@@ -36,6 +36,12 @@ unsafe fn idiv(a: i32, b: i32) -> (i32, i32) {
     let r: i32;
     // SAFETY: raw idiv; a zero divisor or overflow faults like the original.
     unsafe {
+        mech_trace::log::debug!(
+            f = "100728a3", b = "idiv", a:% = mech_trace::Args([
+                mech_trace::__shown!(a),
+                mech_trace::__shown!(b),
+            ]); "asm.in"
+        );
         core::arch::asm!(
             "cdq",
             "idiv ecx",
@@ -43,6 +49,12 @@ unsafe fn idiv(a: i32, b: i32) -> (i32, i32) {
             in("ecx") b,
             out("edx") r,
             options(nomem, nostack)
+        );
+        mech_trace::log::debug!(
+            f = "100728a3", b = "idiv", r = "eax", v:% = mech_trace::__shown!(q); "asm.out"
+        );
+        mech_trace::log::debug!(
+            f = "100728a3", b = "idiv", r = "edx", v:% = mech_trace::__shown!(r); "asm.out"
         );
     }
     (q, r)

@@ -21,12 +21,21 @@ unsafe fn machine_rem(a: i32, d: i32) -> i32 {
     let rem: i32;
     // SAFETY: plain idiv; faults like the original machine on a bad divisor.
     unsafe {
+        mech_trace::log::debug!(
+            f = "10067e8f", b = "idiv", a:% = mech_trace::Args([
+                mech_trace::__shown!(d),
+                mech_trace::__shown!(a),
+            ]); "asm.in"
+        );
         asm!(
             "cdq",
             "idiv {d:e}",
             d = in(reg) d,
             inout("eax") a => _,
             out("edx") rem,
+        );
+        mech_trace::log::debug!(
+            f = "10067e8f", b = "idiv", r = "edx", v:% = mech_trace::__shown!(rem); "asm.out"
         );
     }
     rem

@@ -16,13 +16,20 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "stdcall" fn FUN_10069db8() {
-    mech_trace::enter!("10069db8");
     let mut eax_tmp: u32 = 0;
     let mut edi: u32 = 0;
-    // SAFETY: captures the register inputs (AL, EDI) the caller set up.
+    // SAFETY: captures the register inputs (AL, EDI) the caller set up. Nothing may stand
+    // above it that could write them, a log line included: this is why the entry logs below.
     unsafe {
         core::arch::asm!("", out("eax") eax_tmp, out("edi") edi, options(nomem, nostack, preserves_flags));
+        mech_trace::log::debug!(
+            f = "10069db8", b = "reg", r = "eax", v:% = mech_trace::__shown!(eax_tmp); "asm.out"
+        );
+        mech_trace::log::debug!(
+            f = "10069db8", b = "reg", r = "edi", v:% = mech_trace::__shown!(edi); "asm.out"
+        );
     }
+    mech_trace::enter!("10069db8", eax_tmp, edi);
     let in_al = eax_tmp as u8;
     let p = edi as usize as *mut u8;
     // SAFETY: EDI points at the caller's object; the globals are the game's own

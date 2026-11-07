@@ -36,6 +36,12 @@ unsafe fn measure(this: *mut c_void, text: *mut i8) -> i32 {
     // SAFETY: calls the game's thiscall routine with this in ecx and one
     // stack argument, which the callee pops.
     unsafe {
+        mech_trace::log::debug!(
+            f = "1004b200", b = "10050b20", a:% = mech_trace::Args([
+                mech_trace::__shown!(text),
+                mech_trace::__shown!(this),
+            ]); "asm.in"
+        );
         asm!(
             "push {arg}",
             "call {f}",
@@ -45,6 +51,7 @@ unsafe fn measure(this: *mut c_void, text: *mut i8) -> i32 {
             out("eax") r,
             clobber_abi("C"),
         );
+        mech_trace::cr!("1004b200", "10050b20", r);
     }
     r
 }

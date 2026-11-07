@@ -51,6 +51,14 @@ pub unsafe extern "C" fn FUN_10009e80(str: *mut i8) -> *mut u8 {
             let this = mech_trace::gr!("10009e80", "100a6738", DAT_100a6738);
             let p3 = &raw mut DAT_1008d004;
             let ret: *mut i8;
+            mech_trace::log::debug!(
+                f = "10009e80", b = "100364c0", a:% = mech_trace::Args([
+                    mech_trace::__shown!(str),
+                    mech_trace::__shown!(8u32),
+                    mech_trace::__shown!(p3),
+                    mech_trace::__shown!(this),
+                ]); "asm.in"
+            );
             asm!(
                 "push {p3}",
                 "push {p2}",
@@ -64,6 +72,7 @@ pub unsafe extern "C" fn FUN_10009e80(str: *mut i8) -> *mut u8 {
                 lateout("eax") ret,
                 clobber_abi("C"),
             );
+            mech_trace::cr!("10009e80", "100364c0", ret);
             return mech_trace::rt!("10009e80", ret.cast::<u8>());
         }
 

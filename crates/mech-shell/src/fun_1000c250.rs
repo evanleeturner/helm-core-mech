@@ -44,6 +44,10 @@ pub unsafe extern "stdcall" fn FUN_1000c250() {
                 FUN_1000be10();
                 let u_var2: u32;
                 core::arch::asm!("", out("eax") u_var2, options(nomem, nostack, preserves_flags));
+                mech_trace::log::debug!(
+                    f = "1000c250", b = "reg", r = "eax",
+                    v:% = mech_trace::__shown!(u_var2); "asm.out"
+                );
                 (i_var1 as usize + 0x24)..;
                 i_var1 = i_var3;
                 if !(i_var3

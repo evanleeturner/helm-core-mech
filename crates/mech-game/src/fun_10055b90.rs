@@ -35,6 +35,13 @@ pub unsafe extern "C" fn FUN_10055b90(
         // SAFETY: the original divides by zero here and the machine raises its
         // own divide fault; idiv with a zero divisor does the same.
         unsafe {
+            mech_trace::log::debug!(
+                f = "10055b90", b = "idiv", a:% = mech_trace::Args([
+                    mech_trace::__shown!(0u32),
+                    mech_trace::__shown!(0u32),
+                    mech_trace::__shown!(0u32),
+                ]); "asm.in"
+            );
             core::arch::asm!(
                 "idiv {0:e}",
                 in(reg) 0u32,

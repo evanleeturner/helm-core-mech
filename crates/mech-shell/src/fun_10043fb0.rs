@@ -26,6 +26,11 @@ unsafe fn call_thiscall(this: *mut c_void) {
     // SAFETY: the callee is the game's __thiscall function taking `this` in ECX
     // and one stack argument (0), which it pops itself.
     unsafe {
+        mech_trace::log::debug!(
+            f = "10043fb0", b = "1005f7d0", a:% = mech_trace::Args([
+                mech_trace::__shown!(this),
+            ]); "asm.in"
+        );
         core::arch::asm!(
             "push 0",
             "call {f}",

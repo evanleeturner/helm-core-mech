@@ -67,6 +67,15 @@ pub unsafe extern "C" fn FUN_1000f6d0(
                     let a2 = mech_trace::rd!("1000f6d0", p94, read_unaligned);
                     let a3 = mech_trace::rd!("1000f6d0", p88, read_unaligned);
                     let a4 = mech_trace::rd!("1000f6d0", p8c, read_unaligned);
+                    mech_trace::log::debug!(
+                        f = "1000f6d0", b = "10012f10", a:% = mech_trace::Args([
+                            mech_trace::__shown!(a1),
+                            mech_trace::__shown!(a2),
+                            mech_trace::__shown!(a3),
+                            mech_trace::__shown!(a4),
+                            mech_trace::__shown!(this),
+                        ]); "asm.in"
+                    );
                     core::arch::asm!(
                         "push {a4}",
                         "push {a3}",

@@ -16,6 +16,12 @@ pub unsafe extern "C" fn FUN_1000a690(record_base: i32) {
             .wrapping_mul(100) as i32;
         let divisor = mech_trace::rd!("1000a690", p200, read_unaligned);
         let percent: i32;
+        mech_trace::log::debug!(
+            f = "1000a690", b = "idiv", a:% = mech_trace::Args([
+                mech_trace::__shown!(divisor),
+                mech_trace::__shown!(num),
+            ]); "asm.in"
+        );
         core::arch::asm!(
             "cdq",
             "idiv {d:e}",
@@ -23,6 +29,9 @@ pub unsafe extern "C" fn FUN_1000a690(record_base: i32) {
             inout("eax") num => percent,
             out("edx") _,
             options(nomem, nostack)
+        );
+        mech_trace::log::debug!(
+            f = "1000a690", b = "idiv", r = "eax", v:% = mech_trace::__shown!(percent); "asm.out"
         );
         mech_trace::wr!(
             "1000a690",

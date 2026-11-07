@@ -16,12 +16,21 @@ pub unsafe extern "C" fn FUN_10067ce5(param_1: i32, param_2: i32) -> i32 {
         );
         let i_var1 = d >> 1;
         let mut local_c: i32;
+        mech_trace::log::debug!(
+            f = "10067ce5", b = "idiv", a:% = mech_trace::Args([
+                mech_trace::__shown!(d),
+                mech_trace::__shown!(param_2),
+            ]); "asm.in"
+        );
         core::arch::asm!(
             "cdq",
             "idiv {d:e}",
             d = in(reg) d,
             inout("eax") param_2 => _,
             out("edx") local_c,
+        );
+        mech_trace::log::debug!(
+            f = "10067ce5", b = "idiv", r = "edx", v:% = mech_trace::__shown!(local_c); "asm.out"
         );
         if i_var1 < local_c {
             local_c = local_c.wrapping_sub(d);

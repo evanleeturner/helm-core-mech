@@ -17,12 +17,22 @@ pub unsafe extern "C" fn FUN_10066ec0(divisor: i32, dividend: u32, quotient: *mu
         // SAFETY: divisor is nonzero; idiv faults on i32::MIN / -1 exactly as
         // the original's machine division does.
         unsafe {
+            let input_2 = dividend as i32;
+            mech_trace::log::debug!(
+                f = "10066ec0", b = "idiv", a:% = mech_trace::Args([
+                    mech_trace::__shown!(divisor),
+                    mech_trace::__shown!(input_2),
+                ]); "asm.in"
+            );
             core::arch::asm!(
                 "cdq",
                 "idiv {d:e}",
                 d = in(reg) divisor,
                 inout("eax") dividend as i32 => q,
                 out("edx") _,
+            );
+            mech_trace::log::debug!(
+                f = "10066ec0", b = "idiv", r = "eax", v:% = mech_trace::__shown!(q); "asm.out"
             );
         }
         if q > 0x7fff || q < -0x8000 {

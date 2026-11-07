@@ -15,6 +15,9 @@ pub unsafe extern "C" fn FUN_1007af4b(param_1: *mut u32, param_2: *mut u32) -> u
     // SAFETY: reading the CS segment register has no side effects.
     unsafe {
         asm!("mov {0:x}, cs", out(reg) in_cs, options(nomem, nostack, preserves_flags));
+        mech_trace::log::debug!(
+            f = "1007af4b", b = "reg", r = "cs", v:% = mech_trace::__shown!(in_cs); "asm.out"
+        );
     }
     // SAFETY: param_1 and param_2 point at the caller's writable u32 slots;
     // the global's address is the game's own.

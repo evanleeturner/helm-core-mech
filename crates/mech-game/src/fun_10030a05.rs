@@ -136,12 +136,23 @@ pub unsafe extern "stdcall" fn FUN_10030a05() {
                                 )
                                 .wrapping_mul(c9);
                             let q: u32;
+                            mech_trace::log::debug!(
+                                f = "10030a05", b = "div", a:% = mech_trace::Args([
+                                    mech_trace::__shown!(c8),
+                                    mech_trace::__shown!(num),
+                                    mech_trace::__shown!(0u32),
+                                ]); "asm.in"
+                            );
                             asm!(
                                 "div {d:e}",
                                 d = in(reg) c8,
                                 inout("eax") num => q,
                                 inout("edx") 0u32 => _,
                                 options(nostack)
+                            );
+                            mech_trace::log::debug!(
+                                f = "10030a05", b = "div", r = "eax",
+                                v:% = mech_trace::__shown!(q); "asm.out"
                             );
                             let u2 = ((q as i32) >> 0x1f) as u32;
                             mech_trace::wr!(

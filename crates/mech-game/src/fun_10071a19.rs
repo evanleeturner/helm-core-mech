@@ -49,11 +49,25 @@ pub unsafe extern "C" fn FUN_10071a19(param_1: *mut i32) {
                 let d = mech_trace::rd!("10071a19", param_1.add(3), read_unaligned);
                 let q: i32;
                 let r: i32;
+                let input_3 = n >> 31;
+                mech_trace::log::debug!(
+                    f = "10071a19", b = "idiv", a:% = mech_trace::Args([
+                        mech_trace::__shown!(d),
+                        mech_trace::__shown!(n),
+                        mech_trace::__shown!(input_3),
+                    ]); "asm.in"
+                );
                 core::arch::asm!(
                     "idiv {d:e}",
                     d = in(reg) d,
                     inout("eax") n => q,
                     inout("edx") (n >> 31) => r,
+                );
+                mech_trace::log::debug!(
+                    f = "10071a19", b = "idiv", r = "eax", v:% = mech_trace::__shown!(q); "asm.out"
+                );
+                mech_trace::log::debug!(
+                    f = "10071a19", b = "idiv", r = "edx", v:% = mech_trace::__shown!(r); "asm.out"
                 );
                 mech_trace::wr!(
                     "10071a19",

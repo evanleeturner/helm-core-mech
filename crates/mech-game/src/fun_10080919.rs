@@ -200,7 +200,11 @@ pub unsafe extern "C" fn FUN_10080919(param_1: *mut u16, param_2: i32) {
         let mut local_34 = i_var16;
         if b_var4 == 0 {
             let p = mech_trace::cr!("10080919", "10080130", FUN_10080130(i_var16));
-            DAT_100aafcc(p);
+            mech_trace::cr!(
+                "10080919",
+                "ind",
+                mech_trace::gr!("10080919", "100aafcc", DAT_100aafcc)(p)
+            );
         }
         loop {
             local_1c = local_1c.wrapping_sub(1);
@@ -214,7 +218,11 @@ pub unsafe extern "C" fn FUN_10080919(param_1: *mut u16, param_2: i32) {
             let b_var5 = flags(i_var15) & 1;
             if b_var5 != local_40 {
                 let p = mech_trace::cr!("10080919", "10080241", FUN_10080241(local_34, i_var15));
-                DAT_100aafcc(p);
+                mech_trace::cr!(
+                    "10080919",
+                    "ind",
+                    mech_trace::gr!("10080919", "100aafcc", DAT_100aafcc)(p)
+                );
             }
             local_34 = param_2.wrapping_add(
                 ((mech_trace::dr!("10080919", local_3c) as u16).wrapping_mul(0x44)) as i32,
@@ -222,12 +230,20 @@ pub unsafe extern "C" fn FUN_10080919(param_1: *mut u16, param_2: i32) {
             local_40 = b_var5;
             if b_var5 == 0 {
                 let p = mech_trace::cr!("10080919", "10080130", FUN_10080130(local_34));
-                DAT_100aafcc(p);
+                mech_trace::cr!(
+                    "10080919",
+                    "ind",
+                    mech_trace::gr!("10080919", "100aafcc", DAT_100aafcc)(p)
+                );
             }
         }
         if local_40 != b_var4 {
             let p = mech_trace::cr!("10080919", "10080241", FUN_10080241(local_34, i_var16));
-            DAT_100aafcc(p);
+            mech_trace::cr!(
+                "10080919",
+                "ind",
+                mech_trace::gr!("10080919", "100aafcc", DAT_100aafcc)(p)
+            );
         }
 
         if !(((2 < mech_trace::gr!("10080919", "10115160", DAT_10115160) as i32)
@@ -350,11 +366,15 @@ pub unsafe extern "C" fn FUN_10080919(param_1: *mut u16, param_2: i32) {
             DAT_10168288,
             mech_trace::gr!("10080919", "101150f0", DAT_101150f0)
         );
-        let u6 = DAT_100aafd0(
-            param_1,
-            param_2,
-            mech_trace::rd!("10080919", param_1, read_unaligned),
-            local_14,
+        let u6 = mech_trace::cr!(
+            "10080919",
+            "ind",
+            mech_trace::gr!("10080919", "100aafd0", DAT_100aafd0)(
+                param_1,
+                param_2,
+                mech_trace::rd!("10080919", param_1, read_unaligned),
+                local_14,
+            )
         );
         mech_trace::wr!("10080919", puvar8.add(1), write_unaligned, u6);
 

@@ -25,12 +25,22 @@ unsafe fn idiv64(num: i64, div: i32) -> i32 {
     // SAFETY: the machine's idiv faults on a zero divisor or an overflowing
     // quotient, exactly as the original does.
     unsafe {
+        mech_trace::log::debug!(
+            f = "10080639", b = "idiv", a:% = mech_trace::Args([
+                mech_trace::__shown!(div),
+                mech_trace::__shown!(lo),
+                mech_trace::__shown!(hi),
+            ]); "asm.in"
+        );
         core::arch::asm!(
             "idiv {d:e}",
             d = in(reg) div,
             inout("eax") lo => q,
             inout("edx") hi => _,
             options(nomem, nostack)
+        );
+        mech_trace::log::debug!(
+            f = "10080639", b = "idiv", r = "eax", v:% = mech_trace::__shown!(q); "asm.out"
         );
     }
     q as i32

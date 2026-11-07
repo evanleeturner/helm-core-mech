@@ -46,7 +46,16 @@ unsafe fn idiv(a: i32, d: i32) -> i32 {
     let q: i32;
     // SAFETY: the machine's own idiv, faulting as the original does.
     unsafe {
+        mech_trace::log::debug!(
+            f = "100117f2", b = "idiv", a:% = mech_trace::Args([
+                mech_trace::__shown!(a),
+                mech_trace::__shown!(d),
+            ]); "asm.in"
+        );
         asm!("cdq", "idiv ecx", inout("eax") a => q, in("ecx") d, out("edx") _);
+        mech_trace::log::debug!(
+            f = "100117f2", b = "idiv", r = "eax", v:% = mech_trace::__shown!(q); "asm.out"
+        );
     }
     q
 }

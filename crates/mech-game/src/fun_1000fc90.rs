@@ -12,12 +12,24 @@ unsafe fn machine_idiv(prod: i64, d: i32) -> i32 {
     // SAFETY: only reached for a zero divisor or an overflowing quotient, where the
     // machine's idiv raises its own divide fault, as the original does.
     unsafe {
+        let input_2 = prod as u64 as u32;
+        let input_3 = (prod as u64 >> 32) as u32;
+        mech_trace::log::debug!(
+            f = "1000fc90", b = "idiv", a:% = mech_trace::Args([
+                mech_trace::__shown!(d),
+                mech_trace::__shown!(input_2),
+                mech_trace::__shown!(input_3),
+            ]); "asm.in"
+        );
         asm!(
             "idiv {d:e}",
             d = in(reg) d,
             inout("eax") (prod as u64 as u32) => q,
             inout("edx") ((prod as u64 >> 32) as u32) => _,
             options(nostack)
+        );
+        mech_trace::log::debug!(
+            f = "1000fc90", b = "idiv", r = "eax", v:% = mech_trace::__shown!(q); "asm.out"
         );
     }
     q

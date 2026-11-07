@@ -128,6 +128,18 @@
       "level": "D",
       "fields": { "module": "the module's base", "stamp": "its header's time stamp" },
       "template": "the module at {module}, stamp {stamp}: no row names it, left alone"
+    },
+    {
+      "id": "asm.in",
+      "level": "D",
+      "fields": { "f": "the function's address", "b": "the block's label: the instruction for a division, reg for a register read, the callee's address or name for a call", "a": "its inputs, in order, literals too; a call's target pointer left out" },
+      "template": "{f}'s {b} block takes {a}"
+    },
+    {
+      "id": "asm.out",
+      "level": "D",
+      "fields": { "f": "the function's address", "b": "the block's label, as in asm.in", "r": "the register", "v": "the value it left" },
+      "template": "{f}'s {b} block left {v} in {r}"
     }
   ]
 }

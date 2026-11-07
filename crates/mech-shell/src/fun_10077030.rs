@@ -16,6 +16,13 @@ pub unsafe extern "stdcall" fn FUN_10077030(
         let rem2: u32;
         // SAFETY: the machine's own DIV is used so a zero divisor faults as in the original.
         unsafe {
+            mech_trace::log::debug!(
+                f = "10077030", b = "div", a:% = mech_trace::Args([
+                    mech_trace::__shown!(param_3),
+                    mech_trace::__shown!(param_2),
+                    mech_trace::__shown!(0u32),
+                ]); "asm.in"
+            );
             asm!(
                 "div {d}",
                 d = in(reg) param_3,
@@ -23,12 +30,25 @@ pub unsafe extern "stdcall" fn FUN_10077030(
                 inout("edx") 0u32 => rem1,
                 options(nomem, nostack)
             );
+            mech_trace::log::debug!(
+                f = "10077030", b = "div", r = "edx", v:% = mech_trace::__shown!(rem1); "asm.out"
+            );
+            mech_trace::log::debug!(
+                f = "10077030", b = "div", a:% = mech_trace::Args([
+                    mech_trace::__shown!(param_3),
+                    mech_trace::__shown!(param_1),
+                    mech_trace::__shown!(rem1),
+                ]); "asm.in"
+            );
             asm!(
                 "div {d}",
                 d = in(reg) param_3,
                 inout("eax") param_1 => _,
                 inout("edx") rem1 => rem2,
                 options(nomem, nostack)
+            );
+            mech_trace::log::debug!(
+                f = "10077030", b = "div", r = "edx", v:% = mech_trace::__shown!(rem2); "asm.out"
             );
         }
         return mech_trace::rt!("10077030", rem2 as u64);

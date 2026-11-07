@@ -17,12 +17,21 @@ unsafe fn idiv(a: i32, b: i32) -> i32 {
     let q: i32;
     // SAFETY: the machine's own signed divide; a zero divisor faults as in the original.
     unsafe {
+        mech_trace::log::debug!(
+            f = "10066dc9", b = "idiv", a:% = mech_trace::Args([
+                mech_trace::__shown!(b),
+                mech_trace::__shown!(a),
+            ]); "asm.in"
+        );
         core::arch::asm!(
             "cdq",
             "idiv {b:e}",
             b = in(reg) b,
             inout("eax") a => q,
             out("edx") _,
+        );
+        mech_trace::log::debug!(
+            f = "10066dc9", b = "idiv", r = "eax", v:% = mech_trace::__shown!(q); "asm.out"
         );
     }
     q

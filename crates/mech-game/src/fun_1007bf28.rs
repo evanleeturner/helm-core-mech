@@ -29,7 +29,17 @@ unsafe fn udiv(n: u32, d: u32) -> u32 {
     let q: u32;
     // SAFETY: the machine's own unsigned divide; faults on zero as the original does.
     unsafe {
+        mech_trace::log::debug!(
+            f = "1007bf28", b = "div", a:% = mech_trace::Args([
+                mech_trace::__shown!(d),
+                mech_trace::__shown!(n),
+                mech_trace::__shown!(0u32),
+            ]); "asm.in"
+        );
         asm!("div {d:e}", d = in(reg) d, inout("eax") n => q, inout("edx") 0u32 => _, options(nomem, nostack));
+        mech_trace::log::debug!(
+            f = "1007bf28", b = "div", r = "eax", v:% = mech_trace::__shown!(q); "asm.out"
+        );
     }
     q
 }

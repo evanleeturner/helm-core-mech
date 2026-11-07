@@ -33,6 +33,13 @@ pub unsafe extern "C" fn FUN_1000a060(text: *mut i8) {
         if compare_result == 0 {
             let this = mech_trace::gr!("1000a060", "100a6738", DAT_100a6738);
             let p3 = &raw mut DAT_1008d00c as *mut i32;
+            mech_trace::log::debug!(
+                f = "1000a060", b = "10036510", a:% = mech_trace::Args([
+                    mech_trace::__shown!(p3),
+                    mech_trace::__shown!(text),
+                    mech_trace::__shown!(this),
+                ]); "asm.in"
+            );
             core::arch::asm!(
                 "push {c}",
                 "push 8",

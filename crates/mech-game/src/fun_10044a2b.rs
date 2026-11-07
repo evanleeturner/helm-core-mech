@@ -28,6 +28,12 @@ pub unsafe extern "C" fn FUN_10044a2b(param_1: i32) -> i32 {
         );
         let num = a.wrapping_sub(b);
         let q: i32;
+        mech_trace::log::debug!(
+            f = "10044a2b", b = "idiv", a:% = mech_trace::Args([
+                mech_trace::__shown!(divisor),
+                mech_trace::__shown!(num),
+            ]); "asm.in"
+        );
         core::arch::asm!(
             "cdq",
             "idiv {d}",
@@ -35,6 +41,9 @@ pub unsafe extern "C" fn FUN_10044a2b(param_1: i32) -> i32 {
             inout("eax") num => q,
             out("edx") _,
             options(nomem, nostack)
+        );
+        mech_trace::log::debug!(
+            f = "10044a2b", b = "idiv", r = "eax", v:% = mech_trace::__shown!(q); "asm.out"
         );
         let v = mech_trace::rd!(
             "10044a2b",

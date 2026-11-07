@@ -13,6 +13,12 @@ unsafe fn idiv(n: i32, d: i32) -> i32 {
     let q: i32;
     // SAFETY: the machine's own idiv; a zero divisor faults as in the original.
     unsafe {
+        mech_trace::log::debug!(
+            f = "10064f07", b = "idiv", a:% = mech_trace::Args([
+                mech_trace::__shown!(d),
+                mech_trace::__shown!(n),
+            ]); "asm.in"
+        );
         asm!(
             "cdq",
             "idiv {d:e}",
@@ -20,6 +26,9 @@ unsafe fn idiv(n: i32, d: i32) -> i32 {
             inout("eax") n => q,
             out("edx") _,
             options(nomem, nostack)
+        );
+        mech_trace::log::debug!(
+            f = "10064f07", b = "idiv", r = "eax", v:% = mech_trace::__shown!(q); "asm.out"
         );
     }
     q

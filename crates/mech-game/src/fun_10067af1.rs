@@ -21,12 +21,21 @@ pub unsafe extern "C" fn FUN_10067af1(param_1: *mut i32) -> i32 {
             .wrapping_mul(i_var1 as u32) as i32;
             let divisor = mech_trace::rd!("10067af1", param_1.add(3), read_unaligned);
             let i_var2: i32;
+            mech_trace::log::debug!(
+                f = "10067af1", b = "idiv", a:% = mech_trace::Args([
+                    mech_trace::__shown!(divisor),
+                    mech_trace::__shown!(num),
+                ]); "asm.in"
+            );
             core::arch::asm!(
                 "cdq",
                 "idiv {d:e}",
                 d = in(reg) divisor,
                 inout("eax") num => i_var2,
                 out("edx") _,
+            );
+            mech_trace::log::debug!(
+                f = "10067af1", b = "idiv", r = "eax", v:% = mech_trace::__shown!(i_var2); "asm.out"
             );
             if (i_var1 < 0 && i_var2 <= i_var1) || (0 < i_var1 && i_var1 <= i_var2) {
                 let v = mech_trace::rd!("10067af1", param_1.add(1), read_unaligned);

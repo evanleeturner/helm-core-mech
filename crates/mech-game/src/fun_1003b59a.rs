@@ -279,11 +279,21 @@ pub unsafe extern "C" fn FUN_1003b59a(param_1: i32) {
         }
         let divisor: u32 = mech_trace::gr!("1003b59a", "100aefa8", DAT_100aefa8).wrapping_mul(0xa0);
         let q: u32;
+        mech_trace::log::debug!(
+            f = "1003b59a", b = "div", a:% = mech_trace::Args([
+                mech_trace::__shown!(divisor),
+                mech_trace::__shown!(local_24),
+                mech_trace::__shown!(0u32),
+            ]); "asm.in"
+        );
         asm!(
             "div {d}",
             d = in(reg) divisor,
             inout("eax") local_24 => q,
             inout("edx") 0u32 => _,
+        );
+        mech_trace::log::debug!(
+            f = "1003b59a", b = "div", r = "eax", v:% = mech_trace::__shown!(q); "asm.out"
         );
         mech_trace::wr!(
             "1003b59a",

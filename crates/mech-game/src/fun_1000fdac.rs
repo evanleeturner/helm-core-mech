@@ -10,6 +10,13 @@ unsafe fn fault_div_zero() {
     // SAFETY: executes a divide by zero so the machine raises its own fault,
     // as the original 64-bit divide would after a continued exception.
     unsafe {
+        mech_trace::log::debug!(
+            f = "1000fdac", b = "div", a:% = mech_trace::Args([
+                mech_trace::__shown!(0u32),
+                mech_trace::__shown!(0u32),
+                mech_trace::__shown!(0u32),
+            ]); "asm.in"
+        );
         core::arch::asm!(
             "div {0:e}",
             in(reg) 0u32,

@@ -132,12 +132,22 @@ pub unsafe extern "C" fn FUN_10017f0b(
                         let num = (p24.wrapping_sub(local_8)).wrapping_mul(local_c);
                         let den = p24.wrapping_add(param_1.wrapping_mul(-4));
                         let q: i32;
+                        mech_trace::log::debug!(
+                            f = "10017f0b", b = "idiv", a:% = mech_trace::Args([
+                                mech_trace::__shown!(den),
+                                mech_trace::__shown!(num),
+                            ]); "asm.in"
+                        );
                         core::arch::asm!(
                             "cdq",
                             "idiv {d:e}",
                             d = in(reg) den,
                             inout("eax") num => q,
                             out("edx") _,
+                        );
+                        mech_trace::log::debug!(
+                            f = "10017f0b", b = "idiv", r = "eax",
+                            v:% = mech_trace::__shown!(q); "asm.out"
                         );
                         mech_trace::wr!("10017f0b", p2c, write_unaligned, q);
                     }

@@ -31,7 +31,7 @@ macro_rules! count {
 }
 
 macro_rules! copy_loop {
-    ($src:ident, $dst:ident) => {{
+    ($src:expr, $dst:expr) => {{
         let mut i_var4: i32 = 0;
         if 0 < count!($src) {
             loop {
@@ -56,9 +56,18 @@ pub unsafe extern "stdcall" fn FUN_1000cb60() {
     // pointers held in the globals point at live collection objects whose
     // count lives at offset 4, read where the original reads it.
     unsafe {
-        copy_loop!(DAT_100a67bc, DAT_100a67b4);
-        copy_loop!(DAT_100a67c0, DAT_100a67b4);
-        copy_loop!(DAT_100a67c4, DAT_100a67b4);
+        copy_loop!(
+            mech_trace::gr!("1000cb60", "100a67bc", DAT_100a67bc),
+            mech_trace::gr!("1000cb60", "100a67b4", DAT_100a67b4)
+        );
+        copy_loop!(
+            mech_trace::gr!("1000cb60", "100a67c0", DAT_100a67c0),
+            mech_trace::gr!("1000cb60", "100a67b4", DAT_100a67b4)
+        );
+        copy_loop!(
+            mech_trace::gr!("1000cb60", "100a67c4", DAT_100a67c4),
+            mech_trace::gr!("1000cb60", "100a67b4", DAT_100a67b4)
+        );
 
         let mut i_var4: i32 = 0;
         if 0 < count!(mech_trace::gr!("1000cb60", "100a67c8", DAT_100a67c8)) {
@@ -88,9 +97,21 @@ pub unsafe extern "stdcall" fn FUN_1000cb60() {
             }
         }
 
-        copy_loop!(DAT_100a67d4, DAT_100a67cc);
-        copy_loop!(DAT_100a67d8, DAT_100a67cc);
-        copy_loop!(DAT_100a67dc, DAT_100a67cc);
-        copy_loop!(DAT_100a67e0, DAT_100a67cc);
+        copy_loop!(
+            mech_trace::gr!("1000cb60", "100a67d4", DAT_100a67d4),
+            mech_trace::gr!("1000cb60", "100a67cc", DAT_100a67cc)
+        );
+        copy_loop!(
+            mech_trace::gr!("1000cb60", "100a67d8", DAT_100a67d8),
+            mech_trace::gr!("1000cb60", "100a67cc", DAT_100a67cc)
+        );
+        copy_loop!(
+            mech_trace::gr!("1000cb60", "100a67dc", DAT_100a67dc),
+            mech_trace::gr!("1000cb60", "100a67cc", DAT_100a67cc)
+        );
+        copy_loop!(
+            mech_trace::gr!("1000cb60", "100a67e0", DAT_100a67e0),
+            mech_trace::gr!("1000cb60", "100a67cc", DAT_100a67cc)
+        );
     }
 }

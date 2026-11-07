@@ -65,7 +65,16 @@ unsafe fn rem(a: i32, b: i32) -> i32 {
     let r: i32;
     // SAFETY: the machine's own idiv, faulting on zero as the original does.
     unsafe {
+        mech_trace::log::debug!(
+            f = "10049007", b = "idiv", a:% = mech_trace::Args([
+                mech_trace::__shown!(b),
+                mech_trace::__shown!(a),
+            ]); "asm.in"
+        );
         asm!("cdq", "idiv {d:e}", d = in(reg) b, inout("eax") a => _, out("edx") r, options(nostack));
+        mech_trace::log::debug!(
+            f = "10049007", b = "idiv", r = "edx", v:% = mech_trace::__shown!(r); "asm.out"
+        );
     }
     r
 }

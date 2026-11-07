@@ -15,47 +15,65 @@ unsafe extern "C" {
 
 unsafe fn rd(p: *mut u8, off: usize) -> i32 {
     // SAFETY: p points at the caller's state object.
-    unsafe { p.byte_add(off).cast::<i32>().read_unaligned() }
+    unsafe { mech_trace::rd!("1005b218", p.byte_add(off).cast::<i32>(), read_unaligned) }
 }
 
 unsafe fn wr(p: *mut u8, off: usize, v: i32) {
     // SAFETY: p points at the caller's state object.
-    unsafe { p.byte_add(off).cast::<i32>().write_unaligned(v) }
+    unsafe {
+        mech_trace::wr!(
+            "1005b218",
+            p.byte_add(off).cast::<i32>(),
+            write_unaligned,
+            v
+        )
+    }
 }
 
 unsafe extern "C" fn mercsw_inner(in_al: u8, unaff_edi: i32) {
+    mech_trace::enter!("1005b218", in_al, unaff_edi);
     let p = unaff_edi as *mut u8;
     // SAFETY: the globals and the callee are the game's own; p is the
     // state object the caller passed in EDI.
     unsafe {
         let buf = (&raw mut DAT_100b17f9).cast::<u8>();
-        buf.wrapping_offset(rd(p, 8) as isize).write(in_al);
+        mech_trace::wr!(
+            "1005b218",
+            buf.wrapping_offset(rd(p, 8) as isize),
+            write,
+            in_al
+        );
         wr(p, 8, rd(p, 8).wrapping_add(1));
         wr(p, 0x20, rd(p, 0x20).wrapping_sub(1));
         if rd(p, 0x20) == 0 {
-            FUN_1005ace1(
-                DAT_100b2b0c,
-                rd(p, 0xc),
-                buf.cast::<u32>(),
-                rd(p, 0x24) as *mut u8,
+            mech_trace::cr!(
+                "1005b218",
+                "1005ace1",
+                FUN_1005ace1(
+                    mech_trace::gr!("1005b218", "100b2b0c", DAT_100b2b0c),
+                    rd(p, 0xc),
+                    buf.cast::<u32>(),
+                    rd(p, 0x24) as *mut u8,
+                )
             );
             wr(p, 8, 0);
             wr(p, 0x20, rd(p, 0x24));
-            if p.byte_add(0x2c).read() == 0 {
+            if mech_trace::rd!("1005b218", p.byte_add(0x2c), read) == 0 {
                 wr(p, 0xc, rd(p, 0xc).wrapping_add(1));
                 if rd(p, 0x28) <= rd(p, 0xc) {
                     wr(p, 0xc, 0);
                 }
             } else {
                 let t = (&raw mut DAT_100b2b02).cast::<u8>();
-                let i = p.byte_add(0x2d).read() as usize;
-                let b = t.add(i).read() as i32;
+                let i = mech_trace::rd!("1005b218", p.byte_add(0x2d), read) as usize;
+                let b = mech_trace::rd!("1005b218", t.add(i), read) as i32;
                 wr(p, 0xc, rd(p, 0xc).wrapping_add(b));
                 if rd(p, 0x28) <= rd(p, 0xc) {
-                    let n = p.byte_add(0x2d).read().wrapping_add(1);
-                    p.byte_add(0x2d).write(n);
+                    let n = mech_trace::rd!("1005b218", p.byte_add(0x2d), read).wrapping_add(1);
+                    mech_trace::wr!("1005b218", p.byte_add(0x2d), write, n);
                     let t2 = (&raw mut DAT_100b2b07).cast::<u8>();
-                    let v = t2.add(p.byte_add(0x2d).read() as usize).read() as i32;
+                    let at = mech_trace::rd!("1005b218", p.byte_add(0x2d), read) as usize;
+                    let v = mech_trace::rd!("1005b218", t2.add(at), read) as i32;
                     wr(p, 0xc, v);
                 }
             }

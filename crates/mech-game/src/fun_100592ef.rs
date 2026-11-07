@@ -19,6 +19,12 @@ unsafe fn idiv_rem(a: i32, b: i32) -> i32 {
     // SAFETY: the divisor is nonzero per the caller's checks; the machine's own
     // idiv semantics (including its fault) are used.
     unsafe {
+        mech_trace::log::debug!(
+            f = "100592ef", b = "idiv", a:% = mech_trace::Args([
+                mech_trace::__shown!(b),
+                mech_trace::__shown!(a),
+            ]); "asm.in"
+        );
         core::arch::asm!(
             "cdq",
             "idiv {b:e}",
@@ -26,6 +32,9 @@ unsafe fn idiv_rem(a: i32, b: i32) -> i32 {
             inout("eax") a => _,
             out("edx") r,
             options(nostack)
+        );
+        mech_trace::log::debug!(
+            f = "100592ef", b = "idiv", r = "edx", v:% = mech_trace::__shown!(r); "asm.out"
         );
     }
     r

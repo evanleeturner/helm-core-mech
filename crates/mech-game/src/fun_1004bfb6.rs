@@ -125,12 +125,22 @@ pub unsafe extern "stdcall" fn FUN_1004bfb6() {
                                         RaiseException(0xC0000094, 0, 0, core::ptr::null());
                                     }
                                     let quot: i32;
+                                    mech_trace::log::debug!(
+                                        f = "1004bfb6", b = "idiv", a:% = mech_trace::Args([
+                                            mech_trace::__shown!(local_14),
+                                            mech_trace::__shown!(prod),
+                                        ]); "asm.in"
+                                    );
                                     core::arch::asm!(
                                         "cdq",
                                         "idiv {d:e}",
                                         d = in(reg) local_14,
                                         inout("eax") prod => quot,
                                         out("edx") _,
+                                    );
+                                    mech_trace::log::debug!(
+                                        f = "1004bfb6", b = "idiv", r = "eax",
+                                        v:% = mech_trace::__shown!(quot); "asm.out"
                                     );
                                     let local_c = local_18.wrapping_sub(quot) >> 3;
                                     let p = ((iv2 as u32).wrapping_add(0x3c4)) as *mut i32;

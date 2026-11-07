@@ -612,7 +612,11 @@ pub unsafe extern "C" fn FUN_100034e5(
                         );
                     }
                 }
-                mech_trace::cr!("100034e5", "ind", _DAT_10082104(core::ptr::null_mut()));
+                mech_trace::cr!(
+                    "100034e5",
+                    "ind",
+                    mech_trace::gr!("100034e5", "10082104", _DAT_10082104)(core::ptr::null_mut())
+                );
                 return;
             }
             mech_trace::gw!(

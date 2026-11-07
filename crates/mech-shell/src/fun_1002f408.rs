@@ -31,12 +31,25 @@ pub unsafe extern "C" fn FUN_1002f408(param_1: u32) -> i32 {
     // SAFETY: 64-bit by 32-bit unsigned divide of EDX:EAX; a fault is the
     // machine's own behavior, as in the original.
     unsafe {
+        mech_trace::log::debug!(
+            f = "1002f408", b = "div", a:% = mech_trace::Args([
+                mech_trace::__shown!(param_1),
+                mech_trace::__shown!(0u32),
+                mech_trace::__shown!(0x4000u32),
+            ]); "asm.in"
+        );
         asm!(
             "div {d}",
             d = in(reg) param_1,
             inout("eax") 0u32 => q,
             inout("edx") 0x4000u32 => r,
             options(nomem, nostack)
+        );
+        mech_trace::log::debug!(
+            f = "1002f408", b = "div", r = "eax", v:% = mech_trace::__shown!(q); "asm.out"
+        );
+        mech_trace::log::debug!(
+            f = "1002f408", b = "div", r = "edx", v:% = mech_trace::__shown!(r); "asm.out"
         );
     }
 

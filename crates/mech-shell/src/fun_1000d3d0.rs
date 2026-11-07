@@ -19,6 +19,12 @@ pub unsafe extern "C" fn FUN_1000d3d0(
     // SAFETY: calls the game's thiscall function: this in ECX, text pushed on
     // the stack, and the callee pops it.
     unsafe {
+        mech_trace::log::debug!(
+            f = "1000d3d0", b = "10050b20", a:% = mech_trace::Args([
+                mech_trace::__shown!(text),
+                mech_trace::__shown!(width_measurer),
+            ]); "asm.in"
+        );
         asm!(
             "push {t}",
             "call {f}",
@@ -28,6 +34,7 @@ pub unsafe extern "C" fn FUN_1000d3d0(
             lateout("eax") width,
             clobber_abi("C"),
         );
+        mech_trace::cr!("1000d3d0", "10050b20", width);
     }
     if max_width < width {
         let mut i: usize = 0;

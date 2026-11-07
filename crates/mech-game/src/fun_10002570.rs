@@ -32,11 +32,21 @@ pub unsafe extern "C" fn FUN_10002570(param_1: u32, param_2: i32) -> i32 {
         // SAFETY: the machine's own idiv is used so the divide fault is raised
         // exactly as the original would on a zero divisor or overflow.
         unsafe {
+            mech_trace::log::debug!(
+                f = "10002570", b = "idiv", a:% = mech_trace::Args([
+                    mech_trace::__shown!(param_2),
+                    mech_trace::__shown!(lo),
+                    mech_trace::__shown!(hi),
+                ]); "asm.in"
+            );
             core::arch::asm!(
                 "idiv {d:e}",
                 d = in(reg) param_2,
                 inout("eax") lo => r,
                 inout("edx") hi => _,
+            );
+            mech_trace::log::debug!(
+                f = "10002570", b = "idiv", r = "eax", v:% = mech_trace::__shown!(r); "asm.out"
             );
         }
         q = r as i64;

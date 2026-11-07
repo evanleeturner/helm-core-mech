@@ -170,12 +170,21 @@ pub unsafe extern "C" fn FUN_1008716b(param_1: *mut u32) -> *mut u8 {
                 let b = mech_trace::rd!("1008716b", e.byte_add(8).cast::<u32>(), read_unaligned);
                 let q: i32;
                 // SAFETY: the machine's own idiv, faulting as the original does.
+                mech_trace::log::debug!(
+                    f = "1008716b", b = "idiv", a:% = mech_trace::Args([
+                        mech_trace::__shown!(b),
+                        mech_trace::__shown!(a),
+                    ]); "asm.in"
+                );
                 core::arch::asm!(
                     "cdq",
                     "idiv {d:e}",
                     d = in(reg) b,
                     inout("eax") a => q,
                     out("edx") _,
+                );
+                mech_trace::log::debug!(
+                    f = "1008716b", b = "idiv", r = "eax", v:% = mech_trace::__shown!(q); "asm.out"
                 );
                 mech_trace::wr!(
                     "1008716b",

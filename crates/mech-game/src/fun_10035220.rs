@@ -64,12 +64,21 @@ pub unsafe extern "C" fn FUN_10035220(param_1: *mut u32, param_2: i32, param_3: 
             RaiseException(0xC0000094, 0, 0, core::ptr::null());
         }
         let q: i32;
+        mech_trace::log::debug!(
+            f = "10035220", b = "idiv", a:% = mech_trace::Args([
+                mech_trace::__shown!(i_div),
+                mech_trace::__shown!(param_3),
+            ]); "asm.in"
+        );
         asm!(
             "cdq",
             "idiv {d:e}",
             d = in(reg) i_div,
             inout("eax") param_3 => q,
             out("edx") _,
+        );
+        mech_trace::log::debug!(
+            f = "10035220", b = "idiv", r = "eax", v:% = mech_trace::__shown!(q); "asm.out"
         );
         mech_trace::gw!("10035220", "10168398", DAT_10168398, q);
         mech_trace::gw!("10035220", "10168384", _DAT_10168384, param_3 / 2);

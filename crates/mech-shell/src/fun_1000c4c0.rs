@@ -20,6 +20,12 @@ pub unsafe extern "C" fn FUN_1000c4c0(
     // ECX, the single argument is pushed, and the callee pops it. The result
     // comes back in EAX.
     unsafe {
+        mech_trace::log::debug!(
+            f = "1000c4c0", b = "10050b20", a:% = mech_trace::Args([
+                mech_trace::__shown!(text),
+                mech_trace::__shown!(param_1),
+            ]); "asm.in"
+        );
         asm!(
             "push {text}",
             "call {f}",
@@ -29,6 +35,7 @@ pub unsafe extern "C" fn FUN_1000c4c0(
             lateout("eax") text_width_likely,
             clobber_abi("C"),
         );
+        mech_trace::cr!("1000c4c0", "10050b20", text_width_likely);
     }
     mech_trace::rt!(
         "1000c4c0",

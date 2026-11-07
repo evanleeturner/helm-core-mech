@@ -55,15 +55,31 @@ pub unsafe extern "C" fn FUN_10019e33(param_1: i32, param_2: *mut i32, param_3: 
             return;
         }
         if mech_trace::gr!("10019e33", "100aafa4", DAT_100aafa4) == 0 {
-            DAT_100aafd4(param_1, param_2, param_3);
+            mech_trace::cr!(
+                "10019e33",
+                "ind",
+                mech_trace::gr!("10019e33", "100aafd4", DAT_100aafd4)(param_1, param_2, param_3)
+            );
             return;
         }
         if mech_trace::gr!("10019e33", "100aafa4", DAT_100aafa4) == 3 {
-            DAT_100aafd4(param_1, param_2, param_3);
+            mech_trace::cr!(
+                "10019e33",
+                "ind",
+                mech_trace::gr!("10019e33", "100aafd4", DAT_100aafd4)(param_1, param_2, param_3)
+            );
             return;
         }
         if mech_trace::gr!("10019e33", "100aafa4", DAT_100aafa4) != 1 {
-            DAT_100aafd4(param_1, param_2, param_3 | 0xa000);
+            mech_trace::cr!(
+                "10019e33",
+                "ind",
+                mech_trace::gr!("10019e33", "100aafd4", DAT_100aafd4)(
+                    param_1,
+                    param_2,
+                    param_3 | 0xa000
+                )
+            );
             return;
         }
         let u_var1 = param_3 & 0xf000;
@@ -72,24 +88,54 @@ pub unsafe extern "C" fn FUN_10019e33(param_1: i32, param_2: *mut i32, param_3: 
         }
         if u_var1 < 0x5001 {
             if u_var1 == 0x5000 || u_var1 == 0x3000 {
-                DAT_100aafd4(param_1, param_2, param_3);
+                mech_trace::cr!(
+                    "10019e33",
+                    "ind",
+                    mech_trace::gr!("10019e33", "100aafd4", DAT_100aafd4)(
+                        param_1, param_2, param_3
+                    )
+                );
                 return;
             }
         } else if u_var1 < 0x7001 {
             if u_var1 == 0x7000 || u_var1 == 0x6000 {
-                DAT_100aafd4(param_1, param_2, param_3);
+                mech_trace::cr!(
+                    "10019e33",
+                    "ind",
+                    mech_trace::gr!("10019e33", "100aafd4", DAT_100aafd4)(
+                        param_1, param_2, param_3
+                    )
+                );
                 return;
             }
         } else {
             if u_var1 == 0x8000 {
-                DAT_100aafd4(param_1, param_2, param_3);
+                mech_trace::cr!(
+                    "10019e33",
+                    "ind",
+                    mech_trace::gr!("10019e33", "100aafd4", DAT_100aafd4)(
+                        param_1, param_2, param_3
+                    )
+                );
                 return;
             }
             if u_var1 == 0x9000 {
                 return;
             }
         }
-        DAT_100aafd4(param_1, param_2, 0);
-        DAT_100aafd4(param_1, param_2, param_3 | 0xa000);
+        mech_trace::cr!(
+            "10019e33",
+            "ind",
+            mech_trace::gr!("10019e33", "100aafd4", DAT_100aafd4)(param_1, param_2, 0)
+        );
+        mech_trace::cr!(
+            "10019e33",
+            "ind",
+            mech_trace::gr!("10019e33", "100aafd4", DAT_100aafd4)(
+                param_1,
+                param_2,
+                param_3 | 0xa000
+            )
+        );
     }
 }

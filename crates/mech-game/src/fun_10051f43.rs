@@ -32,12 +32,21 @@ pub unsafe extern "C" fn FUN_10051f43(param_1: i32) -> i32 {
             read_unaligned
         );
         let rem: i32;
+        mech_trace::log::debug!(
+            f = "10051f43", b = "idiv", a:% = mech_trace::Args([
+                mech_trace::__shown!(param_1),
+                mech_trace::__shown!(v),
+            ]); "asm.in"
+        );
         core::arch::asm!(
             "cdq",
             "idiv {d:e}",
             d = in(reg) param_1,
             inout("eax") v => _,
             out("edx") rem,
+        );
+        mech_trace::log::debug!(
+            f = "10051f43", b = "idiv", r = "edx", v:% = mech_trace::__shown!(rem); "asm.out"
         );
         mech_trace::rt!("10051f43", rem)
     }

@@ -210,12 +210,22 @@ pub unsafe extern "C" fn FUN_10002d8f(
             );
             let divisor = rd32(0x1a8u32.wrapping_add(l4));
             let q: u32;
+            mech_trace::log::debug!(
+                f = "10002d8f", b = "div", a:% = mech_trace::Args([
+                    mech_trace::__shown!(divisor),
+                    mech_trace::__shown!(0x2000u32),
+                    mech_trace::__shown!(0u32),
+                ]); "asm.in"
+            );
             core::arch::asm!(
                 "div {d:e}",
                 d = in(reg) divisor,
                 inout("eax") 0x2000u32 => q,
                 inout("edx") 0u32 => _,
                 options(nomem, nostack)
+            );
+            mech_trace::log::debug!(
+                f = "10002d8f", b = "div", r = "eax", v:% = mech_trace::__shown!(q); "asm.out"
             );
             wr32(0x1e8u32.wrapping_add(l4), q);
             wr32(

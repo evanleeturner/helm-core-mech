@@ -18,6 +18,12 @@ pub unsafe extern "stdcall" fn FUN_10004620() {
         let n = mech_trace::gr!("10004620", "10083720", DAT_10083720).wrapping_mul(100);
         let d = mech_trace::gr!("10004620", "10083710", DAT_10083710);
         let q: i32;
+        mech_trace::log::debug!(
+            f = "10004620", b = "idiv", a:% = mech_trace::Args([
+                mech_trace::__shown!(d),
+                mech_trace::__shown!(n),
+            ]); "asm.in"
+        );
         core::arch::asm!(
             "cdq",
             "idiv {d:e}",
@@ -25,6 +31,9 @@ pub unsafe extern "stdcall" fn FUN_10004620() {
             inout("eax") n => q,
             out("edx") _,
             options(nostack)
+        );
+        mech_trace::log::debug!(
+            f = "10004620", b = "idiv", r = "eax", v:% = mech_trace::__shown!(q); "asm.out"
         );
         mech_trace::gw!("10004620", "10083790", DAT_10083790, q);
         mech_trace::gw!(

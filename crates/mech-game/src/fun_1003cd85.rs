@@ -33,12 +33,21 @@ unsafe fn rem_idiv(a: i32, b: i32) -> i32 {
     let r: i32;
     // SAFETY: the machine's own idiv; faults on zero divisor as the original does.
     unsafe {
+        mech_trace::log::debug!(
+            f = "1003cd85", b = "idiv", a:% = mech_trace::Args([
+                mech_trace::__shown!(b),
+                mech_trace::__shown!(a),
+            ]); "asm.in"
+        );
         asm!(
             "cdq",
             "idiv {d:e}",
             d = in(reg) b,
             inlateout("eax") a => _,
             out("edx") r,
+        );
+        mech_trace::log::debug!(
+            f = "1003cd85", b = "idiv", r = "edx", v:% = mech_trace::__shown!(r); "asm.out"
         );
     }
     r

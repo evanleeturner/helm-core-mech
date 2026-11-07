@@ -16,6 +16,13 @@ pub unsafe extern "stdcall" fn FUN_10076fc0(
         // the second DIV cannot overflow because its high half is a remainder.
         unsafe {
             let rem: u32;
+            mech_trace::log::debug!(
+                f = "10076fc0", b = "div", a:% = mech_trace::Args([
+                    mech_trace::__shown!(param_3),
+                    mech_trace::__shown!(param_2),
+                    mech_trace::__shown!(0u32),
+                ]); "asm.in"
+            );
             core::arch::asm!(
                 "div {d}",
                 d = in(reg) param_3,
@@ -23,13 +30,32 @@ pub unsafe extern "stdcall" fn FUN_10076fc0(
                 inout("edx") 0u32 => rem,
                 options(nomem, nostack)
             );
+            mech_trace::log::debug!(
+                f = "10076fc0", b = "div", r = "eax", v:% = mech_trace::__shown!(q_hi); "asm.out"
+            );
+            mech_trace::log::debug!(
+                f = "10076fc0", b = "div", r = "edx", v:% = mech_trace::__shown!(rem); "asm.out"
+            );
             let _rem2: u32;
+            mech_trace::log::debug!(
+                f = "10076fc0", b = "div", a:% = mech_trace::Args([
+                    mech_trace::__shown!(param_3),
+                    mech_trace::__shown!(param_1),
+                    mech_trace::__shown!(rem),
+                ]); "asm.in"
+            );
             core::arch::asm!(
                 "div {d}",
                 d = in(reg) param_3,
                 inout("eax") param_1 => q_lo,
                 inout("edx") rem => _rem2,
                 options(nomem, nostack)
+            );
+            mech_trace::log::debug!(
+                f = "10076fc0", b = "div", r = "eax", v:% = mech_trace::__shown!(q_lo); "asm.out"
+            );
+            mech_trace::log::debug!(
+                f = "10076fc0", b = "div", r = "edx", v:% = mech_trace::__shown!(_rem2); "asm.out"
             );
         }
         return mech_trace::rt!("10076fc0", ((q_hi as u64) << 32) | (q_lo as u64));

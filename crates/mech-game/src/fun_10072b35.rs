@@ -33,6 +33,12 @@ unsafe fn ftol_low(f: *const f32) -> i32 {
     // SAFETY: loads the float onto the x87 stack, then calls the runtime's
     // __ftol which consumes it and returns the result in edx:eax.
     unsafe {
+        mech_trace::log::debug!(
+            f = "10072b35", b = "__ftol", a:% = mech_trace::Args([
+                mech_trace::__shown!(f),
+                mech_trace::__shown!(*f),
+            ]); "asm.in"
+        );
         core::arch::asm!(
             "fld dword ptr [{p}]",
             "call {f}",
@@ -42,6 +48,7 @@ unsafe fn ftol_low(f: *const f32) -> i32 {
             out("edx") _,
             clobber_abi("C"),
         );
+        mech_trace::cr!("10072b35", "__ftol", lo);
     }
     lo
 }
@@ -50,12 +57,21 @@ unsafe fn idiv(num: i32, den: i32) -> i32 {
     let q: i32;
     // SAFETY: the machine's idiv, faulting on zero as the original does.
     unsafe {
+        mech_trace::log::debug!(
+            f = "10072b35", b = "idiv", a:% = mech_trace::Args([
+                mech_trace::__shown!(den),
+                mech_trace::__shown!(num),
+            ]); "asm.in"
+        );
         core::arch::asm!(
             "cdq",
             "idiv {d}",
             d = in(reg) den,
             inout("eax") num => q,
             out("edx") _,
+        );
+        mech_trace::log::debug!(
+            f = "10072b35", b = "idiv", r = "eax", v:% = mech_trace::__shown!(q); "asm.out"
         );
     }
     q

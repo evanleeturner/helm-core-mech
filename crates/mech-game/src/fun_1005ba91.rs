@@ -157,11 +157,22 @@ pub unsafe extern "C" fn FUN_1005ba91(param_1: *mut u32, param_2: i32, param_3: 
                     RaiseException(0xC0000094, 0, 0, core::ptr::null());
                 }
                 let quot: u32;
+                mech_trace::log::debug!(
+                    f = "1005ba91", b = "div", a:% = mech_trace::Args([
+                        mech_trace::__shown!(local_c),
+                        mech_trace::__shown!(lo),
+                        mech_trace::__shown!(hi),
+                    ]); "asm.in"
+                );
                 core::arch::asm!(
                     "div {d:e}",
                     d = in(reg) local_c,
                     inout("eax") lo => quot,
                     inout("edx") hi => _,
+                );
+                mech_trace::log::debug!(
+                    f = "1005ba91", b = "div", r = "eax",
+                    v:% = mech_trace::__shown!(quot); "asm.out"
                 );
                 let i6: i32 = local_14.wrapping_add(quot) as i32;
                 let b2 = 0 < ((i6 >> 0x10) as i16);
