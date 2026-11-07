@@ -6,8 +6,8 @@
 //! arguments in order, the value it returned. Unless a row below says a front
 //! answers it, the real function answers, through Wine.
 //!
-//! The 15 imports ([`imports`]), the 11 file calls ([`files`]:
-//! `kernel_files`' seam over the Windows folder) and the 6 time calls
+//! The 16 imports ([`imports`]), the 11 file calls ([`files`]:
+//! `kernel_files`' seam over the Windows folder) and the 5 time calls
 //! ([`time`]: `kernel_time`'s seam over Windows' clocks) and the 9
 //! thread calls ([`threads`]: `kernel_threads`' seam over Windows'
 //! threads) and the 26 process calls ([`process`]: `kernel_process`' front answers
@@ -21,8 +21,7 @@
 //! drawing calls ([`draw`]: `draw`'s front answers) and the 10
 //! Smacker slots ([`smack`]: the shell's by number, so the rig's build script
 //! names them), 140 in all,
-//! are exported `HC6_<name>`. The 6 CD-audio calls ([`cd_audio`]: `cd_audio`'s
-//! front, which reads no disc) go by `GAME_<name>` instead. With
+//! are exported `HC6_<name>`. With
 //! `HC6_LAYER=all` the swap's loader points the shell's own import slot at
 //! each, and each calls the real import through the swap DLL's own import
 //! table, so no call loops back through the shell's slot. The six older Smacker
@@ -33,6 +32,10 @@
 //!
 //! The 157 other slots of the 3 files ([`slots`]) are the original's, logged, under
 //! `HC6_`, `GAME_` and `LAUNCHER_`, so no import of the 3 goes unseen.
+//!
+//! `cd_audio.rs` and `sound_mix.rs` stand beside this file, not built: 43 of the
+//! names they export are rows of [`slots`] too, and one symbol takes one answer.
+//! Here the original answers those rows.
 //!
 //! `DirectDraw`'s 21 names ([`surfaces`]) are one export and 20 methods a file
 //! reaches through `draw_surfaces`' tables, which answer them.
@@ -183,10 +186,6 @@ fn left() -> u32 {
 
 #[cfg(all(target_arch = "x86", target_os = "windows", not(test)))]
 mod allocator;
-#[cfg(all(target_arch = "x86", target_os = "windows"))]
-pub mod cd_audio;
-#[cfg(all(target_arch = "x86", target_os = "windows"))]
-pub mod sound_mix;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
 pub mod crt;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
