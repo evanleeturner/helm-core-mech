@@ -1,0 +1,16 @@
+23:15:39.226 D imp.through c=KERNEL32!CreateFileA a=4fb54c,80000000,0,0,3,0,0 p=C:\through-test\missing.bin v=ffffffff e=3 from=40a12b by=orig tid=24
+23:15:39.232 D imp.through c=KERNEL32!CreateFileA a=4fb810,c0000000,0,0,2,0,0 p=C:\through-test.bin v=3c e=0 from=40af89 by=orig tid=24
+23:15:39.232 D imp.through c=KERNEL32!WriteFile a=3c,4fb7cc,b,caf17c,0 v=1 e=0 from=40b023 by=orig tid=24
+23:15:39.232 D imp.through c=KERNEL32!SetFilePointer a=3c,2,0,0 v=2 e=0 from=40b06d by=orig tid=24
+23:15:39.232 D imp.through c=KERNEL32!ReadFile a=3c,caf183,5,caf188,0 v=1 e=0 from=40b0fd by=orig tid=24
+23:15:39.307 D imp.through c=USER32!GetAsyncKeyState a=10 v=0 e=0 from=40a163 by=orig tid=24
+23:15:39.307 D imp.through c=KERNEL32!CreateFileA a=4fb54c,80000000,0,0,3,0,0 p=C:\through-test\missing.bin v=ffffffff e=3 from=40f393 by=orig tid=24
+23:15:39.307 D imp.through c=KERNEL32!CreateFileA a=4fb54c,80000000,0,0,3,0,0 p=C:\through-test\missing.bin v=ffffffff e=3 from=40f393 by=orig tid=24
+23:15:39.307 D imp.through c=TEST!outer@12 v=ffffa5a5 e=3 from=409840 by=orig tid=24
+23:15:39.307 D imp.through c=KERNEL32!CreateFileA a=4fb54c,80000000,0,0,3,0,0 p=C:\through-test\missing.bin v=ffffffff e=3 from=40f393 by=orig tid=24
+23:15:39.307 D imp.through c=TEST!outer@12 v=ffffa5a5 e=3 from=409840 by=orig tid=24
+23:15:39.307 D imp.through c=KERNEL32!CreateFileA a=4fb54c,80000000,0,0,3,0,0 p=C:\through-test\missing.bin v=ffffffff e=3 from=40f393 by=orig tid=24
+23:15:39.307 D imp.through c=TEST!outer@12 v=ffffa5a5 e=3 from=409840 by=orig tid=24
+23:15:39.307 D imp.through c=TEST!mixed v=d0 e=2a from=4097e0 by=orig tid=24
+23:15:39.307 D imp.through c=TEST!wide@4 v=12345678 e=0 from=410c4e by=orig tid=24
+23:15:39.308 D imp.through c=WAIL32!_AIL_end_sample@4 a=1234560 v=1234560 e=0 from=410720 by=orig tid=24

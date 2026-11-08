@@ -78,19 +78,7 @@ pub(crate) unsafe fn record<const N: usize>(address: u32) -> [u32; N] {
     unsafe { with_exposed_provenance::<[u32; N]>(address as usize).read_unaligned() }
 }
 
-/// Numbers as a line shows them, comma-joined: `a`'s, or `o`'s record.
-pub(crate) struct Numbers<'a>(pub(crate) &'a [u32]);
-
-impl fmt::Display for Numbers<'_> {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        self.0.iter().enumerate().try_for_each(|(index, number)| {
-            if index > 0 {
-                f.write_str(",")?;
-            }
-            mech_trace::__shown!(*number).fmt(f)
-        })
-    }
-}
+pub(crate) use crate::numbers::Numbers;
 
 /// What a call wrote at its record, the line's `o`: `N` numbers, or
 /// nothing on a 0 answer.

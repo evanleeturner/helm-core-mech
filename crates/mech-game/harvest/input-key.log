@@ -1,0 +1,46 @@
+fn.in f=10070381 a=41
+mem.rd f=10070381 a=5520ba v=61
+call.ret f=10070381 c=GetKeyState v=0
+call.ret f=10070381 c=GetKeyState v=0
+call.ret f=10070381 c=GetKeyState v=0
+glob.rd f=10070381 g=100c7fdc v=0
+mem.wr f=10070381 a=552240 v=61
+glob.rd f=10070381 g=100c7fdc v=0
+glob.wr f=10070381 g=100c7fdc v=1
+glob.rd f=10070381 g=100c7fdc v=1
+glob.rd f=10070381 g=100c7fd8 v=0
+glob.rd f=10070381 g=100c7fdc v=1
+input.key vk=41 act=61
+fn.in f=10070381 a=42
+mem.rd f=10070381 a=5520bc v=0
+call.ret f=10070381 c=MapVirtualKeyA v=42
+call.ret f=10070381 c=_tolower v=62
+call.ret f=10070381 c=GetKeyState v=ff80
+call.ret f=10070381 c=GetKeyState v=0
+call.ret f=10070381 c=GetKeyState v=0
+glob.rd f=10070381 g=100c7fdc v=1
+mem.wr f=10070381 a=552242 v=162
+glob.rd f=10070381 g=100c7fdc v=1
+glob.wr f=10070381 g=100c7fdc v=2
+glob.rd f=10070381 g=100c7fdc v=2
+glob.rd f=10070381 g=100c7fd8 v=0
+glob.rd f=10070381 g=100c7fdc v=2
+input.key vk=42 act=162
+fn.in f=10070381 a=7f
+mem.rd f=10070381 a=552136 v=0
+call.ret f=10070381 c=MapVirtualKeyA v=0
+call.ret f=10070381 c=_tolower v=0
+input.key vk=7f act=none
+fn.in f=10070381 a=41
+mem.rd f=10070381 a=5520ba v=61
+call.ret f=10070381 c=GetKeyState v=0
+call.ret f=10070381 c=GetKeyState v=ff80
+call.ret f=10070381 c=GetKeyState v=ff80
+glob.rd f=10070381 g=100c7fdc v=2
+mem.wr f=10070381 a=552244 v=661
+glob.rd f=10070381 g=100c7fdc v=2
+glob.wr f=10070381 g=100c7fdc v=3
+glob.rd f=10070381 g=100c7fdc v=3
+glob.rd f=10070381 g=100c7fd8 v=0
+glob.rd f=10070381 g=100c7fdc v=3
+input.key vk=41 act=661

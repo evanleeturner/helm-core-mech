@@ -120,6 +120,8 @@ dependencies = [
 name = "mech_game"
 version = "0.1.0"
 dependencies = [
+ "log",
+ "oxide_logline",
  "oxide_trace",
 ]
 
@@ -146,6 +148,7 @@ dependencies = [
  "kernel_time",
  "log",
  "mech_rows",
+ "oxide_logline",
  "oxide_trace",
  "sound-mix",
  "window",

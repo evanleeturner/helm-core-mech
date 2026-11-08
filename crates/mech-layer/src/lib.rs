@@ -33,6 +33,10 @@
 //! The 157 other slots of the 3 files ([`slots`]) are the original's, logged, under
 //! `HC6_`, `GAME_` and `LAUNCHER_`, so no import of the 3 goes unseen.
 //!
+//! With the pieces off (the swap's `HC5_PIECES`), a slot the bind does not keep points at
+//! [`through`]'s pass-through instead, which logs the call and goes on to the original, and
+//! `BitBlt`'s at [`draw::height_row`]'s, where Wine draws and the one answer stays ours.
+//!
 //! `cd_audio.rs` and `sound_mix.rs` stand beside this file, not built: 43 of the
 //! names they export are rows of [`slots`] too, and one symbol takes one answer.
 //! Here the original answers those rows.
@@ -199,6 +203,8 @@ pub mod imports;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
 pub mod input;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
+mod numbers;
+#[cfg(all(target_arch = "x86", target_os = "windows"))]
 pub mod process;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
 pub mod registry;
@@ -212,6 +218,8 @@ pub mod surfaces;
 pub mod text;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
 pub mod threads;
+#[cfg(all(target_arch = "x86", target_os = "windows"))]
+pub mod through;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
 pub mod time;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]

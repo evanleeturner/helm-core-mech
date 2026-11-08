@@ -18,7 +18,9 @@
 use core::ffi::c_void;
 use core::fmt;
 use core::ptr::{null, null_mut, with_exposed_provenance, with_exposed_provenance_mut};
+use core::sync::atomic::{AtomicPtr, AtomicUsize, Ordering};
 
+use mech_rows::pieces::{HEIGHT, KEPT};
 use mech_rows::sites::{BoundFile, FILES, Patched};
 
 use crate::bind::{self, File, Hex, Loaded, Memory, Refusal};
@@ -382,12 +384,28 @@ fn bind_file(row: &'static BoundFile, module: u32) {
         refused(row.file, &row.table);
     };
     let high = row.base + row.size;
-    let pointed = bind::bind_table(table, &mut Live, row.base, high)
-        .unwrap_or_else(|refusal| refused(row.file, &refusal));
+    let pieces = bind::pieces(pieces_value()).unwrap_or_else(|refusal| refused(row.file, &refusal));
+    let setting = bind::Routes { pieces, kept: KEPT, height: HEIGHT };
+    let routed = bind::bind_routed(table, &mut Live, row.base, high, &setting, |route, label, live| {
+        match route {
+            bind::Route::Through => mech_layer::through::entry(live, label),
+            bind::Route::Height => mech_layer::draw::height_row(live),
+            bind::Route::Export => None,
+        }
+    })
+    .unwrap_or_else(|refusal| refused(row.file, &refusal));
+    let pointed = routed.pointed;
     log::info!(
         file = row.file, table = row.table, written = pointed.written, failed = pointed.failed;
         "bind.table"
     );
+    if pieces != bind::Pieces::All {
+        log::info!(
+            file = row.file, export = routed.export, through = routed.through,
+            height = routed.height;
+            "bind.routed"
+        );
+    }
     if let Some(slot) = pointed.first_failed {
         refused(row.file, &Hex(slot));
     }
@@ -399,8 +417,49 @@ fn bind_file(row: &'static BoundFile, module: u32) {
     }
 }
 
-/// `DllMain`'s part: with `HC5_BIND` set, the layer told where to call after each load and
-/// the launcher, already parked and mapped, bound now.
+/// `HC5_PIECES`' value as [`attach`] read it, its bytes and length; null for unset.
+static PIECES_AT: AtomicPtr<u8> = AtomicPtr::new(null_mut());
+static PIECES_LENGTH: AtomicUsize = AtomicUsize::new(0);
+
+/// The pieces setting [`attach`] read, for each load's bind.
+fn pieces_value() -> Option<&'static str> {
+    let at = PIECES_AT.load(Ordering::Acquire);
+    if at.is_null() {
+        return None;
+    }
+    let length = PIECES_LENGTH.load(Ordering::Relaxed);
+    // SAFETY: `attach` stored a `'static` str's length, then its pointer, never changed after.
+    Some(unsafe {
+        core::str::from_utf8_unchecked(core::slice::from_raw_parts(at.cast_const(), length))
+    })
+}
+
+/// `name`'s value, NUL-terminated `name` asked of the process, its bytes kept to the
+/// process's end as a table's are; `None` for unset. Windows answers an empty value as it
+/// answers an unset one, so an empty value is unset here too.
+fn variable(name: &[u8]) -> Option<&'static [u8]> {
+    // SAFETY: the name is NUL-terminated and a size of 0 asks only for the length.
+    let size = unsafe { GetEnvironmentVariableA(name.as_ptr(), null_mut(), 0) };
+    if size <= 1 {
+        return None;
+    }
+    // SAFETY: asks for fresh pages; a null answer is checked before use.
+    let block = unsafe { VirtualAlloc(null_mut(), size, MEM_COMMIT_RESERVE, PAGE_READWRITE) };
+    if block.is_null() {
+        return None;
+    }
+    // SAFETY: the block is `size` bytes and the size is passed, so it writes inside.
+    let length = unsafe { GetEnvironmentVariableA(name.as_ptr(), block, size) };
+    if length == 0 || length >= size {
+        return None;
+    }
+    // SAFETY: `length` bytes were just written there, and the block is never freed or
+    // written again, so it lives as `'static` says.
+    Some(unsafe { core::slice::from_raw_parts(block.cast_const(), length as usize) })
+}
+
+/// `DllMain`'s part: with `HC5_BIND` set, the pieces setting read and judged once, the layer
+/// told where to call after each load and the launcher, already parked and mapped, bound now.
 pub fn attach(module: u32) {
     // SAFETY: the name is NUL-terminated and a size of 0 asks only for the length.
     let set = unsafe { GetEnvironmentVariableA(b"HC5_BIND\0".as_ptr(), null_mut(), 0) } != 0;
@@ -409,6 +468,17 @@ pub fn attach(module: u32) {
     }
     if module != SWAP_BASE {
         refused("the swap", &Hex(module));
+    }
+    let value = variable(b"HC5_PIECES\0").map(|bytes| {
+        core::str::from_utf8(bytes).unwrap_or_else(|_| refused("the swap", &"HC5_PIECES: no text"))
+    });
+    log::info!(pieces = value.unwrap_or("unset"); "bind.pieces");
+    if let Err(refusal) = bind::pieces(value) {
+        refused("the swap", &refusal);
+    }
+    if let Some(value) = value {
+        PIECES_LENGTH.store(value.len(), Ordering::Relaxed);
+        PIECES_AT.store(value.as_ptr().cast_mut(), Ordering::Release);
     }
     mech_layer::process::set_after_load(bind_module);
     // SAFETY: a null name asks for the process's own module, which nothing can unmap.

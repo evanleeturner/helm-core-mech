@@ -41,3 +41,13 @@ draw-surfaces = { workspace = true, features = ["desk"] }
 window = { workspace = true, features = ["user32"] }
 window-input = { workspace = true, features = ["user32"] }
 log = { version = "0.4", features = ["kv"] }
+
+[dev-dependencies]
+mech_logline = { workspace = true }
+
+# The Wine test is a program of its own, no test harness: its `off` case sets the
+# logger's level for the whole program, so the cases run in order on one thread.
+# It compiles `src/through.rs` into itself and links no part of this library.
+[[test]]
+name = "through"
+harness = false

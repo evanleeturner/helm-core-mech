@@ -16,6 +16,12 @@
       "template": "the layer's call to {c} with {a} returned {v}"
     },
     {
+      "id": "imp.through",
+      "level": "D",
+      "fields": { "c": "the import, as DLL!NAME: the row's label", "a": "the arguments the call was handed, as many as helm declares for the import, comma-joined; absent for one it declares none for", "p": "CreateFileA's file name, read at the return from its first argument: empty for a null or unreadable one, cut at 260 bytes", "v": "what the original answered, its eax", "e": "the thread's last error as the original left it", "from": "the address the call returns to in the file that made it", "by": "who answers the call: orig, the original, which ran before this line; on a row with no v or e, the thread's frames all taken, it runs after" },
+      "template": "a call to {c} from {from}, passed on to the original; the row follows its return"
+    },
+    {
       "id": "sound.file.cut",
       "level": "D",
       "fields": { "at": "the address of the file image the program handed", "declared": "the bytes its RIFF size declares, the 8 of its head counted", "reach": "the bytes readable from that address" },
@@ -42,7 +48,7 @@
     {
       "id": "draw.answer",
       "level": "D",
-      "fields": { "v": "what the front's BitBlt returned", "answer": "what the layer gives the game in its place: the height", "from": "the address the call returns to", "by": "who computed the answer: mech-layer" },
+      "fields": { "v": "what BitBlt returned: the front's, or the original's with the pieces off", "answer": "what the layer gives the game in its place: the height", "from": "the address the call returns to", "by": "who computed the answer: mech-layer" },
       "template": "BitBlt at {from} returned {v}; {by} answered {answer}"
     },
     {
@@ -50,6 +56,24 @@
       "level": "I",
       "fields": { "file": "the file the bind recognised, by its name in the rows", "table": "the table of slots it took", "written": "the slots pointed", "failed": "the slots whose write failed" },
       "template": "{file}'s table {table}: {written} slots pointed, {failed} failed: one line a load"
+    },
+    {
+      "id": "bind.pieces",
+      "level": "I",
+      "fields": { "pieces": "HC5_PIECES as the swap read it at its start: unset, off, or off and the exports put back, comma-joined" },
+      "template": "the pieces setting, read once before any bind: {pieces}"
+    },
+    {
+      "id": "bind.routed",
+      "level": "I",
+      "fields": { "file": "the file the bind recognised, by its name in the rows", "export": "the slots pointed at their exports: kept or put back", "through": "the slots pointed at the pass-through, which goes on to the original", "height": "the slots pointed at the height row, where the original draws and the one answer stays the layer's" },
+      "template": "{file} with the pieces off: {export} at their exports, {through} through, {height} at the height row"
+    },
+    {
+      "id": "bind.slot.routed",
+      "level": "D",
+      "fields": { "slot": "the slot's address", "label": "the row's label", "export": "the swap's export the row names, not taken", "route": "where it went instead: through or height", "target": "the address written in its place" },
+      "template": "slot {slot}, {label}, pointed {route} at {target}, not at {export}"
     },
     {
       "id": "bind.import",
@@ -167,6 +191,15 @@
         "stuck": "the pages that would not close"
       },
       "template": "{file} at {module}: {rows} rows from {first}, {written} written, {held} held, {moved} moved, {parked} parked; {threads} threads stopped, {pages} pages, {stuck} stuck: one line a load"
+    },
+    {
+      "id": "input.key",
+      "level": "D",
+      "fields": {
+        "vk": "the virtual key the game file's `fun_10070381` was handed; its one caller, `fun_10070276`, hands it a key-up message's (0x101, 0x105) alone",
+        "act": "the queued key it wrote: the key table's code, or MapVirtualKeyA's lower-cased, with Ctrl 0x100, Alt 0x400 and Shift 0x200 OR'd in; none when both gave 0 and nothing was queued"
+      },
+      "template": "key {vk} let go: {act} queued"
     }
   ]
 }

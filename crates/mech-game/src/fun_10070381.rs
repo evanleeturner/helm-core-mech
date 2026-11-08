@@ -87,6 +87,16 @@ pub unsafe extern "C" fn FUN_10070381(code: u32) {
                     mech_trace::gw!("10070381", "100c7fd8", DAT_100c7fd8, 0);
                 }
             }
+            // `input.key`: the key handed and what was queued for it, from
+            // values already computed; no read is added.
+            log::debug!(
+                vk:% = mech_trace::__shown!(code),
+                act:% = mech_trace::__shown!(local_8); "input.key"
+            );
+        } else {
+            // `input.key`, the other branch: neither the table nor
+            // `MapVirtualKeyA` gave a code, and nothing was queued.
+            log::debug!(vk:% = mech_trace::__shown!(code), act = "none"; "input.key");
         }
     }
 }

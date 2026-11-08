@@ -71,6 +71,8 @@ pub enum Refusal<'a> {
     BadSite { site: u8 },
     /// The other threads could not all be stopped, so no site is judged.
     ThreadsNotStopped(&'a str),
+    /// A pieces setting that is none of [`pieces`]' words.
+    BadPieces(&'a str),
 }
 
 impl fmt::Display for Refusal<'_> {
@@ -89,6 +91,9 @@ impl fmt::Display for Refusal<'_> {
             Self::ReadBack { site } => write!(f, "site {site} read back unequal to its new row"),
             Self::BadSite { site } => write!(f, "site {site}'s rows do not fit the plan"),
             Self::ThreadsNotStopped(why) => write!(f, "threads not stopped: {why}"),
+            Self::BadPieces(value) => {
+                write!(f, "pieces is unset, off, or off,<export>,...; not {value:?}")
+            }
         }
     }
 }
@@ -373,29 +378,9 @@ pub struct Pointed {
     pub first_failed: Option<u32>,
 }
 
-/// Each slot pointed at its export and read back. It goes on past a failure, as the script
-/// did, so the line counts them all. A bad line counts as failed, never skipped.
+/// Each slot pointed at its export and read back: [`point_routed`] with every piece on.
 pub fn point_slots(table: &str, memory: &mut impl Memory) -> Pointed {
-    let mut pointed = Pointed::default();
-    for row in slot_rows(table) {
-        let Ok(row) = row else {
-            pointed.failed += 1;
-            continue;
-        };
-        if written(memory, row.slot, &row.target.to_le_bytes()) {
-            pointed.written += 1;
-            log::debug!(
-                slot:% = Hex(row.slot), label = row.label, export = row.export,
-                target:% = Hex(row.target);
-                "bind.slot.pointed"
-            );
-        } else {
-            pointed.failed += 1;
-            pointed.first_failed.get_or_insert(row.slot);
-            log::error!(slot:% = Hex(row.slot), label = row.label; "bind.slot.failed");
-        }
-    }
-    pointed
+    point_routed(table, memory, &Routes::ALL, |_, _, _| None).pointed
 }
 
 /// One file's table, the whole of a load's bind: judged first, then written. Run at each
@@ -407,8 +392,172 @@ pub fn bind_table<'a>(
     low: u32,
     high: u32,
 ) -> Result<Pointed, Refusal<'a>> {
+    bind_routed(table, memory, low, high, &Routes::ALL, |_, _, _| None).map(|r| r.pointed)
+}
+
+/// Which pieces answer the calls. `All` is every row at its export, the build as it always
+/// was. `Off` sends a row's call back to the original it replaced, but for the rows a start
+/// cannot go without and the exports `back` names, a comma list put back one by one.
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+pub enum Pieces<'a> {
+    All,
+    Off { back: &'a str },
+}
+
+/// The setting, read once at the bind. Unset is `All`; `off`, or `off,` and a comma list of
+/// exports, each named and with no space, is `Off`; anything else refuses, so a mistyped
+/// setting never runs as one it did not name.
+pub fn pieces(value: Option<&str>) -> Result<Pieces<'_>, Refusal<'_>> {
+    let Some(value) = value else {
+        return Ok(Pieces::All);
+    };
+    if value == "off" {
+        return Ok(Pieces::Off { back: "" });
+    }
+    let named = |name: &str| !name.is_empty() && !name.contains(char::is_whitespace);
+    match value.strip_prefix("off,") {
+        Some(back) if back.split(',').all(named) => Ok(Pieces::Off { back }),
+        _ => Err(Refusal::BadPieces(value)),
+    }
+}
+
+/// Where one row's slot is pointed.
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+pub enum Route {
+    /// At the row's export, ours.
+    Export,
+    /// At a pass-through that logs the call and goes on to the original, answering nothing.
+    Through,
+    /// At the one row whose answer stays ours while the original does the work.
+    Height,
+}
+
+impl Route {
+    fn word(self) -> &'static str {
+        match self {
+            Self::Export => "export",
+            Self::Through => "through",
+            Self::Height => "height",
+        }
+    }
+}
+
+/// The setting with what it cannot turn off: `kept`, the exports a start needs, and
+/// `height`, the export whose answer stays ours while the original does the work.
+#[derive(Debug, Clone, Copy)]
+pub struct Routes<'a> {
+    pub pieces: Pieces<'a>,
+    pub kept: &'a [&'a str],
+    pub height: &'a str,
+}
+
+impl Routes<'_> {
+    /// Every row at its export.
+    pub const ALL: Self = Self {
+        pieces: Pieces::All,
+        kept: &[],
+        height: "",
+    };
+
+    /// Where the row with `export` goes. A name put back or kept wins over the height row,
+    /// so putting the height export back restores its front whole.
+    #[must_use]
+    pub fn route(&self, export: &str) -> Route {
+        let Pieces::Off { back } = self.pieces else {
+            return Route::Export;
+        };
+        let put_back = !back.is_empty() && back.split(',').any(|name| name == export);
+        if put_back || self.kept.contains(&export) {
+            Route::Export
+        } else if !self.height.is_empty() && export == self.height {
+            Route::Height
+        } else {
+            Route::Through
+        }
+    }
+}
+
+/// What [`point_routed`] did: the slots written and failed, and of those written, how many
+/// went to their exports, to the pass-through, and to the height row.
+#[derive(Debug, PartialEq, Eq, Clone, Copy, Default)]
+pub struct Routed {
+    pub pointed: Pointed,
+    pub export: u32,
+    pub through: u32,
+    pub height: u32,
+}
+
+/// Each slot pointed where `setting` sends its row, and read back. An export row takes its
+/// export; any other reads the slot's live value, the original, and takes what `elsewhere`
+/// hands back for it. `None` from `elsewhere` fails that row alone, as a write that does not
+/// read back does: it goes on past a failure, as the script did, so the line counts them
+/// all. A bad line counts as failed, never skipped.
+pub fn point_routed<'a>(
+    table: &'a str,
+    memory: &mut impl Memory,
+    setting: &Routes<'_>,
+    mut elsewhere: impl FnMut(Route, &'a str, u32) -> Option<u32>,
+) -> Routed {
+    let mut routed = Routed::default();
+    for row in slot_rows(table) {
+        let Ok(row) = row else {
+            routed.pointed.failed += 1;
+            continue;
+        };
+        let route = setting.route(row.export);
+        let target = match route {
+            Route::Export => Some(row.target),
+            Route::Through | Route::Height => {
+                let mut raw = [0; 4];
+                memory
+                    .read(row.slot, &mut raw)
+                    .then(|| u32::from_le_bytes(raw))
+                    .and_then(|live| elsewhere(route, row.label, live))
+            }
+        };
+        match target {
+            Some(target) if written(memory, row.slot, &target.to_le_bytes()) => {
+                routed.pointed.written += 1;
+                *match route {
+                    Route::Export => &mut routed.export,
+                    Route::Through => &mut routed.through,
+                    Route::Height => &mut routed.height,
+                } += 1;
+                if route == Route::Export {
+                    log::debug!(
+                        slot:% = Hex(row.slot), label = row.label, export = row.export,
+                        target:% = Hex(target);
+                        "bind.slot.pointed"
+                    );
+                } else {
+                    log::debug!(
+                        slot:% = Hex(row.slot), label = row.label, export = row.export,
+                        route = route.word(), target:% = Hex(target);
+                        "bind.slot.routed"
+                    );
+                }
+            }
+            _ => {
+                routed.pointed.failed += 1;
+                routed.pointed.first_failed.get_or_insert(row.slot);
+                log::error!(slot:% = Hex(row.slot), label = row.label; "bind.slot.failed");
+            }
+        }
+    }
+    routed
+}
+
+/// [`bind_table`] with `routes`: judged first by the same [`check_slots`], then written.
+pub fn bind_routed<'a>(
+    table: &'a str,
+    memory: &mut impl Memory,
+    low: u32,
+    high: u32,
+    routes: &Routes<'_>,
+    elsewhere: impl FnMut(Route, &'a str, u32) -> Option<u32>,
+) -> Result<Routed, Refusal<'a>> {
     check_slots(table, memory, low, high)?;
-    Ok(point_slots(table, memory))
+    Ok(point_routed(table, memory, routes, elsewhere))
 }
 
 /// `row` with each 32-bit word naming its own DLL's image moved to the loaded base; how many
@@ -796,6 +945,90 @@ mod tests {
         let again = bind_table(TABLE, &mut memory, BASE, BASE + 0x9000).expect("a third load");
         assert_eq!(again.written, 2);
         assert_eq!(slot(&memory, 0x1000_1000), 0x6000_0010);
+    }
+
+    #[test]
+    fn pieces_reads_unset_off_and_off_with_names_and_refuses_the_rest() {
+        assert_eq!(pieces(None), Ok(Pieces::All));
+        assert_eq!(pieces(Some("off")), Ok(Pieces::Off { back: "" }));
+        assert_eq!(pieces(Some("off,A,B")), Ok(Pieces::Off { back: "A,B" }));
+        for bad in ["", "on", "off,", "off,A,,B", "off, A", "OFF"] {
+            assert_eq!(pieces(Some(bad)), Err(Refusal::BadPieces(bad)), "{bad:?}");
+        }
+    }
+
+    #[test]
+    fn every_piece_on_writes_as_the_bind_always_did_and_asks_nothing_elsewhere() {
+        let mut plain = bound();
+        let mut routed = bound();
+        let pointed = bind_table(TABLE, &mut plain, BASE, BASE + 0x9000).expect("no refusal");
+        let got = bind_routed(TABLE, &mut routed, BASE, BASE + 0x9000, &Routes::ALL, |_, _, _| {
+            unreachable!("every row goes to its export")
+        })
+        .expect("no refusal");
+        assert_eq!(got, Routed { pointed, export: 2, through: 0, height: 0 });
+        assert_eq!(plain.bytes, routed.bytes);
+    }
+
+    const THREE: &str = "10001000\tL_A\t60000010\tKERNEL32!A\n\
+                         10001004\tL_B\t60000020\tUSER32!B\n\
+                         10001008\tL_C\t60000030\tGDI32!C\n";
+
+    fn bound_three() -> Fake {
+        let mut memory = bound();
+        memory.word(0x1000_1008, 0x7d00_0030);
+        memory
+    }
+
+    fn off(back: &str) -> Routes<'_> {
+        Routes { pieces: Pieces::Off { back }, kept: &["L_A"], height: "L_B" }
+    }
+
+    #[test]
+    fn off_keeps_a_kept_row_and_hands_the_rest_elsewhere_with_their_live_values() {
+        let mut memory = bound_three();
+        let mut asked = Vec::new();
+        let routed = bind_routed(THREE, &mut memory, BASE, BASE + 0x9000, &off(""), |r, l, v| {
+            asked.push((r, l, v));
+            Some(if r == Route::Height { 0x5000_0004 } else { 0x5000_0008 })
+        })
+        .expect("no refusal");
+        assert_eq!(
+            asked,
+            vec![
+                (Route::Height, "USER32!B", 0x7e00_0020),
+                (Route::Through, "GDI32!C", 0x7d00_0030)
+            ]
+        );
+        let pointed = Pointed { written: 3, failed: 0, first_failed: None };
+        assert_eq!(routed, Routed { pointed, export: 1, through: 1, height: 1 });
+        assert_eq!(slot(&memory, 0x1000_1000), 0x6000_0010);
+        assert_eq!(slot(&memory, 0x1000_1004), 0x5000_0004);
+        assert_eq!(slot(&memory, 0x1000_1008), 0x5000_0008);
+    }
+
+    #[test]
+    fn a_name_put_back_answers_from_its_export_the_height_row_too() {
+        let mut memory = bound_three();
+        let routed = bind_routed(THREE, &mut memory, BASE, BASE + 0x9000, &off("L_C,L_B"), {
+            |_, _, _| unreachable!("every row is kept or put back")
+        })
+        .expect("no refusal");
+        assert_eq!((routed.export, routed.through, routed.height), (3, 0, 0));
+        assert_eq!(slot(&memory, 0x1000_1004), 0x6000_0020);
+        assert_eq!(slot(&memory, 0x1000_1008), 0x6000_0030);
+    }
+
+    #[test]
+    fn a_row_with_nowhere_to_go_fails_alone_and_the_rest_go_on() {
+        let mut memory = bound_three();
+        let routed = bind_routed(THREE, &mut memory, BASE, BASE + 0x9000, &off(""), |r, _, v| {
+            (r == Route::Height).then_some(v)
+        })
+        .expect("no refusal");
+        let pointed = Pointed { written: 2, failed: 1, first_failed: Some(0x1000_1008) };
+        assert_eq!(routed, Routed { pointed, export: 1, through: 0, height: 1 });
+        assert_eq!(slot(&memory, 0x1000_1008), 0x7d00_0030, "the failed slot untouched");
     }
 
     const SWAPS: &str = "100026c1\tHC5_100026c1\t60001000\n100042c0\tHC5_100042c0\t60002000\n";

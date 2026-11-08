@@ -335,6 +335,11 @@ extern "system" fn bit_blt(
     let value = front("GDI32!BitBlt", from).map_or(1, |front| {
         front.bit_blt(dc, x, y, width, height, source, sx, sy, rop)
     });
+    answered(from, height, value)
+}
+
+/// The one caller's answer: `height` where the draw worked, else the draw's own `value`.
+fn answered(from: u32, height: u32, value: u32) -> u32 {
     if from == SET_MODE_PRESENT && value != 0 {
         kept!(log::debug!(v:% = mech_trace::__shown!(value),
             answer:% = mech_trace::__shown!(height), from:% = mech_trace::__shown!(from),
@@ -343,6 +348,50 @@ extern "system" fn bit_blt(
         return height;
     }
     value
+}
+
+/// Wine's `BitBlt`, as the height row's slot held it at the bind.
+static ORIGINAL_BIT_BLT: AtomicU32 = AtomicU32::new(0);
+
+/// The height row with the pieces off: keeps `original`, the slot's live `BitBlt`, and gives
+/// the address of `ORIG_BitBlt` for the slot, so the original draws and [`bit_blt`]'s one
+/// caller still gets the height. `None` for an address past 32 bits, which no x86 one is.
+pub fn height_row(original: u32) -> Option<u32> {
+    ORIGINAL_BIT_BLT.store(original, Ordering::Release);
+    u32::try_from(ORIG_BitBlt as unsafe extern "C" fn() as usize).ok()
+}
+
+/// `BitBlt` with the pieces off: the original through the slot's own value, then
+/// [`bit_blt`]'s answer for its one caller.
+#[expect(
+    clippy::too_many_arguments,
+    reason = "BitBlt's own 9, and the caller first"
+)]
+extern "system" fn orig_bit_blt(
+    from: u32,
+    dc: u32,
+    x: u32,
+    y: u32,
+    width: u32,
+    height: u32,
+    source: u32,
+    sx: u32,
+    sy: u32,
+    rop: u32,
+) -> u32 {
+    type BitBlt = unsafe extern "system" fn(u32, u32, u32, u32, u32, u32, u32, u32, u32) -> u32;
+    let original = ORIGINAL_BIT_BLT.load(Ordering::Acquire) as usize;
+    // SAFETY: the bind stored the slot's live value, judged an import outside its file,
+    // before it pointed the slot here: Wine's `BitBlt`, a stdcall of 9.
+    let real = unsafe { core::mem::transmute::<usize, BitBlt>(original) };
+    let value = imp_call!(
+        "orig",
+        "GDI32!BitBlt",
+        [dc, x, y, width, height, source, sx, sy, rop],
+        // SAFETY: the original, as above, handed the caller's own arguments.
+        unsafe { real(dc, x, y, width, height, source, sx, sy, rop) }
+    );
+    answered(from, height, value)
 }
 
 #[expect(
@@ -490,6 +539,7 @@ entry!(HC6_GetSystemPaletteEntries, get_system_palette_entries, 4);
 entry!(HC6_StretchBlt, stretch_blt, 11);
 entry!(HC6_CreateDIBSection, create_dib_section, 6);
 entry!(HC6_BitBlt, bit_blt, 9);
+entry!(ORIG_BitBlt, orig_bit_blt, 9);
 entry!(HC6_CreateCompatibleDC, create_compatible_dc, 1);
 entry!(HC6_DeleteDC, delete_dc, 1);
 entry!(HC6_DeleteObject, delete_object, 1);
