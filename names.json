@@ -5,6 +5,7 @@
   "functions": {
     "1000278e": "StopAndFreeAllSamples",
     "10002849": "RefillStreamingSampleBuffers",
+    "10002ba7": "PrepareSoundSample",
     "10002d8f": "AcquireSampleSlot",
     "100033ce": "HandleSampleEnd",
     "1000381c": "ComputeSamplePan",
@@ -21,7 +22,10 @@
     "1001a060": "FixedMul30",
     "1001a080": "FixedDot3Shift27",
     "1001c299": "SetCurrentNode",
+    "1001c303": "AllocAndInsertSortedNode",
+    "1001c5d1": "CreateObjectWithFirstBlock_Likely",
     "1001c8a3": "FreeHeapBlock",
+    "1001c989": "FreeObjectAndNodeList",
     "10022aaa": "GetUnitSize",
     "10025799": "AllocQuadtreeNode",
     "1002628c": "SetSegmentFromDirection",
@@ -32,6 +36,7 @@
     "1002f010": "CreateTreeNode",
     "10035980": "FixedDot3Shift29",
     "1003c190": "IsWithinRadius3_Likely",
+    "1003c92a": "SendMidiPitchBendAndVolume",
     "1003ca49": "MuteMidiChannel",
     "100447bf": "ClampSymmetric",
     "100455b7": "BlitPixelBufferToWindow",
@@ -54,6 +59,7 @@
     "10066284": "RectBareFrom319x199",
     "100662fd": "PointFrom319x199",
     "100663e5": "ScaleRectAboutCenter",
+    "100668b6": "WordWrapTextInRect_Likely",
     "10066ec0": "CheckedFixedDiv16",
     "1006ad3f": "ServiceSoundAndRefillStreams_Likely",
     "1006c340": "FillBitGroups_Likely",
@@ -85,9 +91,13 @@
       "1": "format"
     },
     "10002ba7": {
+      "1": "extraOffset",
       "3": "soundId_Likely",
       "4": "sampleData_Likely",
-      "8": "playbackRate"
+      "5": "baseFactor_Likely",
+      "6": "fixedScale_Likely",
+      "8": "playbackRate",
+      "10": "acquireWord"
     },
     "10002d8f": {
       "1": "soundId_Likely",
@@ -173,12 +183,16 @@
     "1001c303": {
       "1": "ownerObject",
       "2": "sortKey",
+      "3": "firstAreaEntryCount",
+      "4": "secondAreaEntryCount",
       "5": "extraByteCount",
       "6": "tailAreaOut"
     },
     "1001c5d1": {
       "1": "pointCount_Likely",
-      "3": "indexBytes_Likely"
+      "2": "recordCount_Likely",
+      "3": "indexBytes_Likely",
+      "4": "outValue_Likely"
     },
     "1001c8a3": {
       "1": "mem"
@@ -291,6 +305,9 @@
     },
     "1003c190": {
       "4": "radius_Likely"
+    },
+    "1003c92a": {
+      "1": "pitchBendOffset"
     },
     "1003eb7c": {
       "1": "mem"
@@ -412,6 +429,11 @@
       "2": "out",
       "3": "scaleX",
       "4": "scaleY"
+    },
+    "100668b6": {
+      "1": "rect",
+      "2": "text",
+      "3": "font_Likely"
     },
     "10066ec0": {
       "1": "divisor",
