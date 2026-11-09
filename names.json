@@ -1,540 +1,2687 @@
 {
   "program": "helm-core-mech",
-  "about": "The game's names by address, for the log readers: functions and globals map an address to its name; parameters map a function's address to each argument's position (param_N at N) and its name. A rename is one edit here.",
-  "target": "mercsw",
-  "functions": {
-    "1000278e": "StopAndFreeAllSamples",
-    "10002849": "RefillStreamingSampleBuffers",
-    "10002ba7": "PrepareSoundSample",
-    "10002d8f": "AcquireSampleSlot",
-    "100033ce": "HandleSampleEnd",
-    "1000381c": "ComputeSamplePan",
-    "1000389e": "StopAllSamples",
-    "10003c3e": "StopAndReleaseSoundSample",
-    "10003cf8": "ComputeVolumeFalloffPercent",
-    "10003d60": "FixedMul16",
-    "10003dc4": "LerpRect",
-    "10007dc0": "RemoveBettyQueueEntry",
-    "1000fc30": "ApproxLength3_Likely",
-    "1000fe30": "FixedSqrt16",
-    "1000fef4": "NormalizeVec3",
-    "10015b30": "FixedMul29",
-    "1001a060": "FixedMul30",
-    "1001a080": "FixedDot3Shift27",
-    "1001c299": "SetCurrentNode",
-    "1001c303": "AllocAndInsertSortedNode",
-    "1001c5d1": "CreateObjectWithFirstBlock_Likely",
-    "1001c8a3": "FreeHeapBlock",
-    "1001c989": "FreeObjectAndNodeList",
-    "10022aaa": "GetUnitSize",
-    "10025799": "AllocQuadtreeNode",
-    "1002628c": "SetSegmentFromDirection",
-    "1002637d": "EnsureSegmentDirection",
-    "10026815": "RaySlabInterval",
-    "1002b08b": "ClampedAdd1024_Likely",
-    "1002b48b": "SwapOneAndTwo",
-    "1002f010": "CreateTreeNode",
-    "10035980": "FixedDot3Shift29",
-    "1003c190": "IsWithinRadius3_Likely",
-    "1003c92a": "SendMidiPitchBendAndVolume",
-    "1003ca49": "MuteMidiChannel",
-    "100447bf": "ClampSymmetric",
-    "100455b7": "BlitPixelBufferToWindow",
-    "10045873": "SetPaletteRange",
-    "1004639a": "ResumeMciDevice",
-    "100463c4": "StopMciDevice",
-    "100463ee": "PlayMciDeviceFromTo",
-    "10046fc9": "IsWithinBounds_Likely",
-    "10047052": "SetAuxDeviceVolume",
-    "10055b60": "ScaledDiffShift_Likely",
-    "1005ed99": "ReadMouseButtonsAndPosition",
-    "10064d15": "IndexBitWidth_Likely",
-    "10065e40": "ScaleRect",
-    "10065ebf": "MapRectIntoRect",
-    "10065f87": "ScaleRectBare",
-    "10066004": "ScalePoint",
-    "1006604b": "ScaleRectBareBySize",
-    "100660e1": "ScalePointBySize",
-    "10066209": "RectFrom319x199",
-    "10066284": "RectBareFrom319x199",
-    "100662fd": "PointFrom319x199",
-    "100663e5": "ScaleRectAboutCenter",
-    "100668b6": "WordWrapTextInRect_Likely",
-    "10066ec0": "CheckedFixedDiv16",
-    "1006ad3f": "ServiceSoundAndRefillStreams_Likely",
-    "1006c340": "FillBitGroups_Likely",
-    "10070276": "ProcessKeyboardMessages",
-    "10071674": "MirrorBinaryTree",
-    "10072715": "ScaleBy150Or75Percent_Likely",
-    "100821fe": "InitBitmapHeader8Bit",
-    "1008628d": "FindCacheEntry",
-    "10086336": "FreeCacheEntry",
-    "1008668b": "FindOrLoadCacheEntry_Likely",
-    "10086951": "AllocZeroedHeapBlock"
-  },
-  "globals": {
-    "100aafbc": "g_disabled100aafbc_Likely",
-    "100aafc0": "g_disabledBits100aafc0_Likely",
-    "100c9250": "g_bitmapHeader100c9250_Likely"
-  },
-  "parameters": {
-    "10001d0a": {
-      "1": "str1"
-    },
-    "10001e96": {
-      "1": "str1"
-    },
-    "10002110": {
-      "1": "format"
-    },
-    "10002168": {
-      "1": "format"
-    },
-    "10002ba7": {
-      "1": "extraOffset",
-      "3": "soundId_Likely",
-      "4": "sampleData_Likely",
-      "5": "baseFactor_Likely",
-      "6": "fixedScale_Likely",
-      "8": "playbackRate",
-      "10": "acquireWord"
-    },
-    "10002d8f": {
-      "1": "soundId_Likely",
-      "2": "mem",
-      "3": "priorityAndFlags_Likely",
-      "4": "requestedSlot",
-      "5": "busyFlagPtr_Likely"
-    },
-    "100033ce": {
-      "1": "sampleHandle"
-    },
-    "1000389e": {
-      "1": "forceAll"
-    },
-    "10003c3e": {
-      "1": "sampleRecord_Likely"
-    },
-    "10003d60": {
-      "1": "multiplicand",
-      "2": "multiplier"
-    },
-    "10003dc4": {
-      "1": "from",
-      "2": "to",
-      "3": "out",
-      "4": "fraction"
-    },
-    "10007218": {
-      "1": "str"
-    },
-    "100072ef": {
-      "1": "format"
-    },
-    "10007321": {
-      "1": "source"
-    },
-    "10007342": {
-      "1": "format"
-    },
-    "10007dc0": {
-      "1": "queueEntry"
-    },
-    "1000eda8": {
-      "1": "unusedArg1"
-    },
-    "1000fe30": {
-      "1": "value"
-    },
-    "1000fef4": {
-      "1": "vecX",
-      "2": "vecY",
-      "3": "vecZ"
-    },
-    "100108a0": {
-      "2": "format"
-    },
-    "10010bc0": {
-      "1": "str"
-    },
-    "10015b30": {
-      "1": "multiplicand",
-      "2": "multiplier"
-    },
-    "100175e7": {
-      "1": "file"
-    },
-    "1001a060": {
-      "1": "factorA",
-      "2": "factorB"
-    },
-    "1001a080": {
-      "1": "vecA0",
-      "2": "vecB0",
-      "3": "vecA1",
-      "4": "vecB1",
-      "5": "vecA2",
-      "6": "vecB2"
-    },
-    "1001c299": {
-      "1": "nodeList_Likely",
-      "2": "node"
-    },
-    "1001c303": {
-      "1": "ownerObject",
-      "2": "sortKey",
-      "3": "firstAreaEntryCount",
-      "4": "secondAreaEntryCount",
-      "5": "extraByteCount",
-      "6": "tailAreaOut"
-    },
-    "1001c5d1": {
-      "1": "pointCount_Likely",
-      "2": "recordCount_Likely",
-      "3": "indexBytes_Likely",
-      "4": "outValue_Likely"
-    },
-    "1001c8a3": {
-      "1": "mem"
-    },
-    "1001c989": {
-      "1": "mem"
-    },
-    "1001dfc3": {
-      "1": "fileHandle"
-    },
-    "1001e041": {
-      "1": "fileHandle"
-    },
-    "1001e0bf": {
-      "1": "source"
-    },
-    "1001e55a": {
-      "2": "str2"
-    },
-    "10025799": {
-      "1": "bound0Min_Likely",
-      "2": "bound0Max_Likely",
-      "3": "bound1Min_Likely",
-      "4": "bound1Max_Likely",
-      "5": "bound2Min_Likely",
-      "6": "bound2Max_Likely",
-      "7": "entryCount"
-    },
-    "1002587d": {
-      "1": "mem"
-    },
-    "1002628c": {
-      "1": "segment",
-      "8": "length"
-    },
-    "1002637d": {
-      "1": "segment"
-    },
-    "10026815": {
-      "1": "origin",
-      "2": "direction",
-      "3": "slabMin",
-      "4": "slabMax",
-      "5": "tNear",
-      "6": "tFar"
-    },
-    "1002949b": {
-      "1": "ch_Likely"
-    },
-    "1002974a": {
-      "1": "unusedArg1"
-    },
-    "1002977f": {
-      "1": "unusedArg1"
-    },
-    "1002b08b": {
-      "3": "matchSign"
-    },
-    "1002cd49": {
-      "1": "toggleMask"
-    },
-    "1002cd5d": {
-      "1": "mask"
-    },
-    "1002cd87": {
-      "2": "enable"
-    },
-    "1002cdde": {
-      "2": "enable"
-    },
-    "1002f010": {
-      "1": "parentNode",
-      "2": "createFlags"
-    },
-    "1002fe1e": {
-      "1": "mem"
-    },
-    "1002feb2": {
-      "2": "str2"
-    },
-    "10035980": {
-      "1": "vecA0",
-      "2": "vecB0",
-      "3": "vecA1",
-      "4": "vecB1",
-      "5": "vecA2",
-      "6": "vecB2"
-    },
-    "10036b20": {
-      "2": "set"
-    },
-    "10037859": {
-      "1": "wnd",
-      "2": "msg",
-      "3": "wParam",
-      "4": "lParam"
-    },
-    "10037f18": {
-      "1": "str1"
-    },
-    "10037fe6": {
-      "1": "joyID"
-    },
-    "10038f3a": {
-      "3": "dest",
-      "4": "count"
-    },
-    "1003c13a": {
-      "2": "enable"
-    },
-    "1003c190": {
-      "4": "radius_Likely"
-    },
-    "1003c92a": {
-      "1": "pitchBendOffset"
-    },
-    "1003eb7c": {
-      "1": "mem"
-    },
-    "100447bf": {
-      "2": "limit"
-    },
-    "1004563f": {
-      "2": "yDest"
-    },
-    "100456d9": {
-      "1": "xDest"
-    },
-    "10045777": {
-      "1": "xSrc"
-    },
-    "100457f5": {
-      "1": "xSrc"
-    },
-    "10045873": {
-      "1": "firstIndex",
-      "2": "colorCount",
-      "3": "srcColors"
-    },
-    "10045f0f": {
-      "2": "source"
-    },
-    "100463ee": {
-      "1": "fromPosition",
-      "2": "toPosition"
-    },
-    "10046fc9": {
-      "1": "checkedValue"
-    },
-    "10047052": {
-      "1": "volume"
-    },
-    "10047a54": {
-      "2": "buf"
-    },
-    "10047c9e": {
-      "2": "buf"
-    },
-    "10047e21": {
-      "2": "buf"
-    },
-    "10047fde": {
-      "2": "buf"
-    },
-    "1004cf27": {
-      "2": "str2"
-    },
-    "10051e70": {
-      "1": "seed"
-    },
-    "100528ee": {
-      "1": "c"
-    },
-    "10055b60": {
-      "4": "shift"
-    },
-    "1005be24": {
-      "1": "source"
-    },
-    "1005ed99": {
-      "2": "normalizedCursorOut",
-      "3": "buttonMaskOut"
-    },
-    "10064c99": {
-      "1": "filename"
-    },
-    "10064e6a": {
-      "1": "ch"
-    },
-    "10065e40": {
-      "1": "unusedArg1",
-      "2": "source",
-      "3": "out"
-    },
-    "10065ebf": {
-      "1": "frame",
-      "2": "source",
-      "3": "out"
-    },
-    "10065f87": {
-      "1": "unusedArg1",
-      "2": "source",
-      "3": "out"
-    },
-    "10066004": {
-      "1": "unusedArg1",
-      "2": "source",
-      "3": "out"
-    },
-    "1006604b": {
-      "1": "frame",
-      "2": "source",
-      "3": "out"
-    },
-    "100660e1": {
-      "1": "frame",
-      "2": "source",
-      "3": "out"
-    },
-    "10066209": {
-      "1": "source",
-      "2": "out"
-    },
-    "10066284": {
-      "1": "source",
-      "2": "out"
-    },
-    "100662fd": {
-      "1": "source",
-      "2": "out"
-    },
-    "100663e5": {
-      "1": "source",
-      "2": "out",
-      "3": "scaleX",
-      "4": "scaleY"
-    },
-    "100668b6": {
-      "1": "rect",
-      "2": "text",
-      "3": "font_Likely"
-    },
-    "10066ec0": {
-      "1": "divisor",
-      "2": "dividend",
-      "3": "quotient"
-    },
-    "1006a2a5": {
-      "1": "source"
-    },
-    "1006c340": {
-      "1": "flags"
-    },
-    "1006f330": {
-      "1": "bits"
-    },
-    "1006f925": {
-      "1": "xSrc",
-      "2": "ySrc"
-    },
-    "10070276": {
-      "1": "message",
-      "2": "wParam",
-      "3": "lParam"
-    },
-    "10070381": {
-      "1": "code"
-    },
-    "10070ed9": {
-      "1": "filename"
-    },
-    "10070f83": {
-      "2": "str1"
-    },
-    "10071107": {
-      "2": "dstBuf",
-      "3": "count"
-    },
-    "10071674": {
-      "1": "sourceNode"
-    },
-    "10071b60": {
-      "2": "str"
-    },
-    "100728a3": {
-      "2": "str"
-    },
-    "10072b35": {
-      "2": "str"
-    },
-    "10072e03": {
-      "2": "str"
-    },
-    "10073127": {
-      "2": "str"
-    },
-    "10073377": {
-      "2": "str"
-    },
-    "1007b890": {
-      "2": "str2"
-    },
-    "1007bbed": {
-      "3": "source"
-    },
-    "100821fe": {
-      "1": "width",
-      "2": "height"
-    },
-    "1008628d": {
-      "1": "entryId",
-      "2": "fourCharKey"
-    },
-    "10086336": {
-      "1": "mem"
-    },
-    "1008668b": {
-      "2": "entryId",
-      "3": "entryTag_Likely"
-    },
-    "10086951": {
-      "1": "bytes"
-    },
-    "100869d5": {
-      "1": "mem"
-    },
-    "10086a00": {
-      "1": "str2"
-    },
-    "10087076": {
-      "1": "buf",
-      "2": "maxCount",
-      "3": "file"
-    },
-    "10088ec7": {
-      "1": "code"
-    },
-    "1008e260": {
-      "1": "newFlag"
-    },
-    "100989f0": {
-      "1": "controlWord"
+  "about": "The game's names by address, for the log readers, one target a DLL under the DLL's file name: functions and globals map an address to its name; parameters map a function's address to each argument's position in its entry row (param_N at N; in a thiscall, this at 1 and param_N at N + 1) and its name; extents map a named function's address to the code it covers, each range from a block's first instruction to the address of its last, for the return addresses rows carry. A rename is one edit here.",
+  "targets": {
+    "mercsw": {
+      "dll": "MERCSW.DLL",
+      "functions": {
+        "1000278e": "StopAndFreeAllSamples",
+        "10002849": "RefillStreamingSampleBuffers",
+        "10002ba7": "PrepareSoundSample",
+        "10002d8f": "AcquireSampleSlot",
+        "100033ce": "HandleSampleEnd",
+        "1000381c": "ComputeSamplePan",
+        "1000389e": "StopAllSamples",
+        "10003c3e": "StopAndReleaseSoundSample",
+        "10003cf8": "ComputeVolumeFalloffPercent",
+        "10003d60": "FixedMul16",
+        "10003dc4": "LerpRect",
+        "10007dc0": "RemoveBettyQueueEntry",
+        "1000fc30": "ApproxLength3_Likely",
+        "1000fe30": "FixedSqrt16",
+        "1000fef4": "NormalizeVec3",
+        "10015b30": "FixedMul29",
+        "1001a060": "FixedMul30",
+        "1001a080": "FixedDot3Shift27",
+        "1001c299": "SetCurrentNode",
+        "1001c303": "AllocAndInsertSortedNode",
+        "1001c5d1": "CreateObjectWithFirstBlock_Likely",
+        "1001c8a3": "FreeHeapBlock",
+        "1001c989": "FreeObjectAndNodeList",
+        "10022aaa": "GetUnitSize",
+        "10025799": "AllocQuadtreeNode",
+        "1002628c": "SetSegmentFromDirection",
+        "1002637d": "EnsureSegmentDirection",
+        "10026815": "RaySlabInterval",
+        "1002b08b": "ClampedAdd1024_Likely",
+        "1002b48b": "SwapOneAndTwo",
+        "1002f010": "CreateTreeNode",
+        "10035980": "FixedDot3Shift29",
+        "1003c190": "IsWithinRadius3_Likely",
+        "1003c92a": "SendMidiPitchBendAndVolume",
+        "1003ca49": "MuteMidiChannel",
+        "100447bf": "ClampSymmetric",
+        "100455b7": "BlitPixelBufferToWindow",
+        "10045873": "SetPaletteRange",
+        "1004639a": "ResumeMciDevice",
+        "100463c4": "StopMciDevice",
+        "100463ee": "PlayMciDeviceFromTo",
+        "10046fc9": "IsWithinBounds_Likely",
+        "10047052": "SetAuxDeviceVolume",
+        "10055b60": "ScaledDiffShift_Likely",
+        "1005ed99": "ReadMouseButtonsAndPosition",
+        "10064d15": "IndexBitWidth_Likely",
+        "10065e40": "ScaleRect",
+        "10065ebf": "MapRectIntoRect",
+        "10065f87": "ScaleRectBare",
+        "10066004": "ScalePoint",
+        "1006604b": "ScaleRectBareBySize",
+        "100660e1": "ScalePointBySize",
+        "10066209": "RectFrom319x199",
+        "10066284": "RectBareFrom319x199",
+        "100662fd": "PointFrom319x199",
+        "100663e5": "ScaleRectAboutCenter",
+        "100668b6": "WordWrapTextInRect_Likely",
+        "10066ec0": "CheckedFixedDiv16",
+        "1006ad3f": "ServiceSoundAndRefillStreams_Likely",
+        "1006c340": "FillBitGroups_Likely",
+        "10070276": "ProcessKeyboardMessages",
+        "10071674": "MirrorBinaryTree",
+        "10072715": "ScaleBy150Or75Percent_Likely",
+        "100821fe": "InitBitmapHeader8Bit",
+        "1008628d": "FindCacheEntry",
+        "10086336": "FreeCacheEntry",
+        "1008668b": "FindOrLoadCacheEntry_Likely",
+        "10086951": "AllocZeroedHeapBlock"
+      },
+      "globals": {
+        "100aafbc": "g_disabled100aafbc_Likely",
+        "100aafc0": "g_disabledBits100aafc0_Likely",
+        "100c9250": "g_bitmapHeader100c9250_Likely"
+      },
+      "parameters": {
+        "10001d0a": {
+          "1": "str1"
+        },
+        "10001e96": {
+          "1": "str1"
+        },
+        "10002110": {
+          "1": "format"
+        },
+        "10002168": {
+          "1": "format"
+        },
+        "10002ba7": {
+          "1": "extraOffset",
+          "3": "soundId_Likely",
+          "4": "sampleData_Likely",
+          "5": "baseFactor_Likely",
+          "6": "fixedScale_Likely",
+          "8": "playbackRate",
+          "10": "acquireWord"
+        },
+        "10002d8f": {
+          "1": "soundId_Likely",
+          "2": "mem",
+          "3": "priorityAndFlags_Likely",
+          "4": "requestedSlot",
+          "5": "busyFlagPtr_Likely"
+        },
+        "100033ce": {
+          "1": "sampleHandle"
+        },
+        "1000389e": {
+          "1": "forceAll"
+        },
+        "10003c3e": {
+          "1": "sampleRecord_Likely"
+        },
+        "10003d60": {
+          "1": "multiplicand",
+          "2": "multiplier"
+        },
+        "10003dc4": {
+          "1": "from",
+          "2": "to",
+          "3": "out",
+          "4": "fraction"
+        },
+        "10007218": {
+          "1": "str"
+        },
+        "100072ef": {
+          "1": "format"
+        },
+        "10007321": {
+          "1": "source"
+        },
+        "10007342": {
+          "1": "format"
+        },
+        "10007dc0": {
+          "1": "queueEntry"
+        },
+        "1000eda8": {
+          "1": "unusedArg1"
+        },
+        "1000fe30": {
+          "1": "value"
+        },
+        "1000fef4": {
+          "1": "vecX",
+          "2": "vecY",
+          "3": "vecZ"
+        },
+        "100108a0": {
+          "2": "format"
+        },
+        "10010bc0": {
+          "1": "str"
+        },
+        "10015b30": {
+          "1": "multiplicand",
+          "2": "multiplier"
+        },
+        "100175e7": {
+          "1": "file"
+        },
+        "1001a060": {
+          "1": "factorA",
+          "2": "factorB"
+        },
+        "1001a080": {
+          "1": "vecA0",
+          "2": "vecB0",
+          "3": "vecA1",
+          "4": "vecB1",
+          "5": "vecA2",
+          "6": "vecB2"
+        },
+        "1001c299": {
+          "1": "nodeList_Likely",
+          "2": "node"
+        },
+        "1001c303": {
+          "1": "ownerObject",
+          "2": "sortKey",
+          "3": "firstAreaEntryCount",
+          "4": "secondAreaEntryCount",
+          "5": "extraByteCount",
+          "6": "tailAreaOut"
+        },
+        "1001c5d1": {
+          "1": "pointCount_Likely",
+          "2": "recordCount_Likely",
+          "3": "indexBytes_Likely",
+          "4": "outValue_Likely"
+        },
+        "1001c8a3": {
+          "1": "mem"
+        },
+        "1001c989": {
+          "1": "mem"
+        },
+        "1001dfc3": {
+          "1": "fileHandle"
+        },
+        "1001e041": {
+          "1": "fileHandle"
+        },
+        "1001e0bf": {
+          "1": "source"
+        },
+        "1001e55a": {
+          "2": "str2"
+        },
+        "10025799": {
+          "1": "bound0Min_Likely",
+          "2": "bound0Max_Likely",
+          "3": "bound1Min_Likely",
+          "4": "bound1Max_Likely",
+          "5": "bound2Min_Likely",
+          "6": "bound2Max_Likely",
+          "7": "entryCount"
+        },
+        "1002587d": {
+          "1": "mem"
+        },
+        "1002628c": {
+          "1": "segment",
+          "8": "length"
+        },
+        "1002637d": {
+          "1": "segment"
+        },
+        "10026815": {
+          "1": "origin",
+          "2": "direction",
+          "3": "slabMin",
+          "4": "slabMax",
+          "5": "tNear",
+          "6": "tFar"
+        },
+        "1002949b": {
+          "1": "ch_Likely"
+        },
+        "1002974a": {
+          "1": "unusedArg1"
+        },
+        "1002977f": {
+          "1": "unusedArg1"
+        },
+        "1002b08b": {
+          "3": "matchSign"
+        },
+        "1002cd49": {
+          "1": "toggleMask"
+        },
+        "1002cd5d": {
+          "1": "mask"
+        },
+        "1002cd87": {
+          "2": "enable"
+        },
+        "1002cdde": {
+          "2": "enable"
+        },
+        "1002f010": {
+          "1": "parentNode",
+          "2": "createFlags"
+        },
+        "1002fe1e": {
+          "1": "mem"
+        },
+        "1002feb2": {
+          "2": "str2"
+        },
+        "10035980": {
+          "1": "vecA0",
+          "2": "vecB0",
+          "3": "vecA1",
+          "4": "vecB1",
+          "5": "vecA2",
+          "6": "vecB2"
+        },
+        "10036b20": {
+          "2": "set"
+        },
+        "10037859": {
+          "1": "wnd",
+          "2": "msg",
+          "3": "wParam",
+          "4": "lParam"
+        },
+        "10037f18": {
+          "1": "str1"
+        },
+        "10037fe6": {
+          "1": "joyID"
+        },
+        "10038f3a": {
+          "3": "dest",
+          "4": "count"
+        },
+        "1003c13a": {
+          "2": "enable"
+        },
+        "1003c190": {
+          "4": "radius_Likely"
+        },
+        "1003c92a": {
+          "1": "pitchBendOffset"
+        },
+        "1003eb7c": {
+          "1": "mem"
+        },
+        "100447bf": {
+          "2": "limit"
+        },
+        "1004563f": {
+          "2": "yDest"
+        },
+        "100456d9": {
+          "1": "xDest"
+        },
+        "10045777": {
+          "1": "xSrc"
+        },
+        "100457f5": {
+          "1": "xSrc"
+        },
+        "10045873": {
+          "1": "firstIndex",
+          "2": "colorCount",
+          "3": "srcColors"
+        },
+        "10045f0f": {
+          "2": "source"
+        },
+        "100463ee": {
+          "1": "fromPosition",
+          "2": "toPosition"
+        },
+        "10046fc9": {
+          "1": "checkedValue"
+        },
+        "10047052": {
+          "1": "volume"
+        },
+        "10047a54": {
+          "2": "buf"
+        },
+        "10047c9e": {
+          "2": "buf"
+        },
+        "10047e21": {
+          "2": "buf"
+        },
+        "10047fde": {
+          "2": "buf"
+        },
+        "1004cf27": {
+          "2": "str2"
+        },
+        "10051e70": {
+          "1": "seed"
+        },
+        "100528ee": {
+          "1": "c"
+        },
+        "10055b60": {
+          "4": "shift"
+        },
+        "1005be24": {
+          "1": "source"
+        },
+        "1005ed99": {
+          "2": "normalizedCursorOut",
+          "3": "buttonMaskOut"
+        },
+        "10064c99": {
+          "1": "filename"
+        },
+        "10064e6a": {
+          "1": "ch"
+        },
+        "10065e40": {
+          "1": "unusedArg1",
+          "2": "source",
+          "3": "out"
+        },
+        "10065ebf": {
+          "1": "frame",
+          "2": "source",
+          "3": "out"
+        },
+        "10065f87": {
+          "1": "unusedArg1",
+          "2": "source",
+          "3": "out"
+        },
+        "10066004": {
+          "1": "unusedArg1",
+          "2": "source",
+          "3": "out"
+        },
+        "1006604b": {
+          "1": "frame",
+          "2": "source",
+          "3": "out"
+        },
+        "100660e1": {
+          "1": "frame",
+          "2": "source",
+          "3": "out"
+        },
+        "10066209": {
+          "1": "source",
+          "2": "out"
+        },
+        "10066284": {
+          "1": "source",
+          "2": "out"
+        },
+        "100662fd": {
+          "1": "source",
+          "2": "out"
+        },
+        "100663e5": {
+          "1": "source",
+          "2": "out",
+          "3": "scaleX",
+          "4": "scaleY"
+        },
+        "100668b6": {
+          "1": "rect",
+          "2": "text",
+          "3": "font_Likely"
+        },
+        "10066ec0": {
+          "1": "divisor",
+          "2": "dividend",
+          "3": "quotient"
+        },
+        "1006a2a5": {
+          "1": "source"
+        },
+        "1006c340": {
+          "1": "flags"
+        },
+        "1006f330": {
+          "1": "bits"
+        },
+        "1006f925": {
+          "1": "xSrc",
+          "2": "ySrc"
+        },
+        "10070276": {
+          "1": "message",
+          "2": "wParam",
+          "3": "lParam"
+        },
+        "10070381": {
+          "1": "code"
+        },
+        "10070ed9": {
+          "1": "filename"
+        },
+        "10070f83": {
+          "2": "str1"
+        },
+        "10071107": {
+          "2": "dstBuf",
+          "3": "count"
+        },
+        "10071674": {
+          "1": "sourceNode"
+        },
+        "10071b60": {
+          "2": "str"
+        },
+        "100728a3": {
+          "2": "str"
+        },
+        "10072b35": {
+          "2": "str"
+        },
+        "10072e03": {
+          "2": "str"
+        },
+        "10073127": {
+          "2": "str"
+        },
+        "10073377": {
+          "2": "str"
+        },
+        "1007b890": {
+          "2": "str2"
+        },
+        "1007bbed": {
+          "3": "source"
+        },
+        "100821fe": {
+          "1": "width",
+          "2": "height"
+        },
+        "1008628d": {
+          "1": "entryId",
+          "2": "fourCharKey"
+        },
+        "10086336": {
+          "1": "mem"
+        },
+        "1008668b": {
+          "2": "entryId",
+          "3": "entryTag_Likely"
+        },
+        "10086951": {
+          "1": "bytes"
+        },
+        "100869d5": {
+          "1": "mem"
+        },
+        "10086a00": {
+          "1": "str2"
+        },
+        "10087076": {
+          "1": "buf",
+          "2": "maxCount",
+          "3": "file"
+        },
+        "10088ec7": {
+          "1": "code"
+        },
+        "1008e260": {
+          "1": "newFlag"
+        },
+        "100989f0": {
+          "1": "controlWord"
+        }
+      },
+      "extents": {
+        "1000278e": [
+          "1000278e-1000279e",
+          "100027a9-10002848"
+        ],
+        "10002849": [
+          "10002849-10002859",
+          "10002864-100028a9",
+          "100028b4-100028ca",
+          "100028d5-100028f0",
+          "100028fb-10002ba6"
+        ],
+        "10002ba7": [
+          "10002ba7-10002c7c",
+          "10002c8a-10002d8e"
+        ],
+        "10002d8f": [
+          "10002d8f-10002dfe",
+          "10002e08-10002ee2",
+          "10002ef1-10002ff5",
+          "10002ffd-100033b9",
+          "100033c9-100033cd"
+        ],
+        "100033ce": [
+          "100033ce-10003544",
+          "10003551-100035a5"
+        ],
+        "1000381c": [
+          "1000381c-1000387c"
+        ],
+        "1000389e": [
+          "1000389e-100038ae",
+          "100038b9-10003903",
+          "1000390e-1000392b",
+          "10003938-1000393c"
+        ],
+        "10003c3e": [
+          "10003c3e-10003c58",
+          "10003c63-10003cf7"
+        ],
+        "10003cf8": [
+          "10003cf8-10003d57"
+        ],
+        "10003d60": [
+          "10003d60-10003d79"
+        ],
+        "10003dc4": [
+          "10003dc4-10003ea1"
+        ],
+        "10007dc0": [
+          "10007dc0-10007e29"
+        ],
+        "1000fc30": [
+          "1000fc30-1000fc80"
+        ],
+        "1000fe30": [
+          "1000fe30-1000fe97",
+          "1000fea2-1000fed7",
+          "1000fee7-1000fef3"
+        ],
+        "1000fef4": [
+          "1000fef4-1000ff6d"
+        ],
+        "10015b30": [
+          "10015b30-10015b49"
+        ],
+        "1001a060": [
+          "1001a060-1001a079"
+        ],
+        "1001a080": [
+          "1001a080-1001a0bd"
+        ],
+        "1001c299": [
+          "1001c299-1001c2ac"
+        ],
+        "1001c303": [
+          "1001c303-1001c477",
+          "1001c482-1001c4b1"
+        ],
+        "1001c5d1": [
+          "1001c5d1-1001c72c"
+        ],
+        "1001c8a3": [
+          "1001c8a3-1001c8ad",
+          "1001c8b8-1001c8ce"
+        ],
+        "1001c989": [
+          "1001c989-1001c9e7"
+        ],
+        "10022aaa": [
+          "10022aaa-10022adb"
+        ],
+        "10025799": [
+          "10025799-1002585c",
+          "10025863-1002587c"
+        ],
+        "1002628c": [
+          "1002628c-1002634d"
+        ],
+        "1002637d": [
+          "1002637d-10026422"
+        ],
+        "10026815": [
+          "10026815-10026949"
+        ],
+        "1002b08b": [
+          "1002b08b-1002b106"
+        ],
+        "1002b48b": [
+          "1002b48b-1002b4ce"
+        ],
+        "1002f010": [
+          "1002f010-1002f0f7",
+          "1002f0ff-1002f13e",
+          "1002f145-1002f199"
+        ],
+        "10035980": [
+          "10035980-100359bd"
+        ],
+        "1003c190": [
+          "1003c190-1003c1ec"
+        ],
+        "1003c92a": [
+          "1003c92a-1003c937",
+          "1003c942-1003c967",
+          "1003c972-1003c9e1"
+        ],
+        "1003ca49": [
+          "1003ca49-1003ca56",
+          "1003ca61-1003ca93"
+        ],
+        "100447bf": [
+          "100447bf-100447fe"
+        ],
+        "100455b7": [
+          "100455b7-1004563e"
+        ],
+        "10045873": [
+          "10045873-100459f7"
+        ],
+        "1004639a": [
+          "1004639a-100463c3"
+        ],
+        "100463c4": [
+          "100463c4-100463ed"
+        ],
+        "100463ee": [
+          "100463ee-1004643a"
+        ],
+        "10046fc9": [
+          "10046fc9-10047002"
+        ],
+        "10047052": [
+          "10047052-100470bd"
+        ],
+        "10055b60": [
+          "10055b60-10055b80"
+        ],
+        "1005ed99": [
+          "1005ed99-1005ef6c",
+          "1005ef74-1005ef9e",
+          "1005efaa-1005efae"
+        ],
+        "10064d15": [
+          "10064d15-10064d4f",
+          "10064d5c-10064d60"
+        ],
+        "10065e40": [
+          "10065e40-10065ebe"
+        ],
+        "10065ebf": [
+          "10065ebf-10065f86"
+        ],
+        "10065f87": [
+          "10065f87-10066003"
+        ],
+        "10066004": [
+          "10066004-1006604a"
+        ],
+        "1006604b": [
+          "1006604b-100660e0"
+        ],
+        "100660e1": [
+          "100660e1-10066144"
+        ],
+        "10066209": [
+          "10066209-10066283"
+        ],
+        "10066284": [
+          "10066284-100662fc"
+        ],
+        "100662fd": [
+          "100662fd-10066341"
+        ],
+        "100663e5": [
+          "100663e5-100664ee"
+        ],
+        "100668b6": [
+          "100668b6-100668d7",
+          "100668e2-100668fa",
+          "10066905-100669ca",
+          "100669d5-100669f1",
+          "100669fc-10066ad8"
+        ],
+        "10066ec0": [
+          "10066ec0-10066f35"
+        ],
+        "1006ad3f": [
+          "1006ad3f-1006adc1",
+          "1006adcc-1006ae38",
+          "1006ae42-1006ae46"
+        ],
+        "1006c340": [
+          "1006c340-1006c374"
+        ],
+        "10070276": [
+          "10070276-10070380"
+        ],
+        "10071674": [
+          "10071674-10071744"
+        ],
+        "10072715": [
+          "10072715-10072796"
+        ],
+        "100821fe": [
+          "100821fe-10082278"
+        ],
+        "1008628d": [
+          "1008628d-10086324",
+          "10086331-10086335"
+        ],
+        "10086336": [
+          "10086336-1008634a",
+          "10086355-100864b2",
+          "100864ba-100864d6"
+        ],
+        "1008668b": [
+          "1008668b-1008689b"
+        ],
+        "10086951": [
+          "10086951-10086972"
+        ]
+      }
+    },
+    "mw2shell": {
+      "dll": "MW2SHELL.DLL",
+      "functions": {
+        "10009840": "LookUpNameByThreeCharCode_Likely",
+        "1000a030": "CopyBytesReturnSourceEnd",
+        "1000a060": "ForwardStringIfCharsMatch",
+        "1000a120": "RoundUpTo100_Likely",
+        "1000a140": "TruncateTo100",
+        "1000a160": "RoundToNearest100_Likely",
+        "1000a5d0": "ComputeTotalAndRemainder",
+        "1000a6e0": "DoNothing",
+        "1000a790": "SetFieldsFromCodeTableRow",
+        "1000a800": "CapCountAndComputeTieredTotal",
+        "1000a8c0": "SumTableValueOverUsedSlots",
+        "1000aa80": "SumHundredPerUsedSlot_Likely",
+        "1000ad30": "FindListEntryByKey_Likely",
+        "1000b7f0": "ReserveUnusedNumberInFreeSlot",
+        "1000b8f0": "FindValueInTableList",
+        "1000b940": "ProbeEightIndicesUntilHit",
+        "1000be10": "IncrementGlobalCounter",
+        "1000be30": "DuplicateRecordOnHeap",
+        "1000be60": "RenumberWithLowestUnusedNumber",
+        "1000c4a0": "SubtractMethodResultFromValue",
+        "1000c4c0": "CenterTextAtX_Likely",
+        "1000c4e0": "FormatNumberWithCommas",
+        "1000c990": "ResetListsAndProcessEntries_Likely",
+        "1000cd20": "CountDistinctEntryKeys_Likely",
+        "1000cf60": "ReadMw2rmgCfg",
+        "1000cfe0": "MultiplyBy625",
+        "1000d230": "ClassifyIdByRange_Likely",
+        "1000d260": "MapIdToIndexByKind_Likely",
+        "1000d3d0": "SkipFirstWordIfOverLimit_Likely",
+        "1000d4e0": "IsTotalAtLeastMinScaledValue_Likely",
+        "1000d650": "LookUpValueByThreeCharCode",
+        "1000dee0": "CreateDIBSectionOrSetColorTable",
+        "1000df80": "BlitBufferToScreen_Likely",
+        "1000e1a0": "SetPaletteRangeAndRealize",
+        "1000e330": "CaptureSystemPaletteStaticColors",
+        "1000e6d0": "BuildSmkFilePath",
+        "1000eb90": "CloseSmackerFileIfOpen",
+        "1000f110": "IsSlotHighBitSetBit0Clear",
+        "1000f170": "AreGlobalBits31And12Set",
+        "1000f290": "CloseSmackerSlot",
+        "1000f360": "ApplyToAll32Slots",
+        "1000f6d0": "OpenSmackerSlot_Likely",
+        "1000f8d0": "DispatchFirstQueuedEntry_Likely",
+        "1000fce0": "LoadMercLordsTable_Likely",
+        "100107a0": "GetOrOpenWaveOutDriver",
+        "10010820": "CloseWaveOutDriver",
+        "10010890": "AppendSampleToOwnerCollection_Likely",
+        "100108d0": "EmptyItemCollection_Likely",
+        "10010930": "GetGlobalVolumeScale_Likely",
+        "10010bc0": "ConstructSampleFromFileImage_Likely",
+        "10010c80": "ReleaseSample",
+        "10010d60": "SetSampleToLoopForever",
+        "10010d80": "StartSample",
+        "10010db0": "WaitForSampleToFinish_Likely",
+        "10010de0": "StopSample",
+        "10010e00": "IsSamplePlaying",
+        "10010e30": "SetSampleVolume",
+        "10010e80": "SetSampleLoopCount",
+        "100115c0": "ReturnOne",
+        "10011670": "PadFileToFourByteBoundary_Likely",
+        "100116b0": "ZeroSeventeenGlobals",
+        "10011d20": "SetOneObjectPerTripleByIndex_Likely",
+        "10012470": "ExpandRectToInclude",
+        "100125f0": "CallTableEntry5WithObjectFields",
+        "10012830": "FlushPendingUpdates_Likely",
+        "10012940": "CopyTableToBuffer",
+        "10012960": "Store768ByteBlockAndFlag",
+        "10012c30": "ForwardSegmentToCallees_Likely",
+        "10012ca0": "PassBlockAtPosition_Likely",
+        "10012d40": "PassBlockAtPositionIfAllowed_Likely",
+        "10013100": "CallGatedBetweenPrePostCalls_Likely",
+        "10013180": "DrawTextString_Likely",
+        "10013330": "AppendToOneOfTwoCollections",
+        "10013360": "ForwardIntToMemberPair",
+        "10013380": "CallOnMemberWithGlobalFlagSet",
+        "100133b0": "ForwardCharToMemberPair",
+        "100133d0": "ZeroFillRectIfTableCallIsZero",
+        "10016620": "EnableMenuCommands_Likely",
+        "100166c0": "GrayMenuCommands_Likely",
+        "10016b50": "SetGlobalCallback_Likely",
+        "10016b60": "UnregisterScreenFunction",
+        "10016c90": "SetGlobalValue",
+        "10016ca0": "UnregisterMenuFunction_Likely",
+        "10016cd0": "InvokeGlobalCallbackWithZero",
+        "10017b70": "GenerateBwdChunkRevNumber",
+        "10017c90": "CreateCollection",
+        "10017d70": "DestroyCollection",
+        "10017df0": "AppendToCollection",
+        "10017ec0": "RemoveCollectionItem",
+        "10017f30": "FindCollectionItemIndex",
+        "10018020": "SortEntriesIfDirty_Likely",
+        "10018060": "GetCollectionItemAt",
+        "100180f0": "ClearCollection",
+        "1001a730": "LoadUserAndEnStarFiles_Likely",
+        "1001ace0": "ReplaceCurrentObjectFromString_Likely",
+        "1001add0": "SetTableEntriesFromSixRecords_Likely",
+        "1001b680": "StepSetupSelection_Likely",
+        "1001baa0": "ListMekVariantNames_Likely",
+        "1001c310": "ZeroTenGlobals",
+        "1001e600": "AppendToHeldCollection",
+        "1001e620": "CallSecondIfFirstNonNegative",
+        "1001e650": "EmptyCollectionFromLast_Likely",
+        "1001e6b0": "CallOnEachCollectionItem",
+        "1002fea0": "ComputeSlotGridDifferenceScore_Likely",
+        "10032fc0": "ResetGlobalState",
+        "10033e80": "RebuildListKeepingRowKey_Likely",
+        "10033f40": "BuildCountedListRows_Likely",
+        "100361a0": "MarkTableEntryUnset_Likely",
+        "100361e0": "SelectTableAndSetFields",
+        "10036260": "CallWithFixedGlobalArgs",
+        "10036280": "LoadUserAndEnStarFilesWithGlobals_Likely",
+        "10036390": "ForwardIfFieldNonNegative",
+        "10036460": "ForwardUnlessSentinelValue",
+        "100364f0": "CallUnlessSentinelValue",
+        "10036510": "CallThenForwardResult",
+        "10036660": "AppendBytesToBuffer",
+        "10036780": "ReadFileIntoGlobalBuffer",
+        "10037c90": "HandleEachMerMekFile",
+        "10037ce0": "HandleEachBwdFile",
+        "10037d30": "HandleUserstarBwdFile",
+        "10037d40": "ProcessMw2LogoCelFiles0To9_Likely",
+        "10037fc0": "ParsePiltDssrChunks",
+        "1003a5c0": "CallSameMethodWith10And11_Likely",
+        "1003a640": "ZeroTenGlobalsSetOneToMinusOne",
+        "10040640": "ResetEntryState_Likely",
+        "10040680": "FreeHeapBlockAtField19",
+        "100421c0": "AppendNodeToListTail",
+        "10042210": "UnlinkNodeFromList",
+        "10042370": "FindHashEntryByKey",
+        "100423d0": "RemoveHashEntry",
+        "10042590": "FindEntryAndAppendToListTail",
+        "100425b0": "LoadCachedDataByIdAndType",
+        "10042730": "RemoveHashEntryByKey",
+        "10050390": "InitRecordFromTable",
+        "100503d0": "InitRecordFromTable_Likely",
+        "10050490": "GetFieldAtOffset4",
+        "10050b20": "MeasureTextWidth_Likely",
+        "10050d90": "ForwardTextToInnerObject",
+        "10051650": "ReturnOne",
+        "10053cf0": "FlagKeyboardAndReferencedSlots",
+        "10053df0": "RemapEntryIndicesByName_Likely",
+        "10053fc0": "ResetConfigRecord_Likely",
+        "10054000": "ResetConfigRecordTable_Likely",
+        "10054270": "LoadCpcConfigFile",
+        "10054680": "SetUpCockpitControl_Likely",
+        "10054ef0": "GetDatabaseItemOneBased_Likely",
+        "10054f20": "GetPackDatabaseItem",
+        "10054fe0": "GetPackDataBaseItem",
+        "10055b10": "GetFieldAt0x10",
+        "10055b20": "GetDwordAtOffset14",
+        "10055bf0": "PollMouseInput",
+        "10055d60": "ForwardFieldAt0x4",
+        "10056bb0": "IsPointInsideRect",
+        "10056be0": "RollRandomNumber_Likely",
+        "10056c20": "OffsetBoxCoords_Likely",
+        "10056c60": "SwapArrayEntries",
+        "10056c80": "CopyFileInChunks",
+        "10056dd0": "WriteMechGroupSpecs_Likely",
+        "10057200": "PickEntryFromFourTables_Likely",
+        "10057440": "FormatNumberWithCommas",
+        "10057530": "LoadLogoCelIntoBuffer_Likely",
+        "100575d0": "EnumerateInputDevices_Likely",
+        "100576a0": "EntryAddress120_Likely",
+        "100576d0": "FreeCockpitControlEntries_Likely",
+        "100578d0": "GrowRecordArray_Likely",
+        "10059f10": "ReadFileInChunks",
+        "1005a230": "FindEntryByTag",
+        "1005a3c0": "GetEntryItemValueMinusBase_Likely",
+        "1005a570": "TransferEntryItemViaFile_Likely",
+        "1005aaf0": "ReadMw2SndCfgFile",
+        "1005ab30": "ReadMw2DifCfgFile",
+        "1005af20": "LookUpTableIdGatedByMode_Likely",
+        "1005b1b0": "ShowMessageDialog",
+        "1005b430": "InitTagsAndAllocChunkBuffer",
+        "1005b5f0": "ReturnRecordCountOfOne_Likely",
+        "1005b600": "FillKeyboardEntryRecord_Likely",
+        "1005b6c0": "PopQueuedKey_Likely",
+        "1005b710": "PumpOneKeyMessageThenReset_Likely",
+        "1005ba70": "PollNextKey_Likely",
+        "1005bb20": "AllocateStringCopy",
+        "1005bbb0": "UppercaseStringInPlace",
+        "1005bc00": "SetChoiceDescriptionText_Likely",
+        "1005e020": "FindEntryValueByName",
+        "1005e170": "AppendInclRecord",
+        "1005e200": "AppendBlkxChunk_Likely",
+        "1005e290": "AppendHundredByteRecord_Likely",
+        "1005e400": "AppendFixedSizeTaggedRecord",
+        "1005e4f0": "WriteBlockBeginRecord",
+        "1005e5c0": "WriteBlockEndTag",
+        "1005e670": "AllocateBuffersAndBeginBwd_Likely",
+        "1005e6f0": "EndBwdAndWriteFile",
+        "1005e7f0": "AppendTaggedStringRecord",
+        "1005e870": "AppendTaggedTwoStringRecordHeader_Likely",
+        "1005e910": "AppendTaggedStringRecord",
+        "1005ed50": "AppendToOwnerCollection_Likely",
+        "1005ed70": "ForwardFirstFieldAndArg",
+        "1005ee60": "InitObjectFromString_Likely",
+        "1005efc0": "DoSmackFrameOnceAndTrackChange_Likely",
+        "1005f410": "LoadSmkShpFile",
+        "1005f530": "OpenNamedSmackerFile",
+        "1005f6d0": "SetFlagsUnderMask",
+        "1005f810": "ClearFlag20AndSetFlag100",
+        "1005f8c0": "TestSmackerObjectFlags_Likely",
+        "1005f900": "RunPendingCallback_Likely",
+        "10063de0": "RebuildEntryObjects",
+        "10063ea0": "FreeEntryObjects_Likely",
+        "10063ee0": "ClearAllEntryFlags",
+        "10063f40": "FindFirstEntryWithPositiveField11",
+        "10063f70": "FindEntryContainingPoint",
+        "10064100": "CallPointerFuncAndZeroFirstField",
+        "10064160": "FetchCharCodeAndCheckEscape_Likely",
+        "100648b0": "FindLastMatchingFlaggedEntryValue",
+        "10064af0": "ClearFlaggedEntriesWithKey_Likely",
+        "10064b60": "InitFieldsAndAllocSubBlock_Likely",
+        "10064c50": "ReleaseObjectsAt1CAnd20_Likely",
+        "10064d50": "InitFourFields",
+        "10064e00": "IsPairWithinBounds",
+        "10065b64": "DrawRleImageClipped",
+        "10065f68": "DrawRleImageUnclipped",
+        "10067a14": "FillClampedRectWithByte",
+        "10067af3": "BlitOrFillClippedRect",
+        "10069697": "GetCharWidth_Likely",
+        "100696b7": "DrawCharGlyph_Likely",
+        "1006984a": "DrawTextString_Likely",
+        "10069881": "WriteClippedRow",
+        "10069bf7": "DecodeRleImageToTarget",
+        "10069c79": "CopyLast768BytesShiftedRight2_Likely",
+        "1006a0e7": "ReadShpEntryFirstDword_Likely",
+        "1006a267": "GetShpEntryCount_Likely"
+      },
+      "globals": {
+        "100a3664": "g_entries100a3664_Likely",
+        "100a71e0": "g_callbackPending_Likely",
+        "100a71e4": "g_pendingCallback"
+      },
+      "parameters": {
+        "10009840": {
+          "1": "source"
+        },
+        "100098d0": {
+          "1": "matchValue"
+        },
+        "10009e80": {
+          "1": "str"
+        },
+        "1000a030": {
+          "1": "dest",
+          "2": "source",
+          "3": "byteCount"
+        },
+        "1000a060": {
+          "1": "text"
+        },
+        "1000a120": {
+          "1": "value"
+        },
+        "1000a140": {
+          "1": "value"
+        },
+        "1000a160": {
+          "1": "value"
+        },
+        "1000a5d0": {
+          "1": "recordBase"
+        },
+        "1000a690": {
+          "1": "recordBase"
+        },
+        "1000a6f0": {
+          "1": "record"
+        },
+        "1000a790": {
+          "1": "record"
+        },
+        "1000a800": {
+          "1": "record"
+        },
+        "1000a890": {
+          "1": "record_Likely"
+        },
+        "1000a8c0": {
+          "1": "record"
+        },
+        "1000aa80": {
+          "1": "record"
+        },
+        "1000ad30": {
+          "1": "collection",
+          "2": "searchKey"
+        },
+        "1000ae80": {
+          "1": "source"
+        },
+        "1000b7f0": {
+          "1": "record",
+          "2": "baseNumber_Likely"
+        },
+        "1000b8f0": {
+          "2": "searchValue",
+          "3": "listIndex",
+          "4": "positionOut"
+        },
+        "1000b940": {
+          "3": "foundIndexOut",
+          "4": "calleeValueOut"
+        },
+        "1000be30": {
+          "1": "source"
+        },
+        "1000be60": {
+          "1": "record",
+          "2": "collection"
+        },
+        "1000bf40": {
+          "1": "source"
+        },
+        "1000c4a0": {
+          "1": "methodObject",
+          "2": "baseValue",
+          "3": "methodString"
+        },
+        "1000c4c0": {
+          "2": "centerX_Likely",
+          "3": "text"
+        },
+        "1000c4e0": {
+          "1": "value",
+          "2": "outBuffer"
+        },
+        "1000cd20": {
+          "1": "collection"
+        },
+        "1000cf60": {
+          "1": "dstBuf"
+        },
+        "1000cfa0": {
+          "1": "dstBuf"
+        },
+        "1000cfe0": {
+          "1": "value"
+        },
+        "1000d230": {
+          "1": "id_Likely"
+        },
+        "1000d260": {
+          "2": "id_Likely"
+        },
+        "1000d3d0": {
+          "1": "text",
+          "2": "widthMeasurer_Likely",
+          "3": "maxWidth_Likely"
+        },
+        "1000d650": {
+          "1": "recordBase"
+        },
+        "1000e070": {
+          "1": "x"
+        },
+        "1000e150": {
+          "1": "x1",
+          "2": "y1",
+          "3": "x2"
+        },
+        "1000e1a0": {
+          "1": "firstIndex",
+          "2": "entryCount",
+          "3": "sourceColors",
+          "4": "updateAllEntries_Likely"
+        },
+        "1000e6d0": {
+          "1": "smkName"
+        },
+        "1000e8f0": {
+          "1": "entryName_Likely",
+          "2": "msg",
+          "3": "wParam"
+        },
+        "1000e970": {
+          "1": "entryName",
+          "2": "msg",
+          "3": "wParam"
+        },
+        "1000eb90": {
+          "1": "smackHandlePtr"
+        },
+        "1000f110": {
+          "1": "slotIndex"
+        },
+        "1000f290": {
+          "1": "slotIndex"
+        },
+        "1000f6d0": {
+          "1": "slotIndex",
+          "5": "extraFlags",
+          "6": "ratePerSecond_Likely"
+        },
+        "100107a0": {
+          "1": "soundDriverRecord_Likely"
+        },
+        "10010820": {
+          "1": "driverOwner_Likely"
+        },
+        "10010890": {
+          "1": "sampleOwner_Likely",
+          "2": "sample_Likely"
+        },
+        "100108b0": {
+          "2": "sample_Likely"
+        },
+        "100108d0": {
+          "1": "collectionOwner"
+        },
+        "10010ae0": {
+          "1": "sample",
+          "2": "sampleOwner_Likely",
+          "3": "packDatabase"
+        },
+        "10010bc0": {
+          "1": "sampleObject_Likely",
+          "2": "driverOwner_Likely",
+          "3": "fileImage"
+        },
+        "10010c80": {
+          "1": "sample"
+        },
+        "10010d60": {
+          "1": "sample"
+        },
+        "10010d80": {
+          "1": "sample"
+        },
+        "10010db0": {
+          "1": "sampleObject_Likely"
+        },
+        "10010de0": {
+          "1": "sampleObject"
+        },
+        "10010e00": {
+          "1": "sampleObject_Likely"
+        },
+        "10010e30": {
+          "1": "sampleObject_Likely",
+          "2": "volume"
+        },
+        "10010e80": {
+          "1": "sampleObject",
+          "2": "loopCount"
+        },
+        "10011260": {
+          "1": "file"
+        },
+        "100115d0": {
+          "1": "file"
+        },
+        "10011670": {
+          "1": "file"
+        },
+        "10012470": {
+          "1": "boundsOwner"
+        },
+        "100124d0": {
+          "2": "left",
+          "3": "top",
+          "4": "width",
+          "5": "height"
+        },
+        "10012590": {
+          "1": "boundsOwner_Likely",
+          "2": "rectX_Likely",
+          "3": "rectY_Likely",
+          "4": "rectWidth_Likely",
+          "5": "rectHeight_Likely"
+        },
+        "100125f0": {
+          "1": "objectBase_Likely"
+        },
+        "10012620": {
+          "1": "rectOwner_Likely"
+        },
+        "10012940": {
+          "1": "tableOwner",
+          "2": "destBuffer"
+        },
+        "10012960": {
+          "1": "blockOwner_Likely",
+          "2": "srcBlock",
+          "3": "storedValue"
+        },
+        "10012c30": {
+          "2": "startX_Likely",
+          "3": "startY_Likely",
+          "4": "endX_Likely",
+          "5": "endY_Likely"
+        },
+        "10012ca0": {
+          "3": "posX_Likely",
+          "4": "posY_Likely",
+          "5": "width_Likely",
+          "6": "height_Likely"
+        },
+        "10012d40": {
+          "3": "posX_Likely",
+          "4": "posY_Likely",
+          "5": "width_Likely",
+          "6": "height_Likely"
+        },
+        "10012f10": {
+          "1": "bufferOwner_Likely",
+          "2": "x_Likely",
+          "3": "y_Likely"
+        },
+        "10012fe0": {
+          "1": "destObject",
+          "2": "blockId_Likely"
+        },
+        "10013180": {
+          "1": "bufferOwner_Likely",
+          "2": "x_Likely",
+          "3": "y_Likely",
+          "4": "font_Likely",
+          "5": "text"
+        },
+        "10013330": {
+          "1": "collectionOwner",
+          "2": "item",
+          "3": "useFirstCollection"
+        },
+        "10013360": {
+          "1": "pairHolder",
+          "2": "parentObject_Likely"
+        },
+        "10013380": {
+          "2": "memberSelector"
+        },
+        "100133b0": {
+          "1": "pairHolder",
+          "2": "forwardedChar"
+        },
+        "100133d0": {
+          "1": "rectHolder"
+        },
+        "10014570": {
+          "1": "wnd",
+          "2": "msg",
+          "3": "wParam",
+          "4": "lParam"
+        },
+        "10015aa0": {
+          "3": "str"
+        },
+        "10016590": {
+          "1": "str"
+        },
+        "10016620": {
+          "1": "menu"
+        },
+        "100166c0": {
+          "1": "menu"
+        },
+        "10016b50": {
+          "1": "callback_Likely"
+        },
+        "10016b60": {
+          "1": "screenFunction_Likely"
+        },
+        "10016c90": {
+          "1": "newValue"
+        },
+        "10016ca0": {
+          "1": "menuFunctionPtr_Likely"
+        },
+        "10017a40": {
+          "2": "str1"
+        },
+        "10017c90": {
+          "1": "collectionOut",
+          "2": "capacity",
+          "5": "callbackFn_Likely"
+        },
+        "10017d70": {
+          "1": "mem"
+        },
+        "10017df0": {
+          "1": "collection",
+          "2": "item"
+        },
+        "10017ec0": {
+          "1": "collection",
+          "2": "item",
+          "3": "invokeItemCallback"
+        },
+        "10017f30": {
+          "1": "itemList",
+          "2": "searchKey"
+        },
+        "10018020": {
+          "1": "entryList_Likely"
+        },
+        "10018060": {
+          "1": "collection",
+          "2": "index"
+        },
+        "100180f0": {
+          "1": "collection",
+          "2": "runItemCallback"
+        },
+        "1001a730": {
+          "1": "userRecordCount_Likely",
+          "2": "userRecords_Likely",
+          "3": "enRecordCount_Likely",
+          "4": "enRecords_Likely"
+        },
+        "1001ace0": {
+          "1": "sourceText"
+        },
+        "1001b680": {
+          "1": "selectionRecord_Likely",
+          "2": "indexStep",
+          "3": "positionStep"
+        },
+        "1001baa0": {
+          "1": "baseName",
+          "2": "countIndex"
+        },
+        "1001e600": {
+          "1": "collectionHolder",
+          "2": "item"
+        },
+        "1001e650": {
+          "1": "collectionHolder_Likely"
+        },
+        "1001e6b0": {
+          "1": "collectionHolder_Likely"
+        },
+        "1002fea0": {
+          "1": "firstRecord_Likely",
+          "2": "secondRecord_Likely"
+        },
+        "10033e80": {
+          "1": "listSource_Likely"
+        },
+        "10033f40": {
+          "1": "collection"
+        },
+        "10035f30": {
+          "1": "slotIndex",
+          "2": "keyText",
+          "3": "firstText",
+          "4": "secondText"
+        },
+        "100361a0": {
+          "1": "entryIndex"
+        },
+        "100361e0": {
+          "1": "tableIndex",
+          "3": "entryCount_Likely"
+        },
+        "10036390": {
+          "1": "gateObject",
+          "2": "forwardedString",
+          "3": "forwardedValue"
+        },
+        "10036460": {
+          "1": "sourceObject",
+          "2": "checkedValue",
+          "3": "forwardedPointer"
+        },
+        "100364f0": {
+          "1": "priorCallResult",
+          "2": "forwardedPointer"
+        },
+        "10036510": {
+          "1": "globalObject_Likely",
+          "2": "forwardedString",
+          "3": "forwardedValue",
+          "4": "forwardedPointer"
+        },
+        "10036660": {
+          "1": "sourceData",
+          "2": "byteCount"
+        },
+        "10036780": {
+          "1": "fileName"
+        },
+        "10037fc0": {
+          "1": "chunkBuffer"
+        },
+        "10038710": {
+          "1": "str1"
+        },
+        "10039270": {
+          "1": "mode_Likely"
+        },
+        "1003b570": {
+          "1": "index_Likely"
+        },
+        "1003ddc0": {
+          "1": "str2"
+        },
+        "1003fbf0": {
+          "3": "dest",
+          "4": "count"
+        },
+        "100402b0": {
+          "1": "textObject_Likely"
+        },
+        "10040640": {
+          "1": "objectBase"
+        },
+        "10040680": {
+          "1": "ownerObject"
+        },
+        "100421c0": {
+          "1": "listNode"
+        },
+        "10042210": {
+          "1": "listNode"
+        },
+        "10042370": {
+          "1": "entryId",
+          "2": "keyBytes"
+        },
+        "100423d0": {
+          "1": "entry"
+        },
+        "10042590": {
+          "1": "lookupId_Likely",
+          "2": "lookupKeyPtr_Likely"
+        },
+        "100425b0": {
+          "2": "dataId",
+          "3": "typeTag"
+        },
+        "10042730": {
+          "1": "lookupId_Likely",
+          "2": "lookupKeyPtr_Likely"
+        },
+        "1004eb30": {
+          "1": "msg"
+        },
+        "1004f1e0": {
+          "1": "str"
+        },
+        "1004f2c0": {
+          "1": "format"
+        },
+        "10050390": {
+          "1": "record"
+        },
+        "100503d0": {
+          "1": "record"
+        },
+        "10050490": {
+          "1": "collectionItem_Likely"
+        },
+        "10050b20": {
+          "1": "font_Likely",
+          "2": "text"
+        },
+        "10050d90": {
+          "4": "text"
+        },
+        "10053590": {
+          "2": "str1"
+        },
+        "10053df0": {
+          "1": "cpcRecordTable_Likely"
+        },
+        "10053fc0": {
+          "1": "recordIndex_Likely",
+          "2": "record"
+        },
+        "10054ef0": {
+          "1": "container",
+          "2": "oneBasedIndex"
+        },
+        "10054f20": {
+          "1": "packDatabase",
+          "3": "outBuffer",
+          "4": "outSize"
+        },
+        "10054fe0": {
+          "1": "packDataBase_Likely",
+          "2": "itemKey_Likely",
+          "3": "outBuffer",
+          "4": "outSize"
+        },
+        "10055610": {
+          "6": "str1"
+        },
+        "10055b10": {
+          "1": "obj"
+        },
+        "10055b20": {
+          "1": "recordPtr"
+        },
+        "10055bf0": {
+          "1": "mouseState"
+        },
+        "10055d60": {
+          "1": "obj"
+        },
+        "10056ad0": {
+          "1": "sizeRecord_Likely",
+          "2": "boundBox_Likely",
+          "3": "movingBox_Likely"
+        },
+        "10056bb0": {
+          "1": "rect"
+        },
+        "10056c20": {
+          "1": "box"
+        },
+        "10056c60": {
+          "1": "firstIndex",
+          "2": "secondIndex",
+          "3": "arrayBase"
+        },
+        "10056c80": {
+          "1": "inputFileName",
+          "2": "outputFileName"
+        },
+        "10056dd0": {
+          "1": "groupCount",
+          "2": "recordPtr",
+          "3": "prefixString",
+          "4": "totalEntryCount"
+        },
+        "10057200": {
+          "2": "outEntryIndex"
+        },
+        "10057440": {
+          "1": "number_Likely",
+          "2": "outBuffer"
+        },
+        "10057530": {
+          "1": "recordIndex",
+          "2": "logoNumber"
+        },
+        "100575d0": {
+          "1": "forceRelist"
+        },
+        "100576a0": {
+          "1": "index"
+        },
+        "10059f10": {
+          "1": "fileHandle",
+          "2": "destBuffer",
+          "3": "byteCount"
+        },
+        "10059f60": {
+          "1": "source"
+        },
+        "1005a230": {
+          "1": "slotIndex",
+          "2": "str2"
+        },
+        "1005a3c0": {
+          "1": "slotIndex",
+          "2": "entryName_Likely",
+          "3": "itemIndex"
+        },
+        "1005a570": {
+          "1": "slotIndex",
+          "2": "entryName_Likely",
+          "3": "itemIndex",
+          "4": "dataBuffer_Likely"
+        },
+        "1005b1b0": {
+          "1": "messageText"
+        },
+        "1005b600": {
+          "2": "keyboardEntry"
+        },
+        "1005b6c0": {
+          "1": "outKey_Likely"
+        },
+        "1005b830": {
+          "1": "code"
+        },
+        "1005bae0": {
+          "1": "file"
+        },
+        "1005bb20": {
+          "1": "source"
+        },
+        "1005bbb0": {
+          "1": "text"
+        },
+        "1005bc00": {
+          "1": "choiceIndex"
+        },
+        "1005e020": {
+          "1": "tableKey_Likely",
+          "2": "str2"
+        },
+        "1005e170": {
+          "1": "recordText",
+          "2": "recordWord"
+        },
+        "1005e290": {
+          "2": "source",
+          "3": "source",
+          "4": "source",
+          "6": "source"
+        },
+        "1005e400": {
+          "1": "firstPayloadDword",
+          "2": "secondPayloadDword",
+          "3": "thirdPayloadDword",
+          "6": "firstPayloadShort",
+          "7": "secondPayloadShort",
+          "8": "thirdPayloadShort",
+          "9": "fourthPayloadShort",
+          "10": "fifthPayloadShort",
+          "11": "sixthPayloadShort",
+          "12": "source"
+        },
+        "1005e4f0": {
+          "1": "blockValue1",
+          "2": "blockValue2",
+          "3": "blockValue3",
+          "4": "blockValue4",
+          "5": "blockValue5",
+          "6": "blockValue6"
+        },
+        "1005e6f0": {
+          "1": "bwdFileName"
+        },
+        "1005e7f0": {
+          "1": "sourceString"
+        },
+        "1005e870": {
+          "1": "firstString",
+          "2": "secondString",
+          "3": "extraByteCount"
+        },
+        "1005e910": {
+          "1": "sourceString"
+        },
+        "1005ed50": {
+          "1": "collectionHolder",
+          "2": "item"
+        },
+        "1005ed70": {
+          "1": "object",
+          "2": "forwardedArg"
+        },
+        "1005ed90": {
+          "1": "collectionHolder"
+        },
+        "1005ee60": {
+          "1": "object",
+          "2": "sourceString",
+          "5": "flags"
+        },
+        "1005efc0": {
+          "1": "smackObject_Likely"
+        },
+        "1005f410": {
+          "1": "shpObject_Likely",
+          "2": "usePathPrefix"
+        },
+        "1005f530": {
+          "1": "smackerObject",
+          "2": "usePathPrefix"
+        },
+        "1005f6d0": {
+          "1": "flagsOwner",
+          "2": "mask",
+          "3": "bits"
+        },
+        "1005f7d0": {
+          "1": "indexedObject",
+          "2": "newIndex"
+        },
+        "1005f810": {
+          "1": "flagObject_Likely"
+        },
+        "1005f890": {
+          "1": "targetObject"
+        },
+        "1005f8c0": {
+          "1": "flagsOwner",
+          "2": "flagMask"
+        },
+        "10060010": {
+          "1": "width",
+          "2": "height"
+        },
+        "10063d30": {
+          "1": "entry"
+        },
+        "10063de0": {
+          "1": "entryTable"
+        },
+        "10063ea0": {
+          "1": "entry"
+        },
+        "10063ee0": {
+          "1": "entryCursor"
+        },
+        "10063f40": {
+          "1": "entry"
+        },
+        "10063f70": {
+          "1": "entry",
+          "2": "pointX_Likely",
+          "3": "pointY_Likely"
+        },
+        "100640a0": {
+          "1": "format"
+        },
+        "10064100": {
+          "1": "object_Likely"
+        },
+        "10064160": {
+          "1": "codeRecord"
+        },
+        "10064780": {
+          "1": "collectionSlot"
+        },
+        "100648b0": {
+          "1": "listOwner_Likely",
+          "2": "testArg1",
+          "3": "testArg2"
+        },
+        "10064af0": {
+          "1": "listOwner_Likely",
+          "2": "entryKey"
+        },
+        "10064b60": {
+          "1": "object",
+          "2": "blockInitArg1",
+          "3": "blockInitArg2",
+          "4": "blockInitArg3",
+          "5": "blockInitArg4",
+          "6": "field24Value",
+          "7": "field28Flag_Likely",
+          "8": "flaggedCallArg",
+          "9": "field10Value",
+          "10": "field0Value",
+          "11": "field4Value",
+          "12": "field8Value",
+          "13": "field14Value",
+          "14": "field29Byte",
+          "15": "field2AValue"
+        },
+        "10064c50": {
+          "1": "owner"
+        },
+        "10064d50": {
+          "1": "object",
+          "2": "field0Value",
+          "3": "field4Value",
+          "4": "field8Value",
+          "5": "fieldCValue"
+        },
+        "10064e00": {
+          "1": "bounds",
+          "2": "firstValue",
+          "3": "secondValue"
+        },
+        "10065b64": {
+          "1": "clipTarget",
+          "2": "imageTable",
+          "3": "imageIndex",
+          "4": "drawX",
+          "5": "drawY"
+        },
+        "10065f68": {
+          "1": "destSurface_Likely",
+          "2": "rleImage",
+          "3": "destX",
+          "4": "destY"
+        },
+        "10067a14": {
+          "1": "destSurface_Likely",
+          "2": "fillByte"
+        },
+        "10067af3": {
+          "1": "srcView",
+          "2": "srcX",
+          "3": "srcY",
+          "4": "dstView",
+          "5": "dstX",
+          "6": "dstY",
+          "7": "fillValue"
+        },
+        "10069697": {
+          "1": "font_Likely",
+          "2": "charCode"
+        },
+        "100696b7": {
+          "1": "destSurface_Likely",
+          "2": "destX",
+          "3": "destY",
+          "4": "fontRecord_Likely",
+          "5": "charCode_Likely",
+          "6": "remapTable"
+        },
+        "1006984a": {
+          "1": "drawTarget_Likely",
+          "2": "destX_Likely",
+          "3": "destY_Likely",
+          "4": "font_Likely",
+          "5": "text"
+        },
+        "10069881": {
+          "1": "dstView",
+          "2": "rowIndex",
+          "3": "srcBytes",
+          "4": "byteCount"
+        },
+        "10069bf7": {
+          "1": "drawTarget_Likely",
+          "2": "imageData"
+        },
+        "10069c79": {
+          "1": "srcBuffer",
+          "2": "srcSize_Likely",
+          "3": "destBuffer"
+        },
+        "1006a0e7": {
+          "1": "shpData_Likely",
+          "2": "entryIndex"
+        },
+        "1006a267": {
+          "1": "shpData_Likely"
+        },
+        "1006a850": {
+          "1": "bits"
+        },
+        "1006c210": {
+          "2": "msg"
+        },
+        "10077490": {
+          "1": "controlWord"
+        },
+        "10079b60": {
+          "1": "aLow",
+          "2": "aHigh",
+          "3": "bLow",
+          "4": "bHigh"
+        }
+      },
+      "extents": {
+        "10009840": [
+          "10009840-100098cd"
+        ],
+        "1000a030": [
+          "1000a030-1000a052"
+        ],
+        "1000a060": [
+          "1000a060-1000a090"
+        ],
+        "1000a120": [
+          "1000a120-1000a13d"
+        ],
+        "1000a140": [
+          "1000a140-1000a154"
+        ],
+        "1000a160": [
+          "1000a160-1000a170"
+        ],
+        "1000a5d0": [
+          "1000a5d0-1000a687"
+        ],
+        "1000a6e0": [
+          "1000a6e0-1000a6e0"
+        ],
+        "1000a790": [
+          "1000a790-1000a7fb"
+        ],
+        "1000a800": [
+          "1000a800-1000a88d"
+        ],
+        "1000a8c0": [
+          "1000a8c0-1000a90b"
+        ],
+        "1000aa80": [
+          "1000aa80-1000aaaf"
+        ],
+        "1000ad30": [
+          "1000ad30-1000ad48",
+          "1000ad4e-1000ad6f"
+        ],
+        "1000b7f0": [
+          "1000b7f0-1000b8eb"
+        ],
+        "1000b8f0": [
+          "1000b8f0-1000b93e"
+        ],
+        "1000b940": [
+          "1000b940-1000b996"
+        ],
+        "1000be10": [
+          "1000be10-1000be27"
+        ],
+        "1000be30": [
+          "1000be30-1000be5d"
+        ],
+        "1000be60": [
+          "1000be60-1000beb7",
+          "1000bebb-1000bf3e"
+        ],
+        "1000c4a0": [
+          "1000c4a0-1000c4b6"
+        ],
+        "1000c4c0": [
+          "1000c4c0-1000c4db"
+        ],
+        "1000c4e0": [
+          "1000c4e0-1000c534",
+          "1000c53b-1000c5cc"
+        ],
+        "1000c990": [
+          "1000c990-1000cb5a"
+        ],
+        "1000cd20": [
+          "1000cd20-1000cdc0"
+        ],
+        "1000cf60": [
+          "1000cf60-1000cf9e"
+        ],
+        "1000cfe0": [
+          "1000cfe0-1000cff0"
+        ],
+        "1000d230": [
+          "1000d230-1000d25a"
+        ],
+        "1000d260": [
+          "1000d260-1000d2f2"
+        ],
+        "1000d3d0": [
+          "1000d3d0-1000d424"
+        ],
+        "1000d4e0": [
+          "1000d4e0-1000d599"
+        ],
+        "1000d650": [
+          "1000d650-1000d6e6"
+        ],
+        "1000dee0": [
+          "1000dee0-1000df7b"
+        ],
+        "1000df80": [
+          "1000df80-1000dfe9"
+        ],
+        "1000e1a0": [
+          "1000e1a0-1000e259",
+          "1000e25d-1000e32b"
+        ],
+        "1000e330": [
+          "1000e330-1000e424"
+        ],
+        "1000e6d0": [
+          "1000e6d0-1000e726"
+        ],
+        "1000eb90": [
+          "1000eb90-1000eb9f"
+        ],
+        "1000f110": [
+          "1000f110-1000f13d"
+        ],
+        "1000f170": [
+          "1000f170-1000f189"
+        ],
+        "1000f290": [
+          "1000f290-1000f35b"
+        ],
+        "1000f360": [
+          "1000f360-1000f373"
+        ],
+        "1000f6d0": [
+          "1000f6d0-1000f7d7"
+        ],
+        "1000f8d0": [
+          "1000f8d0-1000f930"
+        ],
+        "1000fce0": [
+          "1000fce0-1000fd6b"
+        ],
+        "100107a0": [
+          "100107a0-10010811"
+        ],
+        "10010820": [
+          "10010820-10010839"
+        ],
+        "10010890": [
+          "10010890-100108a1"
+        ],
+        "100108d0": [
+          "100108d0-100108dd",
+          "100108e1-10010911"
+        ],
+        "10010930": [
+          "10010930-10010935"
+        ],
+        "10010bc0": [
+          "10010bc0-10010c7d"
+        ],
+        "10010c80": [
+          "10010c80-10010cc3"
+        ],
+        "10010d60": [
+          "10010d60-10010d77"
+        ],
+        "10010d80": [
+          "10010d80-10010daf"
+        ],
+        "10010db0": [
+          "10010db0-10010dd7"
+        ],
+        "10010de0": [
+          "10010de0-10010dfd"
+        ],
+        "10010e00": [
+          "10010e00-10010e25"
+        ],
+        "10010e30": [
+          "10010e30-10010e77"
+        ],
+        "10010e80": [
+          "10010e80-10010e96"
+        ],
+        "100115c0": [
+          "100115c0-100115c5"
+        ],
+        "10011670": [
+          "10011670-100116a1"
+        ],
+        "100116b0": [
+          "100116b0-10011707"
+        ],
+        "10011d20": [
+          "10011d20-10011d34",
+          "10011d54-10011d99"
+        ],
+        "10012470": [
+          "10012470-100124c0"
+        ],
+        "100125f0": [
+          "100125f0-10012610"
+        ],
+        "10012830": [
+          "10012830-10012904",
+          "1001290a-10012932"
+        ],
+        "10012940": [
+          "10012940-10012955"
+        ],
+        "10012960": [
+          "10012960-10012985"
+        ],
+        "10012c30": [
+          "10012c30-10012c77",
+          "10012c85-10012c98"
+        ],
+        "10012ca0": [
+          "10012ca0-10012d1d",
+          "10012d23-10012d39"
+        ],
+        "10012d40": [
+          "10012d40-10012de3"
+        ],
+        "10013100": [
+          "10013100-10013172"
+        ],
+        "10013180": [
+          "10013180-1001326a"
+        ],
+        "10013330": [
+          "10013330-10013350"
+        ],
+        "10013360": [
+          "10013360-1001337c"
+        ],
+        "10013380": [
+          "10013380-100133a9"
+        ],
+        "100133b0": [
+          "100133b0-100133cc"
+        ],
+        "100133d0": [
+          "100133d0-10013404"
+        ],
+        "10016620": [
+          "10016620-100166b7"
+        ],
+        "100166c0": [
+          "100166c0-10016736"
+        ],
+        "10016b50": [
+          "10016b50-10016b59"
+        ],
+        "10016b60": [
+          "10016b60-10016b9e"
+        ],
+        "10016c90": [
+          "10016c90-10016c99"
+        ],
+        "10016ca0": [
+          "10016ca0-10016cc5"
+        ],
+        "10016cd0": [
+          "10016cd0-10016ce0"
+        ],
+        "10017b70": [
+          "10017b70-10017bc4",
+          "10017bcf-10017c54",
+          "10017c5e-10017c5e",
+          "10017c61-10017c8c"
+        ],
+        "10017c90": [
+          "10017c90-10017d4f",
+          "10017d53-10017d6a"
+        ],
+        "10017d70": [
+          "10017d70-10017dc8",
+          "10017dd0-10017de3"
+        ],
+        "10017df0": [
+          "10017df0-10017ebd"
+        ],
+        "10017ec0": [
+          "10017ec0-10017f27"
+        ],
+        "10017f30": [
+          "10017f30-10017fe8"
+        ],
+        "10018020": [
+          "10018020-10018056"
+        ],
+        "10018060": [
+          "10018060-1001808e"
+        ],
+        "100180f0": [
+          "100180f0-100181ad",
+          "100181b1-100181c8"
+        ],
+        "1001a730": [
+          "1001a730-1001a7cc",
+          "1001a7d0-1001a908"
+        ],
+        "1001ace0": [
+          "1001ace0-1001adc8"
+        ],
+        "1001add0": [
+          "1001add0-1001ae4f",
+          "1001ae57-1001af04",
+          "1001af0c-1001af23"
+        ],
+        "1001b680": [
+          "1001b680-1001b745",
+          "1001b74f-1001b891",
+          "1001b897-1001b8f8",
+          "1001b8fe-1001ba5a",
+          "1001ba62-1001ba75"
+        ],
+        "1001baa0": [
+          "1001baa0-1001bada",
+          "1001bae3-1001bc0d"
+        ],
+        "1001c310": [
+          "1001c310-1001c344"
+        ],
+        "1001e600": [
+          "1001e600-1001e610"
+        ],
+        "1001e620": [
+          "1001e620-1001e648"
+        ],
+        "1001e650": [
+          "1001e650-1001e65d",
+          "1001e665-1001e6aa"
+        ],
+        "1001e6b0": [
+          "1001e6b0-1001e6e0"
+        ],
+        "1002fea0": [
+          "1002fea0-1002ff5d"
+        ],
+        "10032fc0": [
+          "10032fc0-1003308f"
+        ],
+        "10033e80": [
+          "10033e80-10033eaa",
+          "10033eb0-10033f37"
+        ],
+        "10033f40": [
+          "10033f40-10034384"
+        ],
+        "100361a0": [
+          "100361a0-100361b5"
+        ],
+        "100361e0": [
+          "100361e0-100361ef",
+          "100361fa-10036251"
+        ],
+        "10036260": [
+          "10036260-1003627d"
+        ],
+        "10036280": [
+          "10036280-1003629d"
+        ],
+        "10036390": [
+          "10036390-100363af"
+        ],
+        "10036460": [
+          "10036460-1003648b"
+        ],
+        "100364f0": [
+          "100364f0-1003650c"
+        ],
+        "10036510": [
+          "10036510-10036532"
+        ],
+        "10036660": [
+          "10036660-100366b5"
+        ],
+        "10036780": [
+          "10036780-100367c3"
+        ],
+        "10037c90": [
+          "10037c90-10037cdf"
+        ],
+        "10037ce0": [
+          "10037ce0-10037d2f"
+        ],
+        "10037d30": [
+          "10037d30-10037d3d"
+        ],
+        "10037d40": [
+          "10037d40-10037d70"
+        ],
+        "10037fc0": [
+          "10037fc0-10038152"
+        ],
+        "1003a5c0": [
+          "1003a5c0-1003a5d8"
+        ],
+        "1003a640": [
+          "1003a640-1003a688"
+        ],
+        "10040640": [
+          "10040640-10040678"
+        ],
+        "10040680": [
+          "10040680-100406a8"
+        ],
+        "100421c0": [
+          "100421c0-10042202"
+        ],
+        "10042210": [
+          "10042210-1004226b"
+        ],
+        "10042370": [
+          "10042370-100423cb"
+        ],
+        "100423d0": [
+          "100423d0-10042472"
+        ],
+        "10042590": [
+          "10042590-100425af"
+        ],
+        "100425b0": [
+          "100425b0-1004272c"
+        ],
+        "10042730": [
+          "10042730-1004274f"
+        ],
+        "10050390": [
+          "10050390-100503c6"
+        ],
+        "100503d0": [
+          "100503d0-100503ff"
+        ],
+        "10050490": [
+          "10050490-10050497"
+        ],
+        "10050b20": [
+          "10050b20-10050b5a"
+        ],
+        "10050d90": [
+          "10050d90-10050db4"
+        ],
+        "10051650": [
+          "10051650-10051655"
+        ],
+        "10053cf0": [
+          "10053cf0-10053de6"
+        ],
+        "10053df0": [
+          "10053df0-10053e78",
+          "10053e7c-10053ef7",
+          "10053efb-10053f50",
+          "10053f54-10053fbf"
+        ],
+        "10053fc0": [
+          "10053fc0-10053ff4"
+        ],
+        "10054000": [
+          "10054000-10054043"
+        ],
+        "10054270": [
+          "10054270-1005428d",
+          "10054294-1005432b"
+        ],
+        "10054680": [
+          "10054680-10054931"
+        ],
+        "10054ef0": [
+          "10054ef0-10054f1d"
+        ],
+        "10054f20": [
+          "10054f20-10054fda"
+        ],
+        "10054fe0": [
+          "10054fe0-100551da"
+        ],
+        "10055b10": [
+          "10055b10-10055b13"
+        ],
+        "10055b20": [
+          "10055b20-10055b23"
+        ],
+        "10055bf0": [
+          "10055bf0-10055d5f"
+        ],
+        "10055d60": [
+          "10055d60-10055d63"
+        ],
+        "10056bb0": [
+          "10056bb0-10056bdd"
+        ],
+        "10056be0": [
+          "10056be0-10056c19"
+        ],
+        "10056c20": [
+          "10056c20-10056c50"
+        ],
+        "10056c60": [
+          "10056c60-10056c7f"
+        ],
+        "10056c80": [
+          "10056c80-10056dcc"
+        ],
+        "10056dd0": [
+          "10056dd0-100571f0"
+        ],
+        "10057200": [
+          "10057200-100572c6"
+        ],
+        "10057440": [
+          "10057440-10057494",
+          "1005749b-1005752c"
+        ],
+        "10057530": [
+          "10057530-100575cd"
+        ],
+        "100575d0": [
+          "100575d0-10057696"
+        ],
+        "100576a0": [
+          "100576a0-100576c4"
+        ],
+        "100576d0": [
+          "100576d0-10057730"
+        ],
+        "100578d0": [
+          "100578d0-10057957"
+        ],
+        "10059f10": [
+          "10059f10-10059f1e",
+          "10059f24-10059f5c"
+        ],
+        "1005a230": [
+          "1005a230-1005a266",
+          "1005a26c-1005a2c1"
+        ],
+        "1005a3c0": [
+          "1005a3c0-1005a45f"
+        ],
+        "1005a570": [
+          "1005a570-1005a645"
+        ],
+        "1005aaf0": [
+          "1005aaf0-1005ab25"
+        ],
+        "1005ab30": [
+          "1005ab30-1005ab65"
+        ],
+        "1005af20": [
+          "1005af20-1005af77",
+          "1005af7b-1005b0dd"
+        ],
+        "1005b1b0": [
+          "1005b1b0-1005b27e"
+        ],
+        "1005b430": [
+          "1005b430-1005b4e4",
+          "1005b4e8-1005b505"
+        ],
+        "1005b5f0": [
+          "1005b5f0-1005b5f5"
+        ],
+        "1005b600": [
+          "1005b600-1005b65d"
+        ],
+        "1005b6c0": [
+          "1005b6c0-1005b70b"
+        ],
+        "1005b710": [
+          "1005b710-1005b758"
+        ],
+        "1005ba70": [
+          "1005ba70-1005bad3"
+        ],
+        "1005bb20": [
+          "1005bb20-1005bbae"
+        ],
+        "1005bbb0": [
+          "1005bbb0-1005bbf3"
+        ],
+        "1005bc00": [
+          "1005bc00-1005bcec"
+        ],
+        "1005e020": [
+          "1005e020-1005e0d8"
+        ],
+        "1005e170": [
+          "1005e170-1005e1f9"
+        ],
+        "1005e200": [
+          "1005e200-1005e283"
+        ],
+        "1005e290": [
+          "1005e290-1005e29e",
+          "1005e2ac-1005e3f5"
+        ],
+        "1005e400": [
+          "1005e400-1005e4ea"
+        ],
+        "1005e4f0": [
+          "1005e4f0-1005e5bf"
+        ],
+        "1005e5c0": [
+          "1005e5c0-1005e643",
+          "1005e647-1005e66b"
+        ],
+        "1005e670": [
+          "1005e670-1005e6eb"
+        ],
+        "1005e6f0": [
+          "1005e6f0-1005e7e9"
+        ],
+        "1005e7f0": [
+          "1005e7f0-1005e863"
+        ],
+        "1005e870": [
+          "1005e870-1005e903"
+        ],
+        "1005e910": [
+          "1005e910-1005e983"
+        ],
+        "1005ed50": [
+          "1005ed50-1005ed60"
+        ],
+        "1005ed70": [
+          "1005ed70-1005ed82"
+        ],
+        "1005ee60": [
+          "1005ee60-1005ef6a"
+        ],
+        "1005efc0": [
+          "1005efc0-1005f11e"
+        ],
+        "1005f410": [
+          "1005f410-1005f528"
+        ],
+        "1005f530": [
+          "1005f530-1005f6cc"
+        ],
+        "1005f6d0": [
+          "1005f6d0-1005f6f8"
+        ],
+        "1005f810": [
+          "1005f810-1005f843"
+        ],
+        "1005f8c0": [
+          "1005f8c0-1005f8cf"
+        ],
+        "1005f900": [
+          "1005f900-1005f91e"
+        ],
+        "10063de0": [
+          "10063de0-10063df8",
+          "10063dff-10063e97"
+        ],
+        "10063ea0": [
+          "10063ea0-10063edc"
+        ],
+        "10063ee0": [
+          "10063ee0-10063eed",
+          "10063ef1-10063eff"
+        ],
+        "10063f40": [
+          "10063f40-10063f50",
+          "10063f54-10063f68"
+        ],
+        "10063f70": [
+          "10063f70-10063f80",
+          "10063f8c-10063fc2"
+        ],
+        "10064100": [
+          "10064100-10064110"
+        ],
+        "10064160": [
+          "10064160-100641b6"
+        ],
+        "100648b0": [
+          "100648b0-100648ff"
+        ],
+        "10064af0": [
+          "10064af0-10064b5b"
+        ],
+        "10064b60": [
+          "10064b60-10064c27"
+        ],
+        "10064c50": [
+          "10064c50-10064c84"
+        ],
+        "10064d50": [
+          "10064d50-10064d6f"
+        ],
+        "10064e00": [
+          "10064e00-10064e2a"
+        ],
+        "10065b64": [
+          "10065b64-10065d75",
+          "10065d7b-10065db8",
+          "10065dbc-10065dbc",
+          "10065dc3-10065ddd",
+          "10065de3-10065dfe",
+          "10065e06-10065e31",
+          "10065e39-10065e42",
+          "10065e46-10065e46",
+          "10065e4d-10065e6b",
+          "10065e71-10065ee0",
+          "10065ee4-10065ee4",
+          "10065ef7-10065f04",
+          "10065f0f-10065f67"
+        ],
+        "10065f68": [
+          "10065f68-10065fd6",
+          "10065fdc-10066019",
+          "1006601d-1006602e"
+        ],
+        "10067a14": [
+          "10067a14-10067af2"
+        ],
+        "10067af3": [
+          "10067af3-10067d99",
+          "10067dbb-10067e1e",
+          "10067e29-10067e4a",
+          "10067e4f-10067e79",
+          "10067e7c-10067e8e"
+        ],
+        "10069697": [
+          "10069697-100696b6"
+        ],
+        "100696b7": [
+          "100696b7-10069820",
+          "10069825-10069849"
+        ],
+        "1006984a": [
+          "1006984a-10069880"
+        ],
+        "10069881": [
+          "10069881-10069983"
+        ],
+        "10069bf7": [
+          "10069bf7-10069c4d",
+          "10069c51-10069c78"
+        ],
+        "10069c79": [
+          "10069c79-10069ca3"
+        ],
+        "1006a0e7": [
+          "1006a0e7-1006a108"
+        ],
+        "1006a267": [
+          "1006a267-1006a279"
+        ]
+      }
     }
   }
 }
