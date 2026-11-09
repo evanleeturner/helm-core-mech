@@ -1,0 +1,4 @@
+fn.in f=1001c8a3 a=0
+fn.in f=1001c8a3 a=550050
+glob.rd f=1001c8a3 g=100adf74 v=4ea90000
+call.ret f=1001c8a3 c=HeapFree v=1

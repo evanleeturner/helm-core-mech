@@ -1,0 +1,14 @@
+fn.in f=1001c989 a=558050
+mem.rd f=1001c989 a=55806c v=0
+call.ret f=1001c989 c=1001c110 v=0
+glob.rd f=1001c989 g=100adf74 v=4ea90000
+call.ret f=1001c989 c=HeapFree v=1
+fn.in f=1001c989 a=558070
+mem.rd f=1001c989 a=55808c v=558090
+mem.rd f=1001c989 a=55809c v=5580a0
+call.ret f=1001c989 c=1001c8a3 v=0
+mem.rd f=1001c989 a=5580ac v=0
+call.ret f=1001c989 c=1001c8a3 v=0
+call.ret f=1001c989 c=1001c110 v=0
+glob.rd f=1001c989 g=100adf74 v=4ea90000
+call.ret f=1001c989 c=HeapFree v=1

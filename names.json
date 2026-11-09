@@ -1,0 +1,518 @@
+{
+  "program": "helm-core-mech",
+  "about": "The game's names by address, for the log readers: functions and globals map an address to its name; parameters map a function's address to each argument's position (param_N at N) and its name. A rename is one edit here.",
+  "target": "mercsw",
+  "functions": {
+    "1000278e": "StopAndFreeAllSamples",
+    "10002849": "RefillStreamingSampleBuffers",
+    "10002d8f": "AcquireSampleSlot",
+    "100033ce": "HandleSampleEnd",
+    "1000381c": "ComputeSamplePan",
+    "1000389e": "StopAllSamples",
+    "10003c3e": "StopAndReleaseSoundSample",
+    "10003cf8": "ComputeVolumeFalloffPercent",
+    "10003d60": "FixedMul16",
+    "10003dc4": "LerpRect",
+    "10007dc0": "RemoveBettyQueueEntry",
+    "1000fc30": "ApproxLength3_Likely",
+    "1000fe30": "FixedSqrt16",
+    "1000fef4": "NormalizeVec3",
+    "10015b30": "FixedMul29",
+    "1001a060": "FixedMul30",
+    "1001a080": "FixedDot3Shift27",
+    "1001c299": "SetCurrentNode",
+    "1001c8a3": "FreeHeapBlock",
+    "10022aaa": "GetUnitSize",
+    "10025799": "AllocQuadtreeNode",
+    "1002628c": "SetSegmentFromDirection",
+    "1002637d": "EnsureSegmentDirection",
+    "10026815": "RaySlabInterval",
+    "1002b08b": "ClampedAdd1024_Likely",
+    "1002b48b": "SwapOneAndTwo",
+    "1002f010": "CreateTreeNode",
+    "10035980": "FixedDot3Shift29",
+    "1003c190": "IsWithinRadius3_Likely",
+    "1003ca49": "MuteMidiChannel",
+    "100447bf": "ClampSymmetric",
+    "100455b7": "BlitPixelBufferToWindow",
+    "10045873": "SetPaletteRange",
+    "1004639a": "ResumeMciDevice",
+    "100463c4": "StopMciDevice",
+    "100463ee": "PlayMciDeviceFromTo",
+    "10046fc9": "IsWithinBounds_Likely",
+    "10047052": "SetAuxDeviceVolume",
+    "10055b60": "ScaledDiffShift_Likely",
+    "1005ed99": "ReadMouseButtonsAndPosition",
+    "10064d15": "IndexBitWidth_Likely",
+    "10065e40": "ScaleRect",
+    "10065ebf": "MapRectIntoRect",
+    "10065f87": "ScaleRectBare",
+    "10066004": "ScalePoint",
+    "1006604b": "ScaleRectBareBySize",
+    "100660e1": "ScalePointBySize",
+    "10066209": "RectFrom319x199",
+    "10066284": "RectBareFrom319x199",
+    "100662fd": "PointFrom319x199",
+    "100663e5": "ScaleRectAboutCenter",
+    "10066ec0": "CheckedFixedDiv16",
+    "1006ad3f": "ServiceSoundAndRefillStreams_Likely",
+    "1006c340": "FillBitGroups_Likely",
+    "10070276": "ProcessKeyboardMessages",
+    "10071674": "MirrorBinaryTree",
+    "10072715": "ScaleBy150Or75Percent_Likely",
+    "100821fe": "InitBitmapHeader8Bit",
+    "1008628d": "FindCacheEntry",
+    "10086336": "FreeCacheEntry",
+    "1008668b": "FindOrLoadCacheEntry_Likely",
+    "10086951": "AllocZeroedHeapBlock"
+  },
+  "globals": {
+    "100aafbc": "g_disabled100aafbc_Likely",
+    "100aafc0": "g_disabledBits100aafc0_Likely",
+    "100c9250": "g_bitmapHeader100c9250_Likely"
+  },
+  "parameters": {
+    "10001d0a": {
+      "1": "str1"
+    },
+    "10001e96": {
+      "1": "str1"
+    },
+    "10002110": {
+      "1": "format"
+    },
+    "10002168": {
+      "1": "format"
+    },
+    "10002ba7": {
+      "3": "soundId_Likely",
+      "4": "sampleData_Likely",
+      "8": "playbackRate"
+    },
+    "10002d8f": {
+      "1": "soundId_Likely",
+      "2": "mem",
+      "3": "priorityAndFlags_Likely",
+      "4": "requestedSlot",
+      "5": "busyFlagPtr_Likely"
+    },
+    "100033ce": {
+      "1": "sampleHandle"
+    },
+    "1000389e": {
+      "1": "forceAll"
+    },
+    "10003c3e": {
+      "1": "sampleRecord_Likely"
+    },
+    "10003d60": {
+      "1": "multiplicand",
+      "2": "multiplier"
+    },
+    "10003dc4": {
+      "1": "from",
+      "2": "to",
+      "3": "out",
+      "4": "fraction"
+    },
+    "10007218": {
+      "1": "str"
+    },
+    "100072ef": {
+      "1": "format"
+    },
+    "10007321": {
+      "1": "source"
+    },
+    "10007342": {
+      "1": "format"
+    },
+    "10007dc0": {
+      "1": "queueEntry"
+    },
+    "1000eda8": {
+      "1": "unusedArg1"
+    },
+    "1000fe30": {
+      "1": "value"
+    },
+    "1000fef4": {
+      "1": "vecX",
+      "2": "vecY",
+      "3": "vecZ"
+    },
+    "100108a0": {
+      "2": "format"
+    },
+    "10010bc0": {
+      "1": "str"
+    },
+    "10015b30": {
+      "1": "multiplicand",
+      "2": "multiplier"
+    },
+    "100175e7": {
+      "1": "file"
+    },
+    "1001a060": {
+      "1": "factorA",
+      "2": "factorB"
+    },
+    "1001a080": {
+      "1": "vecA0",
+      "2": "vecB0",
+      "3": "vecA1",
+      "4": "vecB1",
+      "5": "vecA2",
+      "6": "vecB2"
+    },
+    "1001c299": {
+      "1": "nodeList_Likely",
+      "2": "node"
+    },
+    "1001c303": {
+      "1": "ownerObject",
+      "2": "sortKey",
+      "5": "extraByteCount",
+      "6": "tailAreaOut"
+    },
+    "1001c5d1": {
+      "1": "pointCount_Likely",
+      "3": "indexBytes_Likely"
+    },
+    "1001c8a3": {
+      "1": "mem"
+    },
+    "1001c989": {
+      "1": "mem"
+    },
+    "1001dfc3": {
+      "1": "fileHandle"
+    },
+    "1001e041": {
+      "1": "fileHandle"
+    },
+    "1001e0bf": {
+      "1": "source"
+    },
+    "1001e55a": {
+      "2": "str2"
+    },
+    "10025799": {
+      "1": "bound0Min_Likely",
+      "2": "bound0Max_Likely",
+      "3": "bound1Min_Likely",
+      "4": "bound1Max_Likely",
+      "5": "bound2Min_Likely",
+      "6": "bound2Max_Likely",
+      "7": "entryCount"
+    },
+    "1002587d": {
+      "1": "mem"
+    },
+    "1002628c": {
+      "1": "segment",
+      "8": "length"
+    },
+    "1002637d": {
+      "1": "segment"
+    },
+    "10026815": {
+      "1": "origin",
+      "2": "direction",
+      "3": "slabMin",
+      "4": "slabMax",
+      "5": "tNear",
+      "6": "tFar"
+    },
+    "1002949b": {
+      "1": "ch_Likely"
+    },
+    "1002974a": {
+      "1": "unusedArg1"
+    },
+    "1002977f": {
+      "1": "unusedArg1"
+    },
+    "1002b08b": {
+      "3": "matchSign"
+    },
+    "1002cd49": {
+      "1": "toggleMask"
+    },
+    "1002cd5d": {
+      "1": "mask"
+    },
+    "1002cd87": {
+      "2": "enable"
+    },
+    "1002cdde": {
+      "2": "enable"
+    },
+    "1002f010": {
+      "1": "parentNode",
+      "2": "createFlags"
+    },
+    "1002fe1e": {
+      "1": "mem"
+    },
+    "1002feb2": {
+      "2": "str2"
+    },
+    "10035980": {
+      "1": "vecA0",
+      "2": "vecB0",
+      "3": "vecA1",
+      "4": "vecB1",
+      "5": "vecA2",
+      "6": "vecB2"
+    },
+    "10036b20": {
+      "2": "set"
+    },
+    "10037859": {
+      "1": "wnd",
+      "2": "msg",
+      "3": "wParam",
+      "4": "lParam"
+    },
+    "10037f18": {
+      "1": "str1"
+    },
+    "10037fe6": {
+      "1": "joyID"
+    },
+    "10038f3a": {
+      "3": "dest",
+      "4": "count"
+    },
+    "1003c13a": {
+      "2": "enable"
+    },
+    "1003c190": {
+      "4": "radius_Likely"
+    },
+    "1003eb7c": {
+      "1": "mem"
+    },
+    "100447bf": {
+      "2": "limit"
+    },
+    "1004563f": {
+      "2": "yDest"
+    },
+    "100456d9": {
+      "1": "xDest"
+    },
+    "10045777": {
+      "1": "xSrc"
+    },
+    "100457f5": {
+      "1": "xSrc"
+    },
+    "10045873": {
+      "1": "firstIndex",
+      "2": "colorCount",
+      "3": "srcColors"
+    },
+    "10045f0f": {
+      "2": "source"
+    },
+    "100463ee": {
+      "1": "fromPosition",
+      "2": "toPosition"
+    },
+    "10046fc9": {
+      "1": "checkedValue"
+    },
+    "10047052": {
+      "1": "volume"
+    },
+    "10047a54": {
+      "2": "buf"
+    },
+    "10047c9e": {
+      "2": "buf"
+    },
+    "10047e21": {
+      "2": "buf"
+    },
+    "10047fde": {
+      "2": "buf"
+    },
+    "1004cf27": {
+      "2": "str2"
+    },
+    "10051e70": {
+      "1": "seed"
+    },
+    "100528ee": {
+      "1": "c"
+    },
+    "10055b60": {
+      "4": "shift"
+    },
+    "1005be24": {
+      "1": "source"
+    },
+    "1005ed99": {
+      "2": "normalizedCursorOut",
+      "3": "buttonMaskOut"
+    },
+    "10064c99": {
+      "1": "filename"
+    },
+    "10064e6a": {
+      "1": "ch"
+    },
+    "10065e40": {
+      "1": "unusedArg1",
+      "2": "source",
+      "3": "out"
+    },
+    "10065ebf": {
+      "1": "frame",
+      "2": "source",
+      "3": "out"
+    },
+    "10065f87": {
+      "1": "unusedArg1",
+      "2": "source",
+      "3": "out"
+    },
+    "10066004": {
+      "1": "unusedArg1",
+      "2": "source",
+      "3": "out"
+    },
+    "1006604b": {
+      "1": "frame",
+      "2": "source",
+      "3": "out"
+    },
+    "100660e1": {
+      "1": "frame",
+      "2": "source",
+      "3": "out"
+    },
+    "10066209": {
+      "1": "source",
+      "2": "out"
+    },
+    "10066284": {
+      "1": "source",
+      "2": "out"
+    },
+    "100662fd": {
+      "1": "source",
+      "2": "out"
+    },
+    "100663e5": {
+      "1": "source",
+      "2": "out",
+      "3": "scaleX",
+      "4": "scaleY"
+    },
+    "10066ec0": {
+      "1": "divisor",
+      "2": "dividend",
+      "3": "quotient"
+    },
+    "1006a2a5": {
+      "1": "source"
+    },
+    "1006c340": {
+      "1": "flags"
+    },
+    "1006f330": {
+      "1": "bits"
+    },
+    "1006f925": {
+      "1": "xSrc",
+      "2": "ySrc"
+    },
+    "10070276": {
+      "1": "message",
+      "2": "wParam",
+      "3": "lParam"
+    },
+    "10070381": {
+      "1": "code"
+    },
+    "10070ed9": {
+      "1": "filename"
+    },
+    "10070f83": {
+      "2": "str1"
+    },
+    "10071107": {
+      "2": "dstBuf",
+      "3": "count"
+    },
+    "10071674": {
+      "1": "sourceNode"
+    },
+    "10071b60": {
+      "2": "str"
+    },
+    "100728a3": {
+      "2": "str"
+    },
+    "10072b35": {
+      "2": "str"
+    },
+    "10072e03": {
+      "2": "str"
+    },
+    "10073127": {
+      "2": "str"
+    },
+    "10073377": {
+      "2": "str"
+    },
+    "1007b890": {
+      "2": "str2"
+    },
+    "1007bbed": {
+      "3": "source"
+    },
+    "100821fe": {
+      "1": "width",
+      "2": "height"
+    },
+    "1008628d": {
+      "1": "entryId",
+      "2": "fourCharKey"
+    },
+    "10086336": {
+      "1": "mem"
+    },
+    "1008668b": {
+      "2": "entryId",
+      "3": "entryTag_Likely"
+    },
+    "10086951": {
+      "1": "bytes"
+    },
+    "100869d5": {
+      "1": "mem"
+    },
+    "10086a00": {
+      "1": "str2"
+    },
+    "10087076": {
+      "1": "buf",
+      "2": "maxCount",
+      "3": "file"
+    },
+    "10088ec7": {
+      "1": "code"
+    },
+    "1008e260": {
+      "1": "newFlag"
+    },
+    "100989f0": {
+      "1": "controlWord"
+    }
+  }
+}
