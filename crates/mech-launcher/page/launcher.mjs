@@ -14,7 +14,8 @@
  * and again at Start: a file moved after the pick shows only when the check
  * runs again, and Start must not run on a disc that moved. Each wrong
  * file's sentence comes whole from the disc's check, one item under the
- * status line. An image's pick is not checked yet, so it leaves Start off.
+ * status line. An image's pick is not checked yet: it says so, and Start
+ * stays as it was.
  *
  * A whole folder pick is copied into the browser's page storage, Start off
  * while it copies, so a reload need not pick the disc again; a store with
@@ -22,15 +23,26 @@
  * a reload. At load the kept copy, if any, is checked like a pick, and a
  * whole one turns Start on. After a reload the folder input is empty, so
  * Start checks the disc it was given: this page's pick, or the kept copy.
+ *
+ * One tab of the page's origin holds the disc at a time, asked before the
+ * load's check so a second tab starts no reader at all: it says so in a
+ * sentence and leaves the disc's controls off.
+ *
+ * Each press writes one INFO line, and the reader's own lines join the same
+ * trace, which the save button writes out as a file. Start is off by
+ * `aria-disabled`, never `disabled`: a disabled button drops the keyboard's
+ * focus, and Start turns off while every check runs, its own press's too.
  */
-import { checkKept, checkPick, keepPick } from "./disc-reader.mjs";
+import { checkKept, checkPick, holdDisc, keepPick } from "./disc-reader.mjs";
 import { DISC_FILES, EMPTY_AT_SOURCE } from "./launcher-disc.mjs";
 import {
   CHECK_FAILED,
   CHECKING,
   CHECKING_HELD,
   HELD,
+  HELD_ELSEWHERE,
   HELD_FAILED,
+  IMAGE_NOT_CHECKED,
   KEEP_FAILED,
   KEEPING,
   KEPT,
@@ -42,12 +54,18 @@ import {
   heldWrong,
   wrongFiles,
 } from "./launcher-words.mjs";
+import { logger } from "./track-logger.mjs";
 
 const status = document.getElementById("status");
 const findings = document.getElementById("findings");
 const pick = document.getElementById("pick");
+const image = document.getElementById("image");
 const folder = document.getElementById("folder");
 const start = document.getElementById("start");
+const save = document.getElementById("save");
+
+/** The name the saved trace's file takes. */
+const TRACE_FILE = "launcher-log.txt";
 
 /** Every expected file, marked where the disc itself holds it empty. */
 const EXPECTED = DISC_FILES.map((path) => ({
@@ -77,6 +95,11 @@ function say(state, sentence) {
   status.textContent = sentence;
 }
 
+/** Turns Start on or off, leaving it in the keys' order either way. */
+function startOn(on) {
+  start.setAttribute("aria-disabled", on ? "false" : "true");
+}
+
 /** Lists one item a sentence under the status line; none hides the list. */
 function list(sentences) {
   findings.replaceChildren(
@@ -101,7 +124,7 @@ async function check(source) {
   checks += 1;
   const mine = checks;
   const held = source === "held";
-  start.disabled = true;
+  startOn(false);
   list([]);
   say("checking", held ? CHECKING_HELD : CHECKING);
   let answer = null;
@@ -158,26 +181,41 @@ async function keep() {
   if (answer?.kept === KEPT_WHOLE) say("kept", KEPT);
   else if (answer?.kept === KEPT_NO_ROOM) say("no-room", NO_ROOM);
   else say("keep-failed", KEEP_FAILED);
-  start.disabled = false;
+  startOn(true);
 }
 
+image.addEventListener("change", () => {
+  logger.info("launcher.image.picked", { files: image.files.length });
+  say("image", IMAGE_NOT_CHECKED);
+});
+
 folder.addEventListener("change", async () => {
+  logger.info("launcher.folder.picked", { files: folder.files.length });
   if (!(await check("picked"))) return;
   disc = "picked";
   await keep();
 });
 
 start.addEventListener("click", async () => {
+  if (start.getAttribute("aria-disabled") === "true") return;
+  logger.info("launcher.start", { disc });
   if (await check(disc)) say("started", STARTED);
 });
 
-if (globalThis.crossOriginIsolated) {
+save.addEventListener("click", () => {
+  logger.info("launcher.log.saved", { file: TRACE_FILE });
+  logger.save(TRACE_FILE);
+});
+
+if (!globalThis.crossOriginIsolated) {
+  say("not-isolated", NOT_ISOLATED);
+} else if (!(await holdDisc())) {
+  say("held-elsewhere", HELD_ELSEWHERE);
+} else {
   pick.disabled = false;
   if (await check("held")) {
     disc = "held";
     say("held", HELD);
-    start.disabled = false;
+    startOn(true);
   }
-} else {
-  say("not-isolated", NOT_ISOLATED);
 }

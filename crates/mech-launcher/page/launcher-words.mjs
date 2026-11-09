@@ -42,6 +42,14 @@ export const KEEP_FAILED =
 export const HELD =
   "This browser kept a whole copy of the disc from an earlier pick. Press Start, or pick the disc again.";
 
+/** Shown, with the disc's controls off, when another tab of this page holds the disc. */
+export const HELD_ELSEWHERE =
+  "Another tab of this page has the disc already, so this tab cannot pick it or start. Close that tab, then reload this one.";
+
+/** Shown when a disc image is picked, until an image's check exists. */
+export const IMAGE_NOT_CHECKED =
+  "A disc image cannot be checked yet, so this page does not use it. Pick the mounted disc's folder instead.";
+
 /** Shown when the kept copy could not be checked; the disc must be picked again. */
 export const HELD_FAILED =
   "The copy of the disc this browser kept could not be checked, so it cannot start. Pick the disc again.";
