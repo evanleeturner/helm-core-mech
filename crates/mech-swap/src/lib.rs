@@ -10,8 +10,9 @@
 //! The ports' DEBUG trace goes to a file: `DllMain` opens the path the
 //! environment's `HC5_LOG` names and installs the sink, which writes each
 //! record as one line of the workspace's grammar, `HH:MM:SS.mmm L event
-//! k=v`, by one `WriteFile`; a line past [`LINE_BYTES`] is cut there, and a
-//! line that cannot be written is dropped. No `HC5_LOG`, no trace.
+//! k=v`, by one `WriteFile`; a line past [`LINE_BYTES`] is cut there, its
+//! newline kept, and a line that cannot be written is dropped. No
+//! `HC5_LOG`, no trace.
 //!
 //! 32-bit x86 Windows only: on any other target the crate is [`body`]
 //! alone, for the host test that holds it equal to `mech_logline::body`.
@@ -47,10 +48,14 @@ mod windows;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
 use mech_layer as _;
 
-/// The bytes one trace line may take, its newline included.
-pub const LINE_BYTES: usize = 1024;
+/// The bytes one trace line may take, its newline included: room for the
+/// longest row the swap writes, `bind.swap` with every port's address in its
+/// setting, about 5,300 bytes. Two lines sit on the writing thread's stack
+/// while a record is written, the sink's and [`body`]'s for a field's value.
+pub const LINE_BYTES: usize = 8192;
 
-/// A fixed buffer that takes what fits and drops the rest.
+/// A fixed buffer that takes what fits and drops the rest, its last byte
+/// kept for the newline [`Line::end`] writes.
 pub struct Line {
     bytes: [u8; LINE_BYTES],
     len: usize,
@@ -69,6 +74,16 @@ impl Line {
     pub fn as_bytes(&self) -> &[u8] {
         &self.bytes[..self.len]
     }
+
+    /// Ends the line with its newline, in the byte a write never takes, so a
+    /// line cut at [`LINE_BYTES`] still ends and the next is never glued to
+    /// it. Once a line: a full line takes no second.
+    pub fn end(&mut self) {
+        if self.len < LINE_BYTES {
+            self.bytes[self.len] = b'\n';
+            self.len += 1;
+        }
+    }
 }
 
 impl Default for Line {
@@ -79,7 +94,7 @@ impl Default for Line {
 
 impl fmt::Write for Line {
     fn write_str(&mut self, text: &str) -> fmt::Result {
-        let take = text.len().min(LINE_BYTES - self.len);
+        let take = text.len().min((LINE_BYTES - 1).saturating_sub(self.len));
         self.bytes[self.len..self.len + take].copy_from_slice(&text.as_bytes()[..take]);
         self.len += take;
         Ok(())
@@ -125,9 +140,88 @@ pub fn body(record: &Record<'_>, line: &mut Line) {
 
 #[cfg(test)]
 mod tests {
+    use log::kv::Value;
     use log::{Level, Record};
 
-    use super::{Line, body};
+    use super::{LINE_BYTES, Line, body};
+
+    /// The 580 ports' addresses as `build.rs` takes them from `mech-shell`'s
+    /// `lib.rs`: each `mod fun_<address>;` or `mod swap_<address>;` under
+    /// `#[cfg(target_arch = "x86")]`.
+    fn port_addresses() -> std::vec::Vec<&'static str> {
+        let lib = include_str!("../../mech-shell/src/lib.rs");
+        let mut addresses = std::vec::Vec::new();
+        let mut gated = false;
+        for line in lib.lines().map(str::trim) {
+            let module = line.strip_prefix("mod ").and_then(|m| m.strip_suffix(';'));
+            if let (true, Some(module)) = (gated, module) {
+                let address = module
+                    .strip_prefix("fun_")
+                    .or_else(|| module.strip_prefix("swap_"))
+                    .expect("a gated module is fun_<address> or swap_<address>");
+                addresses.push(address);
+            }
+            gated = line == "#[cfg(target_arch = \"x86\")]";
+        }
+        assert_eq!(addresses.len(), 580, "mech-shell gates 580 ports");
+        addresses
+    }
+
+    /// The sink's line for `record` past its time and level: `body`, then
+    /// the sink's ending, as `windows.rs` writes them.
+    fn ended(record: &Record<'_>) -> Line {
+        let mut line = Line::new();
+        body(record, &mut line);
+        line.end();
+        line
+    }
+
+    /// A `bind.swap` row whose setting lists every port, past 1,024 bytes:
+    /// the swap's line is `mech_logline::body`'s whole, its counts in it,
+    /// then its newline.
+    #[test]
+    fn a_full_swap_row_is_written_whole() {
+        let addresses = port_addresses();
+        let setting = addresses.join(",");
+        assert!(setting.len() > 1024, "the setting passes 1,024 bytes");
+        let count = addresses.len();
+        let fields = [
+            ("file", Value::from("MW2SHELL.DLL")),
+            ("setting", Value::from(setting.as_str())),
+            ("chosen", Value::from(count)),
+            ("written", Value::from(count)),
+        ];
+        let record = Record::builder()
+            .level(Level::Info)
+            .args(format_args!("bind.swap"))
+            .key_values(&fields)
+            .build();
+        let whole = mech_logline::body(&record);
+        let line = ended(&record);
+        let shown = std::str::from_utf8(line.as_bytes()).expect("the line is UTF-8");
+        assert_eq!(shown, std::format!("{whole}\n"));
+        assert!(shown.ends_with(&std::format!(" chosen={count} written={count}\n")));
+    }
+
+    /// A row past `LINE_BYTES` is cut there and still ends its line: its
+    /// first `LINE_BYTES - 1` bytes are `mech_logline::body`'s, then the
+    /// newline, so the next row is never glued to it.
+    #[test]
+    fn a_row_past_the_cap_keeps_its_newline() {
+        let ports = port_addresses().join(",");
+        let setting = [ports.as_str(), ports.as_str()].join(",");
+        let fields = [("file", "MW2SHELL.DLL"), ("setting", setting.as_str())];
+        let record = Record::builder()
+            .level(Level::Info)
+            .args(format_args!("bind.swap"))
+            .key_values(&fields)
+            .build();
+        let whole = mech_logline::body(&record);
+        assert!(whole.len() > LINE_BYTES, "the row passes the cap");
+        let mut cut = std::vec::Vec::from(&whole.as_bytes()[..LINE_BYTES - 1]);
+        cut.push(b'\n');
+        assert_eq!(ended(&record).as_bytes(), cut.as_slice());
+    }
 
     /// The swap's line holds `mech_logline::body`'s for one record whose
     /// fields take every rule: plain, a space, a quote, `=`, and empty.

@@ -8,9 +8,10 @@
 //! Each line ends `tid=<hex>`, the writing thread's id (KH1, wall 4): the
 //! Miles timer calls in from a thread of its own, and the line says whose
 //! it is. The field comes last, so a reader's third word is still the
-//! event; a line cut at [`crate::LINE_BYTES`] loses it. Two threads'
-//! lines cannot tear each other: the file is opened for appending and a
-//! line is one `WriteFile`, so each lands whole at the end.
+//! event; a line cut at [`crate::LINE_BYTES`] loses it but keeps its
+//! newline ([`Line::end`]), so the next line starts a line of its own. Two
+//! threads' lines cannot tear each other: the file is opened for appending
+//! and a line is one `WriteFile`, so each lands whole at the end.
 //!
 //! The panic handler and the personality are the swap
 //! profile's alone (`panic = "abort"`, the crate built by itself, no `std`):
@@ -108,7 +109,7 @@ impl Log for Sink {
         body(record, &mut line);
         // SAFETY: reads the calling thread's own id; touches no memory.
         let _ = write!(line, " tid={:x}", unsafe { GetCurrentThreadId() });
-        let _ = line.write_char('\n');
+        line.end();
         let bytes = line.as_bytes();
         let mut written = 0;
         // SAFETY: the handle is the trace file DllMain opened, never closed;
