@@ -398,7 +398,7 @@ unsafe extern "system" fn on_fault(pointers: *const Pointers) -> i32 {
 /// This process's pages copied plainly, for under the stop: `VirtualProtect`, which the bind's
 /// other memory calls per write, may wait on a lock a stopped thread holds. Good only over
 /// pages already open, and only for addresses a checked table named.
-struct Plain;
+pub(crate) struct Plain;
 
 impl Memory for Plain {
     fn read(&self, at: u32, out: &mut [u8]) -> bool {
@@ -427,7 +427,7 @@ impl Memory for Plain {
 }
 
 /// `VirtualProtect` by the page, for [`listen::open_pages`].
-struct Pages;
+pub(crate) struct Pages;
 
 impl Protect for Pages {
     fn set(&mut self, page: u32, protection: u32) -> Option<u32> {

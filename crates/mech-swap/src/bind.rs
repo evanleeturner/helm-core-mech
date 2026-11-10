@@ -12,6 +12,8 @@ use core::fmt;
 
 use mech_rows::sites::Patched;
 
+use crate::listen::{JUMP_BYTES, jump_over};
+
 /// `IMAGE_SCN_MEM_SHARED`: a page every process of the file shares, so a write here would
 /// reach past this process. Replaces the `s` the script read in `/proc`'s maps.
 const MEM_SHARED: u32 = 0x1000_0000;
@@ -73,6 +75,26 @@ pub enum Refusal<'a> {
     ThreadsNotStopped(&'a str),
     /// A pieces setting that is none of [`pieces`]' words.
     BadPieces(&'a str),
+    /// A swap setting that is none of [`swap_set`]'s words.
+    BadSwaps(&'a str),
+    /// More swap rows chosen than the plan has room for.
+    SwapRoom { rows: u32 },
+    /// A swap row whose 5 bytes are not all inside its file.
+    SwapOutside { address: u32 },
+    /// A swap row whose target is not inside the rebuilt copies.
+    SwapTarget { address: u32 },
+    /// Two swap rows whose bytes overlap, one address named twice among them.
+    SwapOverlap { address: u32, other: u32 },
+    /// A swap row over a site of its own file.
+    SwapOverSite { address: u32, site: u8 },
+    /// A swap row whose bytes do not read, in the file or live.
+    SwapUnread { address: u32 },
+    /// A swap row whose live bytes are not the file's.
+    SwapUnequal { address: u32 },
+    /// A thread stands inside a swap row's bytes.
+    ThreadInSwap { pc: u32 },
+    /// A swap row's jump did not read back, its write done.
+    SwapReadBack { address: u32 },
 }
 
 impl fmt::Display for Refusal<'_> {
@@ -93,6 +115,36 @@ impl fmt::Display for Refusal<'_> {
             Self::ThreadsNotStopped(why) => write!(f, "threads not stopped: {why}"),
             Self::BadPieces(value) => {
                 write!(f, "pieces is unset, off, or off,<export>,...; not {value:?}")
+            }
+            Self::BadSwaps(value) => {
+                write!(
+                    f,
+                    "swap is unset, none, all, or <address>,...; not {value:?}"
+                )
+            }
+            Self::SwapRoom { rows } => write!(f, "{rows} swap rows chosen, past the plan's room"),
+            Self::SwapOutside { address } => {
+                write!(f, "swap row {address:#x} is not inside its file")
+            }
+            Self::SwapTarget { address } => {
+                write!(
+                    f,
+                    "swap row {address:#x}'s target is not inside the rebuilt copies"
+                )
+            }
+            Self::SwapOverlap { address, other } => {
+                write!(f, "swap rows {other:#x} and {address:#x} overlap")
+            }
+            Self::SwapOverSite { address, site } => {
+                write!(f, "swap row {address:#x} is over site {site}")
+            }
+            Self::SwapUnread { address } => write!(f, "swap row {address:#x} does not read"),
+            Self::SwapUnequal { address } => {
+                write!(f, "swap row {address:#x}'s live bytes are not its file's")
+            }
+            Self::ThreadInSwap { pc } => write!(f, "a thread at {pc:#x} is inside a swap row"),
+            Self::SwapReadBack { address } => {
+                write!(f, "swap row {address:#x} read back unequal to its jump")
             }
         }
     }
@@ -321,6 +373,22 @@ pub fn for_chosen<'a>(
         count += 1;
     }
     Ok(count)
+}
+
+/// The swap setting judged by its form alone, once at the attach: unset is `none`; `none`,
+/// `all`, or a comma list of addresses, each 1 to 8 hex digits. Whether each address is in
+/// the table is [`for_chosen`]'s, at the file's load.
+pub fn swap_set(value: Option<&str>) -> Result<&str, Refusal<'_>> {
+    let Some(value) = value else {
+        return Ok("none");
+    };
+    let address =
+        |word: &str| (1..=8).contains(&word.len()) && word.bytes().all(|b| b.is_ascii_hexdigit());
+    if value == "none" || value == "all" || value.split(',').all(address) {
+        Ok(value)
+    } else {
+        Err(Refusal::BadSwaps(value))
+    }
 }
 
 /// The process's memory, or a test's.
@@ -731,13 +799,207 @@ pub fn report_sites(plan: &Plan, pcs: &[u32], memory: &impl Memory) {
     }
 }
 
+/// Do `[a, a + a_len)` and `[b, b + b_len)` share a byte? Widened, so no end wraps.
+fn overlaps(a: u32, a_len: usize, b: u32, b_len: usize) -> bool {
+    let (a, b) = (u64::from(a), u64::from(b));
+    a < b + b_len as u64 && b < a + a_len as u64
+}
+
+/// One swap row as the plan holds it: the file's address, the export it jumps to and that
+/// export's address, the file's bytes there and the jump that goes over them.
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+pub struct Swap<'a> {
+    pub address: u32,
+    pub export: &'a str,
+    pub target: u32,
+    pub old: [u8; JUMP_BYTES],
+    pub new: [u8; JUMP_BYTES],
+}
+
+impl Swap<'_> {
+    /// A place not yet filled: the plan's room is made of these before [`plan_swaps`] runs.
+    pub const EMPTY: Self = Self {
+        address: 0,
+        export: "",
+        target: 0,
+        old: [0; JUMP_BYTES],
+        new: [0; JUMP_BYTES],
+    };
+}
+
+/// What a swap plan is judged against at one file's load.
+pub struct SwapBounds<'s> {
+    /// The file's name, as a site's `dll` names it, in any case.
+    pub file: &'s str,
+    /// The file's mapped `[low, high)`; `low` is its base, the image's RVA 0.
+    pub low: u32,
+    pub high: u32,
+    /// The rebuilt copies' mapped `[low, high)`.
+    pub copies_low: u32,
+    pub copies_high: u32,
+    /// The load's sites; only those whose `dll` is `file` count.
+    pub sites: &'s [Patched],
+}
+
+/// The chosen rows judged while every thread still runs, so [`apply_swaps`] has only to
+/// compare and write: each row's 5 bytes inside the file and over none of its sites, no two
+/// rows sharing a byte, each target inside the rebuilt copies, each row's live bytes equal
+/// to `file`'s. Fills `out` and answers how many.
+///
+/// **The rows come back sorted by address**, whatever the setting's order, so
+/// `listen::open_pages` meets each page once, two rows on one page side by side, and each
+/// row need be held only against the one before it: all are 5 bytes long.
+pub fn plan_swaps<'a>(
+    table: &'a str,
+    chosen: &'a str,
+    bounds: &SwapBounds<'_>,
+    file: &impl Image,
+    live: &impl Memory,
+    out: &mut [Swap<'a>],
+) -> Result<usize, Refusal<'a>> {
+    let mut rows = 0;
+    let count = for_chosen(table, chosen, |row| {
+        if let Some(place) = out.get_mut(rows) {
+            *place = Swap {
+                address: row.address,
+                export: row.export,
+                target: row.target,
+                ..Swap::EMPTY
+            };
+        }
+        rows += 1;
+    })?;
+    if rows > out.len() {
+        return Err(Refusal::SwapRoom { rows: count });
+    }
+    let plan = &mut out[..rows];
+    plan.sort_unstable_by_key(|swap| swap.address);
+    let own = |patched: &&Patched| patched.dll.eq_ignore_ascii_case(bounds.file);
+    let mut before: Option<u32> = None;
+    for swap in plan.iter_mut() {
+        let address = swap.address;
+        let inside = address >= bounds.low
+            && u64::from(address) + JUMP_BYTES as u64 <= u64::from(bounds.high);
+        if !inside {
+            return Err(Refusal::SwapOutside { address });
+        }
+        if !(bounds.copies_low..bounds.copies_high).contains(&swap.target) {
+            return Err(Refusal::SwapTarget { address });
+        }
+        if let Some(other) = before.filter(|other| overlaps(*other, JUMP_BYTES, address, 1)) {
+            return Err(Refusal::SwapOverlap { address, other });
+        }
+        before = Some(address);
+        let mut over = bounds
+            .sites
+            .iter()
+            .filter(own)
+            .flat_map(|patched| patched.sites);
+        if let Some(site) = over.find(|site| overlaps(site.at, site.old.len(), address, JUMP_BYTES))
+        {
+            return Err(Refusal::SwapOverSite {
+                address,
+                site: site.n,
+            });
+        }
+        let held = file
+            .at(address - bounds.low, JUMP_BYTES)
+            .filter(|bytes| bytes.len() == JUMP_BYTES)
+            .ok_or(Refusal::SwapUnread { address })?;
+        swap.old.copy_from_slice(held);
+        let mut now = [0; JUMP_BYTES];
+        if !live.read(address, &mut now) {
+            return Err(Refusal::SwapUnread { address });
+        }
+        if now != swap.old {
+            return Err(Refusal::SwapUnequal { address });
+        }
+        swap.new
+            .copy_from_slice(&jump_over(address, swap.target, JUMP_BYTES)[..JUMP_BYTES]);
+    }
+    Ok(rows)
+}
+
+/// The moment itself, every other thread stopped: a thread inside any row's 5 bytes, or a
+/// row whose live bytes are no longer its file's, refuses with nothing written; then each
+/// jump is written and read back. A read back unequal stops there, the rows before it
+/// written, as [`apply_sites`]' does.
+///
+/// **It logs nothing, calls no heap and changes no protection**: a stopped thread may hold
+/// the lock any of them takes. `memory` must be writable already, its pages opened before
+/// the stop; [`report_swaps`] speaks after the threads run again.
+pub fn apply_swaps(
+    plan: &[Swap<'_>],
+    pcs: &[u32],
+    memory: &mut impl Memory,
+) -> Result<(), Refusal<'static>> {
+    for pc in pcs {
+        if plan
+            .iter()
+            .any(|swap| overlaps(swap.address, JUMP_BYTES, *pc, 1))
+        {
+            return Err(Refusal::ThreadInSwap { pc: *pc });
+        }
+    }
+    for swap in plan {
+        let mut live = [0; JUMP_BYTES];
+        if !memory.read(swap.address, &mut live) {
+            return Err(Refusal::SwapUnread {
+                address: swap.address,
+            });
+        }
+        if live != swap.old {
+            return Err(Refusal::SwapUnequal {
+                address: swap.address,
+            });
+        }
+    }
+    for swap in plan {
+        if !written(memory, swap.address, &swap.new) {
+            return Err(Refusal::SwapReadBack {
+                address: swap.address,
+            });
+        }
+    }
+    Ok(())
+}
+
+/// What [`apply_swaps`] could not say, once the threads run again, whichever way it ended:
+/// each row's address, export, target, old and new bytes and its live bytes read back now;
+/// then the load's line, the file, the setting, how many rows were chosen and how many read
+/// back as their jump. Answers that last count.
+pub fn report_swaps(file: &str, setting: &str, plan: &[Swap<'_>], memory: &impl Memory) -> usize {
+    let mut written = 0;
+    for swap in plan {
+        let mut back = [0; JUMP_BYTES];
+        let read = memory.read(swap.address, &mut back);
+        written += usize::from(read && back == swap.new);
+        log::debug!(
+            address:% = Hex(swap.address), export = swap.export, target:% = Hex(swap.target),
+            old:% = Bytes(&swap.old), new:% = Bytes(&swap.new),
+            back:% = Bytes(if read { &back[..] } else { &[] });
+            "bind.swap.row"
+        );
+    }
+    log::info!(
+        file = file, setting = setting, chosen = plan.len(), written = written; "bind.swap"
+    );
+    written
+}
+
 #[cfg(test)]
 mod tests {
     use std::collections::BTreeMap;
+    use std::format;
+    use std::string::{String, ToString};
     use std::vec;
     use std::vec::Vec;
 
+    use log::Level;
+    use mech_rows::sites::Site;
+
     use super::*;
+    use crate::test_log::lines;
 
     const BASE: u32 = 0x1000_0000;
     const PE_WORD: u32 = 0x40;
@@ -1054,6 +1316,338 @@ mod tests {
         let refused = for_chosen(SWAPS, "100026c1,deadbeef", |_| seen += 1);
         assert_eq!(refused, Err(Refusal::NotInTable("deadbeef")));
         assert_eq!(seen, 0);
+    }
+
+    const SHELL: u32 = 0x1000_0000;
+    const SHELL_SIZE: u32 = 0x5000;
+
+    /// A mapped image a test holds: an RVA is its offset.
+    struct Flat(Vec<u8>);
+
+    impl Image for Flat {
+        fn at(&self, rva: u32, size: usize) -> Option<&[u8]> {
+            cut(&self.0, rva as usize, size)
+        }
+    }
+
+    /// The shell's file, made-up bytes.
+    fn file() -> Flat {
+        Flat(
+            (0..SHELL_SIZE)
+                .map(|i| (i * 7 + 3).to_le_bytes()[0])
+                .collect(),
+        )
+    }
+
+    /// Live memory holding `file` at the shell's base, as a bind at base finds it.
+    fn live(file: &Flat) -> Fake {
+        let mut memory = Fake::default();
+        memory.bytes.extend((SHELL..).zip(file.0.iter().copied()));
+        memory
+    }
+
+    fn bounds(sites: &'static [Patched]) -> SwapBounds<'static> {
+        SwapBounds {
+            file: "MW2SHELL.DLL",
+            low: SHELL,
+            high: SHELL + SHELL_SIZE,
+            copies_low: 0x6000_0000,
+            copies_high: 0x6000_4000,
+            sites,
+        }
+    }
+
+    /// One load's swap on the host: the plan, the stop's writes with threads at `pcs`, then
+    /// the report, as the live bind runs them; the answer and every line logged.
+    fn swap_load(
+        table: &'static str,
+        set: &'static str,
+        sites: &'static [Patched],
+        pcs: &[u32],
+        memory: &mut Fake,
+    ) -> (Result<usize, Refusal<'static>>, Vec<(Level, String)>) {
+        let file = file();
+        let mut out = [Swap::EMPTY; 4];
+        let mut answer = Ok(0);
+        let logged = lines(|| {
+            answer = plan_swaps(table, set, &bounds(sites), &file, &*memory, &mut out).and_then(
+                |rows| {
+                    let ended = apply_swaps(&out[..rows], pcs, memory);
+                    report_swaps("MW2SHELL.DLL", set, &out[..rows], memory);
+                    ended.map(|()| rows)
+                },
+            );
+        });
+        (answer, logged)
+    }
+
+    /// A line's fields by name.
+    fn fields(line: &str) -> BTreeMap<&str, &str> {
+        line.split(' ')
+            .skip(1)
+            .filter_map(|field| field.split_once('='))
+            .collect()
+    }
+
+    fn rows(logged: &[(Level, String)]) -> Vec<BTreeMap<&str, &str>> {
+        logged
+            .iter()
+            .filter(|(_, line)| line.starts_with("bind.swap.row "))
+            .map(|(level, line)| {
+                assert_eq!(*level, Level::Debug, "{line}");
+                fields(line)
+            })
+            .collect()
+    }
+
+    #[test]
+    fn the_swap_setting_is_judged_by_its_form_alone() {
+        assert_eq!(swap_set(None), Ok("none"));
+        for good in [
+            "none",
+            "all",
+            "100026c1",
+            "100042c0,100026c1",
+            "0",
+            "deadbeef",
+        ] {
+            assert_eq!(swap_set(Some(good)), Ok(good));
+        }
+        for bad in [
+            "",
+            "ALL",
+            "off",
+            "100026c1,",
+            ",100026c1",
+            "0x100026c1",
+            "123456789",
+            "+1",
+        ] {
+            assert_eq!(swap_set(Some(bad)), Err(Refusal::BadSwaps(bad)));
+        }
+    }
+
+    #[test]
+    fn none_plans_nothing_writes_nothing_and_logs_nothing() {
+        let file = file();
+        let mut memory = live(&file);
+        let before = memory.bytes.clone();
+        let mut out = [Swap::EMPTY; 4];
+        let logged = lines(|| {
+            let planned = plan_swaps(SWAPS, "none", &bounds(&[]), &file, &memory, &mut out);
+            assert_eq!(planned, Ok(0));
+            assert_eq!(apply_swaps(&out[..0], &[], &mut memory), Ok(()));
+        });
+        assert_eq!(logged, vec![]);
+        assert_eq!(memory.bytes, before);
+    }
+
+    /// Each value checked is the code's own DEBUG line's: the row's live bytes are its `new`
+    /// and `back`, its `old` what memory held, its jump lands on its `target`, and no byte
+    /// outside the logged rows moved.
+    #[test]
+    fn each_chosen_row_jumps_to_its_copy_as_its_line_says() {
+        for (set, chosen) in [("all", 2), ("100042c0", 1), ("100042c0,100026c1", 2)] {
+            let mut memory = live(&file());
+            let before = memory.bytes.clone();
+            let (answer, logged) = swap_load(SWAPS, set, &[], &[], &mut memory);
+            assert_eq!(answer, Ok(chosen));
+            let rows = rows(&logged);
+            assert_eq!(rows.len(), chosen);
+            let mut spans = Vec::new();
+            for row in &rows {
+                let address = hex(row["address"]).expect("an address");
+                let mut now = [0; JUMP_BYTES];
+                assert!(memory.read(address, &mut now));
+                assert_eq!(Bytes(&now).to_string(), row["new"]);
+                assert_eq!(row["back"], row["new"]);
+                let was: Vec<u8> = (address..address + 5).map(|at| before[&at]).collect();
+                assert_eq!(Bytes(&was).to_string(), row["old"]);
+                assert_eq!(now[0], 0xe9);
+                let rel = u32::from_le_bytes(now[1..].try_into().expect("4 bytes"));
+                let lands = address.wrapping_add(5).wrapping_add(rel);
+                assert_eq!(Hex(lands).to_string(), row["target"]);
+                assert_eq!(row["export"], format!("HC5_{}", row["address"]));
+                spans.push(address..address + 5);
+            }
+            assert!(
+                spans.windows(2).all(|pair| pair[0].start < pair[1].start),
+                "sorted"
+            );
+            let moved = memory
+                .bytes
+                .iter()
+                .filter(|(at, byte)| before[at] != **byte);
+            assert!(
+                moved
+                    .map(|(at, _)| at)
+                    .all(|at| spans.iter().any(|s| s.contains(at)))
+            );
+            let load = format!("bind.swap file=MW2SHELL.DLL setting={set} chosen={chosen}");
+            let written = format!("{load} written={chosen}");
+            assert_eq!(logged.last(), Some(&(Level::Info, written)));
+        }
+    }
+
+    const SITE_ON_ROW: &[Patched] = &[Patched {
+        dll: "mw2shell.dll",
+        base: SHELL,
+        sites: &[Site {
+            n: 7,
+            at: 0x1000_26c4,
+            old: &[0; 2],
+            new: &[0; 2],
+        }],
+        guards: &[],
+    }];
+
+    const OTHER_FILES_SITE: &[Patched] = &[Patched {
+        dll: "mercsw.dll",
+        ..SITE_ON_ROW[0]
+    }];
+
+    #[test]
+    fn a_site_of_another_file_at_the_same_address_is_no_refusal() {
+        let mut memory = live(&file());
+        let (answer, _) = swap_load(SWAPS, "all", OTHER_FILES_SITE, &[], &mut memory);
+        assert_eq!(answer, Ok(2));
+    }
+
+    type Case = (
+        &'static str,
+        &'static str,
+        &'static [Patched],
+        &'static [u32],
+        fn(&mut Fake),
+    );
+
+    /// Every refusal leaves memory as it was, and any row line logged says so: its live
+    /// bytes still its `old`, the load's line `written=0`.
+    #[test]
+    fn each_refusal_comes_with_nothing_written() {
+        let none: fn(&mut Fake) = |_| {};
+        let flip: fn(&mut Fake) = |memory| {
+            let byte = memory.bytes[&0x1000_26c2];
+            memory.bytes.insert(0x1000_26c2, !byte);
+        };
+        let hole: fn(&mut Fake) = |memory| {
+            memory.bytes.remove(&0x1000_42c3);
+        };
+        let freeze: fn(&mut Fake) = |memory| memory.frozen = Some(0x1000_26c1);
+        let cases: [(Case, Refusal<'static>); 11] = [
+            (
+                ("10004ffc\tHC5_10004ffc\t60001000\n", "all", &[], &[], none),
+                Refusal::SwapOutside {
+                    address: 0x1000_4ffc,
+                },
+            ),
+            (
+                ("0ffffffe\tHC5_0ffffffe\t60001000\n", "all", &[], &[], none),
+                Refusal::SwapOutside {
+                    address: 0x0fff_fffe,
+                },
+            ),
+            (
+                ("100026c1\tHC5_100026c1\t60004000\n", "all", &[], &[], none),
+                Refusal::SwapTarget {
+                    address: 0x1000_26c1,
+                },
+            ),
+            (
+                (
+                    "100026c4\tB\t60002000\n100026c1\tA\t60001000\n",
+                    "all",
+                    &[],
+                    &[],
+                    none,
+                ),
+                Refusal::SwapOverlap {
+                    address: 0x1000_26c4,
+                    other: 0x1000_26c1,
+                },
+            ),
+            (
+                (SWAPS, "100026c1,100026c1", &[], &[], none),
+                Refusal::SwapOverlap {
+                    address: 0x1000_26c1,
+                    other: 0x1000_26c1,
+                },
+            ),
+            (
+                (SWAPS, "all", SITE_ON_ROW, &[], none),
+                Refusal::SwapOverSite {
+                    address: 0x1000_26c1,
+                    site: 7,
+                },
+            ),
+            (
+                (SWAPS, "100026c1,deadbeef", &[], &[], none),
+                Refusal::NotInTable("deadbeef"),
+            ),
+            (
+                (SWAPS, "all", &[], &[], flip),
+                Refusal::SwapUnequal {
+                    address: 0x1000_26c1,
+                },
+            ),
+            (
+                (SWAPS, "all", &[], &[], hole),
+                Refusal::SwapUnread {
+                    address: 0x1000_42c0,
+                },
+            ),
+            (
+                (SWAPS, "all", &[], &[0x1000_42c4], none),
+                Refusal::ThreadInSwap { pc: 0x1000_42c4 },
+            ),
+            (
+                (SWAPS, "all", &[], &[], freeze),
+                Refusal::SwapReadBack {
+                    address: 0x1000_26c1,
+                },
+            ),
+        ];
+        for ((table, set, sites, pcs, prepare), refusal) in cases {
+            let mut memory = live(&file());
+            prepare(&mut memory);
+            let before = memory.bytes.clone();
+            let (answer, logged) = swap_load(table, set, sites, pcs, &mut memory);
+            assert_eq!(answer, Err(refusal), "{set} over {table:?}");
+            assert_eq!(memory.bytes, before, "{set} over {table:?}");
+            assert!(rows(&logged).iter().all(|row| row["back"] == row["old"]));
+            if let Some((_, load)) = logged.last() {
+                assert_eq!(fields(load)["written"], "0", "{load}");
+            }
+        }
+    }
+
+    #[test]
+    fn bytes_changed_after_the_plan_refuse_under_the_stop() {
+        let file = file();
+        let mut memory = live(&file);
+        let mut out = [Swap::EMPTY; 4];
+        let rows = plan_swaps(SWAPS, "all", &bounds(&[]), &file, &memory, &mut out);
+        let rows = rows.expect("the plan holds");
+        let byte = memory.bytes[&0x1000_42c1];
+        memory.bytes.insert(0x1000_42c1, !byte);
+        let before = memory.bytes.clone();
+        let applied = apply_swaps(&out[..rows], &[], &mut memory);
+        assert_eq!(
+            applied,
+            Err(Refusal::SwapUnequal {
+                address: 0x1000_42c0
+            })
+        );
+        assert_eq!(memory.bytes, before);
+    }
+
+    #[test]
+    fn rows_past_the_plans_room_refuse() {
+        let file = file();
+        let memory = live(&file);
+        let mut out = [Swap::EMPTY; 1];
+        let planned = plan_swaps(SWAPS, "all", &bounds(&[]), &file, &memory, &mut out);
+        assert_eq!(planned, Err(Refusal::SwapRoom { rows: 2 }));
     }
 
     #[test]

@@ -9,21 +9,31 @@
 //! Not `HC5_LINK`:** the rig's flights set that for their gdb bind and inherit it, and the
 //! swap binding beside gdb would be 2 binds. Unset, the swap is what it was.
 //!
+//! **`HC5_SWAP` jumps a file's own functions to their rebuilt copies in the swap:** unset or
+//! `none`, nothing; `all`, or a comma list of the addresses its swap table names. Only a file
+//! whose row names a swap table is swapped, at its load, after its sites, so the file's own
+//! start-up already runs the copies.
+//!
 //! A refusal is a named stop, an ERROR line and [`BIND_REFUSED`] as the exit code. A process
 //! half bound would run on, answer from the wrong place and look alive.
 //!
 //! No allocator: each table is read into its own `VirtualAlloc` and kept to the process's
 //! end, one small block a load. No thread is stopped under a heap call or a log line: see
-//! [`bind::apply_sites`].
+//! [`bind::apply_sites`]. A swap's plan, its pages and the file it reads are freed after
+//! its load.
 use core::ffi::c_void;
 use core::fmt;
+use core::mem::ManuallyDrop;
+use core::ops::{Deref, DerefMut};
 use core::ptr::{null, null_mut, with_exposed_provenance, with_exposed_provenance_mut};
 use core::sync::atomic::{AtomicPtr, AtomicUsize, Ordering};
 
 use mech_rows::pieces::{HEIGHT, KEPT};
 use mech_rows::sites::{BoundFile, FILES, Patched};
 
-use crate::bind::{self, File, Hex, Loaded, Memory, Refusal};
+use crate::bind::{self, File, Hex, Loaded, Memory, Refusal, Swap};
+use crate::listen::{self, JUMP_BYTES, MOST_STOLEN, Placed};
+use crate::listen_live::{Pages, Plain};
 
 /// The `/fixed` base the swap is linked at: every table's targets assume it.
 const SWAP_BASE: u32 = 0x6000_0000;
@@ -42,6 +52,7 @@ const OPEN_EXISTING: u32 = 3;
 const FILE_ATTRIBUTE_NORMAL: u32 = 0x80;
 const INVALID_HANDLE_VALUE: usize = usize::MAX;
 const MEM_COMMIT_RESERVE: u32 = 0x3000;
+const MEM_RELEASE: u32 = 0x8000;
 const PAGE_READWRITE: u32 = 4;
 const PAGE_EXECUTE_READWRITE: u32 = 0x40;
 /// `GetCurrentProcess`'s fixed answer, so no call for it.
@@ -71,10 +82,12 @@ struct ThreadEntry {
 unsafe extern "system" {
     fn GetEnvironmentVariableA(name: *const u8, buffer: *mut u8, size: u32) -> u32;
     fn GetModuleHandleA(name: *const u8) -> u32;
+    fn GetModuleFileNameA(module: u32, path: *mut u8, size: u32) -> u32;
     fn IsBadReadPtr(at: *const c_void, size: u32) -> i32;
     fn VirtualProtect(at: *mut c_void, size: u32, new: u32, old: *mut u32) -> i32;
     fn FlushInstructionCache(process: usize, at: *const c_void, size: u32) -> i32;
     fn VirtualAlloc(at: *mut c_void, size: u32, kind: u32, protect: u32) -> *mut u8;
+    fn VirtualFree(at: *mut c_void, size: u32, kind: u32) -> i32;
     fn CreateFileA(
         path: *const u8,
         access: u32,
@@ -202,7 +215,68 @@ pub(crate) fn read_table_in(env: &[u8], name: &str) -> Option<&'static str> {
     if !path_in(env, name, &mut path) {
         return None;
     }
-    // SAFETY: `path_in` leaves the byte after the name inside the zeroed buffer.
+    core::str::from_utf8(read_whole(&path)?.keep()).ok()
+}
+
+/// Fresh pages holding `count` values, freed when dropped: a load's working room, the bind
+/// having no allocator. [`Block::keep`] keeps them to the process's end instead.
+struct Block<T> {
+    at: *mut T,
+    count: usize,
+}
+
+impl<T: Copy> Block<T> {
+    /// Place `i` holding `fill(i)`; `None` if the pages would not come.
+    fn new(count: usize, fill: impl Fn(usize) -> T) -> Option<Self> {
+        let bytes = u32::try_from(count.max(1).checked_mul(size_of::<T>())?).ok()?;
+        // SAFETY: asks for fresh pages; a null answer is checked before use.
+        let at = unsafe { VirtualAlloc(null_mut(), bytes, MEM_COMMIT_RESERVE, PAGE_READWRITE) }
+            .cast::<T>();
+        if at.is_null() {
+            return None;
+        }
+        for i in 0..count {
+            // SAFETY: the pages hold `count` values and start on a page, so each place is in
+            // bounds and aligned.
+            unsafe { at.add(i).write(fill(i)) };
+        }
+        Some(Self { at, count })
+    }
+
+    /// The values kept to the process's end, as a table's bytes are.
+    fn keep(self) -> &'static mut [T] {
+        let kept = ManuallyDrop::new(self);
+        // SAFETY: `new` wrote every place, and with the drop gone nothing frees the pages.
+        unsafe { core::slice::from_raw_parts_mut(kept.at, kept.count) }
+    }
+}
+
+impl<T> Deref for Block<T> {
+    type Target = [T];
+
+    fn deref(&self) -> &[T] {
+        // SAFETY: `new` wrote every place, and the pages stand until the drop.
+        unsafe { core::slice::from_raw_parts(self.at, self.count) }
+    }
+}
+
+impl<T> DerefMut for Block<T> {
+    fn deref_mut(&mut self) -> &mut [T] {
+        // SAFETY: as `deref`, and `&mut self` makes this the only borrow.
+        unsafe { core::slice::from_raw_parts_mut(self.at, self.count) }
+    }
+}
+
+impl<T> Drop for Block<T> {
+    fn drop(&mut self) {
+        // SAFETY: frees the pages `new` asked for, once; no borrow of them outlives the drop.
+        unsafe { VirtualFree(self.at.cast(), 0, MEM_RELEASE) };
+    }
+}
+
+/// The whole of the file at the NUL-terminated `path`, in fresh pages.
+fn read_whole(path: &[u8; PATH_BYTES]) -> Option<Block<u8>> {
+    // SAFETY: the caller leaves a NUL inside the buffer after the path.
     let file = unsafe {
         CreateFileA(
             path.as_ptr(),
@@ -217,25 +291,31 @@ pub(crate) fn read_table_in(env: &[u8], name: &str) -> Option<&'static str> {
     if file == INVALID_HANDLE_VALUE {
         return None;
     }
-    // SAFETY: the handle is open; the high half is not asked for, a table being small.
+    // SAFETY: the handle is open; the high half is not asked for, no file the bind reads
+    // nearing 4 GB.
     let size = unsafe { GetFileSize(file, null_mut()) };
-    // SAFETY: asks for fresh pages; a null answer is checked before use.
-    let block =
-        unsafe { VirtualAlloc(null_mut(), size.max(1), MEM_COMMIT_RESERVE, PAGE_READWRITE) };
+    let block = Block::new(size as usize, |_| 0);
     let mut read = 0;
-    // SAFETY: the block is `size` bytes, or null and then not read into.
-    let whole = !block.is_null()
-        && unsafe { ReadFile(file, block, size, &raw mut read, null_mut()) } != 0
-        && read == size;
+    let whole = block.as_ref().is_some_and(|block| {
+        // SAFETY: the block is `size` bytes, made by `new`, and nothing borrows it yet.
+        let done = unsafe { ReadFile(file, block.at, size, &raw mut read, null_mut()) };
+        done != 0
+    }) && read == size;
     // SAFETY: closes the handle opened above, once.
     unsafe { CloseHandle(file) };
-    if !whole {
+    block.filter(|_| whole)
+}
+
+/// The file `module` was loaded from, read whole: its bytes as the disk holds them.
+fn own_file(module: u32) -> Option<Block<u8>> {
+    let mut path = [0; PATH_BYTES];
+    // SAFETY: the buffer's size is passed, so it writes inside; a cut path answers that size.
+    let length =
+        unsafe { GetModuleFileNameA(module, path.as_mut_ptr(), PATH_BYTES as u32) } as usize;
+    if length == 0 || length >= PATH_BYTES {
         return None;
     }
-    // SAFETY: `read` bytes were just written there, and the block is never freed or written
-    // again, so it lives as `'static` says.
-    let bytes = unsafe { core::slice::from_raw_parts(block.cast_const(), size as usize) };
-    core::str::from_utf8(bytes).ok()
+    read_whole(&path)
 }
 
 /// The named stop.
@@ -415,19 +495,107 @@ fn bind_file(row: &'static BoundFile, module: u32) {
     if !row.sites.is_empty() {
         write_sites(row.file, row.sites);
     }
+    let setting = swap_value();
+    if let Some(name) = row.swaps.filter(|_| setting != "none") {
+        write_swaps(row, name, setting);
+    }
+}
+
+/// The swap table's chosen rows jumped to their rebuilt copies, at the sites' moment: the
+/// plan judged while the threads run, against the file's own bytes on disk read by RVA as
+/// the rig read them; the pages opened, the jumps written with the others stopped, the pages
+/// closed; then the lines, and a refusal last.
+fn write_swaps(row: &'static BoundFile, name: &'static str, setting: &'static str) {
+    let Some(table) = read_table(name) else {
+        refused(row.file, &name);
+    };
+    let Some(copies) = headers(SWAP_BASE).and_then(|head| bind::header_key(&File(head))) else {
+        refused(row.file, &"the swap's own headers would not read");
+    };
+    let bounds = bind::SwapBounds {
+        file: row.file,
+        low: row.base,
+        high: row.base + row.size,
+        copies_low: SWAP_BASE,
+        copies_high: SWAP_BASE + copies.size,
+        sites: row.sites,
+    };
+    let lines = table.lines().filter(|line| !line.trim().is_empty()).count();
+    let Some(mut room) = Block::new(lines, |_| Swap::EMPTY) else {
+        refused(row.file, &"no room for its swap plan");
+    };
+    let planned = {
+        let Some(own) = own_file(row.base) else {
+            refused(row.file, &"its own file would not read");
+        };
+        bind::plan_swaps(table, setting, &bounds, &File(&own), &Live, &mut room)
+    }
+    .unwrap_or_else(|refusal| refused(row.file, &refusal));
+    let plan = &room[..planned];
+    let pages =
+        Block::new(plan.len(), |i| as_placed(&plan[i])).zip(Block::new(2 * plan.len(), |_| (0, 0)));
+    let Some((placed, mut opened)) = pages else {
+        refused(row.file, &"no room for its swap's pages");
+    };
+    let open = listen::open_pages(&placed, PAGE_EXECUTE_READWRITE, &mut Pages, &mut opened)
+        .unwrap_or_else(|page| refused(row.file, &Hex(page)));
+    let mut pcs = [0; MOST_THREADS];
+    let stopped = with_others_stopped(&mut pcs, |pcs| bind::apply_swaps(plan, pcs, &mut Plain));
+    listen::close_pages(&opened[..open], &mut Pages);
+    if let (Some(first), Some(last)) = (plan.first(), plan.last()) {
+        // SAFETY: flushes the range the rows span, inside the file's image.
+        unsafe {
+            FlushInstructionCache(
+                CURRENT_PROCESS,
+                with_exposed_provenance::<c_void>(first.address as usize),
+                last.address + JUMP_BYTES as u32 - first.address,
+            );
+        }
+    }
+    bind::report_swaps(row.file, setting, plan, &Live);
+    match stopped {
+        Ok((_, Ok(()))) => {}
+        Ok((_, Err(refusal))) | Err(refusal) => refused(row.file, &refusal),
+    }
+}
+
+/// A planned swap as [`listen::open_pages`] reads a row: its 5 bytes, the jump's target and
+/// the file's bytes there.
+fn as_placed(swap: &Swap<'_>) -> Placed {
+    let mut saved = [0; MOST_STOLEN];
+    saved[..JUMP_BYTES].copy_from_slice(&swap.old);
+    Placed {
+        address: swap.address,
+        stub: swap.target,
+        length: JUMP_BYTES as u32,
+        saved,
+    }
 }
 
 /// `HC5_PIECES`' value as [`attach`] read it, its bytes and length; null for unset.
 static PIECES_AT: AtomicPtr<u8> = AtomicPtr::new(null_mut());
 static PIECES_LENGTH: AtomicUsize = AtomicUsize::new(0);
+/// `HC5_SWAP`'s value as [`attach`] judged it, as `PIECES_AT` holds the pieces'.
+static SWAP_AT: AtomicPtr<u8> = AtomicPtr::new(null_mut());
+static SWAP_LENGTH: AtomicUsize = AtomicUsize::new(0);
 
 /// The pieces setting [`attach`] read, for each load's bind.
 fn pieces_value() -> Option<&'static str> {
-    let at = PIECES_AT.load(Ordering::Acquire);
+    kept(&PIECES_AT, &PIECES_LENGTH)
+}
+
+/// The swap setting [`attach`] judged, for each load's bind; `none` before it has.
+fn swap_value() -> &'static str {
+    kept(&SWAP_AT, &SWAP_LENGTH).unwrap_or("none")
+}
+
+/// A setting `attach` stored; `None` for none stored.
+fn kept(at: &AtomicPtr<u8>, length: &AtomicUsize) -> Option<&'static str> {
+    let at = at.load(Ordering::Acquire);
     if at.is_null() {
         return None;
     }
-    let length = PIECES_LENGTH.load(Ordering::Relaxed);
+    let length = length.load(Ordering::Relaxed);
     // SAFETY: `attach` stored a `'static` str's length, then its pointer, never changed after.
     Some(unsafe {
         core::str::from_utf8_unchecked(core::slice::from_raw_parts(at.cast_const(), length))
@@ -458,8 +626,9 @@ fn variable(name: &[u8]) -> Option<&'static [u8]> {
     Some(unsafe { core::slice::from_raw_parts(block.cast_const(), length as usize) })
 }
 
-/// `DllMain`'s part: with `HC5_BIND` set, the pieces setting read and judged once, the layer
-/// told where to call after each load and the launcher, already parked and mapped, bound now.
+/// `DllMain`'s part: with `HC5_BIND` set, the pieces and swap settings read and judged once,
+/// the layer told where to call after each load and the launcher, already parked and mapped,
+/// bound now.
 pub fn attach(module: u32) {
     // SAFETY: the name is NUL-terminated and a size of 0 asks only for the length.
     let set = unsafe { GetEnvironmentVariableA(b"HC5_BIND\0".as_ptr(), null_mut(), 0) } != 0;
@@ -480,6 +649,12 @@ pub fn attach(module: u32) {
         PIECES_LENGTH.store(value.len(), Ordering::Relaxed);
         PIECES_AT.store(value.as_ptr().cast_mut(), Ordering::Release);
     }
+    let swap = variable(b"HC5_SWAP\0").map(|bytes| {
+        core::str::from_utf8(bytes).unwrap_or_else(|_| refused("the swap", &"HC5_SWAP: no text"))
+    });
+    let swap = bind::swap_set(swap).unwrap_or_else(|refusal| refused("the swap", &refusal));
+    SWAP_LENGTH.store(swap.len(), Ordering::Relaxed);
+    SWAP_AT.store(swap.as_ptr().cast_mut(), Ordering::Release);
     mech_layer::process::set_after_load(bind_module);
     // SAFETY: a null name asks for the process's own module, which nothing can unmap.
     bind_module(unsafe { GetModuleHandleA(null()) });

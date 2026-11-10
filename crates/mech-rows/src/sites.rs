@@ -93,6 +93,9 @@ pub struct BoundFile {
     pub stamp: u32,
     pub size: u32,
     pub sites: &'static [Patched],
+    /// The table of this file's functions that `HC5_SWAP` may jump to their rebuilt copies,
+    /// read from `HC5_BIND`'s folder at this file's load; `None` for a file with none.
+    pub swaps: Option<&'static str>,
 }
 
 /// `MW2SHELL.DLL` and `MERCSW.DLL` map at one base in turn, so only the headers tell them
@@ -106,6 +109,7 @@ pub const FILES: &[BoundFile] = &[
         stamp: 0x322d_c8ee,
         size: 0xe000,
         sites: &[],
+        swaps: None,
     },
     BoundFile {
         file: "MW2SHELL.DLL",
@@ -115,6 +119,7 @@ pub const FILES: &[BoundFile] = &[
         stamp: 0x323d_eb8e,
         size: 0xe_a000,
         sites: &[],
+        swaps: Some("swap-table.tsv"),
     },
     BoundFile {
         file: "MERCSW.DLL",
@@ -124,6 +129,7 @@ pub const FILES: &[BoundFile] = &[
         stamp: 0x323d_0ef1,
         size: 0x22_9000,
         sites: &[WAIL32, MERCSW],
+        swaps: None,
     },
 ];
 

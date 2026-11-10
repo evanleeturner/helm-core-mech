@@ -17,9 +17,10 @@ use std::path::PathBuf;
 
 use mech_rows::sites::FILES;
 use mech_swap::bind::{
-    File, HeaderKey, Loaded, Memory, Pointed, bind_table, for_chosen, header_key, iat_slot,
-    plan_sites, rebased, sections, slot_rows,
+    File, HeaderKey, Image, Loaded, Memory, Pointed, Swap, SwapBounds, bind_table, for_chosen,
+    header_key, iat_slot, plan_sites, plan_swaps, rebased, sections, slot_rows,
 };
+use mech_swap::listen::JUMP_BYTES;
 
 const IGNORED: &str = "needs the player's own files: BIND_GAME, BIND_LINK, BIND_HARVEST";
 
@@ -324,4 +325,105 @@ fn every_site_plans_on_the_game_files() {
         seen += row.sites.len();
     }
     println!("{seen} sites planned");
+}
+
+/// A file as a loader maps it at `base`, read by address: what `Live` reads in-process.
+struct Mapped<'a>(u32, File<'a>);
+
+impl Memory for Mapped<'_> {
+    fn read(&self, at: u32, out: &mut [u8]) -> bool {
+        let got = at
+            .checked_sub(self.0)
+            .and_then(|rva| self.1.at(rva, out.len()));
+        match got {
+            Some(got) if got.len() == out.len() => {
+                out.copy_from_slice(got);
+                true
+            }
+            _ => false,
+        }
+    }
+
+    fn write(&mut self, _at: u32, _bytes: &[u8]) -> bool {
+        false
+    }
+}
+
+/// `HC5_SWAP=all` judged as `live.rs`'s `write_swaps` judges it at a file's load, the file
+/// standing for its mapped image and the swap build's DLL for the copies: every row planned,
+/// none refused. Inside, aimed and overlapping rows are counted again apart from the plan.
+#[test]
+#[ignore = "needs the player's own files: BIND_GAME, BIND_LINK"]
+fn the_swap_plan_holds_on_the_game_files() {
+    let link = folder("BIND_LINK");
+    let dll = fs::read(link.join("hc5_swap.dll")).expect("the swap DLL reads");
+    let copies = header_key(&File(&dll)).expect("the swap DLL's headers read");
+    let image_base = File(&dll)
+        .at(copies.pe + 0x34, 4)
+        .and_then(|field| field.try_into().ok())
+        .map(u32::from_le_bytes)
+        .expect("the swap DLL's ImageBase reads");
+    assert_eq!(image_base, 0x6000_0000, "the base live.rs's attach takes");
+    let jump = JUMP_BYTES as u64;
+    let mut files = BTreeMap::new();
+    let mut seen = 0;
+    for row in FILES {
+        let Some(name) = row.swaps else { continue };
+        let table = fs::read_to_string(link.join(name)).expect("the swap table reads");
+        let image = file(&mut files, row.file);
+        let key = HeaderKey {
+            pe: row.pe,
+            stamp: row.stamp,
+            size: row.size,
+        };
+        assert_eq!(header_key(&File(image)), Some(key), "{}", row.file);
+        let bounds = SwapBounds {
+            file: row.file,
+            low: row.base,
+            high: row.base + row.size,
+            copies_low: image_base,
+            copies_high: image_base + copies.size,
+            sites: row.sites,
+        };
+        let lines = table.lines().filter(|line| !line.trim().is_empty()).count();
+        let mut room = vec![Swap::EMPTY; lines];
+        let live = Mapped(row.base, File(image));
+        let planned = plan_swaps(&table, "all", &bounds, &File(image), &live, &mut room)
+            .unwrap_or_else(|refusal| panic!("{}: {refusal:?}", row.file));
+        let plan = &room[..planned];
+        let inside = plan
+            .iter()
+            .filter(|swap| {
+                swap.address >= bounds.low
+                    && u64::from(swap.address) + jump <= u64::from(bounds.high)
+            })
+            .count();
+        let aimed = plan
+            .iter()
+            .filter(|swap| (bounds.copies_low..bounds.copies_high).contains(&swap.target))
+            .count();
+        let over = plan
+            .windows(2)
+            .filter(|pair| u64::from(pair[1].address) < u64::from(pair[0].address) + jump)
+            .count();
+        let sites: usize = row
+            .sites
+            .iter()
+            .filter(|patched| patched.dll.eq_ignore_ascii_case(row.file))
+            .map(|patched| patched.sites.len())
+            .sum();
+        println!(
+            "{}: {lines} table rows, {planned} planned, {inside} inside the file, {aimed} aimed \
+             inside the copies, {over} over the row before, {sites} sites of its own",
+            row.file
+        );
+        assert_eq!(
+            (planned, inside, aimed, over),
+            (lines, lines, lines, 0),
+            "{}",
+            row.file
+        );
+        seen += planned;
+    }
+    assert!(seen > 0, "no file names a swap table");
 }

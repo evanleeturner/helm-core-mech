@@ -31,6 +31,9 @@ include!(concat!(env!("OUT_DIR"), "/ports.rs"));
 pub mod bind;
 pub mod listen;
 
+#[cfg(test)]
+mod test_log;
+
 #[cfg(all(target_arch = "x86", target_os = "windows", not(test)))]
 mod listen_live;
 

@@ -142,6 +142,18 @@
       "template": "{file}'s sites written, {threads} threads judged"
     },
     {
+      "id": "bind.swap",
+      "level": "I",
+      "fields": { "file": "the file whose functions were swapped", "setting": "HC5_SWAP as the swap judged it: all, or the addresses chosen, comma-joined", "chosen": "the rows the setting chose", "written": "the rows whose bytes read back as their jump" },
+      "template": "{file} swapped by {setting}: {written} of {chosen} chosen rows jump to their rebuilt copies: one line a load"
+    },
+    {
+      "id": "bind.swap.row",
+      "level": "D",
+      "fields": { "address": "the function's address in the file", "export": "the swap's export holding its rebuilt copy", "target": "the export's address", "old": "the file's bytes there, which the live ones must equal", "new": "the jump to the export", "back": "the bytes read back after the write, none if unread" },
+      "template": "{address} jumps to {export} at {target}: old {old}, new {new}, back {back}"
+    },
+    {
       "id": "bind.unread",
       "level": "D",
       "fields": { "module": "the module's base" },
