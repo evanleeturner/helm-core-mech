@@ -13,6 +13,30 @@
 //! `GetSystemMetrics`, `PostMessageA`) moved here from [`crate::imports`],
 //! their exports' names unchanged.
 //!
+//! The game is told a 640 by 480 screen, `mech_rows::draw::MODE`, before
+//! the first window it places, size it reads, or point it reads or gives:
+//! the rows that do any of these (`create_window`, `set_window_pos`,
+//! `get_window_rect`, `get_system_metrics`, and the pointer's
+//! `peek_message`, `client_to_screen`, `screen_to_client`) tell it first,
+//! by `user32::tell_screen`. Its windows then land on the real screen at
+//! the whole-factor fit, and the sizes it reads answer the told screen's.
+//! The points the game reads or gives on the pointer's rows (a mouse
+//! message's, a window's corner) are the told screen's and Wine's the real
+//! one's, mapped between them by `window`'s back. The pointer's own three
+//! calls, in [`crate::input`], tell it by this module's `told` too. The
+//! other rows are told nothing and hand their numbers on as they came.
+//!
+//! `DefWindowProcA` alone does one thing after its call: at
+//! `WM_WINDOWPOSCHANGED`, once Wine has moved or sized a window, it has
+//! [`crate::draw::present_again`] show the picture on that window's new
+//! inside.
+//!
+//! `RegisterClassA` hands the real call a copy of the file's class with
+//! its background brush 0, by [`crate::window_class`], and writes one
+//! line naming the brush taken out: an erase the system sends while it
+//! holds the window's messages then fills nothing, and the last picture
+//! stays. The file's own record is not written.
+//!
 //! A line's `a` holds numbers: a record a call is handed (a message, a
 //! rectangle, a point, a class) shows its fields, never its address; `o`
 //! the record the call wrote, empty on a 0 answer. A class, title, icon
@@ -28,7 +52,9 @@ use ::window::user32;
 use core::ffi::CStr;
 use core::fmt;
 use core::ptr::with_exposed_provenance;
+use core::sync::atomic::{AtomicBool, Ordering};
 use kernel_process::Text;
+use mech_rows::draw::MODE;
 
 /// A name a call is handed, as `s` and `with` show it.
 pub(crate) enum Name<'a> {
@@ -101,8 +127,32 @@ pub(crate) unsafe fn wrote<const N: usize>(value: u32, address: u32) -> Wrote<N>
     Wrote((value != 0).then(|| unsafe { record(address) }))
 }
 
-/// A row: the file's call, passed to `window`'s front whole.
+/// Whether the game has been told its screen.
+static TOLD: AtomicBool = AtomicBool::new(false);
+
+/// Tells the game its screen, `MODE`'s 640 by 480, the first time a row
+/// that places a window, reads a size, or reads or gives a point runs,
+/// here or in [`crate::input`]. Two rows at once may both tell it: telling
+/// the same screen twice changes nothing and writes no second line, and no
+/// row goes on untold.
+pub(crate) fn told() {
+    if !TOLD.load(Ordering::Acquire) {
+        user32::tell_screen(MODE.0, MODE.1);
+        TOLD.store(true, Ordering::Release);
+    }
+}
+
+/// A row: the file's call, passed to `window`'s front whole; a `told` row
+/// tells the game its screen first.
 macro_rules! row {
+    (told $name:ident, $($argument:ident),*) => {
+        #[allow(clippy::too_many_arguments, reason = "the import's own, and the caller first")]
+        extern "system" fn $name(from: u32, $($argument: u32),*) -> u32 {
+            told();
+            // SAFETY: the file's arguments as its import takes them, passed on whole.
+            unsafe { user32::$name(from, $($argument),*) }
+        }
+    };
     ($name:ident, $($argument:ident),*) => {
         #[allow(clippy::too_many_arguments, reason = "the import's own, and the caller first")]
         extern "system" fn $name(from: u32, $($argument: u32),*) -> u32 {
@@ -113,7 +163,7 @@ macro_rules! row {
 }
 
 row!(
-    create_window,
+    told create_window,
     extended,
     class,
     title,
@@ -130,21 +180,53 @@ row!(
 row!(set_window_long, window, index, long);
 row!(destroy_window, window);
 row!(load_icon, instance, icon);
-row!(register_class, class);
-row!(def_window_proc, window, message, w, l);
 row!(translate_message, message);
 row!(dispatch_message, message);
-row!(peek_message, message, window, low, high, remove);
+row!(told peek_message, message, window, low, high, remove);
 row!(send_message, window, message, w, l);
 row!(post_message, window, message, w, l);
 row!(show_window, window, command);
 row!(adjust_window_rect, rectangle, style, menu);
-row!(set_window_pos, window, after, x, y, width, height, flags);
-row!(get_window_rect, window, rectangle);
-row!(client_to_screen, window, point);
-row!(screen_to_client, window, point);
+row!(told set_window_pos, window, after, x, y, width, height, flags);
+row!(told get_window_rect, window, rectangle);
+row!(told client_to_screen, window, point);
+row!(told screen_to_client, window, point);
 row!(set_focus, window);
 row!(find_window, class, title);
+
+/// `WM_WINDOWPOSCHANGED`, the message a window is sent once it has been
+/// moved or sized.
+const WINDOW_POS_CHANGED: u32 = 0x47;
+
+/// The file's `DefWindowProcA`, passed on whole and its answer handed back.
+/// After the answer to [`WINDOW_POS_CHANGED`] the picture is shown again on
+/// the window, so a window Wine grew or shrank is painted at its new inside
+/// now, not at the file's next paint, which may not come.
+extern "system" fn def_window_proc(from: u32, window: u32, message: u32, w: u32, l: u32) -> u32 {
+    // SAFETY: the file's arguments as its import takes them, passed on whole.
+    let value = unsafe { user32::def_window_proc(from, window, message, w, l) };
+    if message == WINDOW_POS_CHANGED {
+        crate::draw::present_again(window);
+    }
+    value
+}
+
+/// The file's `RegisterClassA`, handed on with a copy of its class whose
+/// background brush is 0, by [`crate::window_class::without_brush`]; the
+/// file's own record is not written. A null class is passed on as it came.
+extern "system" fn register_class(from: u32, class: u32) -> u32 {
+    if class == 0 {
+        // SAFETY: the file's null argument, passed on whole.
+        return unsafe { user32::register_class(from, 0) };
+    }
+    // SAFETY: the file's class record, 10 fields, as `RegisterClassA` takes it.
+    let (copy, brush) = crate::window_class::without_brush(unsafe { record(class) });
+    kept!(log::debug!(brush:% = mech_trace::__shown!(brush),
+        from:% = mech_trace::__shown!(from), by = "mech-layer";
+        "window.brush"));
+    // SAFETY: `copy` is a whole class record on this stack, alive across the call.
+    unsafe { user32::register_class(from, copy.as_ptr().expose_provenance() as u32) }
+}
 
 extern "system" fn wait_message(from: u32) -> u32 {
     // SAFETY: the file's own wait, in the loop that holds nothing across it.
@@ -164,6 +246,7 @@ extern "system" fn get_message_time(from: u32) -> u32 {
 }
 
 extern "system" fn get_system_metrics(from: u32, index: u32) -> u32 {
+    told();
     user32::get_system_metrics(from, index)
 }
 

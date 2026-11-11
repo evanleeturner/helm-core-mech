@@ -7,10 +7,25 @@
 //! 15 exports, one a name a file imports: the shell's 7 `HC6_`, the game
 //! file's 7 `GAME_`, the launcher's 1 `LAUNCHER_` (`LoadCursorA` alone).
 //! Each is a naked entry that reads the address the call returns to first.
+//!
+//! The pointer's own three, `GetCursorPos`, `SetCursorPos` and
+//! `ClipCursor`, are `told` rows: each tells the game its screen first, by
+//! [`crate::window`]'s `told`, as that module's pointer rows do, so the
+//! point it reads or gives is the told screen's from the first call, and
+//! `window-input`'s back maps it to and from the real one. `ShowCursor`,
+//! `LoadCursorA` and the keys are told nothing.
 use ::window_input::user32;
 
-/// A row: the file's call, passed to `window-input`'s front whole.
+/// A row: the file's call, passed to `window-input`'s front whole; a
+/// `told` row tells the game its screen first.
 macro_rules! row {
+    (told $name:ident, $($argument:ident),*) => {
+        extern "system" fn $name(from: u32, $($argument: u32),*) -> u32 {
+            crate::window::told();
+            // SAFETY: the file's arguments as its import takes them, passed on whole.
+            unsafe { user32::$name(from, $($argument),*) }
+        }
+    };
     ($name:ident, $($argument:ident),*) => {
         extern "system" fn $name(from: u32, $($argument: u32),*) -> u32 {
             // SAFETY: the file's arguments as its import takes them, passed on whole.
@@ -19,8 +34,15 @@ macro_rules! row {
     };
 }
 
-/// A row whose front takes no address, so it needs no promise.
+/// A row whose front takes no address, so it needs no promise; a `told`
+/// row tells the game its screen first.
 macro_rules! safe_row {
+    (told $name:ident, $($argument:ident),*) => {
+        extern "system" fn $name(from: u32, $($argument: u32),*) -> u32 {
+            crate::window::told();
+            user32::$name(from, $($argument),*)
+        }
+    };
     ($name:ident, $($argument:ident),*) => {
         extern "system" fn $name(from: u32, $($argument: u32),*) -> u32 {
             user32::$name(from, $($argument),*)
@@ -28,10 +50,10 @@ macro_rules! safe_row {
     };
 }
 
-row!(get_cursor_pos, point);
+row!(told get_cursor_pos, point);
 row!(load_cursor, instance, cursor);
-row!(clip_cursor, rectangle);
-safe_row!(set_cursor_pos, x, y);
+row!(told clip_cursor, rectangle);
+safe_row!(told set_cursor_pos, x, y);
 safe_row!(show_cursor, show);
 safe_row!(get_async_key_state, key);
 safe_row!(get_key_state, key);

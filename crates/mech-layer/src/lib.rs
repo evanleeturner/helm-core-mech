@@ -53,7 +53,9 @@
 //! line is written, so the sink's `WriteFile` cannot change what the
 //! caller reads (`TlsGetValue` and `CreateFileA` set it on success).
 //!
-//! 32-bit x86 Windows only; on any other target the crate is empty.
+//! 32-bit x86 Windows only, but for [`window_class`], which every target
+//! builds so a host test reads it: on any other target the crate is that
+//! module alone.
 #![no_std]
 
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
@@ -224,3 +226,4 @@ pub mod through;
 pub mod time;
 #[cfg(all(target_arch = "x86", target_os = "windows"))]
 pub mod window;
+pub mod window_class;

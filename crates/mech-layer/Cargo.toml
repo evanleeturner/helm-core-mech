@@ -1,8 +1,8 @@
 # The layer (HC6): a Rust function for each Windows and Miles import the
 # shell's screens call, and for each Smacker thunk; each calls the real
 # function through Wine and writes one DEBUG line, `imp.call`. Linked into
-# the swap's library by `mech-swap`. 32-bit x86 Windows only; on any other
-# target the crate is empty.
+# the swap's library by `mech-swap`. 32-bit x86 Windows only, but for
+# `window_class`, which every target builds so a host test reads it.
 [package]
 name = "mech_layer"
 version = "0.1.0"

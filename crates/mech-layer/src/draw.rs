@@ -2,7 +2,8 @@
 //! The drawing calls: mercs's 23 `GDI32` and paint names,
 //! each answered by [`::draw`]'s front from call 1, `by=draw` on its line and
 //! `from`, the caller, beside it. The picture reaches the real window by
-//! [`::draw::user32::Window`], `SetDIBitsToDevice` alone.
+//! [`::draw::user32::Window`], `SetDIBitsToDevice` alone; after a window is
+//! moved or sized, [`present_again`] has Wine put it on the screen by `EndPaint`.
 //!
 //! 41 exports, one a name a file imports: the shell's 19 `HC6_`, the game
 //! file's 18 `GAME_`, the launcher's 4 `LAUNCHER_`. Each is a naked entry that
@@ -32,6 +33,7 @@ use mech_rows::draw::{MODE, SHELL};
 
 unsafe extern "system" {
     fn GetCurrentThreadId() -> u32;
+    fn EndPaint(window: u32, paint: u32) -> i32;
 }
 
 /// The rows' state: one easel and the thread it belongs to, 0 until a first
@@ -53,6 +55,12 @@ static SHARED: Shared = Shared {
 };
 pub(crate) static REAL: Real = Real;
 
+/// The id of the thread that calls.
+fn this_thread() -> u32 {
+    // SAFETY: reads this thread's own id.
+    unsafe { GetCurrentThreadId() }
+}
+
 /// The front for `from`'s call on this thread; `None`, as [`easel`] answers.
 fn front(call: &'static str, from: u32) -> Option<Front<'static, Window, Real>> {
     easel(call, from).map(|easel| Front::new(&SHELL, easel, &REAL).from(from))
@@ -62,8 +70,7 @@ fn front(call: &'static str, from: u32) -> Option<Front<'static, Window, Real>> 
 /// line written, on a thread that is not its own. The first call builds the
 /// screen, `MODE`'s size.
 pub(crate) fn easel(call: &'static str, from: u32) -> Option<&'static Easel<Window>> {
-    // SAFETY: reads this thread's own id.
-    let tid = unsafe { GetCurrentThreadId() };
+    let tid = this_thread();
     match SHARED
         .owner
         .compare_exchange(0, tid, Ordering::AcqRel, Ordering::Acquire)
@@ -89,6 +96,40 @@ fn aim(window: u32) {
         && let Some(easel) = SHARED.easel.get()
     {
         easel.back().aim(window);
+    }
+}
+
+/// The picture presented again on `window` after it was moved or sized, so
+/// its new inside is painted now. Nothing on a thread that is not the
+/// easel's, before the first drawing row, while a row has the easel's state
+/// lent out (a call that came back in), or when the easel is aimed at
+/// another window. The present writes its own line, and `EndPaint` its one
+/// `imp.call`.
+///
+/// Wine keeps a window's drawing in a copy of its own and puts that copy on
+/// the screen only at a thread's next wait, or at a later draw once 50 ms
+/// have passed since the first draw not yet shown: a program that paints and
+/// then waits for nothing leaves the picture unseen. `EndPaint` with no paint
+/// record is the one call in Wine 9.0 that puts it on the screen at once, with
+/// no erase, no message sent and nothing validated, unless a thread of the
+/// program waited in the last 50 ms, whose next wait does it instead. It
+/// answers FALSE. On Windows the call is outside its contract, with no
+/// `BeginPaint` before it. The thread's last error is kept around it.
+pub(crate) fn present_again(window: u32) {
+    if SHARED.owner.load(Ordering::Acquire) == this_thread()
+        && let Some(easel) = SHARED.easel.get()
+        && !easel.held()
+        && easel.back().aimed() == window
+    {
+        easel.present();
+        kept!(imp_call!(
+            "orig",
+            "USER32!EndPaint",
+            [window, 0_u32],
+            // SAFETY: `window` is the window the easel paints; with a null
+            // paint record Wine reads nothing of the caller's.
+            unsafe { EndPaint(window, 0) }
+        ));
     }
 }
 
