@@ -12,6 +12,7 @@ unsafe extern "C" {
 
 #[allow(non_snake_case)]
 unsafe extern "stdcall" {
+    #[link_name = "\u{1}_HC6_BitBlt"]
     fn BitBlt(
         param_1: *mut c_void,
         param_2: i32,

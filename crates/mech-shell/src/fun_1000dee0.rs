@@ -16,12 +16,14 @@ unsafe extern "C" {
 
 #[allow(non_snake_case)]
 unsafe extern "stdcall" {
+    #[link_name = "\u{1}_HC6_SetDIBColorTable"]
     fn SetDIBColorTable(
         hdc: *mut core::ffi::c_void,
         i_start: u32,
         c_entries: u32,
         prgbq: *const core::ffi::c_void,
     ) -> u32;
+    #[link_name = "\u{1}_HC6_CreateDIBSection"]
     fn CreateDIBSection(
         hdc: *mut core::ffi::c_void,
         pbmi: *const core::ffi::c_void,
@@ -30,10 +32,12 @@ unsafe extern "stdcall" {
         h_section: *mut core::ffi::c_void,
         offset: u32,
     ) -> *mut core::ffi::c_void;
+    #[link_name = "\u{1}_HC6_SelectObject"]
     fn SelectObject(
         hdc: *mut core::ffi::c_void,
         h: *mut core::ffi::c_void,
     ) -> *mut core::ffi::c_void;
+    #[link_name = "\u{1}_HC6_GetLastError"]
     fn GetLastError() -> u32;
 }
 

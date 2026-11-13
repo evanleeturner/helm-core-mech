@@ -28,6 +28,7 @@ unsafe extern "fastcall" {
 }
 
 unsafe extern "stdcall" {
+    #[link_name = "\u{1}_HC6_HeapFree@12"]
     fn HeapFree(h: *mut c_void, flags: u32, mem: *mut c_void) -> i32;
 }
 

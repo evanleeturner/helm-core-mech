@@ -14,6 +14,7 @@ unsafe extern "C" {
 
 #[allow(non_snake_case)]
 unsafe extern "stdcall" {
+    #[link_name = "\u{1}_SETMODE_BitBlt"]
     fn BitBlt(
         hdc: *mut c_void,
         x: i32,
@@ -25,6 +26,7 @@ unsafe extern "stdcall" {
         y1: i32,
         rop: u32,
     ) -> i32;
+    #[link_name = "\u{1}_HC6_GetLastError"]
     fn GetLastError() -> u32;
 }
 

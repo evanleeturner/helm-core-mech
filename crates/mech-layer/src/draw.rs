@@ -379,16 +379,47 @@ extern "system" fn bit_blt(
     answered(from, height, value)
 }
 
+/// `BitBlt` for the set-mode present's port, `FUN_1000df80` run in the original's
+/// place: [`bit_blt`]'s height answer whatever the return address. The port's call
+/// returns into the port, never to [`SET_MODE_PRESENT`], so the rule keyed to that
+/// address misses it; this entry is the port's alone, named by its `link_name`.
+extern "system" fn set_mode_bit_blt(
+    from: u32,
+    dc: u32,
+    x: u32,
+    y: u32,
+    width: u32,
+    height: u32,
+    source: u32,
+    sx: u32,
+    sy: u32,
+    rop: u32,
+) -> u32 {
+    let value = front("GDI32!BitBlt", from).map_or(1, |front| {
+        front.bit_blt(dc, x, y, width, height, source, sx, sy, rop)
+    });
+    height_answer(from, height, value)
+}
+
 /// The one caller's answer: `height` where the draw worked, else the draw's own `value`.
 fn answered(from: u32, height: u32, value: u32) -> u32 {
-    if from == SET_MODE_PRESENT && value != 0 {
-        kept!(log::debug!(v:% = mech_trace::__shown!(value),
-            answer:% = mech_trace::__shown!(height), from:% = mech_trace::__shown!(from),
-            by = "mech-layer";
-            "draw.answer"));
-        return height;
+    if from == SET_MODE_PRESENT {
+        return height_answer(from, height, value);
     }
     value
+}
+
+/// The set-mode present's answer: `height` where the draw worked, else the draw's
+/// own `value`; `draw.answer` shows both, `from` the caller's own.
+fn height_answer(from: u32, height: u32, value: u32) -> u32 {
+    if value == 0 {
+        return value;
+    }
+    kept!(log::debug!(v:% = mech_trace::__shown!(value),
+        answer:% = mech_trace::__shown!(height), from:% = mech_trace::__shown!(from),
+        by = "mech-layer";
+        "draw.answer"));
+    height
 }
 
 /// Wine's `BitBlt`, as the height row's slot held it at the bind.
@@ -581,6 +612,7 @@ entry!(HC6_StretchBlt, stretch_blt, 11);
 entry!(HC6_CreateDIBSection, create_dib_section, 6);
 entry!(HC6_BitBlt, bit_blt, 9);
 entry!(ORIG_BitBlt, orig_bit_blt, 9);
+entry!(SETMODE_BitBlt, set_mode_bit_blt, 9);
 entry!(HC6_CreateCompatibleDC, create_compatible_dc, 1);
 entry!(HC6_DeleteDC, delete_dc, 1);
 entry!(HC6_DeleteObject, delete_object, 1);

@@ -7,7 +7,9 @@ unsafe extern "C" {
 
 #[allow(non_snake_case)]
 unsafe extern "stdcall" {
+    #[link_name = "\u{1}_HC6_EnableMenuItem@12"]
     fn EnableMenuItem(menu: *mut core::ffi::c_void, id: u32, flags: u32) -> i32;
+    #[link_name = "\u{1}_HC6_DrawMenuBar@4"]
     fn DrawMenuBar(hwnd: *mut core::ffi::c_void) -> i32;
 }
 

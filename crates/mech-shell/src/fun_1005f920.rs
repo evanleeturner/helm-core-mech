@@ -27,9 +27,13 @@ unsafe extern "C" {
 
 #[allow(non_snake_case)]
 unsafe extern "stdcall" {
+    #[link_name = "\u{1}_HC6_GetSystemMetrics"]
     fn GetSystemMetrics(nIndex: i32) -> i32;
+    #[link_name = "\u{1}_HC6_AdjustWindowRect"]
     fn AdjustWindowRect(lpRect: *mut c_void, dwStyle: u32, bMenu: i32) -> i32;
+    #[link_name = "\u{1}_HC6_ShowWindow"]
     fn ShowWindow(hWnd: *mut c_void, nCmdShow: i32) -> i32;
+    #[link_name = "\u{1}_HC6_UpdateWindow"]
     fn UpdateWindow(hWnd: *mut c_void) -> i32;
 }
 

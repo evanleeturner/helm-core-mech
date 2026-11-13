@@ -19,6 +19,17 @@
 //!   `cfg(target_arch = "x86")`: on any other target the crate is RT1's 20
 //!   alone. Build them with `--target i686-pc-windows-gnu`.
 //!
+//! A port the swap runs in the original's place calls the game's imports
+//! where the original's own calls land: the shell's import slots point at
+//! `mech-layer`'s entries, `HC6_<name>`, never straight at Wine. So the
+//! import a port declares carries `link_name = "\u{1}_HC6_<name>"`, spelled
+//! as the layer's symbol is (an `@N` where that entry has one); the `\u{1}`
+//! keeps the compiler from adding its own `_` and `@N`. The main menu's 23
+//! ports carry it, 61 declarations; the rest still call Wine directly. One
+//! exception: `FUN_1000df80`, the set-mode present, calls `SETMODE_BitBlt`,
+//! for the shell quits unless that `BitBlt` answers the height, and the
+//! layer's `HC6_BitBlt` gives it only to the original's return address.
+//!
 //! Call: the 20 re-exported below; the game's globals any of them reads or
 //! writes are the fields of [`ShellState`], passed by reference.
 #![expect(

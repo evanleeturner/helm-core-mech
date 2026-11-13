@@ -12,7 +12,8 @@ unsafe extern "C" {
 
 #[allow(non_snake_case)]
 unsafe extern "stdcall" {
-    fn GetFileAttributesA(param_1: *const core::ffi::c_void) -> u32;
+    #[link_name = "\u{1}_HC6_GetFileAttributesA@4"]
+    fn GetFileAttributesA(param_1: *const u8) -> u32;
 }
 
 #[unsafe(no_mangle)]
@@ -26,7 +27,7 @@ pub unsafe extern "C" fn FUN_1000e790(param_1: u32) -> u32 {
         let file_attributes = mech_trace::cr!(
             "1000e790",
             "GetFileAttributesA",
-            GetFileAttributesA(file_path as *const core::ffi::c_void)
+            GetFileAttributesA(file_path.cast_const())
         );
         if file_attributes != 0xffff_ffff {
             return mech_trace::rt!("1000e790", 1);
@@ -36,7 +37,7 @@ pub unsafe extern "C" fn FUN_1000e790(param_1: u32) -> u32 {
         let file_attributes = mech_trace::cr!(
             "1000e790",
             "GetFileAttributesA",
-            GetFileAttributesA(file_path as *const core::ffi::c_void)
+            GetFileAttributesA(file_path.cast_const())
         );
         if file_attributes == 0xffff_ffff {
             return mech_trace::rt!("1000e790", 0);

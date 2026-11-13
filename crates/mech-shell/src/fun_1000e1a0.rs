@@ -22,9 +22,13 @@ unsafe extern "C" {
 
 #[allow(non_snake_case)]
 unsafe extern "stdcall" {
+    #[link_name = "\u{1}_HC6_CreatePalette"]
     fn CreatePalette(p: *const c_void) -> *mut c_void;
+    #[link_name = "\u{1}_HC6_SelectPalette"]
     fn SelectPalette(hdc: *mut c_void, pal: *mut c_void, bg: i32) -> *mut c_void;
+    #[link_name = "\u{1}_HC6_SetPaletteEntries"]
     fn SetPaletteEntries(pal: *mut c_void, start: u32, count: u32, entries: *const c_void) -> u32;
+    #[link_name = "\u{1}_HC6_RealizePalette"]
     fn RealizePalette(hdc: *mut c_void) -> u32;
 }
 

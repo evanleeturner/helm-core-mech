@@ -16,7 +16,9 @@ unsafe extern "C" {
 
 #[allow(non_snake_case)]
 unsafe extern "stdcall" {
+    #[link_name = "\u{1}_HC6_GetDeviceCaps"]
     fn GetDeviceCaps(hdc: *mut core::ffi::c_void, index: i32) -> i32;
+    #[link_name = "\u{1}_HC6_GetSystemPaletteEntries"]
     fn GetSystemPaletteEntries(
         hdc: *mut core::ffi::c_void,
         start: u32,

@@ -24,7 +24,8 @@ unsafe extern "C" {
 
 #[allow(non_snake_case)]
 unsafe extern "stdcall" {
-    fn PeekMessageA(msg: *mut tagMSG, hwnd: *mut u8, min: u32, max: u32, remove: u32) -> i32;
+    #[link_name = "\u{1}_HC6_PeekMessageA"]
+    fn PeekMessageA(msg: *mut u32, hwnd: *mut u8, min: u32, max: u32, remove: u32) -> i32;
 }
 
 #[unsafe(no_mangle)]
@@ -52,7 +53,13 @@ pub unsafe extern "stdcall" fn FUN_1005ba70() -> i16 {
             let got_message = mech_trace::cr!(
                 "1005ba70",
                 "PeekMessageA",
-                PeekMessageA(&raw mut key_message, core::ptr::null_mut(), 0x100, 0x108, 1)
+                PeekMessageA(
+                    (&raw mut key_message).cast(),
+                    core::ptr::null_mut(),
+                    0x100,
+                    0x108,
+                    1
+                )
             );
             if got_message != 0 {
                 mech_trace::cr!(

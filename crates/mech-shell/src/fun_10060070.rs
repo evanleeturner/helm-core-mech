@@ -24,8 +24,11 @@ unsafe extern "C" {
 
 #[allow(non_snake_case)]
 unsafe extern "stdcall" {
+    #[link_name = "\u{1}_HC6_SetWindowLongA"]
     fn SetWindowLongA(hWnd: i32, nIndex: i32, dwNewLong: i32) -> i32;
+    #[link_name = "\u{1}_HC6_timeGetTime@0"]
     fn timeGetTime() -> u32;
+    #[link_name = "\u{1}_HC6_SetWindowPos"]
     fn SetWindowPos(
         hWnd: i32,
         hWndInsertAfter: i32,
@@ -35,7 +38,9 @@ unsafe extern "stdcall" {
         cy: i32,
         uFlags: u32,
     ) -> i32;
+    #[link_name = "\u{1}_HC6_ShowCursor"]
     fn ShowCursor(bShow: i32) -> i32;
+    #[link_name = "\u{1}_HC6_GetSystemMetrics"]
     fn GetSystemMetrics(nIndex: i32) -> i32;
 }
 

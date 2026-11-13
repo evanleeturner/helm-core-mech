@@ -16,7 +16,8 @@ unsafe extern "C" {
 
 #[allow(non_snake_case)]
 unsafe extern "stdcall" {
-    fn HeapAlloc(heap: *mut u8, flags: u32, size: u32) -> *mut u8;
+    #[link_name = "\u{1}_HC6_HeapAlloc@12"]
+    fn HeapAlloc(heap: *mut core::ffi::c_void, flags: u32, size: u32) -> *mut core::ffi::c_void;
 }
 
 #[unsafe(no_mangle)]
@@ -38,7 +39,7 @@ pub unsafe extern "C" fn FUN_1005bb20(param_1: *mut i8) -> *mut i8 {
             "1005bb20",
             "HeapAlloc",
             HeapAlloc(
-                mech_trace::gr!("1005bb20", "10098224", DAT_10098224),
+                mech_trace::gr!("1005bb20", "10098224", DAT_10098224).cast(),
                 1,
                 total
             )

@@ -7,6 +7,7 @@ unsafe extern "C" {
 
 #[allow(non_snake_case)]
 unsafe extern "stdcall" {
+    #[link_name = "\u{1}_HC6_RegOpenKeyExA"]
     fn RegOpenKeyExA(
         h_key: *mut core::ffi::c_void,
         lp_sub_key: *const i8,
@@ -14,6 +15,7 @@ unsafe extern "stdcall" {
         sam_desired: u32,
         phk_result: *mut *mut core::ffi::c_void,
     ) -> i32;
+    #[link_name = "\u{1}_HC6_RegQueryValueExA"]
     fn RegQueryValueExA(
         h_key: *mut core::ffi::c_void,
         lp_value_name: *const i8,
@@ -22,6 +24,7 @@ unsafe extern "stdcall" {
         lp_data: *mut u8,
         lpcb_data: *mut u32,
     ) -> i32;
+    #[link_name = "\u{1}_HC6_RegCloseKey"]
     fn RegCloseKey(h_key: *mut core::ffi::c_void) -> i32;
 }
 

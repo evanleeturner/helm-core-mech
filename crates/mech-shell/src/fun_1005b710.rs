@@ -13,6 +13,7 @@ unsafe extern "C" {
 
 #[allow(non_snake_case)]
 unsafe extern "stdcall" {
+    #[link_name = "\u{1}_HC6_PeekMessageA"]
     fn PeekMessageA(msg: *mut u32, hwnd: *mut u8, min: u32, max: u32, remove: u32) -> i32;
 }
 

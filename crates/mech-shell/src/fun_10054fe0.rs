@@ -27,7 +27,8 @@ unsafe extern "C" {
 
 #[allow(non_snake_case)]
 unsafe extern "stdcall" {
-    fn HeapAlloc(heap: *mut c_void, flags: u32, size: u32) -> *mut u8;
+    #[link_name = "\u{1}_HC6_HeapAlloc@12"]
+    fn HeapAlloc(heap: *mut c_void, flags: u32, size: u32) -> *mut c_void;
 }
 
 #[unsafe(no_mangle)]
@@ -83,7 +84,8 @@ pub unsafe extern "thiscall" fn FUN_10054fe0(
                 1,
                 local_8
             )
-        );
+        )
+        .cast::<u8>();
         if p5.is_null() {
             mech_trace::cr!(
                 "10054fe0",

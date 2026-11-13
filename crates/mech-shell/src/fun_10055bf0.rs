@@ -22,9 +22,13 @@ unsafe extern "fastcall" {
 
 #[allow(non_snake_case)]
 unsafe extern "stdcall" {
+    #[link_name = "\u{1}_HC6_GetCursorPos"]
     fn GetCursorPos(p: *mut core::ffi::c_void) -> i32;
+    #[link_name = "\u{1}_HC6_ScreenToClient"]
     fn ScreenToClient(h: *mut core::ffi::c_void, p: *mut core::ffi::c_void) -> i32;
+    #[link_name = "\u{1}_HC6_GetAsyncKeyState"]
     fn GetAsyncKeyState(k: i32) -> i16;
+    #[link_name = "\u{1}_HC6_timeGetTime@0"]
     fn timeGetTime() -> u32;
 }
 

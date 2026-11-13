@@ -125,18 +125,31 @@ unsafe extern "thiscall" {
 }
 
 unsafe extern "stdcall" {
+    #[link_name = "\u{1}_HC6_DefWindowProcA"]
     fn DefWindowProcA(hwnd: *mut c_void, msg: u32, wparam: u32, lparam: u32) -> i32;
+    #[link_name = "\u{1}_HC6_PostQuitMessage"]
     fn PostQuitMessage(code: i32);
+    #[link_name = "\u{1}_HC6_BeginPaint"]
     fn BeginPaint(hwnd: *mut c_void, ps: *mut i32) -> *mut c_void;
+    #[link_name = "\u{1}_HC6_EndPaint"]
     fn EndPaint(hwnd: *mut c_void, ps: *mut i32) -> i32;
+    #[link_name = "\u{1}_HC6_SetFocus"]
     fn SetFocus(hwnd: *mut c_void) -> *mut c_void;
+    #[link_name = "\u{1}_HC6_ShowCursor"]
     fn ShowCursor(show: i32) -> i32;
+    #[link_name = "\u{1}_HC6_PostMessageA"]
     fn PostMessageA(hwnd: *mut c_void, msg: u32, wparam: u32, lparam: i32) -> i32;
+    #[link_name = "\u{1}_HC6_EnableMenuItem@12"]
     fn EnableMenuItem(menu: *mut c_void, id: u32, flags: u32) -> i32;
+    #[link_name = "\u{1}_HC6_GetFileAttributesA@4"]
     fn GetFileAttributesA(name: *const u8) -> u32;
+    #[link_name = "\u{1}_HC6_WinHelpA@16"]
     fn WinHelpA(hwnd: *mut c_void, file: *const u8, cmd: u32, data: u32) -> i32;
+    #[link_name = "\u{1}_HC6_SetMenu@8"]
     fn SetMenu(hwnd: *mut c_void, menu: *mut c_void) -> i32;
+    #[link_name = "\u{1}_HC6_GetSystemMetrics"]
     fn GetSystemMetrics(index: i32) -> i32;
+    #[link_name = "\u{1}_HC6_DialogBoxParamA@20"]
     fn DialogBoxParamA(
         inst: *mut c_void,
         name: u32,
