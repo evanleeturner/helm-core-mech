@@ -184,6 +184,12 @@
       "template": "{f}'s {b} block left {v} in {r}"
     },
     {
+      "id": "mem.unpack",
+      "level": "D",
+      "fields": { "f": "the function's address", "s": "the FILE* the entry is read from", "o": "the entry's offset in the pack", "d": "the destination the entry is unpacked into", "n": "the bytes written out, counted as they are written: the unpack's output, not the entry's size field" },
+      "template": "{f} read the entry at {o} from {s} and unpacked {n} bytes into {d}: one line an entry"
+    },
+    {
       "id": "listen.map",
       "level": "I",
       "fields": {

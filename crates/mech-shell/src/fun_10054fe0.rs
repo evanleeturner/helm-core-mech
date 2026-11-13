@@ -55,11 +55,8 @@ pub unsafe extern "thiscall" fn FUN_10054fe0(
             this.byte_add(0x80).cast::<*mut c_void>(),
             read_unaligned
         );
-        let iv = mech_trace::cr!(
-            "10054fe0",
-            "_fseek",
-            _fseek(file, mech_trace::rd!("10054fe0", plvar2, read_unaligned), 0)
-        );
+        let offset = mech_trace::rd!("10054fe0", plvar2, read_unaligned);
+        let iv = mech_trace::cr!("10054fe0", "_fseek", _fseek(file, offset, 0));
         if iv != 0 {
             return mech_trace::rt!("10054fe0", 1);
         }
@@ -76,7 +73,7 @@ pub unsafe extern "thiscall" fn FUN_10054fe0(
         if s != 1 {
             return mech_trace::rt!("10054fe0", 1);
         }
-        let mut p5 = mech_trace::cr!(
+        let p5 = mech_trace::cr!(
             "10054fe0",
             "HeapAlloc",
             HeapAlloc(
@@ -105,53 +102,70 @@ pub unsafe extern "thiscall" fn FUN_10054fe0(
             FUN_1006fde0(1);
         }
         mech_trace::wr!("10054fe0", param_2, write_unaligned, p5 as u32);
-        let mut u8v: u32 = 2;
         mech_trace::wr!("10054fe0", param_3, write_unaligned, local_8);
         let base = (&raw mut DAT_100c01d8).cast::<u8>();
         let end = (&raw mut DAT_100c11d8).cast::<u8>();
-        let mut p11 = base.cast::<u32>();
-        let mut n: i32 = 0x400;
-        while n != 0 {
-            mech_trace::wr!("10054fe0", p11, write_unaligned, 0);
-            p11 = p11.byte_add(4);
-            n -= 1;
-        }
-        let mut p11 = base;
+        mech_trace::fill!("10054fe0", core::ptr::write_bytes, base, 0, 0x1000);
+        let written = unpack(this, local_8, base, end, p5);
+        mech_trace::log::debug!(
+            f = "10054fe0", s:% = mech_trace::__shown!(file),
+            o:% = mech_trace::__shown!(offset), d:% = mech_trace::__shown!(p5),
+            n:% = mech_trace::__shown!(written); "mem.unpack"
+        );
+        mech_trace::rt!("10054fe0", 0)
+    }
+}
+
+/// Unpacks one pack entry from the FILE* at `this + 0x80` into `p5`, through
+/// the game's 0x1000-byte ring `base`..`end`, until `local_8` bytes are
+/// counted out; answers the bytes written to `p5`.
+///
+/// The original's loop as it stands: a flag byte every 8 steps, low bit
+/// first; a set bit is one literal byte, a clear bit a 2-byte back-reference
+/// into the ring (12-bit offset, 4-bit count plus 3). Each byte comes by its
+/// own `_fgetc` call, the FILE* read again from `this + 0x80` before each, as
+/// the original does. No trace line inside: the caller writes one line for
+/// the whole unpack, so the log keeps no line a byte.
+///
+/// # Safety
+///
+/// `this + 0x80` holds an open FILE*; `p5` has room for every byte written,
+/// which can pass `local_8` by up to 17 when a back-reference ends past it;
+/// `base` to `end` is the game's ring.
+unsafe fn unpack(
+    this: *mut u8,
+    mut local_8: u32,
+    base: *mut u8,
+    end: *mut u8,
+    mut p5: *mut u8,
+) -> u32 {
+    let file_slot = this.wrapping_byte_add(0x80).cast::<*mut c_void>();
+    let mut written: u32 = 0;
+    let mut u8v: u32 = 2;
+    let mut p11 = base;
+    // SAFETY: the caller's contract above; `_fgetc` is the game's own.
+    unsafe {
         while 0 < (local_8 as i32) {
             u8v >>= 1;
             if u8v == 1 {
-                let f = mech_trace::rd!(
-                    "10054fe0",
-                    this.byte_add(0x80).cast::<*mut c_void>(),
-                    read_unaligned
-                );
-                u8v = (mech_trace::cr!("10054fe0", "_fgetc", _fgetc(f)) as u32) | 0x100;
+                u8v = (_fgetc(file_slot.read_unaligned()) as u32) | 0x100;
             }
             if (u8v & 1) == 0 {
-                let f = mech_trace::rd!(
-                    "10054fe0",
-                    this.byte_add(0x80).cast::<*mut c_void>(),
-                    read_unaligned
-                );
-                let i3 = mech_trace::cr!("10054fe0", "_fgetc", _fgetc(f));
-                let f = mech_trace::rd!(
-                    "10054fe0",
-                    this.byte_add(0x80).cast::<*mut c_void>(),
-                    read_unaligned
-                );
-                let i6 = mech_trace::cr!("10054fe0", "_fgetc", _fgetc(f));
+                let i3 = _fgetc(file_slot.read_unaligned());
+                let i6 = _fgetc(file_slot.read_unaligned());
                 let u9 = i3.wrapping_add(i6.wrapping_mul(0x100)) as u32;
                 let mut cnt = (((u9 & 0xf000) >> 0xc) + 3) as i32;
                 let mut p10 = base.byte_add((u9 & 0xfff) as usize);
                 local_8 = local_8.wrapping_sub(cnt as u32);
                 while cnt != 0 {
                     cnt -= 1;
-                    let b = mech_trace::rd!("10054fe0", p10, read);
+                    let b = p10.read();
                     p10 = p10.byte_add(1);
-                    mech_trace::wr!("10054fe0", p11, write, b);
+                    p11.write(b);
                     p11 = p11.byte_add(1);
-                    mech_trace::wr!("10054fe0", p5, write, b);
+                    p5.write(b);
                     p5 = p5.byte_add(1);
+                    written = written.wrapping_add(1);
                     if p11 == end {
                         p11 = base;
                     }
@@ -163,14 +177,10 @@ pub unsafe extern "thiscall" fn FUN_10054fe0(
                 local_8 = local_8.wrapping_sub(1);
                 let p10 = p11.byte_add(1);
                 let p7 = p5.byte_add(1);
-                let f = mech_trace::rd!(
-                    "10054fe0",
-                    this.byte_add(0x80).cast::<*mut c_void>(),
-                    read_unaligned
-                );
-                let c = mech_trace::cr!("10054fe0", "_fgetc", _fgetc(f));
-                mech_trace::wr!("10054fe0", p11, write, c as u8);
-                mech_trace::wr!("10054fe0", p5, write, c as u8);
+                let c = _fgetc(file_slot.read_unaligned());
+                p11.write(c as u8);
+                p5.write(c as u8);
+                written = written.wrapping_add(1);
                 p11 = p10;
                 p5 = p7;
                 if p10 == end {
@@ -178,6 +188,6 @@ pub unsafe extern "thiscall" fn FUN_10054fe0(
                 }
             }
         }
-        mech_trace::rt!("10054fe0", 0)
     }
+    written
 }
