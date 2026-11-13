@@ -33,7 +33,8 @@ unsafe extern "C" {
 #[allow(non_snake_case)]
 unsafe extern "stdcall" {
     fn FUN_10037d40();
-    fn HeapAlloc(h: *mut u8, flags: u32, size: u32) -> *mut u8;
+    #[link_name = "\u{1}_HC6_HeapAlloc@12"]
+    fn HeapAlloc(h: *mut core::ffi::c_void, flags: u32, size: u32) -> *mut core::ffi::c_void;
 }
 
 #[allow(non_snake_case)]
@@ -287,10 +288,12 @@ pub unsafe extern "C" fn FUN_10038710(param_1: *mut i8) -> u32 {
                                     "10038710",
                                     "HeapAlloc",
                                     HeapAlloc(
-                                        mech_trace::gr!("10038710", "10098224", DAT_10098224),
+                                        mech_trace::gr!("10038710", "10098224", DAT_10098224)
+                                            .cast(),
                                         1,
                                         0x1a
                                     )
+                                    .cast::<u8>()
                                 );
                                 if c == 2 {
                                     wr(p7, 0, i9);
@@ -316,10 +319,12 @@ pub unsafe extern "C" fn FUN_10038710(param_1: *mut i8) -> u32 {
                                     "10038710",
                                     "HeapAlloc",
                                     HeapAlloc(
-                                        mech_trace::gr!("10038710", "10098224", DAT_10098224),
+                                        mech_trace::gr!("10038710", "10098224", DAT_10098224)
+                                            .cast(),
                                         1,
                                         0x1a
                                     )
+                                    .cast::<u8>()
                                 );
                                 wr(p7, 0, i9);
                                 wr8(p7, 8, 1);
@@ -483,10 +488,12 @@ pub unsafe extern "C" fn FUN_10038710(param_1: *mut i8) -> u32 {
                                         "10038710",
                                         "HeapAlloc",
                                         HeapAlloc(
-                                            mech_trace::gr!("10038710", "10098224", DAT_10098224),
+                                            mech_trace::gr!("10038710", "10098224", DAT_10098224)
+                                                .cast(),
                                             1,
                                             0x1a
                                         )
+                                        .cast::<u8>()
                                     );
                                     wr(p7, 0, rd(rec, 0));
                                     wr(p7, 0xe, 1);
@@ -539,10 +546,11 @@ pub unsafe extern "C" fn FUN_10038710(param_1: *mut i8) -> u32 {
                                 "10038710",
                                 "HeapAlloc",
                                 HeapAlloc(
-                                    mech_trace::gr!("10038710", "10098224", DAT_10098224),
+                                    mech_trace::gr!("10038710", "10098224", DAT_10098224).cast(),
                                     1,
                                     0x16
                                 )
+                                .cast::<u8>()
                             );
                             wr8(p7, 8, 2);
                             wr(p7, 4, rd(rec, 4));
@@ -686,10 +694,11 @@ pub unsafe extern "C" fn FUN_10038710(param_1: *mut i8) -> u32 {
                                 "10038710",
                                 "HeapAlloc",
                                 HeapAlloc(
-                                    mech_trace::gr!("10038710", "10098224", DAT_10098224),
+                                    mech_trace::gr!("10038710", "10098224", DAT_10098224).cast(),
                                     1,
                                     0x1a
                                 )
+                                .cast::<u8>()
                             );
                             wr8(p7, 8, 0);
                             wr(p7, 0, rd(rec, 0));

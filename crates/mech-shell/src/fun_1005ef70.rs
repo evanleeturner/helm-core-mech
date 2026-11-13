@@ -7,6 +7,7 @@ unsafe extern "thiscall" {
 
 #[allow(non_snake_case)]
 unsafe extern "C" {
+    #[link_name = "\u{1}_HC6__SmackClose"]
     fn _SmackClose(param_1: i32);
     fn FUN_1006e790(param_1: *mut core::ffi::c_void);
 }
@@ -14,6 +15,7 @@ unsafe extern "C" {
 #[allow(non_snake_case)]
 unsafe extern "stdcall" {
     fn FUN_1005f900();
+    #[link_name = "\u{1}_HC6_MEM_free_lock@4"]
     fn MEM_free_lock(param_1: i32);
 }
 

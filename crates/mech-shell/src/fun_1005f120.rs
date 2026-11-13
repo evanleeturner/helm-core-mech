@@ -58,6 +58,7 @@ unsafe extern "C" {
 
 #[allow(non_snake_case)]
 unsafe extern "stdcall" {
+    #[link_name = "\u{1}_HC6_timeGetTime@0"]
     fn timeGetTime() -> u32;
 }
 

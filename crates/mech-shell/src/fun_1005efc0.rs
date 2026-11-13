@@ -17,6 +17,7 @@ unsafe extern "fastcall" {
 // 1005f00b) and smackw32's export ends on a bare `ret`.
 #[allow(non_snake_case)]
 unsafe extern "C" {
+    #[link_name = "\u{1}_HC6__SmackDoFrame"]
     fn _SmackDoFrame(smack_object: i32) -> i32;
 }
 

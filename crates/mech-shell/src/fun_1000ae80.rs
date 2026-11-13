@@ -75,7 +75,8 @@ unsafe extern "C" {
 #[allow(non_snake_case)]
 unsafe extern "stdcall" {
     fn FUN_1000be10() -> u32;
-    fn HeapAlloc(h: u32, flags: u32, size: u32) -> *mut u8;
+    #[link_name = "\u{1}_HC6_HeapAlloc@12"]
+    fn HeapAlloc(h: *mut core::ffi::c_void, flags: u32, size: u32) -> *mut core::ffi::c_void;
 }
 
 unsafe fn r(b: *mut u8, off: usize) -> i32 {
@@ -197,10 +198,11 @@ pub unsafe extern "C" fn FUN_1000ae80(param_1: *mut i8) -> *mut i8 {
             "1000ae80",
             "HeapAlloc",
             HeapAlloc(
-                mech_trace::gr!("1000ae80", "10098224", DAT_10098224),
+                mech_trace::gr!("1000ae80", "10098224", DAT_10098224) as *mut core::ffi::c_void,
                 1,
                 0x853
             )
+            .cast::<u8>()
         );
         b.write_bytes(0, 0x853);
         copy_str(b.add(0x823), param_1.cast::<u8>());

@@ -7,7 +7,8 @@ unsafe extern "C" {
 
 #[allow(non_snake_case)]
 unsafe extern "stdcall" {
-    fn HeapAlloc(h: *mut core::ffi::c_void, flags: u32, size: u32) -> *mut u32;
+    #[link_name = "\u{1}_HC6_HeapAlloc@12"]
+    fn HeapAlloc(h: *mut core::ffi::c_void, flags: u32, size: u32) -> *mut core::ffi::c_void;
 }
 
 #[unsafe(no_mangle)]
@@ -25,6 +26,7 @@ pub unsafe extern "C" fn FUN_1000be30(source: *const u32) {
                 1,
                 0x853
             )
+            .cast::<u32>()
         );
         let mut source = source;
         if !copy_cursor.is_null() {
