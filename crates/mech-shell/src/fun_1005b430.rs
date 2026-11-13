@@ -80,13 +80,8 @@ pub unsafe extern "stdcall" fn FUN_1005b430() -> u32 {
                 _wprintf(&raw const s_Error___Unable_to_allocate_memor_100a5110)
             );
         } else {
-            let mut p = mech_trace::gr!("1005b430", "100c6398", DAT_100c6398);
-            let mut n: i32 = 16000;
-            while n != 0 {
-                mech_trace::wr!("1005b430", p, write_unaligned, 0);
-                p = p.add(1);
-                n -= 1;
-            }
+            let p = mech_trace::gr!("1005b430", "100c6398", DAT_100c6398);
+            mech_trace::fill!("1005b430", store_dwords, p, 0, 16000);
         }
         mech_trace::gw!(
             "1005b430",
@@ -95,5 +90,19 @@ pub unsafe extern "stdcall" fn FUN_1005b430() -> u32 {
             mech_trace::gr!("1005b430", "100c6398", DAT_100c6398)
         );
         mech_trace::rt!("1005b430", result)
+    }
+}
+
+/// `rep stosd`'s fill, the original's at 1005b4e4: `n` four-byte words,
+/// forward, one at a time, each the byte `b` four times.
+unsafe fn store_dwords(mut d: *mut u32, b: u8, mut n: u32) {
+    let v = u32::from_ne_bytes([b; 4]);
+    while n != 0 {
+        // SAFETY: the caller's buffer holds n four-byte words.
+        unsafe {
+            d.write_unaligned(v);
+            d = d.wrapping_add(1);
+        }
+        n = n.wrapping_sub(1);
     }
 }
