@@ -70,13 +70,25 @@ unsafe fn call4(table: u32, off: u32, a: i32, b: i32, c: i32, d: i32) {
 }
 
 unsafe fn copy_bytes(src: i32, dst: i32, count: i32) {
-    let mut s = src as *const u8;
-    let mut d = dst as *mut u8;
-    let mut n = count;
+    // SAFETY: the original copies byte by byte between these buffers.
+    unsafe {
+        mech_trace::cp!(
+            "10012620",
+            copy_forward,
+            src as *const u8,
+            dst as *mut u8,
+            count
+        );
+    }
+}
+
+/// `rep movsb`'s copy: `n` bytes, forward, one at a time, so an overlap
+/// reads what the copy has already written, as the original's does.
+unsafe fn copy_forward(mut s: *const u8, mut d: *mut u8, mut n: i32) {
     while n != 0 {
-        // SAFETY: the original copies byte by byte between these buffers.
+        // SAFETY: the caller's buffers hold n bytes each.
         unsafe {
-            mech_trace::dw!("10012620", d, mech_trace::dr!("10012620", s));
+            d.write(s.read());
             s = s.wrapping_add(1);
             d = d.wrapping_add(1);
         }

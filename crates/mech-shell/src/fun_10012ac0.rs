@@ -107,17 +107,17 @@ pub unsafe extern "thiscall" fn FUN_10012ac0(
                     "10069bf7",
                     FUN_10069bf7(this.byte_add(0x56).cast::<i32>(), local_8 as i32)
                 );
-                let mut s = mech_trace::rd!(
+                let s = mech_trace::rd!(
                     "10012ac0",
                     this.byte_add(0x2e).cast::<*const u8>(),
                     read_unaligned
                 );
-                let mut d = mech_trace::rd!(
+                let d = mech_trace::rd!(
                     "10012ac0",
                     this.byte_add(0x42).cast::<*mut u8>(),
                     read_unaligned
                 );
-                let mut n = mech_trace::rd!(
+                let n = mech_trace::rd!(
                     "10012ac0",
                     this.byte_add(0x392).cast::<i32>(),
                     read_unaligned
@@ -127,12 +127,7 @@ pub unsafe extern "thiscall" fn FUN_10012ac0(
                     this.byte_add(0x396).cast::<i32>(),
                     read_unaligned
                 )) as u32;
-                while n != 0 {
-                    mech_trace::dw!("10012ac0", d, mech_trace::dr!("10012ac0", s));
-                    s = s.add(1);
-                    d = d.add(1);
-                    n -= 1;
-                }
+                mech_trace::cp!("10012ac0", copy_forward, s, d, n);
                 FUN_10012470(
                     this,
                     mech_trace::rd!(
@@ -174,5 +169,19 @@ pub unsafe extern "thiscall" fn FUN_10012ac0(
                 local_8 as *mut c_void
             )
         );
+    }
+}
+
+/// `rep movsb`'s copy: `n` bytes, forward, one at a time, so an overlap
+/// reads what the copy has already written, as the original's does.
+unsafe fn copy_forward(mut s: *const u8, mut d: *mut u8, mut n: u32) {
+    while n != 0 {
+        // SAFETY: the caller's buffers hold n bytes each.
+        unsafe {
+            d.write(s.read());
+            s = s.wrapping_add(1);
+            d = d.wrapping_add(1);
+        }
+        n = n.wrapping_sub(1);
     }
 }

@@ -144,27 +144,7 @@ pub unsafe extern "stdcall" fn FUN_1004c2d0() {
                             break;
                         }
                     }
-                    let mut s = src;
-                    let mut d = buf;
-                    let mut n = len >> 2;
-                    while n != 0 {
-                        mech_trace::wr!(
-                            "1004c2d0",
-                            (d as *mut u32),
-                            write_unaligned,
-                            mech_trace::rd!("1004c2d0", (s as *const u32), read_unaligned)
-                        );
-                        s = s.add(4);
-                        d = d.add(4);
-                        n -= 1;
-                    }
-                    let mut n = len & 3;
-                    while n != 0 {
-                        mech_trace::dw!("1004c2d0", d, mech_trace::dr!("1004c2d0", s));
-                        s = s.add(1);
-                        d = d.add(1);
-                        n -= 1;
-                    }
+                    mech_trace::cp!("1004c2d0", copy_dwords_then_bytes, src, buf, len);
                     mech_trace::dw!("1004c2d0", buf.add(5), 0x4d);
                     mech_trace::dw!("1004c2d0", buf.add(6), 0x45);
                     mech_trace::dw!("1004c2d0", buf.add(7), 0x52);
@@ -217,6 +197,25 @@ pub unsafe extern "stdcall" fn FUN_1004c2d0() {
                     break;
                 }
             }
+        }
+    }
+}
+
+/// `rep movsd` then `rep movsb`'s copy: `n / 4` four-byte words, then
+/// `n % 4` bytes, each forward, as the original's two instructions do.
+unsafe fn copy_dwords_then_bytes(mut s: *const u8, mut d: *mut u8, n: u32) {
+    // SAFETY: the caller's buffers hold n bytes each.
+    unsafe {
+        for _ in 0..n >> 2 {
+            d.cast::<u32>()
+                .write_unaligned(s.cast::<u32>().read_unaligned());
+            s = s.wrapping_add(4);
+            d = d.wrapping_add(4);
+        }
+        for _ in 0..n & 3 {
+            d.write(s.read());
+            s = s.wrapping_add(1);
+            d = d.wrapping_add(1);
         }
     }
 }
