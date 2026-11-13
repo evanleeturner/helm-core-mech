@@ -8,7 +8,8 @@ unsafe extern "thiscall" {
 
 #[allow(non_snake_case)]
 unsafe extern "stdcall" {
-    fn _AIL_start_sample_4(param_1: u32) -> u32;
+    #[link_name = "\u{1}_HC6_AIL_start_sample@4"]
+    fn AIL_start_sample(handle: u32);
 }
 
 #[unsafe(no_mangle)]
@@ -42,8 +43,8 @@ pub unsafe extern "fastcall" fn FUN_10010d80(sample: *mut u8) {
             );
             mech_trace::cr!(
                 "10010d80",
-                "_AIL_start_sample_4",
-                _AIL_start_sample_4(mech_trace::rd!(
+                "AIL_start_sample",
+                AIL_start_sample(mech_trace::rd!(
                     "10010d80",
                     sample.byte_add(0x29).cast::<u32>(),
                     read_unaligned

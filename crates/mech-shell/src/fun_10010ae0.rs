@@ -25,10 +25,13 @@ unsafe extern "fastcall" {
 
 #[allow(non_snake_case)]
 unsafe extern "stdcall" {
-    fn _AIL_allocate_sample_handle_4(param_1: u32) -> u32;
+    #[link_name = "\u{1}_HC6_AIL_allocate_sample_handle@4"]
+    fn AIL_allocate_sample_handle(driver: u32) -> u32;
     fn HeapFree(heap: *mut c_void, flags: u32, mem: *mut c_void) -> i32;
-    fn _AIL_init_sample_4(param_1: u32) -> u32;
-    fn _AIL_set_sample_file_12(param_1: u32, param_2: u32, param_3: u32) -> u32;
+    #[link_name = "\u{1}_HC6_AIL_init_sample@4"]
+    fn AIL_init_sample(handle: u32);
+    #[link_name = "\u{1}_HC6_AIL_set_sample_file@12"]
+    fn AIL_set_sample_file(handle: u32, file: u32, block: u32) -> i32;
 }
 
 #[unsafe(no_mangle)]
@@ -128,8 +131,8 @@ pub unsafe extern "thiscall" fn FUN_10010ae0(
                 mech_trace::cr!("10010ae0", "100107a0", FUN_100107a0(sample_owner));
             let handle = mech_trace::cr!(
                 "10010ae0",
-                "_AIL_allocate_sample_handle_4",
-                _AIL_allocate_sample_handle_4(wave_out_driver as u32)
+                "AIL_allocate_sample_handle",
+                AIL_allocate_sample_handle(wave_out_driver as u32)
             );
             mech_trace::wr!(
                 "10010ae0",
@@ -162,8 +165,8 @@ pub unsafe extern "thiscall" fn FUN_10010ae0(
             {
                 mech_trace::cr!(
                     "10010ae0",
-                    "_AIL_init_sample_4",
-                    _AIL_init_sample_4(mech_trace::rd!(
+                    "AIL_init_sample",
+                    AIL_init_sample(mech_trace::rd!(
                         "10010ae0",
                         s.byte_add(0x29).cast::<u32>(),
                         read_unaligned
@@ -171,8 +174,8 @@ pub unsafe extern "thiscall" fn FUN_10010ae0(
                 );
                 mech_trace::cr!(
                     "10010ae0",
-                    "_AIL_set_sample_file_12",
-                    _AIL_set_sample_file_12(
+                    "AIL_set_sample_file",
+                    AIL_set_sample_file(
                         mech_trace::rd!("10010ae0", s.byte_add(0x29).cast::<u32>(), read_unaligned),
                         mech_trace::rd!("10010ae0", s.byte_add(4).cast::<u32>(), read_unaligned),
                         0xffffffff,

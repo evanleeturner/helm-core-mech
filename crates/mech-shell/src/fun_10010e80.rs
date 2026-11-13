@@ -2,7 +2,8 @@
 
 #[allow(non_snake_case)]
 unsafe extern "stdcall" {
-    fn _AIL_set_sample_loop_count(loopCount: i32, param_2: i32);
+    #[link_name = "\u{1}_HC6_AIL_set_sample_loop_count@8"]
+    fn AIL_set_sample_loop_count(handle: i32, count: i32);
 }
 
 #[unsafe(no_mangle)]
@@ -24,7 +25,7 @@ pub unsafe extern "thiscall" fn FUN_10010e80(sample_object: *mut u8, loop_count:
             read_unaligned
         );
         if field_29 != 0 {
-            _AIL_set_sample_loop_count(field_29, loop_count);
+            AIL_set_sample_loop_count(field_29, loop_count);
         }
     }
 }

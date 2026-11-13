@@ -2,7 +2,8 @@
 
 #[allow(non_snake_case)]
 unsafe extern "stdcall" {
-    fn _AIL_stop_sample_4(param_1: u32) -> u32;
+    #[link_name = "\u{1}_HC6_AIL_stop_sample@4"]
+    fn AIL_stop_sample(handle: u32);
 }
 
 #[unsafe(no_mangle)]
@@ -28,11 +29,7 @@ pub unsafe extern "fastcall" fn FUN_10010de0(sample_object: *mut i32) {
                     sample_object.byte_add(0x29).cast::<i32>(),
                     read_unaligned
                 );
-                mech_trace::cr!(
-                    "10010de0",
-                    "_AIL_stop_sample_4",
-                    _AIL_stop_sample_4(h as u32)
-                );
+                mech_trace::cr!("10010de0", "AIL_stop_sample", AIL_stop_sample(h as u32));
             }
         }
     }

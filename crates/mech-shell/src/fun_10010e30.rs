@@ -3,7 +3,8 @@
 #[allow(non_snake_case)]
 unsafe extern "stdcall" {
     fn FUN_10010930() -> u32;
-    fn _AIL_set_sample_volume_8(param_1: u32, param_2: u32) -> u32;
+    #[link_name = "\u{1}_HC6_AIL_set_sample_volume@8"]
+    fn AIL_set_sample_volume(handle: u32, volume: u32);
 }
 
 #[unsafe(no_mangle)]
@@ -49,8 +50,8 @@ pub unsafe extern "thiscall" fn FUN_10010e30(this: *mut u8, volume: i32) {
             let product = scale.wrapping_mul(cur) as i32;
             mech_trace::cr!(
                 "10010e30",
-                "_AIL_set_sample_volume_8",
-                _AIL_set_sample_volume_8(sample_handle as u32, (product >> 0x10) as u32)
+                "AIL_set_sample_volume",
+                AIL_set_sample_volume(sample_handle as u32, (product >> 0x10) as u32)
             );
         }
     }

@@ -20,7 +20,8 @@ unsafe extern "fastcall" {
 #[allow(non_snake_case)]
 unsafe extern "stdcall" {
     fn HeapFree(h: *mut c_void, flags: u32, mem: *mut c_void) -> i32;
-    fn _AIL_release_sample_handle_4(handle: u32) -> u32;
+    #[link_name = "\u{1}_HC6_AIL_release_sample_handle@4"]
+    fn AIL_release_sample_handle(handle: u32);
 }
 
 #[unsafe(no_mangle)]
@@ -56,8 +57,8 @@ pub unsafe extern "fastcall" fn FUN_10010c80(sample: *mut i32) {
             }
             mech_trace::cr!(
                 "10010c80",
-                "_AIL_release_sample_handle_4",
-                _AIL_release_sample_handle_4(mech_trace::rd!(
+                "AIL_release_sample_handle",
+                AIL_release_sample_handle(mech_trace::rd!(
                     "10010c80",
                     sample.byte_add(0x29).cast::<u32>(),
                     read_unaligned
