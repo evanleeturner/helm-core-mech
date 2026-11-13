@@ -190,6 +190,12 @@
       "template": "{f} read the entry at {o} from {s} and unpacked {n} bytes into {d}: one line an entry"
     },
     {
+      "id": "fn.reads",
+      "level": "D",
+      "fields": { "f": "the function's address", "a": "its arguments, in order, as fn.in shows them", "n": "the reads the call made, counted as they are made: none of them logs a mem.rd line", "v": "the value it returns (absent when it returns none)" },
+      "template": "{f} on {a} made {n} reads and returned {v}: a hot port's call in one line at its return, in place of its mem.rd lines, and of its fn.in and fn.ret where it calls nothing out"
+    },
+    {
       "id": "listen.map",
       "level": "I",
       "fields": {

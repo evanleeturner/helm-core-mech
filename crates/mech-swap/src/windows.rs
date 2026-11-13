@@ -139,8 +139,37 @@ fn letter(level: Level) -> char {
     }
 }
 
+/// A variable's value is read into this many bytes.
+const VALUE_BYTES: usize = 16;
+
+/// The level `HC5_LEVEL` names: `info`, INFO and above; unset or any other
+/// value, DEBUG and above.
+fn log_level() -> LevelFilter {
+    let mut value = [0u8; VALUE_BYTES];
+    if env(b"HC5_LEVEL\0", &mut value) == Some(&b"info"[..]) {
+        LevelFilter::Info
+    } else {
+        LevelFilter::Debug
+    }
+}
+
+/// The variable's value; `None` unset or past the buffer.
+fn env<'a>(name: &[u8], value: &'a mut [u8; VALUE_BYTES]) -> Option<&'a [u8]> {
+    // SAFETY: the name is NUL-terminated; the buffer's size is passed,
+    // so the call writes inside it.
+    let len =
+        unsafe { GetEnvironmentVariableA(name.as_ptr(), value.as_mut_ptr(), VALUE_BYTES as u32) }
+            as usize;
+    if len > 0 && len < VALUE_BYTES {
+        Some(&value[..len])
+    } else {
+        None
+    }
+}
+
 /// At the process's attach, opens the file `HC5_LOG` names for appending
-/// and routes every record at DEBUG or above to it; without `HC5_LOG`, or
+/// and routes every record at DEBUG or above to it, at INFO or above when
+/// `HC5_LEVEL` is `info`; without `HC5_LOG`, or
 /// when the file will not open, the sink stays off. Then the bind, which
 /// `HC5_BIND` turns on and which traces through that sink. Returns TRUE,
 /// the swap loading whether or not it traces; a refused bind ends the
@@ -148,6 +177,7 @@ fn letter(level: Level) -> char {
 #[unsafe(no_mangle)]
 pub extern "system" fn DllMain(module: *mut c_void, reason: u32, _reserved: *mut c_void) -> i32 {
     if reason == DLL_PROCESS_ATTACH {
+        let level = log_level();
         let mut path = [0u8; PATH_BYTES];
         // SAFETY: the name is NUL-terminated; the buffer is PATH_BYTES long
         // and its size is passed, so the call writes inside it.
@@ -169,7 +199,7 @@ pub extern "system" fn DllMain(module: *mut c_void, reason: u32, _reserved: *mut
             };
             if file != INVALID_HANDLE_VALUE && log::set_logger(&SINK).is_ok() {
                 TRACE.store(file, Ordering::Relaxed);
-                log::set_max_level(LevelFilter::Debug);
+                log::set_max_level(level);
             }
         }
         crate::live::attach(module.expose_provenance() as u32);

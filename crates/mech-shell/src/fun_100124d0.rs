@@ -9,7 +9,14 @@ pub unsafe extern "thiscall" fn FUN_100124d0(
     width: i32,
     height: i32,
 ) {
-    mech_trace::enter!("100124d0", this, left, top, width, height);
+    // A hot port: its call is one `fn.reads` line at its return, its reads
+    // counted, in place of its `fn.in` and a `mem.rd` a read; each write
+    // keeps its own `mem.wr` line.
+    let mut reads: u32 = 0;
+    let mut counted = |value: i32| {
+        reads += 1;
+        value
+    };
     let right = left.wrapping_add(-1).wrapping_add(width);
     let bottom = top.wrapping_add(-1).wrapping_add(height);
     // SAFETY: `this` points at the caller's object; the fields at offsets
@@ -19,17 +26,28 @@ pub unsafe extern "thiscall" fn FUN_100124d0(
         let p_top = this.byte_add(0x86).cast::<i32>();
         let p_right = this.byte_add(0x8a).cast::<i32>();
         let p_bottom = this.byte_add(0x8e).cast::<i32>();
-        if left < mech_trace::rd!("100124d0", p_left, read_unaligned) {
+        if left < counted(p_left.read_unaligned()) {
             mech_trace::wr!("100124d0", p_left, write_unaligned, left);
         }
-        if top < mech_trace::rd!("100124d0", p_top, read_unaligned) {
+        if top < counted(p_top.read_unaligned()) {
             mech_trace::wr!("100124d0", p_top, write_unaligned, top);
         }
-        if mech_trace::rd!("100124d0", p_right, read_unaligned) < right {
+        if counted(p_right.read_unaligned()) < right {
             mech_trace::wr!("100124d0", p_right, write_unaligned, right);
         }
-        if mech_trace::rd!("100124d0", p_bottom, read_unaligned) < bottom {
+        if counted(p_bottom.read_unaligned()) < bottom {
             mech_trace::wr!("100124d0", p_bottom, write_unaligned, bottom);
         }
     }
+    mech_trace::log::debug!(
+        f = "100124d0",
+        a:% = mech_trace::Args([
+            mech_trace::__shown!(this),
+            mech_trace::__shown!(left),
+            mech_trace::__shown!(top),
+            mech_trace::__shown!(width),
+            mech_trace::__shown!(height)
+        ]),
+        n:% = mech_trace::__shown!(reads); "fn.reads"
+    );
 }
