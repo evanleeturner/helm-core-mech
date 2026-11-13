@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-//! Falsifier 3, the tests harvested: `h2`'s own thread lines under Wine,
+//! The tests harvested: `h2`'s own thread lines under Wine,
 //! played on the page's one thread and the host's real ones
 //! (`harvest/h2-threads.log`, cut by `records/2026-11-03-lane-c/
 //! helm-kernel-threads-kh1/kh1-s14-harvest.py`, its map of logbook line

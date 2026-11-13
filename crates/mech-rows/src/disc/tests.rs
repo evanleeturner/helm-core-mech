@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-//! Falsifier 2 (DS2), the player's image by its path: mercs's disc as the
+//! The player's image, opened by its path: mercs's disc as the
 //! player keeps it, `~/games/mech2merc`, read where it lies and never
 //! copied. `Track 01.cue` with its 22 bins opens, and
 //! `mech2merc-data.iso` alone. Every file on the image's data track,
@@ -166,7 +166,7 @@ fn bytes(disc: &impl Folder, name: &str) -> Vec<u8> {
 #[test]
 fn the_players_image_reads_as_its_iso_and_its_tracks() {
     let Some(folder) = player_image() else {
-        eprintln!("NOTICE: no ~/games/mech2merc on this box; falsifier 2 skipped");
+        eprintln!("NOTICE: no ~/games/mech2merc on this box; the image test skipped");
         return;
     };
     let files = (1..=22)
@@ -213,7 +213,7 @@ fn the_players_image_reads_as_its_iso_and_its_tracks() {
         total += read.len() as u64;
     }
     eprintln!(
-        "falsifier 2: {} files, {total} bytes, equal on the image, the iso{}",
+        "the image test: {} files, {total} bytes, equal on the image, the iso{}",
         walked.len(),
         if witness.is_empty() { "" } else { " and disc/" }
     );

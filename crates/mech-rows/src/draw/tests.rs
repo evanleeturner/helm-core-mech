@@ -232,7 +232,7 @@ fn every_row_answers_a_device_past_8_bits() {
     }
 }
 
-/// Falsifier 1's half: each of the 23 names is spelled as the layer's own row
+/// Each of the 23 names is spelled as the layer's own row
 /// logs it. The pattern names every field, so a 24th fails to compile here.
 #[test]
 fn every_name_is_the_layers() {

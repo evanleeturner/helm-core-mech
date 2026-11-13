@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-//! Falsifier 3, the tests harvested: a1's own runs of file calls, played on
+//! The tests harvested: a1's own runs of file calls, played on
 //! the in-memory folder in a1's order, with a1's names, counts, positions,
 //! answers and errors (`records/2026-11-03-lane-a/helm-files-hc9/
 //! a1-file-lines.txt`, each test naming its stretch by that file's line
@@ -41,7 +41,7 @@ fn read(files: &Files<MemoryFolder>, file: u32, room: usize) -> Vec<u8> {
 }
 
 /// Runs `run` and checks its lines are `calls`, in order, each answered:
-/// falsifier 1 over a whole stretch.
+/// every call logs, over a whole stretch.
 fn as_a1(calls: &[&str], run: impl FnOnce()) {
     let lines = debug_lines(run);
     let named: Vec<&str> = lines.iter().filter_map(|line| field(line, "c")).collect();

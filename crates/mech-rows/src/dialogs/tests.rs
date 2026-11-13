@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-//! Falsifiers 2 and 3: the relay logs `r1`, `r2` and the flight `w1`
+//! The tests harvested: the relay's two logs and the flight `w1`
 //! (`s2_harvest.py`'s rows, copied whole from WD1's records), played on the
 //! rows. The file is planted to the shape the real one read as (`first-read.txt`,
 //! WD1's records): its ids, states, options and styles, no template's bytes and no

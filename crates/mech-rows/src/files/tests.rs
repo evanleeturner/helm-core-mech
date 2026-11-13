@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
-//! Falsifier 1, every call logs: each of the 11 calls once answered and
+//! Every call logs: each of the 11 calls once answered and
 //! once refused, on the in-memory folder, writes one `imp.call` line, its
 //! `c` the row's name and its `e` the error the shell reads (0 on
 //! success), and leaves that error as the folder's last. The names are
 //! a1's (`records/2026-11-03-lane-a/helm-files-hc9/a1-file-lines.txt`);
-//! the bytes are the tests' own fill. Falsifier 3's, a1's whole stretches,
+//! the bytes are the tests' own fill. The tests of a1's whole stretches
 //! are [`harvested`].
 mod harvested;
 

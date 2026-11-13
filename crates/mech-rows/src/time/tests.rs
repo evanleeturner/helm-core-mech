@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-//! Falsifier 3, the test harvested: `t1`'s one time call, played on the
+//! The test harvested: `t1`'s one time call, played on the
 //! page's clocks at `t1`'s wall (`records/2026-11-03-lane-c/
 //! helm-kernel-time-kt1/kt1-s8-t1-time-lines.txt`). `t1`'s path calls the
 //! C library's `time` once and the 8 KERNEL32 names 0 times
 //! (`kt1-s9-f3.txt`). A number in `t1_time_is_its_line` no `t1` line holds
 //! is a bug.
 //!
-//! KZ1's falsifier 2, the three zone fronts at three walls: the epoch,
+//! The three zone fronts at three walls: the epoch,
 //! `t1`'s, and a July instant inside Chicago's daylight time
 //! (`kz1-july.txt`). No run reaches them (wall 1), so their answer is
 //! 1410's, fixed, not harvested: UTC, whatever the wall.

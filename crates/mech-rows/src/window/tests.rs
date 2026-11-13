@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-//! Falsifier 3, the tests harvested: `n1b`'s 32 window lines, the layer's
+//! The tests harvested: `n1b`'s 32 window lines, the layer's
 //! rows under Wine from the main menu to the game file's first frames
 //! (`records/2026-11-04-lane-c/helm-window-wn1/logbook-n1b.log`, counted
 //! in `s2-counts.txt`), played on the rows less their `from` and `tid`.

@@ -66,7 +66,7 @@ pub const GAME: Row = Row {
 /// Every file the input seam serves.
 pub const ROWS: &[&Row] = &[&LAUNCHER, &SHELL, &GAME];
 
-/// The remap rows (falsifier 5): each chord a browser keeps that the key
+/// The remap rows: each chord a browser keeps that the key
 /// tables bind, the shell's `DAT_100a55d8` and the game's `DAT_100b4438`
 /// alike (`s1-tables.txt`). W, T and N read `77`, `74` and `6e`, and
 /// `fun_1005b830` queues each with `0x100` while `GetKeyState(0x11)` reads

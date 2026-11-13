@@ -103,7 +103,7 @@ mod tests {
     /// and then written into one that size, no default given, Wine's answer
     /// the count both times. The relay showed the block's first string
     /// alone, so a neutral ASCII block of each count stands in: the shape
-    /// replayed, not the input. Its bytes are falsifier 4's, Wine's own.
+    /// replayed, not the input, whose bytes are Wine's own.
     #[test]
     fn the_census_environment_rows_replay() {
         for (row, count) in [

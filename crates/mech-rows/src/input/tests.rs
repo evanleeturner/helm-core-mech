@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-//! Falsifier 4, the pointer: under a lock a motion moves the kept point by
+//! The pointer: under a lock a motion moves the kept point by
 //! itself, the clip holds it, and the stick at that point is the game
 //! file's; unlocked, the point follows the host's pointer. The client is
 //! the game's, 640 by 480 at the screen's origin (`n1b`'s window, no frame
@@ -7,11 +7,11 @@
 //! (wall 1): each expected stick is worked from the machine code's `shl
 //! 0x10; cdq; idiv` (`s15-stick-idiv.txt`), never harvested.
 //!
-//! Falsifier 7, the rows: the shell's row answers `k3`'s polls in the
+//! The rows: the shell's row answers `k3`'s polls in the
 //! layer's own words (`records/2026-11-05-lane-a/helm-window-input-wi1/`,
 //! `s11-counts-k3.txt`), played less their `from` and `tid`.
 //!
-//! Falsifier 5, the remap rows: each chord a browser keeps has one row, its
+//! The remap rows: each chord a browser keeps has one row, its
 //! key bound in both tables (`s1-tables.txt`: `57`, `54`, `4e` and `74`),
 //! and no row is pressed with a chord a browser keeps.
 //!

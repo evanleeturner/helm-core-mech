@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-//! Falsifier 3, the tests harvested: the census `p0`'s answers, Wine's
+//! The tests harvested: the census `p0`'s answers, Wine's
 //! `+relay` on the original from the launcher to the main menu
 //! (`records/2026-11-03-lane-a/helm-kernel-process-kp1/p0-lines.txt`, its
 //! counts in `s8-census.txt`), played on the rows. The command line is
