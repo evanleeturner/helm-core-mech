@@ -29,9 +29,13 @@ unsafe extern "stdcall" {
     ) -> i32;
 }
 
+/// Shows the message dialog and returns its end value, `DialogBoxParamA`'s:
+/// 0 for OK or Yes, 1 for No, as the handler `LAB_1005b280` ends it. Ghidra
+/// stored it as `void`; its assembly leaves `DialogBoxParamA`'s EAX standing
+/// to the `RET`, and the Yes/No callers branch on it.
 #[unsafe(export_name = "FUN_1005b1b0")]
 #[allow(non_snake_case)]
-pub unsafe extern "C" fn ShowMessageDialog(message_text: *mut i8) {
+pub unsafe extern "C" fn ShowMessageDialog(message_text: *mut i8) -> i32 {
     mech_trace::enter!("1005b1b0", message_text);
     // SAFETY: the globals and the dialog callee are the game's own; message_text
     // points at a NUL-terminated string, and the segment buffer and slots are
@@ -96,16 +100,19 @@ pub unsafe extern "C" fn ShowMessageDialog(message_text: *mut i8) {
             c = mech_trace::dr!("1005b1b0", msg);
         }
         let id = 0x81u32.wrapping_sub((count == 2) as u32);
-        mech_trace::cr!(
+        mech_trace::rt!(
             "1005b1b0",
-            "DialogBoxParamA",
-            DialogBoxParamA(
-                mech_trace::gr!("1005b1b0", "100d08dc", SHELL_INSTANCE),
-                id as usize as *const c_void,
-                mech_trace::gr!("1005b1b0", "100d08e8", DAT_100d08e8),
-                (&raw mut MessageDialogProc) as *mut c_void,
-                0,
+            mech_trace::cr!(
+                "1005b1b0",
+                "DialogBoxParamA",
+                DialogBoxParamA(
+                    mech_trace::gr!("1005b1b0", "100d08dc", SHELL_INSTANCE),
+                    id as usize as *const c_void,
+                    mech_trace::gr!("1005b1b0", "100d08e8", DAT_100d08e8),
+                    (&raw mut MessageDialogProc) as *mut c_void,
+                    0,
+                )
             )
-        );
+        )
     }
 }
