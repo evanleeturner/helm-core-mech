@@ -22,7 +22,6 @@ unsafe extern "C" {
     fn FUN_1000a8c0(param_1: i32);
     fn FUN_1000aa80(param_1: i32);
     fn FUN_1000a890(param_1: i32);
-    fn HeapAlloc(param_1: i32, param_2: u32, param_3: u32) -> *mut i32;
     fn FUN_10050390(param_1: *mut i32);
     fn FUN_1000c770(param_1: *mut i32, param_2: i32);
     fn FUN_10017df0(param_1: i32, param_2: *mut i32);
@@ -32,6 +31,13 @@ unsafe extern "C" {
     fn FUN_10031950(param_1: i32);
     fn FUN_100319b0(param_1: i32);
     fn FUN_10050400(param_1: *mut i32);
+}
+
+// KERNEL32's `HeapAlloc` is stdcall: it pops its own three arguments,
+// so a `C` declaration pops them twice and leaves `esp` 12 bytes high.
+#[allow(non_snake_case)]
+unsafe extern "stdcall" {
+    fn HeapAlloc(h: *mut core::ffi::c_void, flags: u32, size: u32) -> *mut core::ffi::c_void;
 }
 
 #[unsafe(no_mangle)]
@@ -76,11 +82,12 @@ pub unsafe extern "C" fn FUN_100315b0(param_1: i32) {
                         "100315b0",
                         "HeapAlloc",
                         HeapAlloc(
-                            mech_trace::gr!("100315b0", "10098224", DAT_10098224),
+                            mech_trace::gr!("100315b0", "10098224", DAT_10098224) as usize
+                                as *mut _,
                             1,
                             0x1a
                         )
-                    );
+                    ) as *mut i32;
                     mech_trace::wr!("100315b0", p, write_unaligned, i_var3);
                     mech_trace::wr!("100315b0", p.byte_add(8).cast::<i8>(), write, 0);
                     mech_trace::wr!(
@@ -115,11 +122,12 @@ pub unsafe extern "C" fn FUN_100315b0(param_1: i32) {
                         "100315b0",
                         "HeapAlloc",
                         HeapAlloc(
-                            mech_trace::gr!("100315b0", "10098224", DAT_10098224),
+                            mech_trace::gr!("100315b0", "10098224", DAT_10098224) as usize
+                                as *mut _,
                             1,
                             0x1a
                         )
-                    );
+                    ) as *mut i32;
                     mech_trace::wr!("100315b0", p, write_unaligned, i_var3);
                     mech_trace::wr!("100315b0", p.byte_add(8).cast::<i8>(), write, 1);
                     mech_trace::wr!(
@@ -157,11 +165,11 @@ pub unsafe extern "C" fn FUN_100315b0(param_1: i32) {
                     "100315b0",
                     "HeapAlloc",
                     HeapAlloc(
-                        mech_trace::gr!("100315b0", "10098224", DAT_10098224),
+                        mech_trace::gr!("100315b0", "10098224", DAT_10098224) as usize as *mut _,
                         1,
                         0x16
                     )
-                );
+                ) as *mut i32;
                 if i_var2 < 0x1f41 {
                     if i_var2 == 8000 {
                         let v = mech_trace::rd!(

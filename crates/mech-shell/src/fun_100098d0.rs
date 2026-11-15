@@ -26,9 +26,33 @@ unsafe extern "stdcall" {
     fn HeapAlloc(h: *mut c_void, flags: u32, size: u32) -> *mut c_void;
 }
 
+/// The entry the game's calls reach: pushes `ebx`, as the original's
+/// first instruction does (`100098d0`), pushes the argument again, runs
+/// [`body`] and pops both. The `ebx` word is pushed for the stack it
+/// leaves, not for the body: the CLAN button's press calls this at
+/// `10034bc2`, then `10033e80`, which, when the old list has no lit row,
+/// reads its own local at `esp + 8` (`10033eac`), a word it never writes,
+/// and lights the row whose key equals it. That word is the one the
+/// original's `push ebx` left, the caller's `ebx`; a Rust prologue leaves
+/// another register there, and another row is lit.
+#[unsafe(naked)]
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn FUN_100098d0(match_value: i32) {
+    core::arch::naked_asm!(
+        "push ebx",
+        "push dword ptr [esp + 8]",
+        "call {body}",
+        "add esp, 4",
+        "pop ebx",
+        "ret",
+        body = sym body,
+    )
+}
+
+/// The port's work, entered only through [`FUN_100098d0`], its argument
+/// pushed again above the kept `ebx`.
+unsafe extern "C" fn body(match_value: i32) {
     mech_trace::enter!("100098d0", match_value);
     // SAFETY: globals, callees and heap records are the game's own; records
     // are freshly allocated with enough bytes for every write, and the row
