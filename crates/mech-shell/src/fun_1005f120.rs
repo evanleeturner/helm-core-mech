@@ -81,11 +81,11 @@ unsafe fn wr(p: *mut u8, off: usize, v: u32) {
     }
 }
 
-#[unsafe(no_mangle)]
+#[unsafe(export_name = "FUN_1005f120")]
 #[allow(non_snake_case)]
-pub unsafe extern "fastcall" fn FUN_1005f120(param_1: *mut u8) {
-    mech_trace::enter!("1005f120", param_1);
-    let p = param_1;
+pub unsafe extern "fastcall" fn ServiceItemRedraw(item: *mut u8) {
+    mech_trace::enter!("1005f120", item);
+    let p = item;
     // SAFETY: the object, the callees and the globals are the game's own;
     // reads and writes happen at the original's offsets and order.
     unsafe {

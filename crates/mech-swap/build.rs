@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: MIT
 //! Copies the shell library's 580 ported functions out of `mech-shell` into
-//! the build folder, each definition renamed from `FUN_<address>` to
-//! `HC5_<address>`, and with it each call a port makes to itself (two
-//! recurse: `10053590` and `10053780`). The game's original keeps the name
+//! the build folder, each export renamed from `FUN_<address>` to
+//! `HC5_<address>`: a definition still named `FUN_<address>`, and with it
+//! each call a port makes to itself (two recurse: `10053590` and
+//! `10053780`), or a named port's `export_name = "FUN_<address>"`, its
+//! Rust name kept. The game's original keeps the name
 //! `FUN_<address>`, an absolute symbol at its own address in the swap's
 //! link, so a port's call to another function reaches the game's entry,
 //! and through it the swap where that entry is swapped. The ports are the modules
@@ -12,7 +14,8 @@
 //! `fun_<address>`; its copy is written as `fun_<address>` like the rest.
 //!
 //! Writes `ports.rs`, one gated `mod` line a port, for `lib.rs` to include.
-//! Panics when a port does not define its own function exactly once.
+//! Panics when a port does not define or export its own function exactly
+//! once: ` fn FUN_<address>(` and `export_name = "FUN_<address>"` together.
 use std::env;
 use std::fmt::Write as _;
 use std::fs;
@@ -36,10 +39,11 @@ fn main() {
             let source = fs::read_to_string(shell.join(format!("{module}.rs")))
                 .expect("each gated module's file reads");
             let own = format!(" fn FUN_{address}(");
+            let export = format!("export_name = \"FUN_{address}\"");
             assert_eq!(
-                source.matches(&own).count(),
+                source.matches(&own).count() + source.matches(&export).count(),
                 1,
-                "{module} defines FUN_{address} once"
+                "{module} defines or exports FUN_{address} once"
             );
             let copy = out.join(format!("fun_{address}.rs"));
             fs::write(

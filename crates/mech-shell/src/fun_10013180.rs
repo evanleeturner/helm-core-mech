@@ -27,21 +27,21 @@ unsafe extern "thiscall" {
     fn FUN_100124d0(this: *mut u8, x: i32, y: i32, font: i32, text: i32) -> u8;
 }
 
-#[unsafe(no_mangle)]
+#[unsafe(export_name = "FUN_10013180")]
 #[allow(non_snake_case)]
-pub unsafe extern "thiscall" fn FUN_10013180(
-    this: *mut u8,
+pub unsafe extern "thiscall" fn DrawTextAndMarkDirty(
+    surface: *mut u8,
     x: i32,
     y: i32,
     font: i32,
     text: *mut u8,
-    param_5: *mut u8,
+    remap_table: *mut u8,
 ) -> i32 {
-    mech_trace::enter!("10013180", this, x, y, font, text, param_5);
+    mech_trace::enter!("10013180", surface, x, y, font, text, remap_table);
     if text.is_null() {
         return mech_trace::rt!("10013180", 0);
     }
-    let mut param_5 = param_5;
+    let mut param_5 = remap_table;
     // SAFETY: the callees and globals are the game's own; text points at a
     // NUL-terminated string and font at the game's font structure.
     unsafe {
@@ -65,7 +65,7 @@ pub unsafe extern "thiscall" fn FUN_10013180(
                     "10013180",
                     "10012590",
                     FUN_10012590(
-                        this,
+                        surface,
                         x,
                         y,
                         width,
@@ -100,7 +100,7 @@ pub unsafe extern "thiscall" fn FUN_10013180(
                     "10013180",
                     "1006984a",
                     FUN_1006984a(
-                        this.byte_add(0x56) as *mut i32,
+                        surface.byte_add(0x56) as *mut i32,
                         x,
                         y,
                         font,
@@ -113,7 +113,7 @@ pub unsafe extern "thiscall" fn FUN_10013180(
                 "10013180",
                 "100124d0",
                 FUN_100124d0(
-                    this,
+                    surface,
                     x,
                     y,
                     width,

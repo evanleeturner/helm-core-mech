@@ -2,61 +2,67 @@
 
 use core::arch::asm;
 
-#[unsafe(no_mangle)]
+#[unsafe(export_name = "FUN_10077030")]
 #[allow(non_snake_case)]
-pub unsafe extern "stdcall" fn FUN_10077030(
-    param_1: u32,
-    param_2: u32,
-    param_3: u32,
-    param_4: u32,
+pub unsafe extern "stdcall" fn aullrem(
+    dividend_low: u32,
+    dividend_high: u32,
+    divisor_low: u32,
+    divisor_high: u32,
 ) -> u64 {
-    mech_trace::enter!("10077030", param_1, param_2, param_3, param_4);
-    if param_4 == 0 {
-        let rem1: u32;
-        let rem2: u32;
+    mech_trace::enter!(
+        "10077030",
+        dividend_low,
+        dividend_high,
+        divisor_low,
+        divisor_high
+    );
+    if divisor_high == 0 {
+        let high_remainder: u32;
+        let remainder: u32;
         // SAFETY: the machine's own DIV is used so a zero divisor faults as in the original.
         unsafe {
             mech_trace::log::debug!(
                 f = "10077030", b = "div", a:% = mech_trace::Args([
-                    mech_trace::__shown!(param_3),
-                    mech_trace::__shown!(param_2),
+                    mech_trace::__shown!(divisor_low),
+                    mech_trace::__shown!(dividend_high),
                     mech_trace::__shown!(0u32),
                 ]); "asm.in"
             );
             asm!(
                 "div {d}",
-                d = in(reg) param_3,
-                inout("eax") param_2 => _,
-                inout("edx") 0u32 => rem1,
+                d = in(reg) divisor_low,
+                inout("eax") dividend_high => _,
+                inout("edx") 0u32 => high_remainder,
                 options(nomem, nostack)
             );
             mech_trace::log::debug!(
-                f = "10077030", b = "div", r = "edx", v:% = mech_trace::__shown!(rem1); "asm.out"
+                f = "10077030", b = "div", r = "edx", v:% = mech_trace::__shown!(high_remainder); "asm.out"
             );
             mech_trace::log::debug!(
                 f = "10077030", b = "div", a:% = mech_trace::Args([
-                    mech_trace::__shown!(param_3),
-                    mech_trace::__shown!(param_1),
-                    mech_trace::__shown!(rem1),
+                    mech_trace::__shown!(divisor_low),
+                    mech_trace::__shown!(dividend_low),
+                    mech_trace::__shown!(high_remainder),
                 ]); "asm.in"
             );
             asm!(
                 "div {d}",
-                d = in(reg) param_3,
-                inout("eax") param_1 => _,
-                inout("edx") rem1 => rem2,
+                d = in(reg) divisor_low,
+                inout("eax") dividend_low => _,
+                inout("edx") high_remainder => remainder,
                 options(nomem, nostack)
             );
             mech_trace::log::debug!(
-                f = "10077030", b = "div", r = "edx", v:% = mech_trace::__shown!(rem2); "asm.out"
+                f = "10077030", b = "div", r = "edx", v:% = mech_trace::__shown!(remainder); "asm.out"
             );
         }
-        return mech_trace::rt!("10077030", rem2 as u64);
+        return mech_trace::rt!("10077030", remainder as u64);
     }
-    let mut ecx = param_4;
-    let mut ebx = param_3;
-    let mut edx = param_2;
-    let mut eax = param_1;
+    let mut ecx = divisor_high;
+    let mut ebx = divisor_low;
+    let mut edx = dividend_high;
+    let mut eax = dividend_low;
     loop {
         ebx = (ebx >> 1) | ((ecx & 1) << 31);
         ecx >>= 1;
@@ -67,14 +73,14 @@ pub unsafe extern "stdcall" fn FUN_10077030(
         }
     }
     let q = ((((edx as u64) << 32) | eax as u64) / (ebx as u64)) as u32;
-    let hi_part = q.wrapping_mul(param_4);
-    let prod = (q as u64).wrapping_mul(param_3 as u64);
+    let hi_part = q.wrapping_mul(divisor_high);
+    let prod = (q as u64).wrapping_mul(divisor_low as u64);
     let lo = prod as u32;
     let (hi, carry) = ((prod >> 32) as u32).overflowing_add(hi_part);
     let mut v: u64 = ((hi as u64) << 32) | lo as u64;
-    if carry || hi > param_2 || (hi == param_2 && lo > param_1) {
-        v = v.wrapping_sub(((param_4 as u64) << 32) | param_3 as u64);
+    if carry || hi > dividend_high || (hi == dividend_high && lo > dividend_low) {
+        v = v.wrapping_sub(((divisor_high as u64) << 32) | divisor_low as u64);
     }
-    v = v.wrapping_sub(((param_2 as u64) << 32) | param_1 as u64);
+    v = v.wrapping_sub(((dividend_high as u64) << 32) | dividend_low as u64);
     mech_trace::rt!("10077030", v.wrapping_neg())
 }

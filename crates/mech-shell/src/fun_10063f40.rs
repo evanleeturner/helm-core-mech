@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 
-#[unsafe(no_mangle)]
+#[unsafe(export_name = "FUN_10063f40")]
 #[allow(non_snake_case)]
-pub unsafe extern "C" fn FUN_10063f40(entry: *mut i32) -> *mut i32 {
+pub unsafe extern "C" fn FindFirstEntryWithField2cSet(entry: *mut i32) -> *mut i32 {
     mech_trace::enter!("10063f40", entry);
     if entry.is_null() {
         return mech_trace::rt!("10063f40", core::ptr::null_mut());

@@ -12,26 +12,26 @@ unsafe extern "C" {
     ) -> i32;
 }
 
-#[unsafe(no_mangle)]
+#[unsafe(export_name = "FUN_1006984a")]
 #[allow(non_snake_case)]
-pub unsafe extern "C" fn FUN_1006984a(
+pub unsafe extern "C" fn DrawTextString(
     drawTarget_Likely: *mut i32,
-    destX_Likely: i32,
-    destY_Likely: i32,
-    font_Likely: i32,
+    start_x: i32,
+    y: i32,
+    font: i32,
     text: *mut u8,
-    param_6: i32,
+    remap_table: i32,
 ) {
     mech_trace::enter!(
         "1006984a",
         drawTarget_Likely,
-        destX_Likely,
-        destY_Likely,
-        font_Likely,
+        start_x,
+        y,
+        font,
         text,
-        param_6
+        remap_table
     );
-    let mut dest_x = destX_Likely;
+    let mut dest_x = start_x;
     let mut text = text;
     loop {
         // SAFETY: the callee is the game's own; text points at a
@@ -43,10 +43,10 @@ pub unsafe extern "C" fn FUN_1006984a(
                 FUN_100696b7(
                     drawTarget_Likely,
                     dest_x,
-                    destY_Likely,
-                    font_Likely,
+                    y,
+                    font,
                     i32::from(mech_trace::dr!("1006984a", text)),
-                    param_6,
+                    remap_table,
                 )
             );
             dest_x = dest_x.wrapping_add(advance_width);

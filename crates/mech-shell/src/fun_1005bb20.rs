@@ -2,7 +2,8 @@
 
 #[allow(non_upper_case_globals)]
 unsafe extern "C" {
-    static mut DAT_10098224: *mut u8;
+    #[link_name = "DAT_10098224"]
+    static mut HEAP_HANDLE: *mut u8;
     static mut DAT_100ab6e8: u8;
     static mut s_Out_of_memory_in_allocate_string_100a5984: u8;
 }
@@ -20,15 +21,15 @@ unsafe extern "stdcall" {
     fn HeapAlloc(heap: *mut core::ffi::c_void, flags: u32, size: u32) -> *mut core::ffi::c_void;
 }
 
-#[unsafe(no_mangle)]
+#[unsafe(export_name = "FUN_1005bb20")]
 #[allow(non_snake_case)]
-pub unsafe extern "C" fn FUN_1005bb20(param_1: *mut i8) -> *mut i8 {
-    mech_trace::enter!("1005bb20", param_1);
-    // SAFETY: param_1 is a NUL-terminated string supplied by the caller; the
+pub unsafe extern "C" fn AllocateStringCopy(source: *mut i8) -> *mut i8 {
+    mech_trace::enter!("1005bb20", source);
+    // SAFETY: source is a NUL-terminated string supplied by the caller; the
     // heap handle, file stream and callees are the game's own.
     unsafe {
         let mut len: u32 = 0;
-        while mech_trace::dr!("1005bb20", param_1.byte_add(len as usize)) != 0 {
+        while mech_trace::dr!("1005bb20", source.byte_add(len as usize)) != 0 {
             len = len.wrapping_add(1);
         }
         if len == 0 {
@@ -39,7 +40,7 @@ pub unsafe extern "C" fn FUN_1005bb20(param_1: *mut i8) -> *mut i8 {
             "1005bb20",
             "HeapAlloc",
             HeapAlloc(
-                mech_trace::gr!("1005bb20", "10098224", DAT_10098224).cast(),
+                mech_trace::gr!("1005bb20", "10098224", HEAP_HANDLE).cast(),
                 1,
                 total
             )
@@ -56,7 +57,7 @@ pub unsafe extern "C" fn FUN_1005bb20(param_1: *mut i8) -> *mut i8 {
             mech_trace::cr!("1005bb20", "_fflush", _fflush(&raw mut DAT_100ab6e8));
             FUN_1006fde0(1);
         }
-        let mut src = param_1 as *const i8;
+        let mut src = source as *const i8;
         let mut out = dst;
         let mut n = total >> 2;
         while n != 0 {

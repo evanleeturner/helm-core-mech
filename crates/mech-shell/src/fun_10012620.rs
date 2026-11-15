@@ -104,101 +104,106 @@ unsafe fn copy_forward(mut s: *const u8, mut d: *mut u8, mut n: i32) {
 /// branch. The original pushes the area's left, top, right and bottom
 /// before choosing between `FUN_1000e070` and slot 0x1c, so both receive
 /// them; without them the setup screen drew its frames alone.
-#[unsafe(no_mangle)]
+#[unsafe(export_name = "FUN_10012620")]
 #[allow(non_snake_case)]
-pub unsafe extern "fastcall" fn FUN_10012620(rect_owner: i32) {
+pub unsafe extern "fastcall" fn PresentDirtyRect(rect_owner: i32) {
     mech_trace::enter!("10012620", rect_owner);
-    let r = rect_owner;
-    // SAFETY: r points at the game's rect owner object; globals and
+    let surface = rect_owner;
+    // SAFETY: surface points at the game's rect owner object; globals and
     // function tables are the game's own memory.
     unsafe {
-        if rd(r, 0x82) < rd(r, 0x5a) {
-            wr(r, 0x82, rd(r, 0x5a));
+        if rd(surface, 0x82) < rd(surface, 0x5a) {
+            wr(surface, 0x82, rd(surface, 0x5a));
         }
-        if rd(r, 0x86) < rd(r, 0x5e) {
-            wr(r, 0x86, rd(r, 0x5e));
+        if rd(surface, 0x86) < rd(surface, 0x5e) {
+            wr(surface, 0x86, rd(surface, 0x5e));
         }
-        if rd(r, 0x62) < rd(r, 0x8a) {
-            wr(r, 0x8a, rd(r, 0x62));
+        if rd(surface, 0x62) < rd(surface, 0x8a) {
+            wr(surface, 0x8a, rd(surface, 0x62));
         }
-        if rd(r, 0x66) < rd(r, 0x8e) {
-            wr(r, 0x8e, rd(r, 0x66));
+        if rd(surface, 0x66) < rd(surface, 0x8e) {
+            wr(surface, 0x8e, rd(surface, 0x66));
         }
-        if rd(r, 0x1e) == 0 {
-            if rd(r, 0x82) <= rd(r, 0x8a) && rd(r, 0x86) <= rd(r, 0x8e) {
+        if rd(surface, 0x1e) == 0 {
+            if rd(surface, 0x82) <= rd(surface, 0x8a) && rd(surface, 0x86) <= rd(surface, 0x8e) {
                 if mech_trace::gr!("10012620", "10098214", DAT_10098214) == 0 {
                     call4(
                         mech_trace::gr!("10012620", "100a724c", DAT_100a724c),
                         0x1c,
-                        rd(r, 0x82),
-                        rd(r, 0x86),
-                        rd(r, 0x8a),
-                        rd(r, 0x8e),
+                        rd(surface, 0x82),
+                        rd(surface, 0x86),
+                        rd(surface, 0x8a),
+                        rd(surface, 0x8e),
                     );
                 } else {
                     mech_trace::cr!(
                         "10012620",
                         "1000e070",
-                        FUN_1000e070(rd(r, 0x82), rd(r, 0x86), rd(r, 0x8a), rd(r, 0x8e))
+                        FUN_1000e070(
+                            rd(surface, 0x82),
+                            rd(surface, 0x86),
+                            rd(surface, 0x8a),
+                            rd(surface, 0x8e)
+                        )
                     );
                 }
             }
         } else {
-            if rd(r, 0x22) == 0 {
-                if rd(r, 0x3aa) == 0 {
+            if rd(surface, 0x22) == 0 {
+                if rd(surface, 0x3aa) == 0 {
                     call4(
                         mech_trace::gr!("10012620", "100a7248", DAT_100a7248),
                         0x14,
                         0,
                         0x100,
-                        r.wrapping_add(0x92),
+                        surface.wrapping_add(0x92),
                         0,
                     );
                     call4(
                         mech_trace::gr!("10012620", "100a724c", DAT_100a724c),
                         0x1c,
-                        rd(r, 0x5a),
-                        rd(r, 0x5e),
-                        rd(r, 0x62),
-                        rd(r, 0x66),
+                        rd(surface, 0x5a),
+                        rd(surface, 0x5e),
+                        rd(surface, 0x62),
+                        rd(surface, 0x66),
                     );
                 } else {
                     copy_bytes(
-                        rd(r, 0x2e),
-                        rd(r, 0x42),
-                        rd(r, 0x392).wrapping_mul(rd(r, 0x396)),
+                        rd(surface, 0x2e),
+                        rd(surface, 0x42),
+                        rd(surface, 0x392).wrapping_mul(rd(surface, 0x396)),
                     );
-                    FUN_100133d0(r);
+                    FUN_100133d0(surface);
                     call4(
                         mech_trace::gr!("10012620", "100a7248", DAT_100a7248),
                         0x14,
                         0,
                         0x100,
-                        r.wrapping_add(0x92),
-                        rd(r, 0x22),
+                        surface.wrapping_add(0x92),
+                        rd(surface, 0x22),
                     );
                     copy_bytes(
-                        rd(r, 0x42),
-                        rd(r, 0x2e),
-                        rd(r, 0x392).wrapping_mul(rd(r, 0x396)),
+                        rd(surface, 0x42),
+                        rd(surface, 0x2e),
+                        rd(surface, 0x392).wrapping_mul(rd(surface, 0x396)),
                     );
                     call0(mech_trace::gr!("10012620", "100a724c", DAT_100a724c), 0x18);
-                    wr(r, 0x3aa, 0);
+                    wr(surface, 0x3aa, 0);
                 }
             } else if mech_trace::gr!("10012620", "1008eb68", DAT_1008eb68) == 0 {
-                FUN_100133d0(r);
+                FUN_100133d0(surface);
                 call4(
                     mech_trace::gr!("10012620", "100a7248", DAT_100a7248),
                     0x14,
                     0,
                     0x100,
-                    r.wrapping_add(0x92),
-                    rd(r, 0x22),
+                    surface.wrapping_add(0x92),
+                    rd(surface, 0x22),
                 );
                 copy_bytes(
-                    rd(r, 0x42),
-                    rd(r, 0x2e),
-                    rd(r, 0x392).wrapping_mul(rd(r, 0x396)),
+                    rd(surface, 0x42),
+                    rd(surface, 0x2e),
+                    rd(surface, 0x392).wrapping_mul(rd(surface, 0x396)),
                 );
                 call0(mech_trace::gr!("10012620", "100a724c", DAT_100a724c), 0x18);
             } else {
@@ -209,17 +214,17 @@ pub unsafe extern "fastcall" fn FUN_10012620(rect_owner: i32) {
                     0x14,
                     0,
                     0x100,
-                    r.wrapping_add(0x92),
-                    rd(r, 0x22),
+                    surface.wrapping_add(0x92),
+                    rd(surface, 0x22),
                 );
                 call0(mech_trace::gr!("10012620", "100a724c", DAT_100a724c), 0x18);
                 mech_trace::gw!("10012620", "1008eb68", DAT_1008eb68, 0);
             }
-            wr(r, 0x1e, 0);
+            wr(surface, 0x1e, 0);
         }
-        wr(r, 0x82, rd(r, 0x62));
-        wr(r, 0x86, rd(r, 0x66));
-        wr(r, 0x8a, rd(r, 0x5a));
-        wr(r, 0x8e, rd(r, 0x5e));
+        wr(surface, 0x82, rd(surface, 0x62));
+        wr(surface, 0x86, rd(surface, 0x66));
+        wr(surface, 0x8a, rd(surface, 0x5a));
+        wr(surface, 0x8e, rd(surface, 0x5e));
     }
 }

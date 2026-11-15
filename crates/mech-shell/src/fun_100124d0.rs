@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 
-#[unsafe(no_mangle)]
+#[unsafe(export_name = "FUN_100124d0")]
 #[allow(non_snake_case)]
-pub unsafe extern "thiscall" fn FUN_100124d0(
-    this: *mut u8,
+pub unsafe extern "thiscall" fn ExtendDirtyRect(
+    surface: *mut u8,
     left: i32,
     top: i32,
     width: i32,
@@ -19,30 +19,30 @@ pub unsafe extern "thiscall" fn FUN_100124d0(
     };
     let right = left.wrapping_add(-1).wrapping_add(width);
     let bottom = top.wrapping_add(-1).wrapping_add(height);
-    // SAFETY: `this` points at the caller's object; the fields at offsets
+    // SAFETY: `surface` points at the caller's object; the fields at offsets
     // 0x82..0x8e are read and written unaligned where the original does.
     unsafe {
-        let p_left = this.byte_add(0x82).cast::<i32>();
-        let p_top = this.byte_add(0x86).cast::<i32>();
-        let p_right = this.byte_add(0x8a).cast::<i32>();
-        let p_bottom = this.byte_add(0x8e).cast::<i32>();
-        if left < counted(p_left.read_unaligned()) {
-            mech_trace::wr!("100124d0", p_left, write_unaligned, left);
+        let dirty_left_slot = surface.byte_add(0x82).cast::<i32>();
+        let dirty_top_slot = surface.byte_add(0x86).cast::<i32>();
+        let dirty_right_slot = surface.byte_add(0x8a).cast::<i32>();
+        let dirty_bottom_slot = surface.byte_add(0x8e).cast::<i32>();
+        if left < counted(dirty_left_slot.read_unaligned()) {
+            mech_trace::wr!("100124d0", dirty_left_slot, write_unaligned, left);
         }
-        if top < counted(p_top.read_unaligned()) {
-            mech_trace::wr!("100124d0", p_top, write_unaligned, top);
+        if top < counted(dirty_top_slot.read_unaligned()) {
+            mech_trace::wr!("100124d0", dirty_top_slot, write_unaligned, top);
         }
-        if counted(p_right.read_unaligned()) < right {
-            mech_trace::wr!("100124d0", p_right, write_unaligned, right);
+        if counted(dirty_right_slot.read_unaligned()) < right {
+            mech_trace::wr!("100124d0", dirty_right_slot, write_unaligned, right);
         }
-        if counted(p_bottom.read_unaligned()) < bottom {
-            mech_trace::wr!("100124d0", p_bottom, write_unaligned, bottom);
+        if counted(dirty_bottom_slot.read_unaligned()) < bottom {
+            mech_trace::wr!("100124d0", dirty_bottom_slot, write_unaligned, bottom);
         }
     }
     mech_trace::log::debug!(
         f = "100124d0",
         a:% = mech_trace::Args([
-            mech_trace::__shown!(this),
+            mech_trace::__shown!(surface),
             mech_trace::__shown!(left),
             mech_trace::__shown!(top),
             mech_trace::__shown!(width),

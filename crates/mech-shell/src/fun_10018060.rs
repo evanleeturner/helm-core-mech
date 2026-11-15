@@ -5,9 +5,9 @@ unsafe extern "C" {
     fn FUN_10018020(collection: i32);
 }
 
-#[unsafe(no_mangle)]
+#[unsafe(export_name = "FUN_10018060")]
 #[allow(non_snake_case)]
-pub unsafe extern "C" fn FUN_10018060(collection: i32, index: i32) -> u32 {
+pub unsafe extern "C" fn GetCollectionItemAt(collection: i32, index: i32) -> u32 {
     mech_trace::enter!("10018060", collection, index);
     if collection == 0 {
         return mech_trace::rt!("10018060", 0);

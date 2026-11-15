@@ -44,9 +44,9 @@ unsafe fn wr(p: *mut u32, i: isize, v: u32) {
     unsafe { mech_trace::wr!("10053a40", p.wrapping_offset(i), write_unaligned, v) }
 }
 
-#[unsafe(no_mangle)]
+#[unsafe(export_name = "FUN_10053a40")]
 #[allow(non_snake_case)]
-pub unsafe extern "stdcall" fn FUN_10053a40() -> u32 {
+pub unsafe extern "stdcall" fn WriteCockpitControlMap() -> u32 {
     mech_trace::enter!("10053a40");
     // SAFETY: all globals, tables and callees are the game's own memory;
     // table walks read and write where the original does.
@@ -75,17 +75,17 @@ pub unsafe extern "stdcall" fn FUN_10053a40() -> u32 {
             }
         }
 
-        let mut i7: i32 = 0;
+        let mut entry_index: i32 = 0;
         p4 = (&raw mut DAT_100bdfa0) as *mut u32;
         loop {
             if (rd(p4, -3) as i32) > -1 && (rd(p4, -2) & 7) != 0 {
                 let u5 = (rd(p4, -2) & 7) << 4;
-                let u1 = rd(p4, -4);
-                if u1 == 0 {
+                let entry_kind = rd(p4, -4);
+                if entry_kind == 0 {
                     let mut i6: i32 = 0;
                     let mut p2 = (&raw mut DAT_100bdf98) as *mut u32;
                     loop {
-                        if i6 != i7
+                        if i6 != entry_index
                             && (rd(p2, -1) as i32) > -1
                             && rd(p2, -2) == 0
                             && rd(p2, 2) == rd(p4, 0)
@@ -99,49 +99,52 @@ pub unsafe extern "stdcall" fn FUN_10053a40() -> u32 {
                             break;
                         }
                     }
-                } else if (u1 as i32) > 0 && (u1 as i32) < 3 {
+                } else if (entry_kind as i32) > 0 && (entry_kind as i32) < 3 {
                     let mut i6: i32 = 0;
-                    let mut p3 = (&raw mut DAT_100bdf90) as *mut u32;
+                    let mut other_entry = (&raw mut DAT_100bdf90) as *mut u32;
                     loop {
-                        if i6 != i7 && (rd(p3, 1) as i32) > -1 && rd(p3, 0) != 0 {
-                            if rd(p3, 4) == rd(p4, 0) {
-                                let v = rd(p3, 2) | u5;
-                                wr(p3, 2, v);
+                        if i6 != entry_index
+                            && (rd(other_entry, 1) as i32) > -1
+                            && rd(other_entry, 0) != 0
+                        {
+                            if rd(other_entry, 4) == rd(p4, 0) {
+                                let v = rd(other_entry, 2) | u5;
+                                wr(other_entry, 2, v);
                             }
-                            if rd(p3, 0) == 2 {
-                                if rd(p3, 5) == rd(p4, 0) {
-                                    let v = rd(p3, 3) | u5;
-                                    wr(p3, 3, v);
+                            if rd(other_entry, 0) == 2 {
+                                if rd(other_entry, 5) == rd(p4, 0) {
+                                    let v = rd(other_entry, 3) | u5;
+                                    wr(other_entry, 3, v);
                                 }
-                                if rd(p3, 0) != 2 {
+                                if rd(other_entry, 0) != 2 {
                                     // goto LAB_10053b5e: skip the rest
-                                    p3 = p3.wrapping_add(6);
+                                    other_entry = other_entry.wrapping_add(6);
                                     i6 = i6.wrapping_add(1);
-                                    if !((p3 as usize) < end70) {
+                                    if !((other_entry as usize) < end70) {
                                         break;
                                     }
                                     continue;
                                 }
-                                if rd(p4, 1) == rd(p3, 4) {
-                                    let v = rd(p3, 2) | ((rd(p4, -1) & 7) << 4);
-                                    wr(p3, 2, v);
+                                if rd(p4, 1) == rd(other_entry, 4) {
+                                    let v = rd(other_entry, 2) | ((rd(p4, -1) & 7) << 4);
+                                    wr(other_entry, 2, v);
                                 }
                             }
-                            if rd(p3, 0) == 2 && rd(p3, 5) == rd(p4, 1) {
-                                let v = rd(p3, 3) | ((rd(p4, -1) & 7) << 4);
-                                wr(p3, 3, v);
+                            if rd(other_entry, 0) == 2 && rd(other_entry, 5) == rd(p4, 1) {
+                                let v = rd(other_entry, 3) | ((rd(p4, -1) & 7) << 4);
+                                wr(other_entry, 3, v);
                             }
                         }
-                        p3 = p3.wrapping_add(6);
+                        other_entry = other_entry.wrapping_add(6);
                         i6 = i6.wrapping_add(1);
-                        if !((p3 as usize) < end70) {
+                        if !((other_entry as usize) < end70) {
                             break;
                         }
                     }
                 }
             }
             p4 = p4.wrapping_add(6);
-            i7 = i7.wrapping_add(1);
+            entry_index = entry_index.wrapping_add(1);
             if 0x100bed7fusize < (p4 as usize) {
                 let file = mech_trace::cr!(
                     "10053a40",
@@ -154,14 +157,14 @@ pub unsafe extern "stdcall" fn FUN_10053a40() -> u32 {
                     FUN_1005b1b0(&raw const DAT_1009fe70);
                 } else {
                     let mut u5: u32 = 0;
-                    let mut p = (&raw mut DAT_100bdf98) as *mut u32;
+                    let mut flags_slot = (&raw mut DAT_100bdf98) as *mut u32;
                     mech_trace::cr!(
                         "10053a40",
                         "FID_conflict__fwprintf",
                         FID_conflict__fwprintf(file, &raw const DAT_1009fdd0)
                     );
                     loop {
-                        if (rd(p, -1) as i32) > -1 {
+                        if (rd(flags_slot, -1) as i32) > -1 {
                             let tbl = &raw const DAT_1009c5f8;
                             let s = mech_trace::rd!(
                                 "10053a40",
@@ -171,15 +174,15 @@ pub unsafe extern "stdcall" fn FUN_10053a40() -> u32 {
                             FUN_10053780(
                                 file,
                                 s as usize as *const u8,
-                                p.wrapping_offset(-2) as *mut i32,
+                                flags_slot.wrapping_offset(-2) as *mut i32,
                             );
-                            let v = rd(p, 0) & 0x8000_0007;
-                            wr(p, 0, v);
-                            wr(p, 1, 0);
+                            let v = rd(flags_slot, 0) & 0x8000_0007;
+                            wr(flags_slot, 0, v);
+                            wr(flags_slot, 1, 0);
                         }
-                        p = p.wrapping_add(6);
+                        flags_slot = flags_slot.wrapping_add(6);
                         u5 = u5.wrapping_add(1);
-                        if !((p as usize) < end78) {
+                        if !((flags_slot as usize) < end78) {
                             break;
                         }
                     }

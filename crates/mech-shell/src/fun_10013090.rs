@@ -25,19 +25,26 @@ unsafe extern "thiscall" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "thiscall" fn FUN_10013090(
-    this: *mut u8,
-    param_1: i32,
-    param_2: i32,
-    param_3: i32,
-    param_4: i32,
-    param_5: i32,
-    param_6: i32,
+    surface: *mut u8,
+    image_table: i32,
+    image_index: i32,
+    x: i32,
+    y: i32,
+    width: i32,
+    height: i32,
 ) {
     mech_trace::enter!(
-        "10013090", this, param_1, param_2, param_3, param_4, param_5, param_6
+        "10013090",
+        surface,
+        image_table,
+        image_index,
+        x,
+        y,
+        width,
+        height
     );
     // SAFETY: globals, callees and the vtable-like table are the game's own;
-    // `this` points at the caller's object, offsets used as the original does.
+    // `surface` points at the caller's object, offsets used as the original does.
     unsafe {
         let mut status: i32 = -1;
         if mech_trace::gr!("10013090", "10098204", DAT_10098204) != 0 {
@@ -55,18 +62,18 @@ pub unsafe extern "thiscall" fn FUN_10013090(
                 "10013090",
                 "10065b64",
                 FUN_10065b64(
-                    this.byte_add(0x56).cast::<i32>(),
-                    param_1,
-                    param_2,
-                    param_3,
-                    param_4,
+                    surface.byte_add(0x56).cast::<i32>(),
+                    image_table,
+                    image_index,
+                    x,
+                    y,
                 )
             );
         }
         mech_trace::cr!(
             "10013090",
             "100124d0",
-            FUN_100124d0(this, param_3, param_4, param_5, param_6)
+            FUN_100124d0(surface, x, y, width, height)
         );
     }
 }

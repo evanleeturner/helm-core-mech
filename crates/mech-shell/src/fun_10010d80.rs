@@ -22,9 +22,9 @@ unsafe extern "stdcall" {
 /// original's `push esi` left, the caller's `esi`; a Rust prologue leaves
 /// another register there, and another row is lit.
 #[unsafe(naked)]
-#[unsafe(no_mangle)]
+#[unsafe(export_name = "FUN_10010d80")]
 #[allow(non_snake_case)]
-pub unsafe extern "fastcall" fn FUN_10010d80(sample: *mut u8) {
+pub unsafe extern "fastcall" fn StartSample(sample: *mut u8) {
     core::arch::naked_asm!(
         "push ebx",
         "push esi",
@@ -36,7 +36,7 @@ pub unsafe extern "fastcall" fn FUN_10010d80(sample: *mut u8) {
     )
 }
 
-/// The port's work, entered only through [`FUN_10010d80`]: `ecx` still
+/// The port's work, entered only through [`StartSample`]: `ecx` still
 /// holds the sample.
 unsafe extern "fastcall" fn body(sample: *mut u8) {
     mech_trace::enter!("10010d80", sample);

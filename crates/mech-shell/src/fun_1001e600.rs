@@ -5,9 +5,9 @@ unsafe extern "C" {
     fn FUN_10017df0(item: *mut i32, param_2: u32);
 }
 
-#[unsafe(no_mangle)]
+#[unsafe(export_name = "FUN_1001e600")]
 #[allow(non_snake_case)]
-pub unsafe extern "thiscall" fn FUN_1001e600(collection_holder: *mut u8, item: u32) {
+pub unsafe extern "thiscall" fn AppendToHeldCollection(collection_holder: *mut u8, item: u32) {
     mech_trace::enter!("1001e600", collection_holder, item);
     // SAFETY: collection_holder points at the game's holder object, whose first
     // field is the collection pointer; the callee is the game's own.

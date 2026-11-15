@@ -14,26 +14,26 @@ unsafe extern "thiscall" {
     );
 }
 
-#[unsafe(no_mangle)]
+#[unsafe(export_name = "FUN_10050d90")]
 #[allow(non_snake_case)]
-pub unsafe extern "thiscall" fn FUN_10050d90(
-    this: *mut c_void,
-    param_1: i32,
-    param_2: i32,
+pub unsafe extern "thiscall" fn DrawTextInContext(
+    text_context: *mut c_void,
+    x: i32,
+    y: i32,
     text: *mut u8,
-    param_4: *mut u8,
+    remap_table: *mut u8,
 ) {
-    mech_trace::enter!("10050d90", this, param_1, param_2, text, param_4);
-    // SAFETY: `this` points at the game's object; the inner pointer at
+    mech_trace::enter!("10050d90", text_context, x, y, text, remap_table);
+    // SAFETY: `text_context` points at the game's object; the inner pointer at
     // offset 0x410 and the first dword are read as the original does, and
     // the callee is the game's own.
     unsafe {
-        let inner = mech_trace::rd!(
+        let surface = mech_trace::rd!(
             "10050d90",
-            this.byte_add(0x410).cast::<*mut c_void>(),
+            text_context.byte_add(0x410).cast::<*mut c_void>(),
             read_unaligned
         );
-        let first = mech_trace::rd!("10050d90", this.cast::<i32>(), read_unaligned);
-        FUN_10013180(inner, param_1, param_2, first, text, param_4);
+        let font = mech_trace::rd!("10050d90", text_context.cast::<i32>(), read_unaligned);
+        FUN_10013180(surface, x, y, font, text, remap_table);
     }
 }

@@ -26,16 +26,16 @@ unsafe extern "C" {
 #[unsafe(no_mangle)]
 #[allow(non_snake_case)]
 pub unsafe extern "thiscall" fn FUN_10013100(
-    this: *mut u8,
+    surface: *mut u8,
     param_1: i32,
     param_2: i32,
-    param_3: i32,
-    param_4: i32,
-    param_5: i32,
-    param_6: i32,
+    left: i32,
+    top: i32,
+    width: i32,
+    height: i32,
 ) {
     mech_trace::enter!(
-        "10013100", this, param_1, param_2, param_3, param_4, param_5, param_6
+        "10013100", surface, param_1, param_2, left, top, width, height
     );
     // SAFETY: the callees and globals are the game's own; DAT_100a7248 holds
     // the address of a table whose entry at +0x20 is a callable function pointer.
@@ -43,7 +43,7 @@ pub unsafe extern "thiscall" fn FUN_10013100(
         let call_result = mech_trace::cr!(
             "10013100",
             "10012590",
-            FUN_10012590(this, param_3, param_4, param_5, param_6)
+            FUN_10012590(surface, left, top, width, height)
         );
         if call_result != 0 {
             let mut call_result: i32 = -1;
@@ -62,15 +62,15 @@ pub unsafe extern "thiscall" fn FUN_10013100(
                     "10013100",
                     "10065b64",
                     FUN_10065b64(
-                        this.byte_add(0x56).cast::<i32>(),
+                        surface.byte_add(0x56).cast::<i32>(),
                         param_1,
                         param_2,
-                        param_3,
-                        param_4
+                        left,
+                        top
                     )
                 );
             }
-            FUN_100124d0(this, param_3, param_4, param_5, param_6);
+            FUN_100124d0(surface, left, top, width, height);
         }
     }
 }

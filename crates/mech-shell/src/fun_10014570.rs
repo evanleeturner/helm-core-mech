@@ -278,19 +278,19 @@ unsafe fn help(fmt1: *const u8, f1: *const u8, fmt2: *const u8, f2: *const u8) {
     }
 }
 
-#[unsafe(no_mangle)]
+#[unsafe(export_name = "FUN_10014570")]
 #[allow(non_snake_case)]
-pub unsafe extern "stdcall" fn FUN_10014570(
-    param_1: *mut c_void,
-    param_2: u32,
-    param_3: u32,
-    param_4: u32,
+pub unsafe extern "stdcall" fn ShellWindowProc(
+    hwnd: *mut c_void,
+    msg: u32,
+    wparam: u32,
+    lparam: u32,
 ) -> i32 {
-    mech_trace::enter!("10014570", param_1, param_2, param_3, param_4);
+    mech_trace::enter!("10014570", hwnd, msg, wparam, lparam);
     // SAFETY: all globals, callees and imports are the game's own.
     unsafe {
-        if param_2 >= 0x100 && param_2 < 0x109 {
-            FUN_1005b760(param_2, param_3, param_4);
+        if msg >= 0x100 && msg < 0x109 {
+            FUN_1005b760(msg, wparam, lparam);
             let v = mech_trace::gr!("10014570", "100c6100", DAT_100c6100);
             mech_trace::dw!(
                 "10014570",
@@ -299,14 +299,10 @@ pub unsafe extern "stdcall" fn FUN_10014570(
             );
             return mech_trace::rt!("10014570", 0);
         }
-        if param_2 < 0x10 {
-            if param_2 == 0xf {
+        if msg < 0x10 {
+            if msg == 0xf {
                 let mut ps = [0i32; 16];
-                mech_trace::cr!(
-                    "10014570",
-                    "BeginPaint",
-                    BeginPaint(param_1, ps.as_mut_ptr())
-                );
+                mech_trace::cr!("10014570", "BeginPaint", BeginPaint(hwnd, ps.as_mut_ptr()));
                 if !mech_trace::gr!("10014570", "100a672c", DAT_100a672c).is_null() {
                     if mech_trace::gr!("10014570", "100a6ba4", DAT_100a6ba4) == 0 {
                         FUN_10012470(
@@ -328,10 +324,10 @@ pub unsafe extern "stdcall" fn FUN_10014570(
                         FUN_10012830(mech_trace::gr!("10014570", "100a672c", DAT_100a672c));
                     }
                 }
-                mech_trace::cr!("10014570", "EndPaint", EndPaint(param_1, ps.as_mut_ptr()));
+                mech_trace::cr!("10014570", "EndPaint", EndPaint(hwnd, ps.as_mut_ptr()));
                 return mech_trace::rt!("10014570", 0);
             }
-            if param_2 == 2 {
+            if msg == 2 {
                 PostQuitMessage(0);
                 return mech_trace::rt!("10014570", 0);
             }
@@ -340,18 +336,18 @@ pub unsafe extern "stdcall" fn FUN_10014570(
                 mech_trace::cr!(
                     "10014570",
                     "DefWindowProcA",
-                    DefWindowProcA(param_1, param_2, param_3, param_4)
+                    DefWindowProcA(hwnd, msg, wparam, lparam)
                 )
             );
         }
-        if param_2 < 0xa1 {
-            if param_2 == 0xa0 {
+        if msg < 0xa1 {
+            if msg == 0xa0 {
                 unhide();
                 return mech_trace::rt!("10014570", 0);
             }
-            if param_2 == 0x1c {
-                mech_trace::gw!("10014570", "10098204", DAT_10098204, param_3);
-                if param_3 == 0 {
+            if msg == 0x1c {
+                mech_trace::gw!("10014570", "10098204", DAT_10098204, wparam);
+                if wparam == 0 {
                     if mech_trace::cr!("10014570", "1000f170", FUN_1000f170()) != 0 {
                         FUN_1000f190();
                     }
@@ -378,12 +374,12 @@ pub unsafe extern "stdcall" fn FUN_10014570(
                 mech_trace::cr!(
                     "10014570",
                     "DefWindowProcA",
-                    DefWindowProcA(param_1, param_2, param_3, param_4)
+                    DefWindowProcA(hwnd, msg, wparam, lparam)
                 )
             );
         }
-        if param_2 < 0x201 {
-            if param_2 == 0x200 {
+        if msg < 0x201 {
+            if msg == 0x200 {
                 if mech_trace::cr!("10014570", "1000f170", FUN_1000f170()) != 0
                     && mech_trace::gr!("10014570", "1008ee0c", DAT_1008ee0c) == 0
                 {
@@ -394,7 +390,7 @@ pub unsafe extern "stdcall" fn FUN_10014570(
                     }
                     mech_trace::gw!("10014570", "1008ee0c", DAT_1008ee0c, 1);
                 }
-                let edi = ((param_4 >> 16) & 0xffff) as i32;
+                let edi = ((lparam >> 16) & 0xffff) as i32;
                 if mech_trace::gr!("10014570", "10098214", DAT_10098214) != 0 {
                     if mech_trace::gr!("10014570", "100a757c", DAT_100a757c) != 1 {
                         return mech_trace::rt!("10014570", 0);
@@ -403,7 +399,7 @@ pub unsafe extern "stdcall" fn FUN_10014570(
                         mech_trace::cr!(
                             "10014570",
                             "SetMenu",
-                            SetMenu(param_1, core::ptr::null_mut())
+                            SetMenu(hwnd, core::ptr::null_mut())
                         );
                         mech_trace::gw!("10014570", "10098214", DAT_10098214, 0);
                         return mech_trace::rt!("10014570", 0);
@@ -417,10 +413,7 @@ pub unsafe extern "stdcall" fn FUN_10014570(
                     mech_trace::cr!(
                         "10014570",
                         "SetMenu",
-                        SetMenu(
-                            param_1,
-                            mech_trace::gr!("10014570", "100d08ec", DAT_100d08ec)
-                        )
+                        SetMenu(hwnd, mech_trace::gr!("10014570", "100d08ec", DAT_100d08ec))
                     );
                     mech_trace::gw!("10014570", "10098214", DAT_10098214, 1);
                     FUN_10012470(
@@ -434,11 +427,11 @@ pub unsafe extern "stdcall" fn FUN_10014570(
                 }
                 return mech_trace::rt!("10014570", 0);
             }
-            if param_2 == 0x111 {
+            if msg == 0x111 {
                 if mech_trace::cr!("10014570", "1000f170", FUN_1000f170()) != 0 {
                     FUN_1000f290(0);
                 }
-                match param_3 & 0xffff {
+                match wparam & 0xffff {
                     0x9c41 => {
                         if get(0x23c7) != 0xc02b
                             && mech_trace::cr!(
@@ -554,12 +547,12 @@ pub unsafe extern "stdcall" fn FUN_10014570(
                 mech_trace::cr!(
                     "10014570",
                     "DefWindowProcA",
-                    DefWindowProcA(param_1, param_2, param_3, param_4)
+                    DefWindowProcA(hwnd, msg, wparam, lparam)
                 )
             );
         }
-        if param_2 < 0xc003 {
-            if param_2 == 0xc002 {
+        if msg < 0xc003 {
+            if msg == 0xc002 {
                 FUN_10011170(
                     0xc002,
                     mech_trace::gr!("10014570", "100b0f50", DAT_100b0f50),
@@ -568,18 +561,18 @@ pub unsafe extern "stdcall" fn FUN_10014570(
                 PostQuitMessage(0xc002);
                 return mech_trace::rt!("10014570", 0);
             }
-            if param_2 != 0x30f {
-                if param_2 != 0x311 {
+            if msg != 0x30f {
+                if msg != 0x311 {
                     return mech_trace::rt!(
                         "10014570",
                         mech_trace::cr!(
                             "10014570",
                             "DefWindowProcA",
-                            DefWindowProcA(param_1, param_2, param_3, param_4)
+                            DefWindowProcA(hwnd, msg, wparam, lparam)
                         )
                     );
                 }
-                if mech_trace::gr!("10014570", "100d08e8", DAT_100d08e8) == param_1 {
+                if mech_trace::gr!("10014570", "100d08e8", DAT_100d08e8) == hwnd {
                     return mech_trace::rt!("10014570", 0);
                 }
             }
@@ -608,26 +601,26 @@ pub unsafe extern "stdcall" fn FUN_10014570(
             FUN_10012830(mech_trace::gr!("10014570", "100a672c", DAT_100a672c));
             return mech_trace::rt!("10014570", 1);
         }
-        match param_2 {
+        match msg {
             0xc00a => {
-                chk(param_3);
-                set(0x23c7, param_2);
+                chk(wparam);
+                set(0x23c7, msg);
                 FUN_1004e0e0(
                     mech_trace::gr!("10014570", "100a6734", DAT_100a6734),
                     mem(0x166),
                 );
             }
             0xc010 => {
-                chk(param_3);
+                chk(wparam);
                 FUN_10007770(
                     mech_trace::gr!("10014570", "100a6734", DAT_100a6734),
                     get(0x23c3),
                 );
-                set(0x23c7, param_2);
+                set(0x23c7, msg);
                 set(0x23c3, 0xc01c);
             }
             0xc011 => {
-                set(0x23c7, param_2);
+                set(0x23c7, msg);
                 FUN_10011170(0xc00a, 0, mem(0x166));
                 if get(0x23bb) != 2 {
                     FUN_1001d650();
@@ -636,9 +629,9 @@ pub unsafe extern "stdcall" fn FUN_10014570(
                 PostQuitMessage(0xc001);
             }
             0xc012 => {
-                set(0x23c7, param_2);
-                set(0x23c3, param_3);
-                chk(param_3);
+                set(0x23c7, msg);
+                set(0x23c3, wparam);
+                chk(wparam);
                 FUN_100361e0(0, 0, 3, 1, 100);
                 FUN_1001a980(mem(0x166), 0, 0);
                 FUN_100361e0(1, -1, -1, -1, -1);
@@ -650,17 +643,17 @@ pub unsafe extern "stdcall" fn FUN_10014570(
             0xc013 => {
                 unhide();
                 FUN_1000f360();
-                set(0x23cb, param_3);
-                chk(param_3);
-                set(0x23c7, param_2);
+                set(0x23cb, wparam);
+                chk(wparam);
+                set(0x23c7, msg);
                 FUN_10041780(mech_trace::gr!("10014570", "100a6734", DAT_100a6734));
             }
             0xc016 => {
-                chk(param_3);
-                set(0x23c3, param_3);
-                set(0x23c7, param_2);
+                chk(wparam);
+                set(0x23c3, wparam);
+                set(0x23c7, msg);
                 unhide();
-                if param_3 != 0xc02d {
+                if wparam != 0xc02d {
                     let k = get(0x23bb);
                     if ((k == 1 && mech_trace::dr!("10014570", mem(0x23a2)) == 0) || k == 0)
                         && get(0x23c3) != 0xc036
@@ -718,112 +711,112 @@ pub unsafe extern "stdcall" fn FUN_10014570(
                 FUN_10059880(mech_trace::gr!("10014570", "100a6734", DAT_100a6734));
             }
             0xc018 => {
-                set(0x23c3, param_3);
-                set(0x23c7, param_2);
+                set(0x23c3, wparam);
+                set(0x23c7, msg);
                 FUN_10051340(mech_trace::gr!("10014570", "100a6734", DAT_100a6734));
             }
             0xc01a => {
-                set(0x23c3, param_3);
-                chk(param_3);
-                set(0x23c7, param_2);
+                set(0x23c3, wparam);
+                chk(wparam);
+                set(0x23c7, msg);
                 FUN_10044090(mech_trace::gr!("10014570", "100a6734", DAT_100a6734));
             }
             0xc01b => {
                 set(0x23c3, 0xc01b);
-                chk(param_3);
-                set(0x23c7, param_2);
+                chk(wparam);
+                set(0x23c7, msg);
                 FUN_1006e050(mech_trace::gr!("10014570", "100a6734", DAT_100a6734));
             }
             0xc01c => {
                 unhide();
-                set(0x23c3, param_3);
-                chk(param_3);
-                set(0x23c7, param_2);
+                set(0x23c3, wparam);
+                chk(wparam);
+                set(0x23c7, msg);
                 FUN_100361e0(1, 0, 0, 0, 100);
                 mech_trace::gw!("10014570", "100b0f50", DAT_100b0f50, 0);
                 FUN_1001c350(mech_trace::gr!("10014570", "100a6734", DAT_100a6734));
             }
             0xc01d => {
-                set(0x23c3, param_3);
-                chk(param_3);
-                set(0x23c7, param_2);
+                set(0x23c3, wparam);
+                chk(wparam);
+                set(0x23c7, msg);
                 FUN_10060c50(mech_trace::gr!("10014570", "100a6734", DAT_100a6734));
             }
             0xc01e => {
-                set(0x23c3, param_3);
-                chk(param_3);
-                set(0x23c7, param_2);
+                set(0x23c3, wparam);
+                chk(wparam);
+                set(0x23c7, msg);
                 FUN_10044a60(mech_trace::gr!("10014570", "100a6734", DAT_100a6734));
             }
             0xc01f => {
-                set(0x23c3, param_3);
-                chk(param_3);
-                set(0x23c7, param_2);
+                set(0x23c3, wparam);
+                chk(wparam);
+                set(0x23c7, msg);
                 FUN_10018250(mech_trace::gr!("10014570", "100a6734", DAT_100a6734));
             }
             0xc020 => {
-                set(0x23c3, param_3);
-                chk(param_3);
-                set(0x23c7, param_2);
+                set(0x23c3, wparam);
+                chk(wparam);
+                set(0x23c7, msg);
                 FUN_100367d0(mech_trace::gr!("10014570", "100a6734", DAT_100a6734));
             }
             0xc021 => {
-                set(0x23c3, param_3);
-                chk(param_3);
-                set(0x23c7, param_2);
+                set(0x23c3, wparam);
+                chk(wparam);
+                set(0x23c7, msg);
                 FUN_10042920(mech_trace::gr!("10014570", "100a6734", DAT_100a6734));
             }
             0xc022 => {
-                set(0x23c3, param_3);
-                chk(param_3);
-                set(0x23c7, param_2);
+                set(0x23c3, wparam);
+                chk(wparam);
+                set(0x23c7, msg);
                 FUN_10057a90(mech_trace::gr!("10014570", "100a6734", DAT_100a6734));
             }
             0xc024 => {
-                set(0x23c3, param_3);
-                chk(param_3);
-                set(0x23c7, param_2);
+                set(0x23c3, wparam);
+                chk(wparam);
+                set(0x23c7, msg);
                 FUN_10040bf0(mech_trace::gr!("10014570", "100a6734", DAT_100a6734));
             }
             0xc025 => {
-                set(0x23c3, param_3);
-                chk(param_3);
-                set(0x23c7, param_2);
+                set(0x23c3, wparam);
+                chk(wparam);
+                set(0x23c7, msg);
                 FUN_1001db60(
                     mech_trace::gr!("10014570", "100a6734", DAT_100a6734),
                     get(0x23c3),
                 );
             }
             0xc026 => {
-                set(0x23c3, param_3);
-                chk(param_3);
-                set(0x23c7, param_2);
+                set(0x23c3, wparam);
+                chk(wparam);
+                set(0x23c7, msg);
                 FUN_1003cc80(mech_trace::gr!("10014570", "100a6734", DAT_100a6734));
             }
             0xc028 => {
-                set(0x23c3, param_3);
-                chk(param_3);
-                set(0x23c7, param_2);
+                set(0x23c3, wparam);
+                chk(wparam);
+                set(0x23c7, msg);
                 FUN_1006c210(
                     mech_trace::gr!("10014570", "100a6734", DAT_100a6734),
                     get(0x23c3),
                 );
             }
             0xc029 => {
-                set(0x23c3, param_3);
-                chk(param_3);
-                set(0x23c7, param_2);
+                set(0x23c3, wparam);
+                chk(wparam);
+                set(0x23c7, msg);
                 FUN_1001afe0(mech_trace::gr!("10014570", "100a6734", DAT_100a6734));
             }
             0xc02b => {
                 mech_trace::gw!("10014570", "100b0f50", DAT_100b0f50, 0);
-                set(0x23c7, param_2);
-                chk(param_3);
+                set(0x23c7, msg);
+                chk(wparam);
                 FUN_1005bd10(mech_trace::gr!("10014570", "100a6734", DAT_100a6734));
                 unhide();
             }
             0xc02e => {
-                set(0x23c3, param_3);
+                set(0x23c3, wparam);
                 menu_enable(0x9c97, 1);
                 FUN_1003a690(
                     mech_trace::gr!("10014570", "100a6734", DAT_100a6734),
@@ -831,30 +824,30 @@ pub unsafe extern "stdcall" fn FUN_10014570(
                 );
             }
             0xc02f => {
-                set(0x23c3, param_3);
-                chk(param_3);
-                set(0x23c7, param_2);
+                set(0x23c3, wparam);
+                chk(wparam);
+                set(0x23c7, msg);
                 FUN_10033090(
                     mech_trace::gr!("10014570", "100a6734", DAT_100a6734),
                     get(0x23cf),
                 );
             }
             0xc030 => {
-                set(0x23c3, param_3);
-                chk(param_3);
-                set(0x23c7, param_2);
+                set(0x23c3, wparam);
+                chk(wparam);
+                set(0x23c7, msg);
                 FUN_1003bca0(mech_trace::gr!("10014570", "100a6734", DAT_100a6734));
             }
             0xc031 => {
-                set(0x23c3, param_3);
-                chk(param_3);
-                set(0x23c7, param_2);
+                set(0x23c3, wparam);
+                chk(wparam);
+                set(0x23c7, msg);
                 FUN_10011710(mech_trace::gr!("10014570", "100a6734", DAT_100a6734));
             }
             0xc032 => {
-                set(0x23c3, param_3);
-                set(0x23c7, param_2);
-                chk(param_3);
+                set(0x23c3, wparam);
+                set(0x23c7, msg);
+                chk(wparam);
                 FUN_10016d80(mech_trace::gr!("10014570", "100a6734", DAT_100a6734));
             }
             0xc033 => {
@@ -869,9 +862,9 @@ pub unsafe extern "stdcall" fn FUN_10014570(
                 FUN_1000e970(&raw const s_mland2_1008eea8, 0xc01c, 0xc01c);
             }
             0xc036 => {
-                chk(param_3);
-                set(0x23c3, param_3);
-                set(0x23c7, param_2);
+                chk(wparam);
+                set(0x23c3, wparam);
+                set(0x23c7, msg);
                 FUN_10043230(mech_trace::gr!("10014570", "100a6734", DAT_100a6734));
             }
             0xc037 => {
@@ -884,8 +877,8 @@ pub unsafe extern "stdcall" fn FUN_10014570(
                 FUN_1000e970(&raw const s_mpoorw_1008ef00, 0xc02b, 0xc01c);
             }
             0xc038 => {
-                set(0x23c3, param_3);
-                set(0x23c7, param_2);
+                set(0x23c3, wparam);
+                set(0x23c7, msg);
                 FUN_10050f10(mech_trace::gr!("10014570", "100a6734", DAT_100a6734));
             }
             _ => {
@@ -894,7 +887,7 @@ pub unsafe extern "stdcall" fn FUN_10014570(
                     mech_trace::cr!(
                         "10014570",
                         "DefWindowProcA",
-                        DefWindowProcA(param_1, param_2, param_3, param_4)
+                        DefWindowProcA(hwnd, msg, wparam, lparam)
                     )
                 );
             }
