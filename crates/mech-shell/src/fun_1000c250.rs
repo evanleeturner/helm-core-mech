@@ -15,7 +15,7 @@ unsafe extern "C" {
 
 #[allow(non_snake_case)]
 unsafe extern "stdcall" {
-    fn FUN_1000be10();
+    fn FUN_1000be10() -> i32;
 }
 
 #[unsafe(no_mangle)]
@@ -41,13 +41,7 @@ pub unsafe extern "stdcall" fn FUN_1000c250() {
                         i_var1
                     )
                 ) as i32;
-                FUN_1000be10();
-                let u_var2: u32;
-                core::arch::asm!("", out("eax") u_var2, options(nomem, nostack, preserves_flags));
-                mech_trace::log::debug!(
-                    f = "1000c250", b = "reg", r = "eax",
-                    v:% = mech_trace::__shown!(u_var2); "asm.out"
-                );
+                mech_trace::cr!("1000c250", "1000be10", FUN_1000be10());
                 (i_var1 as usize + 0x24)..;
                 i_var1 = i_var3;
                 if !(i_var3
