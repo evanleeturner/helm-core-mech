@@ -3,9 +3,12 @@
 #[allow(non_upper_case_globals)]
 unsafe extern "C" {
     static mut DAT_100a55d8: [u8; 0];
-    static mut DAT_100c40c0: u32;
-    static mut DAT_100c40c4: u32;
-    static mut DAT_100c6080: [u8; 0];
+    #[link_name = "DAT_100c40c0"]
+    static mut KEY_RING_READ: u32;
+    #[link_name = "DAT_100c40c4"]
+    static mut KEY_RING_WRITE: u32;
+    #[link_name = "DAT_100c6080"]
+    static mut KEY_RING: [u8; 0];
 }
 
 #[allow(non_snake_case)]
@@ -19,9 +22,9 @@ unsafe extern "C" {
     fn _tolower(c: i32) -> i32;
 }
 
-#[unsafe(no_mangle)]
+#[unsafe(export_name = "FUN_1005b830")]
 #[allow(non_snake_case)]
-pub unsafe extern "C" fn FUN_1005b830(code: u32) {
+pub unsafe extern "C" fn QueueKeyPress(code: u32) {
     mech_trace::enter!("1005b830", code);
     // SAFETY: the globals and callees are the game's own memory and the
     // system's API; the table reads and ring-buffer write are at the
@@ -57,10 +60,11 @@ pub unsafe extern "C" fn FUN_1005b830(code: u32) {
         }
         mech_trace::wr!(
             "1005b830",
-            (&raw mut DAT_100c6080)
+            (&raw mut KEY_RING)
                 .cast::<u8>()
                 .byte_add(
-                    mech_trace::gr!("1005b830", "100c40c4", DAT_100c40c4).wrapping_mul(2) as usize
+                    mech_trace::gr!("1005b830", "100c40c4", KEY_RING_WRITE).wrapping_mul(2)
+                        as usize
                 )
                 .cast::<u16>(),
             write_unaligned,
@@ -69,25 +73,25 @@ pub unsafe extern "C" fn FUN_1005b830(code: u32) {
         mech_trace::gw!(
             "1005b830",
             "100c40c4",
-            DAT_100c40c4,
-            mech_trace::gr!("1005b830", "100c40c4", DAT_100c40c4).wrapping_add(1)
+            KEY_RING_WRITE,
+            mech_trace::gr!("1005b830", "100c40c4", KEY_RING_WRITE).wrapping_add(1)
         );
-        if mech_trace::gr!("1005b830", "100c40c4", DAT_100c40c4) != 0x40 {
-            if mech_trace::gr!("1005b830", "100c40c0", DAT_100c40c0)
-                == mech_trace::gr!("1005b830", "100c40c4", DAT_100c40c4)
+        if mech_trace::gr!("1005b830", "100c40c4", KEY_RING_WRITE) != 0x40 {
+            if mech_trace::gr!("1005b830", "100c40c0", KEY_RING_READ)
+                == mech_trace::gr!("1005b830", "100c40c4", KEY_RING_WRITE)
             {
                 mech_trace::gw!(
                     "1005b830",
                     "100c40c0",
-                    DAT_100c40c0,
-                    mech_trace::gr!("1005b830", "100c40c0", DAT_100c40c0).wrapping_add(1)
+                    KEY_RING_READ,
+                    mech_trace::gr!("1005b830", "100c40c0", KEY_RING_READ).wrapping_add(1)
                 );
-                if mech_trace::gr!("1005b830", "100c40c0", DAT_100c40c0) == 0x40 {
-                    mech_trace::gw!("1005b830", "100c40c0", DAT_100c40c0, 0);
+                if mech_trace::gr!("1005b830", "100c40c0", KEY_RING_READ) == 0x40 {
+                    mech_trace::gw!("1005b830", "100c40c0", KEY_RING_READ, 0);
                 }
             }
             return;
         }
-        mech_trace::gw!("1005b830", "100c40c4", DAT_100c40c4, 0);
+        mech_trace::gw!("1005b830", "100c40c4", KEY_RING_WRITE, 0);
     }
 }

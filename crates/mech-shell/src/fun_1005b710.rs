@@ -17,9 +17,9 @@ unsafe extern "stdcall" {
     fn PeekMessageA(msg: *mut u32, hwnd: *mut u8, min: u32, max: u32, remove: u32) -> i32;
 }
 
-#[unsafe(no_mangle)]
+#[unsafe(export_name = "FUN_1005b710")]
 #[allow(non_snake_case)]
-pub unsafe extern "stdcall" fn FUN_1005b710() {
+pub unsafe extern "stdcall" fn FlushKeyInput() {
     mech_trace::enter!("1005b710");
     // MSG layout: hwnd, message, wParam, lParam, time, pt.x, pt.y (7 x 4 bytes)
     let mut key_message: [u32; 7] = [0; 7];

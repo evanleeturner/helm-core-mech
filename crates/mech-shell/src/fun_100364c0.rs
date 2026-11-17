@@ -6,9 +6,9 @@ unsafe extern "thiscall" {
     fn FUN_10036460(this: *mut u8, param_1: u32, param_2: *mut i32, param_3: *mut i8) -> *mut u16;
 }
 
-#[unsafe(no_mangle)]
+#[unsafe(export_name = "FUN_100364c0")]
 #[allow(non_snake_case)]
-pub unsafe extern "thiscall" fn FUN_100364c0(
+pub unsafe extern "thiscall" fn FindEntryByName(
     this: *mut u8,
     param_1: *mut i8,
     param_2: u32,

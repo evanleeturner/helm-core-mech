@@ -2,7 +2,8 @@
 
 #[allow(non_upper_case_globals)]
 unsafe extern "C" {
-    static mut DAT_1009c698: i32;
+    #[link_name = "DAT_1009c698"]
+    static mut CUSTOM_CONFIG_NUMBER: i32;
     static mut DAT_1009c690: u32;
     static mut DAT_1009c68c: i32;
     static mut DAT_1009fecc: i8;
@@ -30,9 +31,9 @@ unsafe extern "C" {
     fn FUN_10053cf0();
 }
 
-#[unsafe(no_mangle)]
+#[unsafe(export_name = "FUN_10054270")]
 #[allow(non_snake_case)]
-pub unsafe extern "C" fn FUN_10054270(param_1: i32) {
+pub unsafe extern "C" fn LoadConfigFileByNumber(param_1: i32) {
     mech_trace::enter!("10054270", param_1);
     let mut file_name = [0i8; 32];
     let mut file_number: i32;
@@ -43,7 +44,7 @@ pub unsafe extern "C" fn FUN_10054270(param_1: i32) {
     unsafe {
         if param_1 == 0 {
             file_number = 0;
-            saved_config_number = mech_trace::gr!("10054270", "1009c698", DAT_1009c698);
+            saved_config_number = mech_trace::gr!("10054270", "1009c698", CUSTOM_CONFIG_NUMBER);
         } else {
             file_number = mech_trace::rd!(
                 "10054270",
@@ -52,12 +53,17 @@ pub unsafe extern "C" fn FUN_10054270(param_1: i32) {
             );
             let mut s = file_number;
             if file_number < 0 {
-                file_number = mech_trace::gr!("10054270", "1009c698", DAT_1009c698);
-                s = mech_trace::gr!("10054270", "1009c698", DAT_1009c698);
+                file_number = mech_trace::gr!("10054270", "1009c698", CUSTOM_CONFIG_NUMBER);
+                s = mech_trace::gr!("10054270", "1009c698", CUSTOM_CONFIG_NUMBER);
             }
             saved_config_number = s;
         }
-        mech_trace::gw!("10054270", "1009c698", DAT_1009c698, saved_config_number);
+        mech_trace::gw!(
+            "10054270",
+            "1009c698",
+            CUSTOM_CONFIG_NUMBER,
+            saved_config_number
+        );
         mech_trace::cr!(
             "10054270",
             "_sprintf",

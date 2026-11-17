@@ -22,9 +22,9 @@ unsafe extern "stdcall" {
     fn HeapFree(h: *mut core::ffi::c_void, flags: u32, mem: *mut core::ffi::c_void) -> i32;
 }
 
-#[unsafe(no_mangle)]
+#[unsafe(export_name = "FUN_10064780")]
 #[allow(non_snake_case)]
-pub unsafe extern "fastcall" fn FUN_10064780(param_1: *mut i32) {
+pub unsafe extern "fastcall" fn FreeCollectionAndItems(param_1: *mut i32) {
     mech_trace::enter!("10064780", param_1);
     // SAFETY: param_1 points at the game's object whose first field is a
     // pointer to a block; the callees and globals are the game's own.

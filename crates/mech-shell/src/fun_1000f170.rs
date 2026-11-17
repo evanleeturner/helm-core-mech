@@ -5,9 +5,9 @@ unsafe extern "C" {
     static mut DAT_1008da7c: u32;
 }
 
-#[unsafe(no_mangle)]
+#[unsafe(export_name = "FUN_1000f170")]
 #[allow(non_snake_case)]
-pub unsafe extern "stdcall" fn FUN_1000f170() -> u32 {
+pub unsafe extern "stdcall" fn IsModalMovieOpen() -> u32 {
     mech_trace::enter!("1000f170");
     // SAFETY: the global is the game's own memory, read by value.
     unsafe {

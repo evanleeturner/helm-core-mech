@@ -65,9 +65,9 @@ unsafe fn copy_cstr(src: *const i8, dst: *mut i8) {
     }
 }
 
-#[unsafe(no_mangle)]
+#[unsafe(export_name = "FUN_100416d0")]
 #[allow(non_snake_case)]
-pub unsafe extern "stdcall" fn FUN_100416d0() {
+pub unsafe extern "stdcall" fn ResetTerminalState() {
     mech_trace::enter!("100416d0");
     // SAFETY: all globals and buffers are the game's own memory; strings are
     // copied exactly as the original does.

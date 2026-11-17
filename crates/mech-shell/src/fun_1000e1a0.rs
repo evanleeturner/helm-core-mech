@@ -5,7 +5,8 @@ use core::ffi::c_void;
 #[allow(non_upper_case_globals)]
 unsafe extern "C" {
     static mut DAT_1008d150: *mut c_void;
-    static mut DAT_1008d154: u32;
+    #[link_name = "DAT_1008d154"]
+    static mut SHELL_PALETTE: u32;
     static mut DAT_1008d158: [u8; 0];
     static mut DAT_1008d159: [u8; 0];
     static mut DAT_1008d15a: [u8; 0];
@@ -17,7 +18,8 @@ unsafe extern "C" {
     static mut DAT_100a7260: [i8; 0];
     static mut DAT_100a7560: [u8; 0];
     static mut DAT_100d1548: u32;
-    static mut DAT_100d154c: u32;
+    #[link_name = "DAT_100d154c"]
+    static mut PALETTE_BEFORE_SHELL: u32;
 }
 
 #[allow(non_snake_case)]
@@ -42,9 +44,9 @@ unsafe fn store(off: i32, c: i8, a: *mut u8, b: *mut u8) {
     }
 }
 
-#[unsafe(no_mangle)]
+#[unsafe(export_name = "FUN_1000e1a0")]
 #[allow(non_snake_case)]
-pub unsafe extern "C" fn FUN_1000e1a0(
+pub unsafe extern "C" fn SetDacPaletteRange(
     first_index: i32,
     entry_count: i32,
     source_colors: *mut u16,
@@ -138,11 +140,11 @@ pub unsafe extern "C" fn FUN_1000e1a0(
                 }
             }
 
-            if mech_trace::gr!("1000e1a0", "1008d154", DAT_1008d154) == 0 {
+            if mech_trace::gr!("1000e1a0", "1008d154", SHELL_PALETTE) == 0 {
                 mech_trace::gw!(
                     "1000e1a0",
                     "1008d154",
-                    DAT_1008d154,
+                    SHELL_PALETTE,
                     mech_trace::cr!(
                         "1000e1a0",
                         "CreatePalette",
@@ -152,13 +154,13 @@ pub unsafe extern "C" fn FUN_1000e1a0(
                 mech_trace::gw!(
                     "1000e1a0",
                     "100d154c",
-                    DAT_100d154c,
+                    PALETTE_BEFORE_SHELL,
                     mech_trace::cr!(
                         "1000e1a0",
                         "SelectPalette",
                         SelectPalette(
                             mech_trace::gr!("1000e1a0", "1008d150", DAT_1008d150),
-                            mech_trace::gr!("1000e1a0", "1008d154", DAT_1008d154) as usize
+                            mech_trace::gr!("1000e1a0", "1008d154", SHELL_PALETTE) as usize
                                 as *mut c_void,
                             0
                         )
@@ -169,7 +171,7 @@ pub unsafe extern "C" fn FUN_1000e1a0(
                     "1000e1a0",
                     "SetPaletteEntries",
                     SetPaletteEntries(
-                        mech_trace::gr!("1000e1a0", "1008d154", DAT_1008d154) as usize
+                        mech_trace::gr!("1000e1a0", "1008d154", SHELL_PALETTE) as usize
                             as *mut c_void,
                         0,
                         0x100,

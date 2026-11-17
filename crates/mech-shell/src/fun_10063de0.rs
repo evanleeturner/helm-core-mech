@@ -12,9 +12,9 @@ unsafe extern "C" {
     fn FUN_1006ec30(param_1: *mut c_void) -> u8;
 }
 
-#[unsafe(no_mangle)]
+#[unsafe(export_name = "FUN_10063de0")]
 #[allow(non_snake_case)]
-pub unsafe extern "C" fn FUN_10063de0(param_1: *mut i32) {
+pub unsafe extern "C" fn RebuildEntryTextItems(param_1: *mut i32) {
     mech_trace::enter!("10063de0", param_1);
     let mut b_var4 = false;
     if !param_1.is_null() {

@@ -4,7 +4,8 @@ use core::ffi::c_void;
 
 #[allow(non_upper_case_globals)]
 unsafe extern "C" {
-    static mut DAT_10098224: *mut c_void;
+    #[link_name = "DAT_10098224"]
+    static mut SHELL_HEAP: *mut c_void;
 }
 
 #[allow(non_snake_case)]
@@ -24,9 +25,9 @@ unsafe extern "stdcall" {
     fn AIL_release_sample_handle(handle: u32);
 }
 
-#[unsafe(no_mangle)]
+#[unsafe(export_name = "FUN_10010c80")]
 #[allow(non_snake_case)]
-pub unsafe extern "fastcall" fn FUN_10010c80(sample: *mut i32) {
+pub unsafe extern "fastcall" fn DisposeSample(sample: *mut i32) {
     mech_trace::enter!("10010c80", sample);
     // SAFETY: sample points at the game's sample structure; the callees and
     // globals are the game's own, used in the original order.
@@ -47,7 +48,7 @@ pub unsafe extern "fastcall" fn FUN_10010c80(sample: *mut i32) {
                     "10010c80",
                     "HeapFree",
                     HeapFree(
-                        mech_trace::gr!("10010c80", "10098224", DAT_10098224),
+                        mech_trace::gr!("10010c80", "10098224", SHELL_HEAP),
                         1,
                         mech_trace::rd!("10010c80", sample.add(1), read_unaligned) as usize
                             as *mut c_void,
